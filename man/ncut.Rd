@@ -11,8 +11,10 @@ ncut(x, breaks, type="left" )
 }
 \arguments{
   \item{x}{A numerical vector.}
-  \item{breaks}{Vector of breakpoints. Values ouside \code{range(x)} will be
-                \code{NA}.}
+  \item{breaks}{Vector of breakpoints. \code{NA} will results for values
+    below \code{min(x)} if \code{type="left"}, for values
+    above \code{max(x)} if \code{type="right"} and for values
+    outside \code{range(x)} if \code{type="mid"}}
   \item{type}{Character: one of \code{c("left","right","mid")},
     indicating whether the left, right or midpoint of the intervals
     defined in breaks is returned.}
@@ -34,9 +36,9 @@ A numerical vector of the same length as \code{x}.
 \examples{
 br <- c(-2,0,1,2.5)
 x <- c( rnorm( 10 ), br, -3, 3 )
-cbind( x, ncut( x, breaks=br, type="l" ),
-          ncut( x, breaks=br, type="m" ),
-          ncut( x, breaks=br, type="r" ) )
+cbind( x, l=ncut( x, breaks=br, type="l" ),
+          m=ncut( x, breaks=br, type="m" ),
+          r=ncut( x, breaks=br, type="r" ) )[order(x),]
 x <- rnorm( 200 )
 plot( x, ncut( x, breaks=br, type="l" ), pch=16, col="blue", ylim=range(x) )
 abline( 0, 1 )

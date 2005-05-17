@@ -9,47 +9,38 @@ region of N. Malawi were compared with population controls.
 }
 \format{
 This data frame contains the following columns:
-}
-\arguments{
-\item{id}{
-subject identifier: a numeric vector
-}
-\item{d}{
-case/control status: a numeric vector (1=case, 0=control)
-}
-\item{age}{
-a factor with levels
+\tabular{rl}{
+\code{id}: \tab subject identifier: a numeric vector \cr
+\code{d}: \tab case/control status: a numeric vector (1=case, 0=control) \cr
+
+\code{age}: \tab a factor with levels
 \code{5-9} 
 \code{10-14} 
 \code{15-19} 
 \code{20-24} 
 \code{25-29} 
 \code{30-44} 
-\code{45+} 
-}
-\item{sex}{
-a factor with levels
-\code{male} 
-\code{female} 
-}
-\item{bcg}{
-presence of vaccine scar, a factor with levels
+\code{45+}  \cr
+
+\code{sex}: \tab a factor with levels
+\code{male},  
+\code{female}  \cr 
+
+\code{bcg}: \tab presence of vaccine scar, a factor with levels
 \code{no} 
-\code{yes} 
-}
-\item{school}{
-schooling, a factor with levels
+\code{yes}  \cr
+
+\code{school}: \tab schooling, a factor with levels
 \code{none} 
 \code{1-5yrs} 
 \code{6-8yrs} 
-\code{sec/tert} 
-}
-\item{house}{
-housing, a factor with levels
+\code{sec/tert} \cr
+
+\code{house}: \tab housing, a factor with levels
 \code{brick} 
 \code{sunbrick} 
 \code{wattle} 
-\code{temp} 
+\code{temp}  \cr
 }
 }
 \source{

@@ -15,54 +15,28 @@ of CHD.
 }
 \format{
 This data frame contains the following columns:
-}
-\arguments{
-\item{id}{
-subject identifier, a numeric vector
-}
-\item{doe}{
-date of entry into follow-up study, a date
-}
-\item{dox}{
-date of exit from the follow-up study, a date
-}
-\item{dob}{
-date of birth, a date
-}
-\item{fail}{
-status on exit, a numeric vector (codes 1, 3, 11, and 13 represent CHD events)
-}
-\item{job}{
-occupation, a factor with levels
+\tabular{rl}{
+\code{id}: \tab subject identifier, a numeric vector \cr
+\code{doe}: \tab date of entry into follow-up study, a date \cr
+\code{dox}: \tab date of exit from the follow-up study, a date \cr
+\code{dob}: \tab date of birth, a date \cr
+\code{fail}: \tab status on exit, a numeric vector (codes 1, 3, 11, and
+13 represent CHD events) \cr
+\code{job}: \tab occupation, a factor with levels
 \code{Driver} 
 \code{Conductor} 
-\code{Bank worker} 
-}
-\item{month}{
-month of dietary survey, a numeric vector
-}
-\item{energy}{
-total energy intake (KCal per day/100), a numeric vector
-}
-\item{height}{
-(cm), a numeric vector
-}
-\item{weight}{
-(kg), a numeric vector
-}
-\item{fat}{
-  fat intake (g/day), a numeric vector
-}
-\item{fibre}{
-dietary fibre intake (g/day), a numeric vector
-}
-\item{energy.grp}{
-high daily energy intake, a factor with levels
+\code{Bank worker} \cr
+\code{month}: \tab month of dietary survey, a numeric vector \cr
+\code{energy}: \tab total energy intake (KCal per day/100), a numeric
+vector \cr
+\code{height}: \tab (cm), a numeric vector \cr
+\code{weight}: \tab (kg), a numeric vector \cr
+\code{fat}: \tab   fat intake (g/day), a numeric vector \cr
+\code{fibre}: \tab dietary fibre intake (g/day), a numeric vector \cr
+\code{energy.grp}: \tab high daily energy intake, a factor with levels
 \code{<=2750 KCal}
-\code{>2750 KCal}
-}
-\item{chd}{
-CHD event, a numeric vector (1=CHD event, 0=no event)
+\code{>2750 KCal} \cr
+\code{chd}: \tab CHD event, a numeric vector (1=CHD event, 0=no event) \cr
 }
 }
 \source{

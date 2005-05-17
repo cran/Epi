@@ -29,17 +29,17 @@ function( rates,
 if( ann ) p.lim <- p.lim + c(0,diff( range( age ) ) * xannx )
 matplot( per, t(rates), type="n",
          xlim=p.lim, ylim=ylim, xlab=p.lab, ylab=ylab,
-         log=log.ax, las=las, if( !is.null( at ) ) yaxt="n" )
-if( !is.null( at ) ) axis( side=2, at=at, labels=labels )
+         log=log.ax, las=las, yaxt=if( !is.null( at ) ) "n" else "s" )
+if( !is.null( at ) ) axis( side=2, at=at, labels=labels, yaxt="s", las=las )
 # and the grid if required
 if( !missing( p.grid ) | !missing( grid ) )
   {
-  if( is.logical( p.grid ) ) p.grid <- nice( per, log=par("xlog") )
+  if( is.logical( p.grid ) & p.grid[1] ) p.grid <- nice( per, log=par("xlog") )
   abline( v=p.grid, col=col.grid )
   }
 if( !missing( ygrid ) | !missing( ygrid ) )
   {
-  if( is.logical( ygrid ) ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
+  if( is.logical( ygrid ) & ygrid[1] ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
   abline( h=ygrid, col=col.grid )
   }
 box()

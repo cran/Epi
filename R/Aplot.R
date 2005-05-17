@@ -37,17 +37,18 @@ if( p.ann ) a.lim <- a.lim + c(0,diff( range( age ) ) * xannx)
 if( c.ann ) a.lim <- a.lim - c(  diff( range( age ) ) * xannx,0)
 matplot( age, rates, type="n",
          xlim=a.lim, ylim=ylim, xlab=a.lab, ylab=ylab,
-         log=log.ax, las=las, if( !is.null( at ) ) yaxt="n" )
-if( !is.null( at ) ) axis( side=2, at=at, labels=labels )
+         log=log.ax, las=las, yaxt=if( !is.null( at ) ) "n" else "s" )
+if( !is.null( at ) ) axis( side=2, at=at, labels=labels, yaxt="s", las=las )
 # and the grid if required:
 if( !missing( a.grid ) | !missing( grid ) )
   {
-  if( is.logical( a.grid ) ) a.grid <- nice( age, log=par("xlog") )
+  if( is.logical( a.grid ) & a.grid[1] )
+    a.grid <- nice( age, log=par("xlog") )
   abline( v=a.grid, col=col.grid )
   }
 if( !missing( ygrid ) | !missing( ygrid ) )
     {
-  if( is.logical( ygrid ) ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
+  if( is.logical( ygrid ) & ygrid[1] ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
   abline( h=ygrid, col=col.grid )
   }
 box()

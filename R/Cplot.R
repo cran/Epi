@@ -40,17 +40,17 @@ if( is.null( c.lim ) )
 if( ann ) c.lim <- c.lim  - c(diff( range( coh ) ) * xannx,0)
 matplot( coh, t(ac), type="n",
          xlim=c.lim, ylim=ylim, xlab=c.lab, ylab=ylab,
-         log=log.ax, las=las, if( !is.null( at ) ) yaxt="n" )
-if( !is.null( at ) ) axis( side=2, at=at, labels=labels ) 
+         log=log.ax, las=las, yaxt=if( !is.null( at ) ) "n" else "s" )
+if( !is.null( at ) ) axis( side=2, at=at, labels=labels, yaxt="s", las=las ) 
 # and the grid if required
 if( !missing( c.grid ) | !missing( grid ) )
   {
-  if( is.logical( c.grid ) ) c.grid <- nice( coh, log=par("xlog") )
+  if( is.logical( c.grid ) & c.grid[1] ) c.grid <- nice( coh, log=par("xlog") )
   abline( v=c.grid, col=col.grid )
   }
 if( !missing( ygrid ) | !missing( grid ) )
   {
-  if( is.logical( ygrid ) ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
+  if( is.logical( ygrid ) & ygrid[1] ) ygrid <- nice( rates[!is.na(rates)], log=par("ylog") )
   abline( h=ygrid, col=col.grid )
   }
 box()
