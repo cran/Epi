@@ -19,43 +19,22 @@ households (that is, not just with their spouse).
 }
 \format{
 This data frame contains the following columns:
-}
-\arguments{
-\item{id}{
-subject identifier, a numeric vector
-}
-\item{couple}{
-couple identifier, a numeric vector
-}
-\item{dob}{
-date of birth, a date
-}
-\item{doe}{
-date of entry into follow-up study, a date
-}
-\item{dox}{
-date of exit from follow-up study, a date
-}
-\item{dosp}{
-date of death of spouse, a date (if the spouse was still alive at the
-end of follow-up, this was coded to January 1, 2000)
-}
-\item{fail}{
-status at end of follow-up, a numeric vector (0=alive, 1=dead)
-}
-\item{group}{
-see Description, a numeric vector
-}
-\item{disab}{
-disability score, a numeric vector
-}
-\item{health}{
-perceived health status score, a numeric vector
-}
-\item{sex}{
-a factor with levels
-\code{Male} 
-\code{Female} 
+\tabular{rl}{
+\code{id}: \tab subject identifier, a numeric vector \cr
+\code{couple}: \tab couple identifier, a numeric vector \cr
+\code{dob}: \tab date of birth, a date \cr
+\code{doe}: \tab date of entry into follow-up study, a date \cr
+\code{dox}: \tab date of exit from follow-up study, a date \cr
+\code{dosp}: \tab date of death of spouse, a date (if the spouse was still alive
+                  at the end of follow-up, this was coded to January 1, 2000) \cr 
+\code{fail}: \tab status at end of follow-up,
+                  a numeric vector (0=alive,1=dead) \cr
+\code{group}: \tab see Description, a numeric vector \cr
+\code{disab}: \tab disability score, a numeric vector \cr
+\code{health}: \tab perceived health status score, a numeric vector \cr
+\code{sex}: \tab a factor with levels
+                 \code{Male} 
+                 \code{Female}
 }
 }
 \source{

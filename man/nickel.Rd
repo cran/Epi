@@ -17,28 +17,14 @@ supplied as the matrices \code{ew.lung}, \code{ew.nasal}, and
 }
 \format{
 This data frame contains the following columns:
-}
-\arguments{
-\item{id}{
-Subject identifier (numeric)
-}
-\item{icd}{
-ICD cause of death if dead, 0 otherwise (numeric)
-}
-\item{exposure}{
-Exposure index for workplace (numeric)
-}
-\item{dob}{
-Date of birth (numeric)
-}
-\item{age1st}{
-Age at first exposure (numeric)
-}
-\item{agein}{
-Age at start of follow-up (numeric)
-}
-\item{ageout}{
-Age at end of follow-up (numeric)
+\tabular{rl}{
+\code{id}: \tab Subject identifier (numeric) \cr
+\code{icd}: \tab ICD cause of death if dead, 0 otherwise (numeric) \cr
+\code{exposure}: \tab Exposure index for workplace (numeric) \cr
+\code{dob}: \tab Date of birth (numeric) \cr
+\code{age1st}: \tab Age at first exposure (numeric) \cr
+\code{agein}: \tab Age at start of follow-up (numeric) \cr
+\code{ageout}: \tab Age at end of follow-up (numeric) \cr
 }
 }
 \source{

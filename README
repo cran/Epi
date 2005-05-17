@@ -1,0 +1,11 @@
+Changes since 0.1:
+
+o rateplot: The option "grid" was not working, a grid was produced
+            anyway. (10/5)
+
+o ncut: Rd file clarified. (11/5)
+
+o stat.table: The "weighted.mean()" function now works correctly for 
+              calculating standardized rates.
+
+o Datasets added: thoro, mortDK, gmortDK, blcaIT, lungDK.

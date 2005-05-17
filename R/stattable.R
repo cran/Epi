@@ -89,14 +89,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     tapply(x, INDEX=subindex, FUN = base::mean, trim=trim, na.rm=na.rm)
   }
   weighted.mean <- function(x,w,na.rm=TRUE) {
-    if (na.rm)
-      z <- na.rm
-    tab1 <- tapply(x*w, INDEX=subindex, FUN=base::sum, na.rm=na.rm)
-    if (na.rm)
-      tab2 <- tapply((!is.na(x))*w, INDEX=subindex, FUN=base::sum, na.rm=TRUE)
-    else
-      tab2 <- tapply(w, INDEX=subindex, FUN=base::sum, na.rm=FALSE)
-    return(tab1/tab2)
+    tapply(x, INDEX=subindex, FUN=stats::weighted.mean, w=w, na.rm=na.rm)
   }
   sum <- function(...,na.rm=TRUE) {
     tapply(..., INDEX=subindex, FUN = base::sum, na.rm=na.rm)
@@ -269,7 +262,7 @@ pretty.print.stattable.1d <- function(x, width, digits)
 
   if (length(dim(x)) != 2)
     stop("Cannot print stat.table")
-  ncol <- dim(x)[1]
+  ncol <- nrow(x)
   
   col.width <- numeric(ncol+1)
   col.header <- vector("list",ncol+1)
@@ -291,7 +284,7 @@ pretty.print.stattable.1d <- function(x, width, digits)
     this.col  <- formatC(x[i-1,],width=width,
                          digits=digits[attr(x,"table.fun")[i-1]], "f")
     this.col <- format(c(col.header[[i]],this.col),justify="right")
-    col.width[i] <- nchar(this.col[[i]][1])
+    col.width[i] <- nchar(this.col[1])
     col.header[[i]] <- this.col[1:n.header[i]]
     print.list[[i]] <- this.col[-(1:n.header[i])]
   }
