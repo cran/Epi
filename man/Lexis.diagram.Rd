@@ -54,7 +54,8 @@ spacing of age-grid and the second for spacing of the date grid.}
        birth.date}{Numerical vectors defining lifelines to be plotted
        in the diagram. At least three must be given to produce lines.
        Not all subsets of three will suffice, the given subset has to 
-       define life lines. If insufficient data is given, no life
+       define life lines.
+       If insufficient data is given, no life
        lines are produced.}
  \item{fail}{Logical of event status at exit for the persons whose 
        life lines are plotted.}
@@ -74,6 +75,15 @@ risk time and status filled in.
 Side effect: a plot of a Lexis diagram is produced with the life lines
 in it is produced. This will be the main reason for using the
 function.
+}
+\details{
+The default unit for supplied variables are (calendar) years.
+If any of the variables \code{entry.date}, \code{exit.date} or
+\code{birth.date} are of class "\code{Date}" or if any of the variables
+\code{entry.age}, \code{exit.age} or \code{risk.time} are of class
+"\code{difftime}", they will be converted to calendar years, and plotted
+correctly in the diagram. The returned dataframe will then have colums of
+classes "\code{Date}" and  "\code{difftime}".
 }
 \author{
   Bendix Carstensen,

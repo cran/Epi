@@ -1,0 +1,19 @@
+o Lexis:
+  - should accept variabels of class Date (and POSIXc / date / chron).
+  - should not crash when one input record is completely
+    outside range(breaks).
+  - better specifcation of the included variabels in Lexis (either as
+    variable numbers in the dataframe or as a character vector of the
+    names, preferably both). Defaults to all variables in dataframe.
+
+o stat.table:
+  - change the digits option of the print method. When summing
+    failures 0 digits is wanted, when summing person-years 1 is
+    wanted.
+  - more than one quantile permitted.
+  - Labelling of statistics in multi-way tables.
+
+o ci.lin: 
+  - Allow a character vector in subset, taking the union of the
+    thus defined subsets.
+  - Confint intervals as an option (complementary to ctr.mat (and diff?)).

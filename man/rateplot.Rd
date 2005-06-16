@@ -28,7 +28,7 @@ rateplot( rates,
           a.lim = range( age, na.rm=TRUE ) + c(0,diff( range( age ) )/30),
           p.lim = range( per, na.rm=TRUE ) + c(0,diff( range( age ) )/30),
           c.lim = NULL, 
-           ylim = range( rates ),
+           ylim = range( rates[rates>0] ),
              at = NULL,
          labels = paste( at ),
           a.lab = "Age at diagnosis",
@@ -145,6 +145,10 @@ Cplot( rates, age = as.numeric( rownames( rates ) ),
   \item{...}{Additional arguments pssed on to \code{matlines} when
     plotting the curves.}
 }
+\details{
+Zero values of the rates are ignored. They are neiter in the plot nor in
+the calculation of the axis ranges.
+}  
 \value{
   \code{NULL}. The function is used for its side-effect, the plot.
 }
@@ -156,23 +160,25 @@ Cplot( rates, age = as.numeric( rownames( rates ) ),
   \code{\link{apc.frame}}
 }
 \examples{
-# Generate some bogus rate data:
-age <- seq(30,80,10) + 5
-per <- seq(1940,2000,10) + 5
-rate.fun <- function( age, per )
-            5*exp( ( age-0 ) * ( 140-age ) / 10^3 + ( per - 1950 ) * 0.02 )
-Y <- outer( age, per, function( age, per ) rep( 1000, length( age ) ) )
-D <- outer( age, per,
-                 function( a, p )
-                    rpois( rate.fun(a,p), rate.fun(a,p) ) )
-rates <- D / Y
-rownames( rates ) <- age
-colnames( rates ) <- per
+data( blcaIT )
+attach(blcaIT)
 
-par( mfrow=c(2,2), mar=c(3,3,1,1), oma=c(0,3,0,0), mgp=c(3,1,0)/1.6 )
-rateplot( rates*10^3, ylab="", ann=TRUE, which=c("AP","AC","PA","CA") )
+# Table of rates:
+bl.rate <- tapply( D, list(age,period), sum ) /
+           tapply( Y, list(age,period), sum )
+bl.rate
 
+# The four classical plots:
+par( mfrow=c(2,2) )
+rateplot( bl.rate*10^6 )
+
+# The labels on the vertical axis could be nicer:
+rateplot( bl.rate*10^6, at=10^(-1:3), labels=c(0.1,1,10,100,1000) ) 
+
+# More bells an whistles
 par( mfrow=c(1,3), mar=c(3,3,1,1), oma=c(0,3,0,0), mgp=c(3,1,0)/1.6 )
-rateplot( rates*10^3, ylab="", ann=TRUE, which=c("APC","PA","CA") )
+rateplot( bl.rate*10^6, ylab="", ann=TRUE, which=c("AC","PA","CA"),
+                      at=10^(-1:3), labels=c(0.1,1,10,100,1000),
+                      col=topo.colors(11), cex.ann=1.2 ) 
 }
 \keyword{hplot}

@@ -40,5 +40,5 @@ Michael Andersson grouped the causes of death.
 \examples{
 data(mortDK)
 }
-\seealso{\code{\link{thoro}},\code{\link{gmortDK}}}
+\seealso{\code{\link{thoro}}, \code{\link{gmortDK}}}
 \keyword{datasets}

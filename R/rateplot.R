@@ -12,7 +12,7 @@ function( rates,
           a.lim = range( age, na.rm=TRUE ) + c(0,diff( range( age ) )/30),
           p.lim = range( per, na.rm=TRUE ) + c(0,diff( range( age ) )/30),
           c.lim = NULL, 
-           ylim = range( rates ),
+           ylim = range( rates[rates>0] ),
              at = NULL,
          labels = paste( at ),
           a.lab = "Age at diagnosis",
@@ -39,6 +39,9 @@ function( rates,
           c.col = col,
             ... )
 {
+# Remove 0 rates, in order to avoid warnings
+rates[rates==0] <- NA
+# then do the plots
 for( i in 1:length( which ) )
     {      
     if( toupper( which[i] ) == "AP" )
