@@ -5,7 +5,8 @@ function( obj,
         diffs = FALSE,
          fnam = !diffs,
          vcov = FALSE,
-        alpha = 0.05) 
+        alpha = 0.05,
+          Exp = FALSE ) 
 {
 # First extract all the coefficients and the variance-covariance matrix
 #
@@ -25,7 +26,7 @@ if( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) {
               class( obj ), "\" which is not supported." )
 
 # Workaround to expand the vcov matrix with 0s so that it matches
-# the coefficients vector in case of extrinsic aliasing.
+# the coefficients vector in case of (extrinsic) aliasing.
 if( any( is.na( cf ) ) )
   {
 vM <- matrix( 0, length( cf ), length( cf ) )
@@ -37,7 +38,7 @@ vcv <- vM
    
 # If subset is not given, make it the entire set
 #
-if( is.null( subset ) ) subset <- 1:length( cf )
+# if( is.null( subset ) ) subset <- 1:length( cf )
 
 # Useful function for constructing a matrix linking estimate, s.e. to
 # a confidence interval
@@ -92,7 +93,7 @@ rownames( cm ) <- rn
 cm
 }
 
-# Were differences requested?
+# Were all differences requested?
 #
 if( diffs )
   {
@@ -129,7 +130,11 @@ if( diffs )
 
 if( !diffs )
   {
-  if( is.character( subset ) ) subset <- grep( subset, names( cf ) )
+  if( is.character( subset ) ) {
+    sb <- numeric(0)
+    for( i in 1:length( subset ) ) sb <- c(sb,grep( subset[i], names( cf )  ))
+    subset <- sb # unique( sb )
+    }
   if( is.null( subset ) ) subset <- 1:length( cf )
   # Exclude units where aliasing has produced NAs.
   # Not needed after replacement with 0s
@@ -155,6 +160,11 @@ if( !diffs )
     t0 <- cbind( se, ct/se, 2 * ( 1 - pnorm( abs( ct / se ) ) ) )
     colnames(t0) <- c("StdErr", "z", "P")
     res <- cbind(ci, t0)[, c(1, 4:6, 2:3), drop=FALSE]
+    if( Exp ) {
+      res <- cbind(      res[,1:4     ,drop=FALSE],
+                    exp( res[,c(1,5,6),drop=FALSE] ) )
+      colnames( res )[5] <- "exp(Est.)"
+    }
 # Return the requested structure
 if( vcov ) invisible( list( est=ct, vcov=vc ) ) else res
 }

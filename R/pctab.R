@@ -1,7 +1,8 @@
-pctab <- function( TT, margin=length( dim( TT ) ) )
+pctab <- function( TT, margin=length( dim( TT ) ), dec=1 )
   {
   nd <- length( dim( TT ) )
   sw <- (1:nd)[-margin[1]]
+  rt <-
   sweep( addmargins( TT,
                      margin,
                      list( list( All=sum,
@@ -11,4 +12,6 @@ pctab <- function( TT, margin=length( dim( TT ) ) )
                 sw,
                 sum )/100,
          "/" )
+  print( round( rt, dec ) )
+  invisible( rt )
   }

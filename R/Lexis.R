@@ -20,6 +20,13 @@ function( entry = 0,
   if (!is.null(data)) {
     attach(data, 2)
     on.exit(detach(pos=2))
+### FIX THIS!    
+  # Lexis is taking variables in the global environment before the 
+  # courtesy of M. Plummer we might do:
+  # 
+  #  entry <- eval( entry, data )
+  #
+  # and so on for all arguments ....
   }
   a.en <- attributes(entry)
   a.ex <- attributes(exit)

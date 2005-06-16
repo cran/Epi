@@ -5,18 +5,20 @@
 Computes percentages and a margin of totals along a given margin of a table.
 }
 \usage{
-pctab(TT, margin = length(dim(TT)))
+pctab(TT, margin = length(dim(TT)), dec=1)
 }
 \arguments{
   \item{TT}{A table or array object}
   \item{margin}{Which margin should be the the total?}
+  \item{dec}{How many decimals should be printed?}
 }
 \value{
   A table, where all dimensions except the one specified \code{margin}
-  has two extra levels named "All" (where all entries are 100) and "N".   
+  has two extra levels named "All" (where all entries are 100) and "N".
+  The function prints the table with \code{dec} decimals.
 }
 \author{
-  Bendix Carstensen, Steno Diabtes Center,
+  Bendix Carstensen, Steno Diabetes Center,
   \url{http://www.biostat.ku.dk/~bxc}}
 }
 \seealso{

@@ -48,6 +48,9 @@ Lexis( entry = 0,
   Any follow-up time before the first break
   on any timescale or after the last break on any of these timescales
   (the output timescales) is discarded.
+
+  NOTE: If a person has his/her exit before the first break or his entry
+  after the last break on any of the timescales the function will crash.
 }
 \value{
   A dataframe with one row per follow-up interval, with the following

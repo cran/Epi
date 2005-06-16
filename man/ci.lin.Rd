@@ -15,7 +15,8 @@ ci.lin( obj,
       diffs = FALSE,
        fnam = !diffs,
        vcov = FALSE,
-      alpha = 0.05)
+      alpha = 0.05,
+        Exp = FALSE )
 }
 \arguments{
   \item{obj}{A model object (of class \code{lm}, \code{glm}, \code{lme},
@@ -24,8 +25,9 @@ ci.lin( obj,
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
     vector, i.e. the desired linear function of the parameters.}
   \item{subset}{The subset of the parameters to be used. If given as a
-    character string this is matched against the parameter names (using
-    \code{grep}) to find the subset.} 
+    character vector, the elements are in turn matched against the
+    parameter names (using \code{grep}) to find the subset. Repeat
+    parameters may result from using a character vector.} 
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
@@ -35,8 +37,9 @@ ci.lin( obj,
     with the annotation of contrasts? Ignored if \code{diffs==T}. If a
     sting is supplied this will be prefixed to the labels.}
   \item{vcov}{Should the covariance matrix of the set of parameters be
-    returned?}
+    returned? If this is set, \code{Exp} is ignored.}
   \item{alpha}{Significance level for the confidence intervals.}
+  \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns 1,5,6 ).}
 }
 \value{
   A matrix with number of rows and rownames as \code{ctr.mat}. The
@@ -44,6 +47,8 @@ ci.lin( obj,
   If \code{vcov=TRUE} a list with components \code{est}, the desired
   functional of the parameters and \code{vcov}, the variance
   covariance matrix of this, is returned but not printed.
+  If code{Exp==TRUE} the confidence intervals for the parameters are
+  replaced with three columns: exp(estimate,c.i.).
 }
 \author{
   Bendix Carstensen,

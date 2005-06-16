@@ -1,8 +1,5 @@
 \name{nickel}
 \alias{nickel}
-\alias{ew.all}
-\alias{ew.lung}
-\alias{ew.nasal}
 \non_function{}
 \title{A Cohort of Nickel Smelters in South Wales}
 \description{
@@ -12,8 +9,7 @@ are taken from Breslow and Day, Volume 2. For comparison purposes,
 England and Wales mortality rates (per 1,000,000 per annum)
 from lung cancer (ICDs 162 and 163),
 nasal cancer (ICD 160), and all causes, by age group and calendar period, are
-supplied as the matrices \code{ew.lung}, \code{ew.nasal}, and
-\code{ew.all} respectively. 
+supplied in the dataset \code{\link{ewrates}}.
 }
 \format{
 This data frame contains the following columns:
@@ -34,5 +30,6 @@ Publications, IARC:Lyon, 1987.
 }
 \examples{
 data(nickel)
+str(nickel)
 }
 \keyword{datasets}

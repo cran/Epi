@@ -7,7 +7,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
   index <- if (missing(data))
     eval(index)
   else
-    eval(index.sub,data)
+    eval(index.sub, data)
 
   deparse.name <- function(x) if(is.symbol(x)) as.character(x) else ""
   if (is.list(index)) {
@@ -79,11 +79,13 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
 
   ##Define the allowed tabulation functions
   
-  count <- function(){
-    z <- rep(1,length(index[[1]]))
-    y <- tapply(z, INDEX=subindex, FUN = base::sum)
-    y[is.na(y)] <- 0
-    return(y)
+  count <- function(id){
+      if (missing(id)) {
+          id <- seq(along=index[[1]])
+      }
+      y <- tapply(id, INDEX=subindex, FUN=function(x) length(unique(x)))
+      y[is.na(y)] <- 0
+      return(y)
   }
   mean <- function(x, trim=0, na.rm=TRUE) {
     tapply(x, INDEX=subindex, FUN = base::mean, trim=trim, na.rm=na.rm)
@@ -467,7 +469,7 @@ print.stat.table <- function(x, width=7,digits,...)
 ## Satisfy QA checks by defining  these functions. But if we never
 ## export them they can't be used directly.
 
-count <- function()
+count <- function(id)
 {
 }
 

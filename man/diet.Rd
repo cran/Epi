@@ -16,16 +16,20 @@ of CHD.
 \format{
 This data frame contains the following columns:
 \tabular{rl}{
-\code{id}: \tab subject identifier, a numeric vector \cr
-\code{doe}: \tab date of entry into follow-up study, a date \cr
-\code{dox}: \tab date of exit from the follow-up study, a date \cr
-\code{dob}: \tab date of birth, a date \cr
+\code{id}: \tab subject identifier, a numeric vector. \cr
+\code{doe}: \tab date of entry into follow-up study, a
+                 \code{\link{Date}} variable. \cr
+\code{dox}: \tab date of exit from the follow-up study, a
+                 \code{\link{Date}} variable. \cr
+\code{dob}: \tab date of birth, a
+                 \code{\link{Date}} variable. \cr
+\code{y}: \tab - number of years at risk, a numeric vector. \cr
 \code{fail}: \tab status on exit, a numeric vector (codes 1, 3, 11, and
 13 represent CHD events) \cr
 \code{job}: \tab occupation, a factor with levels
-\code{Driver} 
-\code{Conductor} 
-\code{Bank worker} \cr
+                 \code{Driver} 
+                 \code{Conductor} 
+                 \code{Bank worker} \cr
 \code{month}: \tab month of dietary survey, a numeric vector \cr
 \code{energy}: \tab total energy intake (KCal per day/100), a numeric
 vector \cr
@@ -47,5 +51,11 @@ reentered from paper printouts.
 }
 \examples{
 data(diet)
+# Illustrate the follow-up in a Lexis diagram
+Lexis.diagram( age=c(30,75), date=c(1965,1990),
+               entry.date=cal.yr(doe), exit.date=cal.yr(dox), birth.date=cal.yr(dob), 
+               fail=(fail>0), pch.fail=c(NA,16), col.fail=c(NA,"red"), cex.fail=1.0,
+               data=diet )
+
 }
 \keyword{datasets}

@@ -43,5 +43,5 @@ pp. 305--320, 1995.
 data(thoro)
 str(thoro)
 }
-\seealso{\code{\link{mortDK}},\code{\link{gmortDK}}}
+\seealso{\code{\link{mortDK}}, \code{\link{gmortDK}}}
 \keyword{datasets}
