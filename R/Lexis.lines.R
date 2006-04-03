@@ -20,6 +20,10 @@ if( !is.null( data ) )
   on.exit( detach( pos=2 ) )
   }
 
+# Remedy indication of only one pch.fail / col.fail
+pch.fail <- rep( pch.fail, 2 )[1:2]
+col.fail <- rep( col.fail, 2 )[1:2]
+
 # Complete the information on lifelines
 XX <- Life.lines( entry.date = entry.date,
                    entry.age = entry.age,

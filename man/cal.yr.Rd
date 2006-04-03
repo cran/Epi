@@ -1,7 +1,10 @@
 \name{cal.yr}
 \alias{cal.yr}
+\alias{as.Date.cal.yr}
+\alias{as.Date.numeric}
 \title{
-  Function to convert character, factor and various date objects into a number.
+  Functions to convert character, factor and various date objects into a number,
+  and vice versa.
   }
 \description{
   Dates are converted to a numerical value, giving the calendar year as
@@ -13,6 +16,8 @@
   }
 \usage{
   cal.yr(x, format)
+  as.Date.cal.yr( x, ... )
+  as.Date.numeric( x, ..., unit="d" )
 }
 \arguments{
   \item{x}{A factor or character vector, representing a date in format
@@ -24,10 +29,16 @@
     \code{dates} or
     \code{chron} (the latter two requires the \code{chron} package).}
   \item{format}{Format of the date values if \code{x} is factor or character}
+  \item{unit}{Which units are the date measured in, \code{"y"} for years,
+    \code{"d"} for days.}
+  \item{...}{Arguments passed on from other methods.}
   }
 \value{
   \code{cal.yr} returns a numerical vector of the same length as
-  \code{x}.
+  \code{x}, of class \code{c("cal.yr","numeric")}.
+
+  \code{as.Date.cal.yr} and \code{as.Date.numeric}
+  return \code{\link{Date}} objects.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
@@ -39,11 +50,21 @@
   \code{\link{Date}}
 }
 \examples{
- birth <- c("14/07/1952","01/04/1954","10/06/1987","16/05/1990",
+ # Charcter vector of dates:
+ birth <- c("14/07/1852","01/04/1954","10/06/1987","16/05/1990",
             "01/01/1996","01/01/1997","01/01/1998","01/01/1999")
- ( bt.yr <- cal.yr( birth, format="\%d/\%m/\%Y" ) )
- # To get readable output:
- data.frame( birth, bt.yr )
+ # Proper conversion to class "Date":
+ birth.dat <- as.Date( birth, format="\%d/\%m/\%Y" )
+ # Converson of character to class "cal.yr"
+ bt.yr <- cal.yr( birth, format="\%d/\%m/\%Y" )
+ # Back to class "Date":
+ bt.dat <- as.Date( bt.yr )
+ # Numerical calculation of days since 1.1.1970:
+ days <- Days <- (bt.yr-1970)*365.25
+ # Blunt assignment of class:
+ class( Days ) <- "Date"
+ # Then data.frame() to get readable output of results:
+ data.frame( birth, birth.dat, bt.yr, bt.dat, days, Days, round(Days) )
 }
 \keyword{manip}
 \keyword{chron}

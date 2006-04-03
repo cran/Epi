@@ -21,7 +21,7 @@
 
   dimnames(mat) <- list(rep("", n), c("Level", "Coefficient",
                                       "Std. Error", "95% Floating CI"))
-  print.matrix(mat, quote=FALSE)
+  print(mat, quote=FALSE)
   cat("\nError limits over all contrasts: ", 
       paste(format(c(0.99, x$limits),
                    digits=2)[-1], collapse=","),"\n")

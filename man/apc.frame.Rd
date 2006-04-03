@@ -104,6 +104,6 @@ points( 50, 10, pch=16, cex=2, col="blue" )
 points( 1960-res[1], 0.3*res[2], pch=16, cex=2, col="red" )
 }
 \seealso{
-  \code{\link{apc.lines}}
+  \code{\link{apc.lines},\link{apc.fit}}
 }
 \keyword{hplot}

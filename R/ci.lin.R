@@ -99,7 +99,8 @@ if( diffs )
   {
   if( is.character( subset ) )
     {
-    if ( inherits( obj, "lm" ) )
+    if ( inherits( obj, "lm" ) &
+         length( grep( subset, names( obj$xlevels ) ) )>0 )
        { # The case of factor level differences we find the relevant
          # subset of parameters by reconstructing names of parameters
          wf <- grep( subset, af <- names( obj$xlevels ) )
