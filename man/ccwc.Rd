@@ -4,7 +4,6 @@
 \usage{
 ccwc(entry=0, exit, fail, origin=0, controls=1, match=list(), include=list(), data=NULL, silent=F)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{entry}{
     Time of entry to follow-up
@@ -65,9 +64,12 @@ matched when selecting controls.
   Clayton and Hills, Statistical Models in Epidemiology, Oxford
   University Press, Oxford:1993.
   }
-\author{David Clayton}
-\seealso{\code{\link{Lexis}}}
-
+\author{
+  David Clayton
+  }
+\seealso{
+  \code{\link{Lexis}}
+  }
 \examples{
 #
 # For the diet and heart dataset, create a nested case-control study
@@ -75,7 +77,6 @@ matched when selecting controls.
 #
 data(diet)
 dietcc <- ccwc(doe, dox, chd, origin=dob, controls=2, data=diet,
-         include=energy, match=job)
+               include=energy, match=job)
 }
 \keyword{datagen}
-  

@@ -73,7 +73,7 @@ function ( test = NULL,
        col.grid = gray( 0.9 ),
            cuts = NULL,
             lwd = 2,
-           data = parent.frame(), 
+           data = parent.frame(),
             ... )
 {
 # First all the computations

@@ -1,3 +1,13 @@
+Chanhes 0.6.0 to 0.6.1
+
+o Coding errors in thoro dataset corrected. Only concerning dates and
+  status for livercancer diagnosis.
+
+o Lexis.lines now allows col.life, lwd.life, pch.fail, col.fail and
+  cex.fail to have the same length as the data, i.e. to produce
+  individualized lines and points. As Lexis.diagram calls Lexis.lines,
+  this facility is also available through Lexis.diagram.
+
 Changes from 0.4 to 0.6
 
 o ci.pd() amended to support the Agresti-Caffo method for confidence

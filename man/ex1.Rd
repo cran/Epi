@@ -60,7 +60,7 @@ doe[1:3] <- dox[1:3] <- 8
 dox[2] <- 6
 dox[3] <- 7.5
 # Some failure indicators
-fail <- sample( 0:1, 15, replace=TRUE,, prob=c(0.7,0.3) )
+fail <- sample( 0:1, 15, replace=TRUE, prob=c(0.7,0.3) )
 # Split follow-up:
 ex1( doe, dox, fail, breaks=0:10 )
 }
