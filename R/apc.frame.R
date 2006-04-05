@@ -25,7 +25,7 @@ rrtck <- outer( c(0.5,1,1.5,2:9), 10^(-5:5), "*" )
 # Empty plot frame
 plot( NA,
       xlab="", xlim=xl, xaxt="n", xaxs="i",
-      ylab="", ylim=yl, yaxt="n", log="y" )
+      ylab="", ylim=yl, yaxt="n", yaxs="i", log="y" )
 # Grid lines
 abline( h=c(r.tic,outer( c(0.5,1,1.5,2:9), 10^(-5:5), "*" )),
         v=c(a.tic,cp.tic - cp), col=col.grid )

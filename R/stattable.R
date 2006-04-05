@@ -132,6 +132,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     x <- list(...)
     if (length(x) == 0)
       stop("No variables to calculate percent")
+    x <- lapply(x, as.factor)
     n <- count()
     ## Work out which indices to sweep out
     sweep.index <- logical(length(subindex))

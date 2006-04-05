@@ -27,12 +27,15 @@ ci.lin( obj,
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
-    parameters may result from using a character vector.} 
+    parameters may result from using a character vector. This is
+    considered a facility.} 
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
     \code{subset} is used to search among the factors in the model and
-    differences of all factor levels for the first match are shown.}
+    differences of all factor levels for the first match are shown.
+    If \code{subset} does not match any of the factors in the model, all
+    pairwise differences between parameters matching are returned.}
   \item{fnam}{Should the common part of the parameter names be included
     with the annotation of contrasts? Ignored if \code{diffs==T}. If a
     sting is supplied this will be prefixed to the labels.}
@@ -67,7 +70,7 @@ ci.lin( mm )
 ci.lin( mm, subset=3:6, diff=TRUE, fnam=FALSE )
 ci.lin( mm, subset=3:6, diff=TRUE, fnam=TRUE )
 ci.lin( mm, subset="f", diff=TRUE, fnam="f levels:" )
-ci.lin( mm, subset="g", diff=TRUE, fnam="gee!:", vcov=TRUE )
+print( ci.lin( mm, subset="g", diff=TRUE, fnam="gee!:", vcov=TRUE ) )
 
 # Use character defined subset to get ALL contrasts:
 ci.lin( mm, subset="f", diff=TRUE )

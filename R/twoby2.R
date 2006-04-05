@@ -34,7 +34,7 @@ twoby2 <-
     uci.or <- exp(log(or) + qnorm( 1-alpha/2 ) * se.log.or)
 # Computing the c.i. for the probability difference as method
 # 10 from Newcombe, Stat.Med. 1998, 17, pp.873 ff.
-    pr.dif <- ci.pd( a, c, b, d, alpha=alpha, print=FALSE )
+    pr.dif <- ci.pd( a, c, b, d, alpha=alpha, print=FALSE )[5:7]
         pd <- pr.dif[1]
     lci.pd <- pr.dif[2]                        
     uci.pd <- pr.dif[3]

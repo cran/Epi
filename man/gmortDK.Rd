@@ -8,7 +8,7 @@ The \code{gmortDK} data frame has 418 rows and 21 columns.
 \format{
 This data frame contains the following columns:
 \tabular{rl}{
-\code{agr}: \tab Age group, O:0--4, 5:5--9,..., 90:90+. \cr
+\code{agr}: \tab Age group, 0:0--4, 5:5--9,..., 90:90+. \cr
 \code{per}: \tab Calendar period, 38: 1938--42, 43: 1943--47, ..., 88:1988-92. \cr
 \code{sex}: \tab Sex, 1: male, 2: female. \cr
 \code{risk}: \tab Number of person-years in the Danish population. \cr
