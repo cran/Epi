@@ -14,9 +14,9 @@ Lexis.lines( entry.date = NA,
                col.life = "black",
                lwd.life = 2,
                    fail = NA,
-               cex.fail = 1.1,
-               pch.fail = c(1, 16),
-               col.fail = rep(col.life, 2),
+               cex.fail = 1,
+               pch.fail = c(NA, 16),
+               col.fail = col.life,
                    data = NULL )
 }
 \arguments{
@@ -56,7 +56,7 @@ Lexis.diagram( entry.age = c(3,30,45),
 Lexis.lines( entry.age = sample( 0:50, 100, replace=TRUE ),
              risk.time = sample( 5:40, 100, r=TRUE),
             birth.date = sample( 1910:1980, 100, r=TRUE ),
-                  fail = sample(0:1,100,r=TRUE), 
+                  fail = sample(0:1,100,r=TRUE),
               cex.fail = 0.5,
               lwd.life = 1 )
 }
