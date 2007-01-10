@@ -29,7 +29,7 @@ twoby2(exposure, outcome,
   \item{table}{The analysed 2 x 2 table augmented with probabilities and
     confidence intervals. The confidence intervals for the probabilities
     are computed using the normal approximation to the
-    log-odds. Confidence inetrvals for the difference of proportions are
+    log-odds. Confidence intervals for the difference of proportions are
     computed using method 10 from Newcombe, Stat.Med. 1998, 17, pp.873
     ff.}
   \item{measures}{A table of Odds-ratios and relative risk with
