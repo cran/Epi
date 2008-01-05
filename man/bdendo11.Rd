@@ -1,6 +1,6 @@
 \name{bdendo11}
 \alias{bdendo11}
-\non_function{}
+\docType{data}
 \title{A 1:1 subset of the endometrial cancer case-control study}
 \description{
 The \code{bdendo11} data frame has 126 rows and 13 columns.

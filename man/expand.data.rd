@@ -47,8 +47,6 @@ expand.data(fu, formula, breaks, data)
   \code{\link{fit.mult}}
   \code{\link{fit.add}}
   }
-\examples{
-  }
 \keyword{ models }
 \keyword{ regression }
 \keyword{ survival }

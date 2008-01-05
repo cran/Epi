@@ -3,7 +3,7 @@
 \title{Plot a Lexis diagram}
 \description{
    Draws a Lexis diagram, optionally with life lines from a cohort, and
-   with lifelines of a cohort if supplied.
+   with lifelines of a cohort if supplied. Intended for presentation purposes.
 }
 \usage{
 Lexis.diagram( age = c( 0, 60), 
@@ -74,7 +74,9 @@ risk time and status filled in.
 
 Side effect: a plot of a Lexis diagram is produced with the life lines
 in it is produced. This will be the main reason for using the
-function.
+function. If the primary aim is to illustrate follow-up of a cohort, then
+it is better to represent the follow-up in a \code{\link{Lexis}} object, and
+use the generic \code{\link{plot.Lexis}} function.
 }
 \details{
 The default unit for supplied variables are (calendar) years.

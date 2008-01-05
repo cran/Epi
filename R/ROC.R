@@ -1,9 +1,9 @@
 steplines <- 
 function( x, 
           y,
-       left = T,
+       left = TRUE,
       right = !left,
-      order = T,
+      order = TRUE,
         ... )
 {
 # A function to plot step-functions
@@ -11,7 +11,7 @@ function( x,
   # Get the logic right if right is supplied...
   left <- !right   # ... right!
   n    <- length( x )
-  if(order) ord <- order(x) else ord <- 1:n
+  if( any( order ) ) ord <- order(x) else ord <- 1:n
   dbl <- rep( 1:n, rep( 2, n) )
   xv  <- c( !left, rep( T, 2*(n-1) ),  left)
   yv  <- c(  left, rep( T, 2*(n-1) ), !left)
@@ -62,14 +62,14 @@ for (i in 1:length(tt))
 ROC <- 
 function ( test = NULL,
            stat = NULL,
-           form = formula( substitute( stat ~ test ) ),
+           form = NULL,
            plot = c( "sp", "ROC" ),  
              PS = is.null(test),      # Curves on probability scale
              PV = TRUE,               # sn, sp, PV printed at "optimality" point
              MX = TRUE,               # tick at "optimality" point
              MI = TRUE,               # Model fit printed
             AUC = TRUE,               # Area under the curve printed
-           grid = 0:10,               # Background grid
+           grid = seq(0,100,10),      # Background grid (%)
        col.grid = gray( 0.9 ),
            cuts = NULL,
             lwd = 2,
@@ -82,16 +82,27 @@ function ( test = NULL,
   rnam <- if ( !missing( test ) ) 
              deparse( substitute( test ) ) else
              "lr.eta"
-# Fit the model ( also in the naive case )
-  lr <- glm( form, family=binomial, data=data )
-# The response variable
-  resp <- eval( parse( text=deparse( form[[2]] ) ) )
-
+# Fit the model and get the info for the two possible types of input
+  if( is.null( form ) )
+    {
+    if( is.null( stat ) | is.null( test ) )
+      stop( "Either 'test' AND 'stat' OR 'formula' must be supplied!" )
+    lr <- glm( stat ~ test, family=binomial )#, data=data )
+    resp <- stat
+    Model.inf <- paste("Model: ", deparse( substitute( stat ) ), "~",
+                                  deparse( substitute( test ) ) )
+    }
+  else
+    {
+    lr <- glm( form, family=binomial )#, data=data )
+    resp <- eval( parse( text=deparse( form[[2]] ) ) )
+    Model.inf <- paste("Model: ",paste(paste(form)[c(2,1,3)], collapse=" "))
+    }
 # Form the empirical distribution function for test for each of
 # the two categories of resp.
   
 # First a table of the test (continuous variable) vs. the response
-  m  <- as.matrix( table( switch( PS+1, test, lr$fit ), resp ) )
+  m  <- as.matrix( base:::table( switch( PS+1, test, lr$fit ), resp ) )
 # What values do they refer to
   fv <-     sort( unique( switch( PS+1, test, lr$fit ) ) )
 # How may different values of the test variable do we have?
@@ -121,8 +132,7 @@ if ( PS ) {
              xlim=0:1, xlab="Cutpoint for predicted probability",
              ylim=0:1, ylab=" ",
              type="n" )
-       if( is.logical( grid ) & grid ) grid <- 0:10
-       if( is.numeric( grid ) ) abline( h=grid, v=grid, col=col.grid ) 
+       if( is.numeric( grid ) ) abline( h=grid/100, v=grid/100, col=col.grid )
        box()
        for ( j in 4:1 ){
        steplines( fv, res[,j], lty=1, lwd=lwd, col=gray((j+1)/7)) }
@@ -141,10 +151,11 @@ else {
        xl <- range( test ) 
        plot( xl, 0:1,
              xlim=xl, 
-             xlab=paste( deparse( substitute( test ) ), "(grid at deciles)" ),
+             xlab=paste( deparse( substitute( test ) ), "(quantiles)" ),
              ylim=0:1,         ylab=" ",
              type="n" )
-       if (grid) abline( h=0:10/10, v=quantile( test, 0:10/10 ), col=gray( 0.9 ) ) 
+       if( is.numeric( grid ) )
+         abline( h=grid/100, v=quantile( test, grid/100 ), col=col.grid )
        box()
        for ( j in 4:1 ){
        steplines( fv, res[,j], lty=1, lwd=lwd, col=gray((j+1)/7))}
@@ -167,7 +178,7 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
              xlim=0:1, xlab="1-Specificity",
              ylim=0:1, ylab=  "Sensitivity",
              type="n", ...)
-       if (grid) abline( h=0:10/10, v=0:10/10, col=gray( 0.9 ) )
+       if( is.numeric( grid ) ) abline( h=grid/100, v=grid/100, col=gray( 0.9 ) )
        abline( 0, 1, col=gray( 0.4 ) )
        box()
        lines( 1-res[,2], res[,1], lwd=lwd )
@@ -184,7 +195,7 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
        if (MX) 
        {
        mx <- max( res[,1]+res[,2] )
-       mhv <- which( (res[,1]+res[,2])==mx )
+       mhv <- which( (res[,1]+res[,2])==mx )[1]
        mxf <- fv[mhv]
        abline( mx-1, 1, col=gray(0.4) )
        ROC.tic( mxf, 
@@ -196,8 +207,7 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
        if (MI) 
        {
        crn <- par()$usr
-       text(0.95*crn[2]+0.05*crn[1], 0.07,
-            paste("Model: ",paste(paste(form)[c(2,1,3)], collapse=" ")),
+       text(0.95*crn[2]+0.05*crn[1], 0.07, Model.inf,
             adj=c(1,0.5),cex=0.7)
        cf <- summary(lr)$coef[,1:2]
        nf <- dimnames(cf)[[1]]

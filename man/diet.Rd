@@ -1,6 +1,6 @@
 \name{diet}
 \alias{diet}
-\non_function{}
+\docType{data}
 \title{Diet and heart data}
 \description{
 The \code{diet} data frame has 337 rows and 14 columns.

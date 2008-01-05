@@ -1,6 +1,6 @@
 \name{S.typh}
 \alias{S.typh}
-\non_function{}
+\docType{data}
 \title{Salmonella Typhimurium outbreak 1996 in Denmark.}
 \description{
 Matched case-control study of food poisoning.
@@ -41,10 +41,10 @@ Matched case-control study of food poisoning.
   Tine Hald.
 }
 \references{
-  Mølbak K and Hald T: Salmonella Typhimurium outbreak in late summer
+  Molbak K and Hald T: Salmonella Typhimurium outbreak in late summer
   1996. A Case-control study. (In Danish:
-  Salmonella typhimurium udbrud på Fyn sensommeren
-  1996. En case-kontrol undersøgelse.) Ugeskrift for Læger.,
+  Salmonella typhimurium udbrud paa Fyn sensommeren
+  1996. En case-kontrol undersogelse.) Ugeskrift for Laeger.,
   159(36):5372-7, 1997.
 }
 \examples{

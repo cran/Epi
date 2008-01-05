@@ -1,6 +1,6 @@
 \name{lep}
 \alias{lep}
-\non_function{}
+\docType{data}
 \title{An unmatched case-control study of leprosy incidence}
 \description{
 The \code{lep} data frame has 1370 rows and 7 columns. This was an

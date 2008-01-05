@@ -412,7 +412,6 @@ res <- list( Type=Type,
                    Coh=if( ref.c ) c0 else NA),
              Anova=AOV )
 if( model %in% c("ns","bs") ) res <- c( res, list( Knots=Knots) )
-if( model == "fpol" )         res <- c( res, list( Powers=Powers ) )
 res$Age[,-1] <- res$Age[,-1] * scale
 if( print.AOV ) print( res$Anova )
 class( res ) <- "apc"

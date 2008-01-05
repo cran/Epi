@@ -8,7 +8,6 @@ o Lexis:
   - better specifcation of the included variables in Lexis (either as
     variable numbers in the dataframe or as a character vector of the
     names, preferably both). 
-  - the default should be to transfer all variables in dataframe.
   - there should be an option which allows ALL risk time to be
     transferred, i.e. adding c(-Inf,Inf) to the breaks= argument.
 

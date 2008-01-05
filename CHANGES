@@ -1,3 +1,107 @@
+Changes in 1.0.4
+
+o cutLexis updated to handle various instances by MP.
+  A few BxC additions to MP's code:
+  - cutLexis2 is renamed cutLexis. BxC's old cutLexis killed.
+  - count=FALSE as argument to cutLexis, just calls countLexis if TRUE.
+  - cutLexis no longer returns the working column lex.cut
+  - cutLexis was missing the attributes "time.scales" and "breaks". Added.
+  - cut=<dataframe> is allowed, simplifying cut of split Lexis objects.
+  - documentation accordingly altered.
+   
+o splitLexis amended so that lex.Xst is returned as a factor if
+  lex.Cst is a factor. splitLexis crashed if lex.Cst and lex.Xst were factors.
+
+o Lexis now allows omission of entry.status --- if exit.status is 
+  numeric/logical/factor, entry.status (and hence lex.Cst) will be set
+  to 0/FALSE/first level. 
+
+o Lexis made sure that lex.Cst and lex.Xst have the same class. If
+  they are factors, the set of levels is taken to be the union.
+
+Changes in 1.0.1
+
+o cutLexis now works properly - no it did not!	
+
+o cutLexis now accepts a (smaller) dataframe with cutpoints and states as input.
+
+Changes in 0.9.6
+
+o Bugfix in timeBand, crashed when type="factor" was chosen.
+  levels was given as 0:(lengh(breaks)+1), changed to 0:lengh(breaks)
+
+Changes in 0.9.5
+
+o The Lexis definition now assumes that entry is 0 if only one of exit
+  or duration are given as a one-component list.
+
+o tab.Lexis is now properly working as a method for Lexis objects.
+
+Changes in 0.9.4
+
+o The lex.-variables in Lexis objects are now called 
+  lex.dur, lex.Cst, lex.Xst, lex.id (duration, Current state, eXit
+  state and identification)
+
+o An extra option states= added to Lexis. If used the state variables are
+  returned as factors.
+
+o The utility function deltat.Lexis() has been renamed to dur().
+
+o state() now returns a dataframe of both (entry,exit) states a
+  default. The reason for this is that lex.Cst and lex.Xst may be
+  factors (which actually would be the logical thing to have by default,
+  but it is not enforced only allowed).
+
+o entry() and exit() now by default returns matrices with entry and 
+  exit times on all timescales. If only one timescale is requested,
+  they return a 1-column matrix.
+  
+o A minor typo in stat.table corrected: in the definition of the
+  quantile function prob=probs changed to probs=probs.
+
+o cutLexis() bugs corrected. Now works with split data too, but
+  requires specification of censoring states --- i.e. states that
+  will be replaced by the new state obtained at the cut date.
+
+Changes in 0.9.3 (since 0.9.0)
+
+o New function cutLexis() to allow cutting of follow-up time at a
+  specific date for each person, where a new state is assumed.
+
+o New function tab.Lexis() which tabulates records as well as events 
+  and person-years from a Lexis object.
+
+o splitLexis got state information wrong if breaks were not unique.
+  Fixed.
+
+Changes in 0.9.0
+
+o effx and effx.match updated following Tartu 2007 to avoid attaching 
+  the data, and to correct the parsing of the list of control variables.
+  
+Changes in 0.8.0
+
+o A new function Lexis() to define follow-up on multiple timescales has
+  been added. An object of class Lexis is defined and a number of
+  utilities for the class are available. Time-splititng is now done by 
+  splitLexis().
+
+o The old Lexis function for time-splitting has been renamed to
+  W.Lexis for backward compatibility.
+
+o The function epi.eff() has been replaced by effx() and effx.match().
+
+Changes 0.7.2 to 0.7.3
+
+o Icens is now able to handle a constant underlying rate. (A bug in
+  expand.data was fixed).
+
+Changes 0.7.0 to 0.7.2
+
+o Bugs in ROC fixed, and the functionality of the grid option slightly
+  chnaged.
+
 Changes 0.6.1 to 0.7.0
 
 o Function Icens() for estimation of rates from intervalcensored 

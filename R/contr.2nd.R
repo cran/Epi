@@ -1,5 +1,5 @@
 contr.2nd <-
-function( n, contrast=TRUE )
+function( n )
 {
 if( is.numeric(n) && length(n) == 1 )
   levs<- 1:n

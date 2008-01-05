@@ -1,6 +1,6 @@
 \name{gmortDK}
 \alias{gmortDK}
-\non_function{}
+\docType{data}
 \title{Population mortality rates for Denmark in 5-years age groups.}
 \description{
 The \code{gmortDK} data frame has 418 rows and 21 columns.

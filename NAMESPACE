@@ -10,23 +10,44 @@ export(
   ci.pd,
   ci.cum,
   ci.lin,
+  contr.orth,
+  contr.2nd,
+  contr.cum,
+  contr.diff,
   detrend,
-  epi.eff,
+  dur,
+  effx,
+  effx.match,
   float,
   print.floated,
-  ex1,
-  fcut,
-  fcut1,
-  ftrend,
-  icut,
-  isec,
   Icens,
   print.Icens,
   plotevent,
+  fit.add,
+  fit.mult,
+  ftrend,
+  W.Lexis,
   Lexis.diagram,
   Lexis.lines,
-  Lexis,
   Life.lines,
+  Lexis,
+  merge.Lexis,
+  plot.Lexis,
+  points.Lexis,
+  lines.Lexis,
+  subset.Lexis,
+  tab.Lexis,
+  tab,
+  splitLexis,
+  cutLexis,
+  countLexis,
+  entry,
+  exit,
+  status,
+  timeBand,
+  timeScales,
+  breaks,
+  merge.data.frame,
   mh,
   ncut,
   nice,
@@ -44,6 +65,12 @@ export(
   tabplot,
   twoby2,
   stat.table)
-
 # register S3 methods
+S3method(plot, Lexis)
+S3method(points, Lexis)
+S3method(lines, Lexis)
+S3method(merge, Lexis)
+S3method(subset, Lexis)
+S3method(tab, Lexis)
+S3method(merge, data.frame)
 S3method(print, stat.table)

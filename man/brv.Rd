@@ -1,6 +1,6 @@
 \name{brv}
 \alias{brv}
-\non_function{}
+\docType{data}
 \title{Bereavement in an elderly cohort}
 \description{
 The \code{brv} data frame has 399 rows and 11 columns.

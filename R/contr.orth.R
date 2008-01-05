@@ -1,5 +1,5 @@
 contr.orth <-
-  function( n, contrasts=T )
+  function( n )
   {
   if( is.numeric( n ) && length( n )==1 )
   levs <- 1:n

@@ -9,7 +9,7 @@
 }
 \usage{
 stat.table(index, contents = count(), data, margins = FALSE)
-print.stat.table(x, width=7, digits,...)
+\method{print}{stat.table}(x, width=7, digits,...)
 }
 \arguments{
   \item{index}{A factor, or list of factors, used for cross-classification.
@@ -114,9 +114,9 @@ stat.table( egr, list( count(), percent(egr), mean( age1st ) ), data=nickel )
 
 # Split the follow-up time by current age
 nickel.ex <-
-Lexis( entry=agein, exit=ageout, fail=icd \%in\% c(162,163),
-       origin=0, breaks=seq(0,100,20),
-       include=list( id, exposure, egr, age1st, icd ), data=nickel )
+W.Lexis( entry=agein, exit=ageout, fail=icd \%in\% c(162,163),
+         origin=0, breaks=seq(0,100,20),
+         include=list( id, exposure, egr, age1st, icd ), data=nickel )
 str( nickel.ex )
 
 # Table of rates

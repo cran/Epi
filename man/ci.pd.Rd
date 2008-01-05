@@ -57,7 +57,7 @@ detail.labs = FALSE )
   54(4), pp. 280-288, 2000.
 }
 \author{
-  Bendix Carstensen, Esa L‰‰r‰.
+  Bendix Carstensen, Esa Laara.
   \url{http://www.biostat.ku.dk/~bxc}
 }
 \seealso{

@@ -78,8 +78,8 @@ if( p0 != c0+a0 )
             col=col[2], lwd=lwd, lty=lty[2], type=type[2], ... )
   matlines( C[,1] - frame.par[1], C[,ifelse( ci[3], -1, 2)] * frame.par[2],
             col=col[3], lwd=lwd, lty=lty[3], type=type[3], ... )
-  points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=16, cex=1.5, col="white" )            
-  points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=1, cex=1.5, lwd=2, col=col[2:3] )            
+  points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=16, col="white" )
+  points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=1, lwd=2, col=col[2:3] )
   if( knots & inherits( obj, "apc" ) ) 
   { 
   rug( obj$Knots$Age, side=1, col=col[1] )
