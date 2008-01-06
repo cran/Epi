@@ -6,7 +6,7 @@
 \description{
   Utility function.
     
-  The model fitted assumes a piecewise constant inensity for the
+  The model fitted assumes a piecewise constant intensity for the
   baseline, and that the covariates act additively on the rate scale.
   }
 \usage{
@@ -23,8 +23,9 @@
        then starting values are generated.}
   }
 \value{
-  A \code{\link{glm}} object from a binomial model with log-link function.
-  }
+  A list with one component:
+  \item{rates}{A glm object from a binomial model with log-link function.}
+}
 \references{
   B Carstensen: Regression models for interval censored
   survival data: application to HIV infection in Danish homosexual

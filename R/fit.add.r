@@ -16,5 +16,5 @@ function(y, rates.frame, cov.frame, start)
     glm.out <- glm(y~-1 + ., family=binomial(link=log),
                    data=model.frame, start=start, maxit=100)
   }
-  return(rates=glm.out)
+  return(list(rates=glm.out))
 }

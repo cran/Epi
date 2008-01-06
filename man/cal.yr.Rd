@@ -27,7 +27,9 @@
     \code{\link{POSIXct}},
     \code{\link{date}},
     \code{dates} or
-    \code{chron} (the latter two requires the \code{chron} package).}
+    \code{chron} (the latter two requires the \code{chron} package).
+    If \code{x} is a data frame, all variables in the data-frame
+    which are of the classes mentioned are converted to class \code{cal.yr}.}
   \item{format}{Format of the date values if \code{x} is factor or character}
   \item{unit}{Which units are the date measured in, \code{"y"} for years,
     \code{"d"} for days.}

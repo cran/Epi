@@ -19,25 +19,25 @@ function(fu, formula, breaks, data)
   ILENGTH <- function(x) {
     pmax(pmin(x[2], breaks[-1]) - pmax(x[1], breaks[-Nbreak]), 0)
   }
-  well.mat <- -apply(fu[,c(1,2), drop=FALSE], 1, ILENGTH)
-
+  well.mat <- -matrix(apply(fu[,c(1,2), drop=FALSE], 1, ILENGTH),
+                      nrow=Nbreak-1)
+  
   ## For the sake of the stability of the fitting procedure, each record
   ## with a 1-response is further split into separate records for each
   ## follow-up interval:  
   id.vec <- c(diag(Nbreak-1))
   well.mat <- matrix(apply(well.mat, 2, "*", id.vec), nrow=Nbreak-1)
-  ## apply returns the transposed design matrix for the baseline,
-  ## hence the column-operations
   well.id <- rep(1:Nsubject, each=Nbreak-1)
   valid.cols <- apply(well.mat!=0, 2, any)
-  well.mat <- well.mat[,valid.cols]  #Remove columns that are all zero
+  well.mat <- well.mat[,valid.cols, drop=FALSE] #Remove cols that are all zero
   well.id <- well.id[valid.cols]
   
   ## 0-responses for the event intervals
   is.case <- !is.na(fu[,3])             # Observed to become ill
   fu.cases <- subset(fu, is.case)
-  ill.mat <- -apply(fu.cases[,c(2,3), drop=FALSE], 1, ILENGTH)
-  ill.id <- (1:Nsubject)[is.case]
+  ill.mat <- -matrix(apply(fu.cases[,c(2,3), drop=FALSE], 1, ILENGTH),
+                     nrow=Nbreak-1)
+  ill.id <- which(is.case)
   
   ## The dataframe for analysis is one observation per survival interval
   ## (well.mat) and one per event interval (ill.mat):

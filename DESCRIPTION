@@ -1,14 +1,15 @@
 Package: Epi
-Version: 0.7.0
-Date: 2007-01-10
+Version: 1.0.5
+Date: 2008-01-05
 Title: A package for statistical analysis in epidemiology.
-Author: Bendix Carstensen, Martyn Plummer, Esa L‰‰r‰, 
-  Mark Myatt, David Clayton et. al.
+Author: Bendix Carstensen, Martyn Plummer, Esa Laara, Michael Hills et. al.
 Maintainer: Bendix Carstensen <bxc@steno.dk>
+Suggests: splines, nlme, survival
 Description: Functions for demographic and epidemiological
   analysis in the Lexis diagram, i.e. register and cohort follow-up
-  data, including interval censored data. Also some useful functions
-  for tabulation and plotting. Contains some epidemiological datasets.
-License: GPL Version 2 or newer.
+  data, including interval censored data and representation of
+  multistate data. Also some useful functions for tabulation and
+  plotting. Contains some epidemiological datasets. 
+License: GPL (>= 2)
 URL: http://www.pubhealth.ku.dk/~bxc/Epi/
-Packaged: Wed Jan 10 14:06:08 2007; BXC
+Packaged: Sun Jan  6 17:47:19 2008; BXC

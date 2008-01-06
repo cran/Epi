@@ -13,14 +13,14 @@ Plots curves of these and a ROC-curve.
 \usage{
 ROC( test = NULL,
      stat = NULL,
-     form = formula(substitute(stat ~ test)),
+     form = NULL,
      plot = c("sp", "ROC"),
        PS = is.null(test),    
        PV = TRUE,             
        MX = TRUE,             
        MI = TRUE,             
       AUC = TRUE,             
-     grid = 0:10,             
+     grid = seq(0,100,10),
  col.grid = gray( 0.9 ),
      cuts = NULL,
       lwd = 2,
@@ -30,7 +30,9 @@ ROC( test = NULL,
 \arguments{
   \item{test}{ Numerical variable used for prediction. }
   \item{stat}{ Logical variable of true status. }
-  \item{form}{ Formula used in a logistic regression. }
+  \item{form}{ Formula used in a logistic regression. If this is given,
+               \code{test} and \code{stat} are ignored. If not given then
+               both \code{test} and \code{stat} must be supplied. }
   \item{plot}{ Character variable. If "sp", the a plot of sensitivity,
 specificity and predictive values against test is produced, if "ROC" a
 ROC-curve is plotted. Both may be given.}
@@ -48,7 +50,7 @@ maximal) be indicated on the ROC curve?}
   \item{AUC}{Should the area under the curve (AUC) be printed in the ROC
     plot?}
   \item{grid}{Numeric or logical. If FALSE no background grid is
-    drawn. Otherwise a grid is drawn on both axes at \code{grid}.}
+    drawn. Otherwise a grid is drawn on both axes at \code{grid} percent.}
   \item{col.grid}{Colour of the grid lines drawn.}
   \item{cuts}{Points on the test-scale to be annotated on the
     ROC-curve. }
@@ -68,7 +70,6 @@ logistic regression}
 construction of the ROC curve}
   0, 1 or 2 plots are produced according to the setting of \code{plot}.
 }
-\references{ }
 \author{Bendix Carstensen, Steno Diabetes Center \& University of
   Copenhagen,
   \url{http://www.biostat.ku.dk/~bxc} }

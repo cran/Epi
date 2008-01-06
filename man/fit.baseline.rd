@@ -30,8 +30,6 @@ fit.baseline( y, rates.frame, start )
   \code{\link{fit.add}}
   \code{\link{fit.mult}}
   }
-\examples{
-  }
 \keyword{ models }
 \keyword{ regression }
 \keyword{ survival }

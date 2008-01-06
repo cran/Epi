@@ -20,7 +20,6 @@ order to accomodate follow up for the \code{\link{nickel}} study.
     \code{other} \tab All cause mortality rate per 1,000,000 py.
 }
 }
-}
 \source{
 From Breslow and Day, Vol II, Appendix IX.
 }

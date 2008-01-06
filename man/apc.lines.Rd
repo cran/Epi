@@ -72,12 +72,11 @@
   A list of three matrices with the effects plotted is
   returned invisibly.
 }
-\references{}
 \author{
   Bendix Carstensen, Steno Diabetes Center,
   \url{http://www.pubhealth.ku.dk/~bxc}
 } 
 \seealso{
-  \code{\link{apc.frame}, \code{\link{apc.fit}}} %, \code{\link{apc.plot}}}
+  \code{\code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}}
 }
 \keyword{hplot}

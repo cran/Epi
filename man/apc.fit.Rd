@@ -2,15 +2,15 @@
 \alias{apc.fit}
 \title{
   Fit an Age-Period-Cohort model to tabular data.
-}
+  }
 \description{
-Fits the classical five models to tabulated rate data (cases,
-person-years) classified by two of age, period, cohort:
-Age, Age-drift, Age-Period, Age-Cohort and Age-period. There are no
-assumtions about the age, period or cohort classes being of the same
-length, or that tabulation should be only by two of the variables.
-Only requires that mean age and period for each tabulation unit is given.
-}
+  Fits the classical five models to tabulated rate data (cases,
+  person-years) classified by two of age, period, cohort:
+  Age, Age-drift, Age-Period, Age-Cohort and Age-period. There are no
+  assumptions about the age, period or cohort classes being of the same
+  length, or that tabulation should be only by two of the variables.
+  Only requires that mean age and period for each tabulation unit is given.
+  }
 \usage{
 apc.fit( data,
             A,
@@ -25,12 +25,14 @@ apc.fit( data,
           npar = c( A=5, P=5, C=5 ),
          scale = 1,
          alpha = 0.05,
-    print.AOV = TRUE )
-}
+     print.AOV = TRUE )
+  }
 \arguments{
   \item{data}{Data frame with (at least) variables, \code{A} (age),
     \code{P} (period), \code{D} (cases, deaths) and \code{Y}
-    (person-years). Cohort (date of birth) is computed as \code{P-A}.} 
+    (person-years). Cohort (date of birth) is computed as \code{P-A}.
+    If thsi argument is given the arguments \code{A}, \code{P},
+    \code{D} and \code{Y} are ignored.}
   \item{A}{Age; numerical vector with mean age at diagnosis for each unit.}
   \item{P}{Period; numerical vector with mean date of diagnosis for each
             unit.}
@@ -38,63 +40,65 @@ apc.fit( data,
   \item{Y}{Person-years; numerical vector.}
   \item{ref.c}{Reference cohort, numerical. Defaults to median date of
     birth among cases. If used with \code{parm="AdCP"} or \code{parm="AdPC"},
-    the resdiual cohort effects will be 1 at ref.c}
-  \item{ref.p}{reference period, numerical. Defaults to median date of
+    the resdiual cohort effects will be 1 at \code{ref.c}}
+  \item{ref.p}{Reference period, numerical. Defaults to median date of
     diagnosis among cases.}
   \item{model}{Type of model fitted:
-               \itemize{
-	       \item \code{bs} fits a model with B-splines for each of
-	       the terms, with \code{npar} parameters for the terms.
-	       \item \code{ns} fits a model with natural splines for each of
-	       the terms, with \code{npar} parameters for the terms.
-               \item \code{ls} fits a model with linear splines.
-               \item \code{factor} fits a factor model with one parameter
-	       per value of \code{A}, \code{P} and \code{C}. \code{npar}
-	       is ignored in this case.} }
-  \item{dr.extr}{How the drift parameter should be extracted from the
-    age-period-cohort model. \code{weighted} (default) lets the
-    weighted average (by marginal no. cases, \code{D}) of the estimated
-    period and cohort effects have 0 slopw. \code{Holford} uses the
-    naïve average over all values for the estimated effects,
-    disregarding the no. cases.} 
-  \item{parm}{The parametrization of the effects. The first four all
-    refer to the ML-fit of the Age-Period-Cohort model, the last four
-    give Age-effects from a smaller model and residuals relative to
-    this. If one of the latter is chosen, \code{drift} is ignored. 
-    Possible values are:
     \itemize{
-      \item \code{ACP}: ML-estimates. Age-effects as rates for the
+	    \item \code{ns} fits a model with natural splines for each of
+	      the terms, with \code{npar} parameters for the terms.
+      \item \code{bs} fits a model with B-splines for each of
+	      the terms, with \code{npar} parameters for the terms.
+	    \item \code{ls} fits a model with linear splines.
+      \item \code{factor} fits a factor model with one parameter
+	      per value of \code{A}, \code{P} and \code{C}. \code{npar}
+	      is ignored in this case.
+           }
+      }
+  \item{dr.extr}{Character. How the drift parameter should be extracted from
+    the age-period-cohort model. \code{"weighted"} (default) lets the
+    weighted average (by marginal no. cases, \code{D}) of the estimated
+    period and cohort effects have 0 slope. \code{"Holford"} uses the
+    naive average over all values for the estimated effects,
+    disregarding the no. cases.} 
+  \item{parm}{Character. Indicates the parametrization of the effects.
+    The first four refer to the ML-fit of the Age-Period-Cohort model, the last four
+    give Age-effects from a smaller model and residuals relative to
+    this. If one of the latter is chosen, the argument \code{dr.extr}
+    is ignored. Possible values for \code{parm} are:
+    \itemize{
+      \item \code{"ACP"}: ML-estimates. Age-effects as rates for the
       reference cohort. Cohort effects as RR relative to the reference
       cohort. Period effects constrained to be 0 on average with 0 slope.
-      \item \code{APC}: ML-estimates. Age-effects as rates for the
+      \item \code{"APC"}: ML-estimates. Age-effects as rates for the
       reference period. Period effects as RR relative to the reference
       period. Cohort effects constrained to be 0 on average with 0 slope.
-      \item \code{AdCP}: ML-estimates. Age-effects as rates for the
+      \item \code{"AdCP"}: ML-estimates. Age-effects as rates for the
       reference cohort. Cohort and period effects constrained to be 0 on
       average with 0 slope. These effects do not multiply to the fitted
       rates, the drift is missing and needs to be included to produce
       the fitted values.
-      \item \code{AdPC}: ML-estimates. Age-effects as rates for the
+      \item \code{"AdPC"}: ML-estimates. Age-effects as rates for the
       reference period. Cohort and period effects constrained to be 0 on
       average with 0 slope. These effects do not multiply to the fitted
       rates, the drift is missing and needs to be included to produce
       the fitted values.
-      \item \code{Ad-C-P}: Age effects are rates for the reference
+      \item \code{"Ad-C-P"}: Age effects are rates for the reference
       cohort in the Age-drift model (cohort drift). Cohort effects are from the model
       with cohort alone, using log(fitted values) from the Age-drift
       model as offset. Period effects are from the model with period
       alone using log(fitted values) from the cohort model as offset.      
-      \item \code{Ad-P-C}: Age effects are rates for the reference
+      \item \code{"Ad-P-C"}: Age effects are rates for the reference
       period in the Age-drift model (period drift). Period effects are from the model
       with period alone, using log(fitted values) from the Age-drift
       model as offset. Cohort effects are from the model with cohort
       alone using log(fitted values) from the period model as offset.      
-      \item \code{AC-P}: Age effects are rates for the reference
+      \item \code{"AC-P"}: Age effects are rates for the reference
       cohort in the Age-Cohort model, cohort effects are RR relative to
       the reference cohort. Period effects are from the model
       with period alone, using log(fitted values) from the Age-Cohort
       model as offset.
-      \item \code{AP-C}: Age effects are rates for the reference
+      \item \code{"AP-C"}: Age effects are rates for the reference
       period in the Age-Period model, period effects are RR relative to
       the reference period. Cohort effects are from the model
       with cohort alone, using log(fitted values) from the Age-Period
@@ -109,7 +113,7 @@ apc.fit( data,
   \item{scale}{numeric(1), factor multiplied to the rate estimates before output.}
   \item{print.AOV}{Should the analysis of deviance table for the models
     be printed?}
-}
+  }
 \value{
   An object of class "apc" (recognized by \code{\link{apc.lines}} and
   \code{\link{apc.plot}}) --- a list with components:
@@ -134,15 +138,24 @@ apc.fit( data,
   \item{Knots}{If \code{model} is one of \code{"ns"} or \code{"bs"}, a list
     with three components: \code{Age}, \code{Per}, \code{Coh}, each one a
     vector of knots. The max and the min are the boundary knots.}
-  \item{Powers}{If \code{model} is \code{"fpol"}, a list
-    with three components: \code{Age}, \code{Per}, \code{Coh}, each one a
-    vector of the powers used in the fractional polynomials.}
-}
-\references{The considerations behind the parametrizations used in this function
-are given in details in a preprint from Department of Biostatistics in Copenhagen:
-\url{http://www.pubhealth.ku.dk/bs/publikationer/rr-06-1.pdf}.}
-\author{Bendix Carstensen, \url{http://www.pubhealth.ku.dk/~bxc}}
-\seealso{\code{\link{apc.frame}}, \code{\link{apc.lines}}, \code{\link{apc.plot}}.}
+   }
+\references{
+   The considerations behind the parametrizations used in this function
+   are given in details in a preprint from Department of Biostatistics
+   in Copenhagen:
+   \url{http://www.pubhealth.ku.dk/bs/publikationer/rr-06-1.pdf}, later
+   published as:
+   B. Carstensen: Age-period-cohort models for the Lexis diagram.
+   Statistics in Medicine, 10; 26(15):3018-45, 2007. 
+   }
+\author{
+   Bendix Carstensen, \url{http://www.biostat.ku.dk/~bxc}
+   }
+\seealso{
+   \code{\link{apc.frame}},
+   \code{\link{apc.lines}},
+   \code{\link{apc.plot}}.
+   }
 \examples{
 library( Epi )
 data(lungDK)

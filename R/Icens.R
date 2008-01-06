@@ -16,6 +16,9 @@ Icens <- function(first.well, last.well, first.ill, formula,
   if (any(missing.f1 & missing.f2)) {
     stop("You must supply at least one of \"first.well\" and \"last.well\"")
   }
+  if (any(fu[,1] > fu[,2], na.rm=TRUE) | any(fu[,2] > fu[,3], na.rm=TRUE)) {
+    stop("Some units do not meet: first.well < last.well < first.ill" )
+  }
   ## Fill in any gaps
   fu[,1][missing.f1] <- fu[,2][missing.f1]
   fu[,2][missing.f2] <- fu[,1][missing.f2]
@@ -27,17 +30,18 @@ Icens <- function(first.well, last.well, first.ill, formula,
   exp.dat <- expand.data(fu, formula, breaks, data)
 
   model.type <- match.arg(model.type)
-  fit.out <- if (missing(formula)) {
+  if (missing(formula)) {
     fit.out <- with(exp.dat, fit.baseline(y, rates.frame))
+    lambda <- coef(fit.out)
   }
   else {
-    switch(model.type,
-           "MRR"=with(exp.dat, fit.mult(y, rates.frame, cov.frame)),
-           "AER"=with(exp.dat, fit.add(y, rates.frame, cov.frame)))
+    fit.out <- switch(model.type,
+                      "MRR"=with(exp.dat, fit.mult(y, rates.frame, cov.frame)),
+                      "AER"=with(exp.dat, fit.add(y, rates.frame, cov.frame)))
+    lambda <- coef(fit.out$rates)
   }
   
-  lambda <- coef(fit.out[[1]])
-  beta <- if (is.null(fit.out[[2]])) numeric(0) else coef(fit.out[[2]])
+  beta <- if (is.null(fit.out$cov)) numeric(0) else coef(fit.out$cov)
   params <- c(lambda,beta)
   if (boot) {
     nboot <- ifelse (is.numeric(boot), boot, 100)

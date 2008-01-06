@@ -1,6 +1,6 @@
 \name{nickel}
 \alias{nickel}
-\non_function{}
+\docType{data}
 \title{A Cohort of Nickel Smelters in South Wales}
 \description{
 The \code{nickel} data frame has 679 rows and 7 columns.

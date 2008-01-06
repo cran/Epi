@@ -5,12 +5,7 @@ Mantel-Haenszel analyses of cohort and case-control studies
 }
 \description{
 This function carries out Mantel-Haenszel comparisons in tabulated data 
-derived from both cohort and case-control studies. Multiway tables of data
-are accepted and any two levels of any dimension can be chosen as defining
-the comparison groups. The rate (odds) ratio estimates and the associated
-significance tests may be collapsed over all the remaining dimensions of the 
-table, or over selected dimensions only (so that tables of estimates and 
-tests are computed).
+derived from both cohort and case-control studies. 
 }
 \usage{
 mh(cases, denom, compare=1, levels=c(1, 2), by=NULL,
@@ -59,6 +54,12 @@ and score test statistics and score variance (u, v).
 None
 }
 \details{
+Multiway tables of data
+are accepted and any two levels of any dimension can be chosen as defining
+the comparison groups. The rate (odds) ratio estimates and the associated
+significance tests may be collapsed over all the remaining dimensions of the 
+table, or over selected dimensions only, so that tables of estimates and 
+tests are computed.
 }
 \references{
 Clayton, D. and Hills, M. : Statistical Models in Epidemiology, Oxford 

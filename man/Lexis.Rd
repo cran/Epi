@@ -1,96 +1,88 @@
 \name{Lexis}
 \alias{Lexis}
-\title{Split follow-up time in cohort studies.}
+\title{Create a Lexis object}
 \description{
-  For cohort input data the follow-up time is chopped in pieces along
-  several time scales, and a dataframe of follow-up intervals is
-  returned. Entry and exit times are assumed to be in the same timescale
-  (the input time scale).
-}
+  Create an object of class \code{Lexis} to represent follow-up on
+  multiple time scales.
+}  
 \usage{
-Lexis( entry = 0,
-        exit,
-        fail,
-      origin = 0,
-       scale = 1,
-      breaks,
-     include = NULL,
-        data = NULL )
+Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
+      merge=TRUE, states )
 }
 \arguments{
-  \item{entry}{Date of entry on the input timescale. Numerical variable.}
-  \item{exit}{Date of exit on the input timescale. Numerical variable.}
-  \item{fail}{Failure indicator.}
-  \item{origin}{Origin of the output timescale(s) on the input
-    timescale. If for example the input timescale is calendar time and
-    the output timescale is (current) age, the the origin is date of
-    birth. If more than one timescale is used for splitting time
-    this is a list. Elements of the list must be named and must have the
-    same names as those in \code{scale} and \code{breaks}.} 
-  \item{scale}{Scale of the output timescale(s) relative to the input
-    timescale. Elements of the list must be named and have the same
-    names as those in \code{origin} and \code{breaks}.} 
-  \item{breaks}{Points on the output scale where the follow-up is
-    cut. If more than one timescale is used for splitting time this is a
-    list. Elements of the list must be named and must have the same
-    names as those in \code{origin} and \code{scale}.} 
-  \item{include}{List of variables to carry unchanged from the original
-    dataframe to the output dataframe.} 
-  \item{data}{Dataframe in which to interpret the arguments.}
+  \item{entry}{a named list of entry times. Each element of the list is
+    a numeric variable representing the entry time on the named time
+    scale. All time scales must have the same units (e.g. years).}
+  \item{exit}{a named list of exit times.}
+  \item{duration}{a numeric vector giving the duration of follow-up.}
+  \item{entry.status}{a vector or a factor giving the status at
+    entry}
+  \item{exit.status}{a vector or factor giving status at exit. Any
+    change in status during follow-up is assumed to take place exactly
+    at the exit time.}
+  \item{id}{a vector giving a unique identity value for each row of the
+    Lexis object.}
+  \item{data}{an optional data frame, list, or environment containing
+    the variables. If  not found in \code{data}, the variables are
+    taken from the environment from which \code{Lexis} was called.}
+  \item{merge}{a logical flag. If \code{TRUE} then the \code{data} 
+    argument will be coerced to a data frame and then merged with
+    the resulting \code{Lexis} object.}
+  \item{states}{A vector of labels for the states. If given, the state
+    variables \code{lex.Cst} and \code{lex.Xst} are returned as factors with
+    identical levels attributes.}
 }
 \details{
-  The \code{data} is assumed to be a dataframe describing the follow-up
-  of a cohort, giving entry and exit time (on the input timescale) for each
-  individual as well as the exit status (failure status,
-  \code{fail}). The purpose of the function is to split each
-  individual's follow-up time along a number of timescales for example
-  age, calendar time, time since entry etc.
-  Any follow-up time before the first break
-  on any timescale or after the last break on any of these timescales
-  (the output timescales) is discarded.
+  The analysis of long-term population-based follow-up studies typically
+  requires multiple time scales to be taken into account, such as
+  age, calender time, or time since an event. A \code{Lexis} object is
+  a data frame with additional attributes that allows these multiple time
+  dimensions of follow-up to be managed.
 
-  NOTE: If a person has his/her exit before the first break or his entry
-  after the last break on any of the timescales the function will crash.
-}
+  Separate variables for current end exit state allows representation of
+  multistate data.
+
+  Lexis objects are named after the German gemographer Wilhelm
+  Lexis (1837-1914), who is credited with the invention of the
+  "Lexis diagram" for representing population dynamics simultaneously
+  by age, period and cohort.
+  
+  The \code{Lexis} function creates a minimal \code{Lexis} object with
+  only those variables required to define the follow-up history in each
+  row. Additional variables can be merged into the \code{Lexis} object
+  using the \code{merge} method for \code{Lexis} objects.
+  }
+\note{
+  Only two of the three arguments \code{entry}, \code{exit} and
+  \code{duration} need to be given.  If the third parameter is missing,
+  it is imputed. If duration is imputed, it must be the same on
+  all time scales.
+
+  If only either \code{exit} or \code{duration} are supplied it is assumed that
+  \code{entry} is 0. This is only meaningful (and therefore checked) if there
+  is only one timescale.
+  
+  If \code{entry.status} is not given, its class is automatically set to that
+  of \code{exit.status}. If \code{exit.status} is a factor, the value of
+  \code{entry.status} is set to the first level, if it is logical it value is
+  set to \code{FALSE}.
+  }
 \value{
-  A dataframe with one row per follow-up interval, with the following
-  variables: \item{Expand}{A numerical vector with values in
-    \code{1:nrows(data)}, pointing at the rows of the input data frame
-    that is expanded to the output intervals.}
-  \item{Entry}{Date of entry for each interval. On the input time scale.}
-  \item{Exit}{Date of exit for each interval. On the input time scale.}
-  \item{Fail}{Exit status for each interval. Coded 0 for censoring, for
-    the last follow-up interval for each person it takes the value of
-    \code{fail}.} 
-  \item{Time}{If \code{origin}, \code{scale} or \code{breaks} were given
-    as vectors this gives the left endpoints of the intervals
-    on the output scale.
-
-    If \code{origin}, \code{scale} or
-    \code{breaks}, were given as lists, there is no variable \code{Time}
-    in the dataframe, instead variables with the same names as
-    the list elements of these will be in the dataframe. The variables
-    have values corresponding to the left endpoints of the intervals on
-    the respective output time scales.}
-  \item{} Finally, variables given in the argument \code{include}, values
-    replicated across all intervals from each individual.
-}
-\references{
-  This function has approximately the same functionality as
-  \code{stsplit} in Stata and the SAS-macro \code{\%Lexis}
-  (\url{http://www.biostat.ku.dk/~bxc/Lexis/Lexis.sas}). It has been
-  attempted to keep argument names similar between the three functions.
-}  
-\author{
-  David Clayton, approx. 2000.
-  Small modifications by Bendix Carstensen.
-}
-\seealso{
-  \code{\link{Lexis.diagram}}
-}
+  An object of class \code{Lexis}. This is represented as a data frame
+  with a column for each time scale, and additional columns with the
+  following names:
+  \item{lex.id}{Identification of the inidvidual}
+  \item{lex.dur}{Duration of follow-up}
+  \item{lex.Cst}{Entry status (Current state),
+                 i.e. the state in which the follow up takes place.}
+  \item{lex.Xst}{Exit status (eXit state),
+                 i.e. that state taken up after \code{dur} in \code{lex.Cst}.}
+  If \code{merge=TRUE} then the \code{Lexis} object will also contain
+  all variables from the \code{data} argument.
+  }
+\author{Martyn Plummer}
 \examples{
 # A small bogus cohort
-#
 xcoh <- structure( list( id = c("A", "B", "C"),
                       birth = c("14/07/1952", "01/04/1954", "10/06/1987"),
                       entry = c("04/08/1965", "08/09/1972", "23/12/1991"),
@@ -101,41 +93,29 @@ xcoh <- structure( list( id = c("A", "B", "C"),
                       class = "data.frame" )
 
 # Convert the character dates into numerical variables (fractional years)
-#
 xcoh$bt <- cal.yr( xcoh$birth, format="\%d/\%m/\%Y" )
 xcoh$en <- cal.yr( xcoh$entry, format="\%d/\%m/\%Y" )
 xcoh$ex <- cal.yr( xcoh$exit , format="\%d/\%m/\%Y" )
 
 # See how it looks
-#
-xcoh 
+xcoh
 
-# Split time along one time-axis
-#
-Lexis( entry = en,
-        exit = ex,
-        fail = fail,
-       scale = 1,
-      origin = bt,
-      breaks = seq( 5, 40, 5 ),
-     include = list( bt, en, ex, id ),
-        data = xcoh )
-
-# Split time along two time-axes
-#
-( x2 <- 
-Lexis( entry = en,
-        exit = ex,
-        fail = fail,
-       scale = 1,
-      origin = list( per=0,                 age=bt          ),
-      breaks = list( per=seq(1900,2000,10), age=seq(0,80,5) ),
-     include = list( bt, en, ex, id ),
-        data = xcoh ) )
-
-# Tabulate the cases and the person-years
-#
-tapply( x2$Fail, list( x2$age, x2$per ), sum )
-tapply( x2$Exit - x2$Entry, list( x2$age, x2$per ), sum )
+# Define as Lexis object with timescales calendar time and age
+Lcoh <- Lexis( entry = list( per=en ),
+                exit = list( per=ex, age=ex-bt ),
+         exit.status = fail,
+                data = xcoh )
+Lcoh
 }
-\keyword{manip}
+\seealso{
+   \code{\link{plot.Lexis}},
+   \code{\link{splitLexis}},
+   \code{\link{cutLexis}},
+   \code{\link{merge.Lexis}},
+   \code{\link{timeScales}},
+   \code{\link{timeBand}},
+   \code{\link{entry}},
+   \code{\link{exit}},
+   \code{\link{dur}}
+   }
+\keyword{survival}

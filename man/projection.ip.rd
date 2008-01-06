@@ -4,8 +4,8 @@
 \description{
   Projects the columns of the matrix \code{M} on the space spanned by the
   columns of the matrix \code{X}, with respect to the inner product
-  defined by \code{weight}: \code{<x|y>=sum(x*w*y)}. } 
-}
+  defined by \code{weight}: \code{<x|y>=sum(x*w*y)}.
+  }
 \usage{
 projection.ip(X, M, orth = FALSE, weight = rep(1, nrow(X)))
 }
