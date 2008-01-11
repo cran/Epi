@@ -72,5 +72,7 @@ S3method(lines, Lexis)
 S3method(merge, Lexis)
 S3method(subset, Lexis)
 S3method(tab, Lexis)
+S3method(transform, Lexis)
 S3method(merge, data.frame)
 S3method(print, stat.table)
+

@@ -11,12 +11,11 @@ trans <- addmargins(trans)
 tr    <- addmargins(tr)
 tr    <- tr[,ncol(tr)]
 pyrs  <- with( x, addmargins( tapply(lex.dur,lex.Cst,sum,na.rm=TRUE),
-                              FUN=function(x) sum(x,na.rm=TRUE) ) )
+                              FUN=function(x) sum(x,na.rm=TRUE) ) )/scale
 res <- cbind( trans, tr, pyrs, tr/pyrs, tr/pyrs/exp(1.96/sqrt(tr)),
                                         tr/pyrs*exp(1.96/sqrt(tr)) )
-res[,ncol(res)-2:0] <- res[,ncol(res)-2:0]*scale
 colnames( res )[ncol(res)-4:0] <- c(" #events:"," #risk time:",
-                             "Rate", "   (95%", " c.i.)")
+                                "  Rate", " (95%", "c.i.)")
 names( dimnames( res ) ) <- c("From","\nStates:\n     #records:\n     To")
 if( simplify ) res <- res[!is.na(pyrs),]
 if( nrow( res )==2 ) res <- res[1,,drop=FALSE]
