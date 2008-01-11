@@ -1,4 +1,25 @@
-Changes in 1.0.4
+Changes in 1.0.6
+
+o Lexis now converts character values of entry/exit.status to factors
+  for lex.Cst and lex.Xst. And produces a warning if the entry.state
+  is defaulted to the first level of exit.state (i.e. when exit.state
+  is given as charcter or factor).
+
+o splitLexis gave wrong results for factor states.
+  cutLexis gave wrong results for character states.
+  Fixed by letting Lexis coerce character mode entry.status and exit.status 
+  to factors for lex.Cst and lex.Xst.
+
+  In split.lexis.1D was the problem with the factor states, they were 
+  coerced to numeric when stuffed into the new.Xst matrix. Now states are 
+  turned to numeric before the call to split.lexis.1D and the factor 
+  attributes reinstituted after the split. 
+
+o Added transform method for Lexis objects.
+
+Changes in 1.0.5
+
+o Typos in documentation of APC functions corrected.
 
 o cutLexis updated to handle various instances by MP.
   A few BxC additions to MP's code:
@@ -8,7 +29,7 @@ o cutLexis updated to handle various instances by MP.
   - cutLexis was missing the attributes "time.scales" and "breaks". Added.
   - cut=<dataframe> is allowed, simplifying cut of split Lexis objects.
   - documentation accordingly altered.
-   
+
 o splitLexis amended so that lex.Xst is returned as a factor if
   lex.Cst is a factor. splitLexis crashed if lex.Cst and lex.Xst were factors.
 

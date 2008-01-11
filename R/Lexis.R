@@ -35,14 +35,25 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     {
     if( is.logical( exit.status ) )
         entry.status <- FALSE
+    if( is.character( exit.status ) )
+        exit.status <- factor( exit.status )
     if( is.factor( exit.status ) )
+        {
         entry.status <- factor( rep( levels(exit.status)[1],
                                      length(exit.status)),
                                 levels=levels(exit.status),
                                 labels=levels(exit.status) )
+        cat("NOTE: entry.status has been set to",
+            paste( '"', levels(exit.status)[1], '"', sep='' ),
+            "for all.\n" )
+        }
     if( is.numeric( exit.status ) )
         entry.status <- rep( 0, length( exit.status ) )
     }
+
+  ## Convert character states to factors
+  if( is.character(entry.status) ) entry.status <- factor(entry.status)
+  if( is.character( exit.status) )  exit.status <- factor( exit.status)
 
   ## Check compatibility of entry and exit status
   if (is.factor(entry.status) || is.factor(exit.status)) {
@@ -51,11 +62,8 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
               all.levels = union(levels(entry.status),levels(exit.status))
               entry.status <- factor( entry.status, levels=all.levels )
                exit.status <- factor(  exit.status, levels=all.levels )
-# Start of BxC change
-#              stop("incompatible factor levels in entry.status and exit.status")
-              cat("Incompatible factor levels in entry.status and exit.status:\n",
-                  "both lex.Cst and lex.Xst now have levels:\n", all.levels)
-# End of Bxc Change
+            cat("Incompatible factor levels in entry.status and exit.status:\n",
+                "both lex.Cst and lex.Xst now have levels:\n", all.levels, "\n")
           }
       }
       else {
@@ -583,4 +591,15 @@ breaks <- function(lex, time.scale)
 {
   time.scale <- check.time.scale(lex, time.scale)[1]
   return(attr(lex, "breaks")[[time.scale]])
+}
+
+transform.Lexis <- function(`_data`, ... )
+{
+    save.at <- attributes(`_data`)
+    ## We can't use NextMethod here because of the special scoping rules
+    ## used by transform.data.frame
+    y <- base:::transform.data.frame(`_data`, ...)
+    save.at[["names"]] <- attr(y, "names")
+    attributes(y) <- save.at
+    y
 }

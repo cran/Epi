@@ -1,7 +1,7 @@
 split.lexis.1D <-
 function(lex, breaks, time.scale, tol)
 {
-    time.scale <- check.time.scale(lex, time.scale)
+    time.scale <- Epi:::check.time.scale(lex, time.scale)
   
     ## Entry and exit times on the time scale that we are splitting
     time1 <- lex[,time.scale, drop=FALSE]
@@ -37,14 +37,9 @@ function(lex, breaks, time.scale, tol)
     aug.valid <- rbind(valid, rep(FALSE, NC))
     last.valid <- valid & !aug.valid[-1,]
     any.valid <- apply(valid,2,any)
-                     
-    new.Xst <- matrix(lex$lex.Cst, NR, NC, byrow=TRUE)
-    new.Xst[last.valid] <- lex$lex.Xst[any.valid]
 
-# Added by BxC:
-    if( is.factor( lex$lex.Xst ) )
-      new.Xst <- factor( new.Xst, levels=levels(lex$lex.Xst) )
-# end of addition
+    new.Xst <- matrix( lex$lex.Cst, NR, NC, byrow=TRUE)
+    new.Xst[last.valid] <- lex$lex.Xst[any.valid]
 
     n.interval <- apply(valid, 2, sum)
     new.lex <- Lexis("entry" = new.entry,
@@ -73,8 +68,25 @@ splitLexis <- function(lex, breaks, time.scale, tol= .Machine$double.eps^0.5)
   aux.data.names <- aux.data.names[substr(aux.data.names,1,4) != "lex."]
   aux.data <- lex[, c("lex.id","lex.tempid", aux.data.names), drop=FALSE]
 
+  ## If states are factors convert to numeric while splitting
+  factor.states <- is.factor( lex$lex.Cst )
+  if( factor.states )
+    {
+    state.levels <- levels( lex$lex.Cst )
+    nstates     <- nlevels( lex$lex.Cst )
+    lex$lex.Cst <- as.integer( lex$lex.Cst )
+    lex$lex.Xst <- as.integer( lex$lex.Xst )
+    }
+  
   ## Split the data
   lex <- split.lexis.1D(lex, breaks, time.scale, tol)
+
+  ## Reinstitute the factor levels
+  if( factor.states )
+    {
+    lex$lex.Cst <- factor( lex$lex.Cst, levels=1:nstates, labels=state.levels )
+    lex$lex.Xst <- factor( lex$lex.Xst, levels=1:nstates, labels=state.levels )
+    }
 
   ## Save attributes
   lex.attr <- attributes(lex)
