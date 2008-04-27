@@ -34,7 +34,7 @@
     as "less severe" than \code{new.state}. See Details below}
   \item{count}{logical indicating wheter the \code{countLexis} options should
     be used. Specifying \code{count=TRUE} amounts to calling \code{countLexis},
-    and the arguments \code{new.state}, \code{progrssive} and
+    and the arguments \code{new.state}, \code{progressive} and
     \code{precursor.states} will be ignored. }
 }
 \value{
@@ -105,7 +105,7 @@
   Martyn Plummer, IARC, \email{plummer@iarc.fr}.
 }
 \seealso{
-  \code{\link{splitLexis}}, \code{\link{Lexis}}, \code{\link{tab.Lexis}}
+  \code{\link{splitLexis}}, \code{\link{Lexis}}, \code{\link{summary.Lexis}}
 }
 \examples{
 # A small artificial example

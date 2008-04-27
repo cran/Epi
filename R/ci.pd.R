@@ -60,7 +60,7 @@ if( missing( conf.level ) ) conf.level <- 1 - alpha
   p2 <- x2/n2
   pd <- x1/n1 - x2/n2
   z <- qnorm( 1-alpha/2 )
-  zz <- qchisq( 1-alpha/2, 1 )
+  zz <- z^2
   if ( method == "AC" )
      { x1.1 <- x1+1
        n1.2 <- n1+2

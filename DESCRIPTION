@@ -1,6 +1,6 @@
 Package: Epi
-Version: 1.0.7
-Date: 2008-01-11
+Version: 1.0.8
+Date: 2008-04-27
 Title: A package for statistical analysis in epidemiology.
 Author: Bendix Carstensen, Martyn Plummer, Esa Laara, Michael Hills et. al.
 Maintainer: Bendix Carstensen <bxc@steno.dk>
@@ -12,4 +12,4 @@ Description: Functions for demographic and epidemiological
   plotting. Contains some epidemiological datasets. 
 License: GPL (>= 2)
 URL: http://www.pubhealth.ku.dk/~bxc/Epi/
-Packaged: Fri Jan 11 10:45:26 2008; bxc
+Packaged: Wed Apr 30 23:08:47 2008; BXC

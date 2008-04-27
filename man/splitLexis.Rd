@@ -77,11 +77,11 @@ points( Lcoh, pch=c(NA,16)[Lcoh$lex.Xst+1], col="red", cex=1.5 )
 str( x2 )
 
 # Tabulate the cases and the person-years
-tab( x2 )
+summary( x2 )
 tapply( status(x2,"exit")==1, list( timeBand(x2,"age","left"),
                                     timeBand(x2,"per","left") ), sum )
 tapply( dur(x2),  list( timeBand(x2,"age","left"),
                         timeBand(x2,"per","left") ), sum )
 }
-\seealso{\code{\link{timeBand}}, \code{\link{cutLexis}}, \code{\link{tab.Lexis}}}
+\seealso{\code{\link{timeBand}}, \code{\link{cutLexis}}, \code{\link{summary.Lexis}}}
 \keyword{manip}
