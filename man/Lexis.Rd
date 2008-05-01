@@ -50,7 +50,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   The \code{Lexis} function creates a minimal \code{Lexis} object with
   only those variables required to define the follow-up history in each
   row. Additional variables can be merged into the \code{Lexis} object
-  using the \code{merge} method for \code{Lexis} objects.
+  using the \code{merge} method for \code{Lexis} objects. This is the default.
 
   There are also \code{merge}, \code{subset} and \code{transform} methods for
   \code{Lexis} objects. They work as the corresponding methods for data-frames
@@ -59,7 +59,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
 \note{
   Only two of the three arguments \code{entry}, \code{exit} and
   \code{duration} need to be given.  If the third parameter is missing,
-  it is imputed. If duration is imputed, it must be the same on
+  it is imputed. If duration is given, it must be the same on
   all time scales.
 
   If only either \code{exit} or \code{duration} are supplied it is assumed that
@@ -69,9 +69,8 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   If any of \code{entry.status} or \code{exit.status} are of mode character,
   they will be converted to factors.
   
-  If \code{entry.status} is not given, then:
-
-  Its class is automatically set to that of \code{exit.status}. If
+  If \code{entry.status} is not given, then
+  its class is automatically set to that of \code{exit.status}. If
   \code{exit.status} is factor, the value of \code{entry.status} is set to the
   first level. This may be highly undesirable, and therefore noted. For example,
   if \code{exit.status} is character the first level will be the first in the
@@ -81,7 +80,8 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
 
   If \code{entry.status} or \code{exit.status} are factors or character, the
   corresponding state variables \code{lex.Cst} and \code{lex.Xst} will be
-  (unordered) factors with identical levels.
+  (unordered) factors with identical levels, namely the union of the levels
+  of \code{entry.status} and \code{exit.status}.
   }
 \value{
   An object of class \code{Lexis}. This is represented as a data frame
@@ -143,7 +143,7 @@ Lexis( entry = list( per=en ),
    \code{\link{merge.Lexis}},
    \code{\link{subset.Lexis}},
    \code{\link{transform.Lexis}},
-   \code{\link{tab.Lexis}},
+   \code{\link{summary.Lexis}},
    \code{\link{timeScales}},
    \code{\link{timeBand}},
    \code{\link{entry}},

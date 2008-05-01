@@ -1,3 +1,15 @@
+Changes in 1.0.8
+
+o tab.Lexis removed and replaced by summary.Lexis which gives a better
+  summary of the transitions and transition rates.
+
+o A bug in ci.pd (confidence interval for probability difference) has
+  been fixed. 
+
+Changes in 1.0.7
+  
+o Stat.table data= argument fixed.
+
 Changes in 1.0.6
 
 o Lexis now converts character values of entry/exit.status to factors

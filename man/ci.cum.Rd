@@ -57,12 +57,12 @@ plot( survfit( Surv( time, status==2 ), data=lung ) )
 # Declare data as Lexis
 lungL <- Lexis( exit=list("tfd"=time),
                 exit.status=(status==2)*1, data=lung )
-tab.Lexis( lungL )
+summary( lungL )
 
 # Cut the follow-up every 10 days
 sL <- splitLexis( lungL, "tfd", breaks=seq(0,1100,10) )
 str( sL )
-tab.Lexis( sL )
+summary( sL )
 
 # Fit a Poisson model with a natural spline for the effect of time.
 # Extract the variables needed
