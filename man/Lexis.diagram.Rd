@@ -60,7 +60,7 @@ spacing of age-grid and the second for spacing of the date grid.}
  \item{fail}{Logical of event status at exit for the persons whose 
        life lines are plotted.}
  \item{pch.fail}{Symbols at the end of the life lines for censorings
-   (\code{fail}=0) and failures (\code{fail}$\ne$0).}
+   (\code{fail==0}) and failures (\code{fail != 0}).}
  \item{cex.fail}{Expansion of the status marks at the end of life lines.}
  \item{col.fail}{Character vector of length 2 giving the colour of the
    failure marks for censorings and failures respectively.}

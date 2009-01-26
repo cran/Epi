@@ -5,7 +5,7 @@
 \description{
   \code{stat.table} creates tabular summaries of the data, using a
   limited set of functions. A list of index variables is used
-  to cross-classify summary statistics.
+  to cross-classify summary statistics. It does NOT work inside \code{with()}!
 }
 \usage{
 stat.table(index, contents = count(), data, margins = FALSE)

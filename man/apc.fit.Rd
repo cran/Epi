@@ -19,6 +19,7 @@ apc.fit( data,
             Y,
         ref.c,
         ref.p,
+          dist = c("poisson","binomial"),
          model = c("ns","bs","ls","factor"),
        dr.extr = c("weighted","Holford"),
           parm = c("ACP","APC","AdCP","AdPC","Ad-P-C","Ad-C-P","AC-P","AP-C"),
@@ -37,12 +38,17 @@ apc.fit( data,
   \item{P}{Period; numerical vector with mean date of diagnosis for each
             unit.}
   \item{D}{Cases, deaths; numerical vector.}
-  \item{Y}{Person-years; numerical vector.}
+  \item{Y}{Person-years; numerical vector. Also used as denominator for binomial
+           data, see the \code{dist} argument.}
   \item{ref.c}{Reference cohort, numerical. Defaults to median date of
     birth among cases. If used with \code{parm="AdCP"} or \code{parm="AdPC"},
     the resdiual cohort effects will be 1 at \code{ref.c}}
   \item{ref.p}{Reference period, numerical. Defaults to median date of
     diagnosis among cases.}
+  \item{dist}{Distribution (or more precisely: Likelihood) used for modelling.
+              if a binomial model us ised, \code{Y} is assuemd to be the
+              denominator; \code{"binomial"} gives a binomial model with logit
+              link.}
   \item{model}{Type of model fitted:
     \itemize{
 	    \item \code{ns} fits a model with natural splines for each of

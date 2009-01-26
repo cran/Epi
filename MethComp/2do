@@ -1,0 +1,6 @@
+o Finalize the plotting functions, including acf
+
+o Make a name-space and proper methods
+
+o Convert examples to use the included mcmc.list objects
+

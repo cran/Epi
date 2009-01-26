@@ -50,7 +50,7 @@ ci.lin( obj,
   If \code{vcov=TRUE} a list with components \code{est}, the desired
   functional of the parameters and \code{vcov}, the variance
   covariance matrix of this, is returned but not printed.
-  If code{Exp==TRUE} the confidence intervals for the parameters are
+  If \code{Exp==TRUE} the confidence intervals for the parameters are
   replaced with three columns: exp(estimate,c.i.).
 }
 \author{

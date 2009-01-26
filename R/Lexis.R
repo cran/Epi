@@ -168,9 +168,12 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     ## Check that duration is the same on all time scales
     dura <- exit - entry[,names(exit),drop=FALSE]
     if (missing(duration)) {
-      duration <- dura[,1]
+      duration <- dura[,1] #BxC# apply( dura, 1, mean, na.rm=TRUE )
+                           # Allows for timescales with missing values
       }
     ok <- sapply(lapply(dura, all.equal, duration), isTRUE)
+#   ok <- sapply(lapply(dura, all.equal, duration),
+#                function(x) identical(FALSE,x) )
     if (!all(ok)) {
       stop("Duration is not the same on all time scales")
     }
@@ -413,7 +416,7 @@ points.Lexis.2D <- function(x, time.scale, ...)
   for (i in 1:2) {
     time.exit[[i]] <- x[,time.scale[i]] + x$lex.dur
   }
-  points(time.exit[[1]], time.exit[[2]], ...)
+  points( time.exit[[1]], time.exit[[2]], ...)
 }
 
 lines.Lexis.2D <- function(x, time.scale, col="darkgray", ...)

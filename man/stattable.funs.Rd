@@ -28,20 +28,18 @@ percent(...)
 \value{
   When used as a \code{contents} argument to \code{stat.table}, these
   functions create the following tables:
-  \itemize{
-    \item{\code{count}}{If given without argument (\code{count()}) it
-      returns a contingency table of counts. If given an \code{id}
-      argument it returns a table of the number of different values of
-      \code{id} in each cell, i.e. how many persons contribute in each
-      cell.}
-    \item{\code{ratio}}{returns a table of values
-      \code{scale * sum(d)/sum(y)}}
-    \item{\code{percent}}{returns a table of percentages of the
-      classifying variables. Variables that are in the \code{index}
-      argument to \code{stat.table} but not in the call to
-      \code{percent} are used to define strata, within which the
-      percentages add up to 100.}
-  }
+  \item{\code{count}}{If given without argument (\code{count()}) it
+    returns a contingency table of counts. If given an \code{id}
+    argument it returns a table of the number of different values of
+    \code{id} in each cell, i.e. how many persons contribute in each
+    cell.}
+  \item{\code{ratio}}{returns a table of values
+    \code{scale * sum(d)/sum(y)}}
+  \item{\code{percent}}{returns a table of percentages of the
+    classifying variables. Variables that are in the \code{index}
+    argument to \code{stat.table} but not in the call to
+    \code{percent} are used to define strata, within which the
+    percentages add up to 100.}
 }
 \author{Martyn Plummer}
 \seealso{\code{\link{stat.table}}}
