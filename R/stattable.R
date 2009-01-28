@@ -177,7 +177,8 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     ulim <- tab.dim + ifelse(in.subtable,rep(0,n.dim),rep(1, n.dim))
     subindex <- index[in.subtable]
     subtable.list <- if(missing(data))
-      eval(contents, parent.frame())
+        ###eval(contents, parent.frame())
+        eval(contents)
     else
       eval(as.expression(contents), data)
     for (j in 1:length(subtable.list)) {

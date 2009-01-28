@@ -73,5 +73,7 @@ twoby2 <-
                      if( Fisher )                    round( ft$p.value, dec ),
                     "\n        Asymptotic P-value:", round( as.pval, dec ),
                     "\n------------------------------------------------------\n")
-    invisible( list( table=tbl, measures=rmat, p.value=ft$p.value ) )
+    invisible( list( table = tbl,
+                  measures = rmat,
+                   p.value = c(as.pval,if( Fisher )ft$p.value) ) )
   }

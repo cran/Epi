@@ -25,11 +25,13 @@ breaks(lex, time.scale)
   Time bands may be labelled in various ways according to the
   \code{type} argument. The permitted values of the \code{type}
   argument, and the corresponding return values are:
+  \describe{
   \item{"integer"}{a numeric vector with integer codes starting from 0.}
   \item{"factor"}{a factor (unordered) with labels "(left,right]"}
   \item{"left"}{the left-hand limit of the time band}
   \item{"middle"}{the midpoint of the time band}
   \item{"right"}{the right-hand limit of the time band}
+  }
 }    
 \value{
   The \code{breaks} function returns a vector of break points

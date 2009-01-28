@@ -1,3 +1,19 @@
+Changes in 1.0.10
+
+o Fixed parse errors in documentation.
+
+Changes in 1.0.9
+
+o Thanks to Mike Murphy, Professor of Demography, Department of Social Policy,
+  London School of Economics, a bug causing a crash of apc.fit if only
+  one row in the model matrix correponds to the reference level.
+
+o Also thanks to Mike Murphy, a much more efficient calculation of
+  median period and cohort is now used.
+
+o apc.fit expanded with an argument allowing logistic regression model
+  instead of a Poisson model only.
+
 Changes in 1.0.8
 
 o tab.Lexis removed and replaced by summary.Lexis which gives a better

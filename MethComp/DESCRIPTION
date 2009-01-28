@@ -1,0 +1,11 @@
+Package: MethComp
+Version: 0.3.1
+Date: 2008-11-02
+Title: Analysis of method comparison studies
+Author: Bendix Carstensen, Lyle Gurrin.
+Maintainer: Bendix Carstensen <bxc@steno.dk>
+Depends: R (>= 2.0.0), nlme
+Suggests:  R2WinBUGS, coda, BRugs, lattice
+Description: Methods (standard and advanced) for comparison of measurement methods.
+License: GPL Version 2 or newer.
+URL: http://www.pubhealth.ku.dk/~bxc/MethComp/

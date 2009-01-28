@@ -42,7 +42,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   Separate variables for current end exit state allows representation of
   multistate data.
 
-  Lexis objects are named after the German gemographer Wilhelm
+  Lexis objects are named after the German demographer Wilhelm
   Lexis (1837-1914), who is credited with the invention of the
   "Lexis diagram" for representing population dynamics simultaneously
   by age, period and cohort.
@@ -61,13 +61,17 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   \code{duration} need to be given.  If the third parameter is missing,
   it is imputed. If duration is given, it must be the same on
   all time scales.
+  
+  \code{entry}, \code{exit} must be numeric, using  \code{\link{Date}}
+  variables will cause some of the utilites to crash. Transformation by
+  \code{\link{cal.yr}} is recommended.
 
   If only either \code{exit} or \code{duration} are supplied it is assumed that
   \code{entry} is 0. This is only meaningful (and therefore checked) if there
   is only one timescale.
   
   If any of \code{entry.status} or \code{exit.status} are of mode character,
-  they will be converted to factors.
+  they will both be converted to factors.
   
   If \code{entry.status} is not given, then
   its class is automatically set to that of \code{exit.status}. If
@@ -79,7 +83,8 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   \code{entry.status} set to \code{FALSE}.
 
   If \code{entry.status} or \code{exit.status} are factors or character, the
-  corresponding state variables \code{lex.Cst} and \code{lex.Xst} will be
+  corresponding state variables in the returned \code{Lexis} object,
+  \code{lex.Cst} and \code{lex.Xst} will be
   (unordered) factors with identical levels, namely the union of the levels
   of \code{entry.status} and \code{exit.status}.
   }
@@ -129,7 +134,8 @@ Lexis( entry = list( per=en ),
         exit = list( per=ex, age=ex-bt ),
  exit.status = Fail,
         data = xcoh )
-        
+
+# unless you order the levels correctly
 ( xcoh$Fail <- factor( xcoh$Fail, levels=c("Well","Dead") ) )
 Lexis( entry = list( per=en ),
         exit = list( per=ex, age=ex-bt ),

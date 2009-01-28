@@ -15,7 +15,7 @@
   difference between corresponding \code{\link{Date}} objects.
   }
 \usage{
-  cal.yr(x, format)
+  cal.yr( x, format="\%Y-\%m-\%d", wh=NULL )
   as.Date.cal.yr( x, ... )
   as.Date.numeric( x, ..., unit="d" )
 }
@@ -29,15 +29,23 @@
     \code{dates} or
     \code{chron} (the latter two requires the \code{chron} package).
     If \code{x} is a data frame, all variables in the data-frame
-    which are of the classes mentioned are converted to class \code{cal.yr}.}
-  \item{format}{Format of the date values if \code{x} is factor or character}
+    which are of one the classes mentioned are converted to class \code{cal.yr}.
+    See arguemt \code{wh}, though.}
+  \item{format}{Format of the date values if \code{x} is factor or character.
+                If this argument is supplied and \code{x} is a datafame, all
+                character variables are converted to class \code{cal.yr}.
+                Factors in the dataframe will be ignored.}
+  \item{wh}{Indices of the variables to convert if \code{x} is a data frame.
+            Can be either a numerical or character vector.}
   \item{unit}{Which units are the date measured in, \code{"y"} for years,
     \code{"d"} for days.}
   \item{...}{Arguments passed on from other methods.}
   }
 \value{
   \code{cal.yr} returns a numerical vector of the same length as
-  \code{x}, of class \code{c("cal.yr","numeric")}.
+  \code{x}, of class \code{c("cal.yr","numeric")}. If \code{x} is a data frame
+  a dataframe with some of the columns converted to class \code{"cal.yr"} is
+  returned.
 
   \code{as.Date.cal.yr} and \code{as.Date.numeric}
   return \code{\link{Date}} objects.

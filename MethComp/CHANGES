@@ -1,0 +1,70 @@
+2do
+
+o plot.MethComp is now a proper S3 method for MethComp objects.
+  The former functions plot.MethComp and plot.VarComp have been renamed
+  plotMethComp and plotVarComp and are called by plot.MethComp via the
+  what= argument.
+
+o A super-function check.MethComp added, which gives convergence diagnostics
+  for a MethComp object, and optionally calls the trace.MethComp and post.MethComp
+  functions.
+
+Changes in 0.3.0
+ 
+o New functions trace.MethComp and post.MethComp, giving the trace and 
+  posterior densities for the parameters separately for the four chains.
+
+o It is now possible to use BRugs(OpenBugs) for the simulations, by
+  specifying program="OpenBugs", "OB" or "Brugs" (case insensitive) 
+  in the call to MethComp. If nothing is specified MethComp will check 
+  if BRugs is installed and if so use it, otherwise attempt to use WinBUGS. 
+
+Changes in 0.2.2
+ 
+o The BA.est function has been changed so that the LoA are based on
+  p/m 2.00 instead of p/m 1.96.
+
+Changes in 0.2.0
+
+o The MethComp function revised and made somewhat modular. Default is
+  now 4 chains, using different starting values for the variance components.
+
+o The BA.est function is now used to generate sensible (and diverse) starting
+  values for the variance components.
+
+o A MethComp object is now of class mcmc.list, in order to allow use
+  of the diagnostic tools from the coda package. Thus the posterior is now in
+  a mcmc.list object (a list of matrices), transformed from the raw output
+  mcmc.list object.
+  
+o R2WinBUGS and coda are not required any more, only suggested. Hence the
+  BlandAltman plots etc. can be used without trouble loading the package even
+  when R2WinBUGS and coda are not installed.
+
+Changes in 0.1.19
+
+o Typos in the documentation fixed (to some extent).
+
+o plot.VarComp now takes range(grid) as the extent of the x-axes.
+
+o Error in column naming in to.wide fixed.
+
+Changes in 0.1.16
+
+o BA.est has been expanded to handle different matrix effects (item by
+  method) between methods if the number of methods exceeds 2. Thanks to
+  advice from Peter Dalgaard.
+
+o plot.meth now displays plots correctly. An argument to display the variable 
+  names inside the panels have been added.
+
+o BlandAltman (and hence BA.plot) has been enhanced to accept axis 
+  specifications from limx, limy, eqax and ymax.
+
+o BA.plot now does not give par() suggestions any more.
+
+Changes in 0.1.13
+
+o The default for the y-limit in the BlandAltman function now defaults to
+  that the y-axis should have the same extent as the x-axis, symmetrically
+  around 0, unless the differences or the limits of agreement are larger.

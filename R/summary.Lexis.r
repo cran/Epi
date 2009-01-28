@@ -16,19 +16,27 @@ trm   <- tr[,ncol(tr)]
 pyrs  <- with( object,
                addmargins( tapply( lex.dur,lex.Cst,sum,na.rm=TRUE),
                                    FUN=function(x) sum(x,na.rm=TRUE) ) )/scale
+pers  <- with( object,
+               c( tapply( lex.id, lex.Cst, function(x) length(unique(x)) ),
+                  length(unique(lex.id)) ) )
 
 # Amend the table of records with column of events and person-years
-trans <- cbind( trans, trm, pyrs )
+trans <- cbind( trans, trm, pyrs, pers )
 
 # Annotate the table nicely
-colnames( trans )[ncol(trans)-1:0] <- c(" Events:"," Risk time:")
-colnames( trans )[ncol(tr)] <- "Records:"
+colnames( trans )[ncol(trans)-2:0] <-
+    c(" Events:","Risk time:"," Persons:" )
+colnames( trans )[ncol(tr)] <- " Records:"
 names( dimnames( trans ) ) <- c("From","\nTransitions:\n     To")
 
 # Make the rates and annotate the table nicely
 rates <- sweep( tr, 1, pyrs, "/" )
 colnames( rates )[ncol(rates)] <- "Total"
-names( dimnames( rates ) ) <- c("From","\nRates:\n     To")
+names( dimnames( rates ) ) <-
+     c("From",
+       paste("\nRates",
+             if( scale != 1 ) paste(" (per ",scale,")",sep=""),
+             ":\n     To", sep="") )
 
 if( simplify )
   {

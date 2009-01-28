@@ -56,8 +56,11 @@ W.Lexis( entry = 0,
   after the last break on any of the timescales the function will crash.
 }
 \value{
-  A dataframe with one row per follow-up interval, with the following
-  variables: \item{Expand}{A numerical vector with values in
+  A dataframe with one row per follow-up interval. The data frame includes
+  all variables given in the argument \code{include}, replicated across
+  all intervals from the same individual.  In addition, the dataframe has
+  the following variables:
+  \item{Expand}{A numerical vector with values in
     \code{1:nrows(data)}, pointing at the rows of the input data frame
     that is expanded to the output intervals.}
   \item{Entry}{Date of entry for each interval. On the input time scale.}
@@ -75,8 +78,6 @@ W.Lexis( entry = 0,
     the list elements of these will be in the dataframe. The variables
     have values corresponding to the left endpoints of the intervals on
     the respective output time scales.}
-  \item{} Finally, variables given in the argument \code{include}, values
-    replicated across all intervals from each individual.
 }
 \references{
   This function has approximately the same functionality as
