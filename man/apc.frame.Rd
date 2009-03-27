@@ -31,6 +31,7 @@
             cp.txt = "Calendar time",
              r.txt = "Rate per 100,000 person-years",
             rr.txt = "Rate ratio",
+          ref.line = TRUE,
                gap = diff(range(c(a.lab, a.tic)))/3,
           col.grid = gray(0.85),
              sides = c(1,2,4) )
@@ -51,6 +52,8 @@
     horizontal axis).}
   \item{r.txt}{Text for the rate axis (left vertical axis).}
   \item{rr.txt}{Text for the rate-ratio axis (right vertical axis)}
+  \item{ref.line}{Logical. Should a reference line at RR=1 be drawn at the
+    calendar time part of the plot?}
   \item{gap}{Gap between the age-scale and the cohort-period scale}
   \item{col.grid}{Colour of the grid put in the plot.}
   \item{sides}{Numerical vector indicating on which sides axes should

@@ -1,3 +1,17 @@
+Changes in 1.1.0
+
+o Vignettes has been updated
+
+o Example for ci.cum has been fixed to be compatible with the new survival
+  package as of 2.9.0 as announced.
+
+o apc.fit fitted the wrong model when using parm="AC-P".
+
+o The axis scaling of apc.plot has been improved.
+
+o apc.frame now by default plots a reference line for RR=1, this may be
+  switched off by the (newly introduced) parameter "ref.line=FALSE".
+
 Changes in 1.0.10
 
 o Fixed parse errors in documentation.
@@ -6,7 +20,7 @@ Changes in 1.0.9
 
 o Thanks to Mike Murphy, Professor of Demography, Department of Social Policy,
   London School of Economics, a bug causing a crash of apc.fit if only
-  one row in the model matrix correponds to the reference level.
+  one row in the model matrix correponds to the reference level was fixed.
 
 o Also thanks to Mike Murphy, a much more efficient calculation of
   median period and cohort is now used.

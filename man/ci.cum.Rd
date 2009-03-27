@@ -52,7 +52,7 @@ data( lung )
 par( mfrow=c(1,2) )
 
 # Plot the Kaplan-meier-estimator
-plot( survfit( Surv( time, status==2 ), data=lung ) )
+plot( survfit( Surv( time, status==2 ) ~ 1, data=lung ) )
 
 # Declare data as Lexis
 lungL <- Lexis( exit=list("tfd"=time),
