@@ -384,7 +384,7 @@ else
   if( parm == "AC-P" )
     {
     ac <- update( m.0, .~.-1 + MA + lC )
-    rp <- update( m.0, .~.-1 + xP )
+    rp <- update( m.0, .~.-1 + xP, offset = predict( ac, type="link" ) )
     A.eff <- ci.lin( ac, subset="MA", ctr.mat=MA[A.pos,], Exp=TRUE, alpha=alpha )[,5:7]
     C.eff <- ci.lin( ac, subset="lC", ctr.mat=lC[C.pos,], Exp=TRUE, alpha=alpha )[,5:7]
     P.eff <- ci.lin( rp, subset="xP", ctr.mat=xP[P.pos,], Exp=TRUE, alpha=alpha )[,5:7]

@@ -13,6 +13,7 @@ function( a.lab,
          cp.txt = "Calendar time",
           r.txt = "Rate per 100,000 person-years",
          rr.txt = "Rate ratio",
+       ref.line = TRUE,
             gap = diff( range( c(a.lab,a.tic) ) ) / 3,
        col.grid = gray( 0.85 ),
           sides = c(1,2,4) )
@@ -29,6 +30,11 @@ plot( NA,
 # Grid lines
 abline( h=c(r.tic,outer( c(0.5,1,1.5,2:9), 10^(-5:5), "*" )),
         v=c(a.tic,cp.tic - cp), col=col.grid )
+# Reference line for the RR=1
+if ( ref.line )
+segments( min(c(cp.lab,cp.tic))-cp, rr.ref,
+          max(c(cp.lab,cp.tic))-cp, rr.ref )
+# Close it nicely off:
 box()
 # Axis construction (tickmarks, labels and annotation)
 if ( 1 %in% sides )

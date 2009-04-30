@@ -5,7 +5,7 @@ if( !inherits( obj, "apc" ) ) stop( "Argument must be an apc-object" )
 
 # Determine the ranges of the horizontal axes
  a.lab = nice( obj$Age[,1] )
-cp.lab = nice( c(obj$Per[,1],obj$Coh[,1]) )[-1]
+cp.lab = nice( c(obj$Per[,1],obj$Coh[,1]), high=0.1 )[-1]
 # The necessary range of the two vertical axes
  r.rg  <- range( obj$Age[,-1] )
 rr.rg  <- range( rbind( obj$Per[,-1], obj$Coh[,-1] ) )
