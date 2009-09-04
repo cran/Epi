@@ -10,12 +10,15 @@ function( obj,
 {
 # First extract all the coefficients and the variance-covariance matrix
 #
-if( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) {
+if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) ) {
        cf <- coef( obj )
       vcv <- vcov( obj )
 } else if( inherits( obj, c("lme") ) ) {
        cf <- fixed.effects( obj )
       vcv <- vcov( obj )
+} else if( inherits( obj, c("mer") ) ) {
+       cf <- fixef( obj )
+      vcv <- as.matrix( vcov( obj ) )
 } else if( inherits( obj, "polr" ) ) {
        cf <- summary( obj )$coefficients
       vcv <- vcov( obj )
@@ -29,12 +32,21 @@ if( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) {
 # the coefficients vector in case of (extrinsic) aliasing.
 if( any( is.na( cf ) ) )
   {
+if( inherits( obj, c("coxph") ) )
+  {
+  wh <- !is.na(cf)
+  cf <- cf[wh]
+  vcv <- vcv[wh,wh]
+  }
+else
+  {
 vM <- matrix( 0, length( cf ), length( cf ) )
 dimnames( vM ) <- list( names( cf ), names( cf ) )
 vM[!is.na(cf),!is.na(cf)] <- vcv
 cf[is.na(cf)] <- 0
 vcv <- vM
-   }
+  }
+  }
    
 # If subset is not given, make it the entire set
 #

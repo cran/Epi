@@ -1,11 +1,45 @@
+Changes in 1.1.2
+
+o cutLexis crashed if new.state=TRUE and new.scale=FALSE were specified.
+  Fixed.
+
+Changes in 1.1.1
+
+o Functions stack.Lexis, tmat.Lexis and mstate.Lexis have been added
+  to facilitate practical multistate modelling. The two latter provides an
+  interface to the mstate package.
+  
+o Functions tbox, dbox, fillarr, boxarr and boxes.Lexis added to facilitate
+  drawing of multistate box diagrams.
+
 Changes in 1.1.0
 
-o Vignettes has been updated
+o Two new datasets DMrand and DMlate with random samples from the
+  Danish National diabetes register. The examples from these
+  illustrate most of the recently added multistate stuff.
+
+o Minor bug in check.time.scale was fixed (misplaced parentheses in the
+  argument to any(), causing a warning).
+
+o cutLexis introduces a new timescale "time since event", which has
+  missing values for any follow-up time prior to event.  Hence
+  requires that the Lexis plotting functions explicitly discards the
+  units with missing on timescales in use. Accomplished by the new
+  function valid.times.
+
+o cutLexis now places the new states after the precursor states and before the
+  other ones in the factors lex.Cst and lex.Xst.
+
+o splitLexis uses the first timescale by default. Which in particular
+  means that in the case of only one time scale it is not necessary to
+  specify it, so this has become acceptable now.
+
+o Vignettes has been updated.
 
 o Example for ci.cum has been fixed to be compatible with the new survival
   package as of 2.9.0 as announced.
 
-o apc.fit fitted the wrong model when using parm="AC-P".
+o apc.fit fitted the wrong model when using parm="AC-P". Fixed
 
 o The axis scaling of apc.plot has been improved.
 

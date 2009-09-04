@@ -57,8 +57,13 @@ function(lex, breaks, time.scale, tol)
 }
 
 
-splitLexis <- function(lex, breaks, time.scale, tol= .Machine$double.eps^0.5)
+splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
 {
+  ## Advise the uninformed user...
+  if( inherits(lex,"stacked.Lexis") )
+    stop( "It makes no sense to time-split after stacking ---\n",
+    "split your original Lexis object and stack that to get what you want.\n")
+
   ## Set temporary, unique, id variable
   lex$lex.tempid <- lex$lex.id
   lex$lex.id <- 1:nrow(lex) 

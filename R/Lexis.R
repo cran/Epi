@@ -256,7 +256,7 @@ check.time.scale <- function(lex, time.scale=NULL)
     }
   }
   else if (is.numeric(time.scale)) {
-    if (any(time.scale) > length(all.names)  || any(time.scale) < 1)
+    if (any(time.scale > length(all.names))  || any(time.scale < 1))
       stop("invalid time scale column number")
     time.scale <- all.names[time.scale]
   }
@@ -266,6 +266,13 @@ check.time.scale <- function(lex, time.scale=NULL)
   return(time.scale)
 }
 
+valid.times <-
+function(x, time.scale=1)
+  {
+  # A utility function that returns a data.frame / Lexis object with
+  # rows with missing timescales removed
+  x[complete.cases(x[,check.time.scale(x,time.scale)]),]
+  }    
 
 plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray", 
                           type="l", col="darkgray", xlim, ylim, xlab, ylab,
@@ -276,7 +283,8 @@ plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray",
 
   if (length(time.scale) != 1)
     stop("Only one time scale allowed")
-  
+
+  x <- valid.times(x,time.scale)
   time.entry <- x[,time.scale]
   time.exit <- x[,time.scale] + x$lex.dur
   id <- x$lex.id
@@ -305,6 +313,7 @@ plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray",
 
 points.Lexis.1D <- function(x, time.scale, ...)
 {
+  x <- valid.times(x,time.scale)  
   time.exit <- x[,time.scale] + x$lex.dur
   points(time.exit, x$lex.id, ...)
 }
@@ -312,6 +321,7 @@ points.Lexis.1D <- function(x, time.scale, ...)
 lines.Lexis.1D <- function(x, time.scale, col="darkgray", breaks="lightgray",
                            ...)
 {
+  x <- valid.times(x,time.scale)
   time.entry <- x[,time.scale]
   time.exit <- x[,time.scale] + x$lex.dur
   id <- x$lex.id
@@ -334,6 +344,8 @@ plot.Lexis.2D <- function(x, time.scale, breaks="lightgray",
   if (length(time.scale) != 2)
     stop("Two time scales are required")
 
+  x <- valid.times(x,time.scale)
+  
   time.entry <- time.exit <- vector("list",2)
   for (i in 1:2) {
     time.entry[[i]] <- x[,time.scale[i]]
@@ -412,6 +424,7 @@ plot.Lexis.2D <- function(x, time.scale, breaks="lightgray",
 
 points.Lexis.2D <- function(x, time.scale, ...)
 {
+  x <- valid.times(x,time.scale)
   time.exit <- vector("list",2)
   for (i in 1:2) {
     time.exit[[i]] <- x[,time.scale[i]] + x$lex.dur
@@ -421,6 +434,7 @@ points.Lexis.2D <- function(x, time.scale, ...)
 
 lines.Lexis.2D <- function(x, time.scale, col="darkgray", ...)
 {
+  x <- valid.times(x,time.scale)
   time.entry <- time.exit <- vector("list",2)
   for (i in 1:2) {
     time.entry[[i]] <- x[,time.scale[i]]
@@ -554,12 +568,13 @@ status <- function(x, at="exit")
   switch(at, "entry"=x$lex.Cst, "exit"=x$lex.Xst)
 }
 
+time.scales <-
 timeScales <- function(x)
 {
   return (attr(x,"time.scales"))
 }
 
-
+time.band <-
 timeBand <- function(lex, time.scale, type="integer")
 {
   time.scale <- check.time.scale(lex, time.scale)[1]

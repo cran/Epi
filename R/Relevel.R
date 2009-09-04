@@ -52,5 +52,5 @@ Relevel <-
 
   # This is in order to merge levels with identical names
   #
-  factor( fnew ) 
+  factor( fnew, levels=levels(fnew) )
 }
