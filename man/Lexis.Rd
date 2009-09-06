@@ -12,7 +12,9 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
 \arguments{
   \item{entry}{a named list of entry times. Each element of the list is
     a numeric variable representing the entry time on the named time
-    scale. All time scales must have the same units (e.g. years).}
+    scale. All time scales must have the same units (e.g. years).
+    The names of the timescales must be different from any column name in
+    \code{date}.}
   \item{exit}{a named list of exit times.}
   \item{duration}{a numeric vector giving the duration of follow-up.}
   \item{entry.status}{a vector or a factor giving the status at
@@ -45,7 +47,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   Lexis objects are named after the German demographer Wilhelm
   Lexis (1837-1914), who is credited with the invention of the
   "Lexis diagram" for representing population dynamics simultaneously
-  by age, period and cohort.
+  by several timescales.
   
   The \code{Lexis} function creates a minimal \code{Lexis} object with
   only those variables required to define the follow-up history in each
@@ -114,31 +116,28 @@ xcoh <- structure( list( id = c("A", "B", "C"),
                       class = "data.frame" )
 
 # Convert the character dates into numerical variables (fractional years)
-xcoh$bt <- cal.yr( xcoh$birth, format="\%d/\%m/\%Y" )
-xcoh$en <- cal.yr( xcoh$entry, format="\%d/\%m/\%Y" )
-xcoh$ex <- cal.yr( xcoh$exit , format="\%d/\%m/\%Y" )
-
+xcoh <- cal.yr( xcoh, format="\%d/\%m/\%Y", wh=2:4 )
 # See how it looks
 xcoh
 
 # Define as Lexis object with timescales calendar time and age
-Lcoh <- Lexis( entry = list( per=en ),
-                exit = list( per=ex, age=ex-bt ),
+Lcoh <- Lexis( entry = list( per=entry ),
+                exit = list( per=exit, age=exit-birth ),
          exit.status = fail,
                 data = xcoh )
 Lcoh
 
 # Using character states may have undesired effects:
 xcoh$Fail <- c("Dead","Well","Dead")
-Lexis( entry = list( per=en ),
-        exit = list( per=ex, age=ex-bt ),
+Lexis( entry = list( per=entry ),
+        exit = list( per=exit, age=exit-birth ),
  exit.status = Fail,
         data = xcoh )
 
 # unless you order the levels correctly
 ( xcoh$Fail <- factor( xcoh$Fail, levels=c("Well","Dead") ) )
-Lexis( entry = list( per=en ),
-        exit = list( per=ex, age=ex-bt ),
+Lexis( entry = list( per=entry ),
+        exit = list( per=exit, age=exit-birth ),
  exit.status = Fail,
         data = xcoh )
 }

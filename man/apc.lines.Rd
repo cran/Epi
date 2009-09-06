@@ -77,6 +77,6 @@
   \url{http://www.pubhealth.ku.dk/~bxc}
 } 
 \seealso{
-  \code{\code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}}
+  \code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}
 }
 \keyword{hplot}

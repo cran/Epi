@@ -1,4 +1,6 @@
-doCutLexis <- function(data, cut, timescale) {
+doCutLexis <- function(data, cut, timescale, new.scale ) {
+
+    ## new.scale is a charscter constant with the name of the new timescale
     
     ## Code each new interval using new variable lex.cut:
     ## 0 = unchanged interval (cut occurs after exit)
@@ -15,6 +17,7 @@ doCutLexis <- function(data, cut, timescale) {
     lx.1 <- data
     lx.1$lex.dur  <- ex.1 - in.1
     lx.1$lex.cut <- ifelse(cut < exit(data, timescale), 1, 0)
+    if( new.scale) lx.1[,"lex.new.scale"] <- NA
     
     ## Second intervals (after the cut)
     in.2 <- pmax(cut, entry(data, timescale))
@@ -24,7 +27,8 @@ doCutLexis <- function(data, cut, timescale) {
     lx.2 <- data
     lx.2$lex.dur <- ex.2 - in.2
     lx.2$lex.cut <- 2
-    
+    if( new.scale) lx.2[,"lex.new.scale"] <- in.2 - cut
+
     ## Update entry times
     lx.2[, timeScales(data)] <- exit(data) - lx.2$lex.dur
     
@@ -59,22 +63,29 @@ setStatus.numeric <- function(data, new.state, precursor.states=NULL,
     return(data)
 }
 
-setStatus.factor <- function(data, new.state, precursor.states=NULL,
-                             progressive=TRUE) {
-    
+setStatus.factor <-
+function( data,
+          new.state,
+          precursor.states=NULL,
+          progressive=TRUE)
+{
     if (!is.character(new.state)) {
         stop("new.state must be a character vector, but it is ",str(new.state))
     }
     
     current.states <- levels(data$lex.Cst)
-    new.states <- setdiff(new.state, current.states)
+    new.states <- setdiff(new.state,current.states)
 
     ## Modify factor levels if necessary
     if (length(new.states) > 0) {
-        all.states <- c(current.states, sort(new.states))
-        levels(data$lex.Cst) <- all.states
-        levels(data$lex.Xst) <- all.states
-    }
+       all.states <- c(current.states, sort(new.states))
+       new.order <- match( c(intersect(precursor.states,current.states),
+                             new.states,
+                             setdiff(current.states,precursor.states)),
+                           all.states )
+       levels(data$lex.Cst) <- all.states
+       levels(data$lex.Xst) <- all.states
+       }
 
     data$lex.Xst[data$lex.cut == 1] <- new.state[data$lex.cut == 1]
     data$lex.Cst[data$lex.cut == 2] <- new.state
@@ -90,6 +101,12 @@ setStatus.factor <- function(data, new.state, precursor.states=NULL,
         }
     }
     data$lex.Xst[data$lex.cut==2][is.precursor] <- new.state[is.precursor]
+
+    # Reorder factor levels sensibly
+    if (!progressive & length(new.states)>0){
+       data$lex.Cst <- Relevel( data$lex.Cst, new.order )
+       data$lex.Xst <- Relevel( data$lex.Xst, new.order )
+       }
 
     return(data)
 }
@@ -118,7 +135,9 @@ function( data, cut )
 cutLexis <- function(data,
                      cut,
                      timescale = 1,
-                     new.state,
+                     new.state = nlevels(data$lex.Cst)+1,
+                     new.scale = FALSE,
+                     split.states = FALSE,
                      progressive = FALSE,
                      precursor.states = NULL,
                      count = FALSE)
@@ -127,30 +146,35 @@ cutLexis <- function(data,
     if (!inherits(data, "Lexis"))
       stop("data must be a Lexis object")
 
-# Added by BxC: Enabling the count argument in cutLexis.
     if( count )
       return( countLexis( data=data, cut=cut, timescale=timescale ) )
-# End of addition
 
-# Added by BxC
     if( inherits( cut, "data.frame" ) ){
       zz <- match.cut( data, cut )
       cut <- zz$cut
       new.state <- zz$new.state
-    }
+      }
     else if (length(cut) == 1) {
-# End of addition / change
      cut <- rep(cut, nrow(data))
-    }
+      }
     else if (length(cut) != nrow(data)) {
         stop("'cut' must have length 1 or nrow(data) (=", nrow(data),
              "),\n --- but it has length ", length(cut),".")
-    }
+      }
 
     timescale <- Epi:::check.time.scale(data, timescale)
     if (length(timescale) > 1) {
         stop("Multiple time scales")
     }
+
+    ## If we want to add a new timescale, contruct the name
+    if( is.logical(new.scale) ) {
+      if( new.scale ) scale.name <- paste( new.state[1], "dur", sep="." )
+      }
+    else {
+      scale.name <- new.scale
+      new.scale <- TRUE
+         }
 
     if (missing(new.state)) {
         new.state <- data$lex.Cst       #Carry forward last state
@@ -172,7 +196,7 @@ cutLexis <- function(data,
         }
     }
     
-    lx <- doCutLexis(data, cut, timescale)
+    lx <- doCutLexis( data, cut, timescale, new.scale=TRUE )
     if (is.factor(data$lex.Cst)) {
         lx <- setStatus.factor(lx, new.state, precursor.states, progressive)
     }
@@ -185,36 +209,77 @@ cutLexis <- function(data,
     
     ## Remove redundant intervals
     lx <- lx[lx$lex.dur > 0,]
-
-# BxC addition
     ## Remove the lex.cut column
     lx <- lx[,-match("lex.cut",names(lx))]
-# end addition
-
-    attributes( lx ) <- attributes( data )
-    return(lx[order(lx$lex.id,lx[,timescale]),])
+    ## Update the states visited after the cut
+    if( split.states & is.factor( data$lex.Cst ) )
+      {
+      post.states <- setdiff( levels(data$lex.Cst), precursor.states )
+      tmp.Cst <- as.character( lx$lex.Cst )
+      tmp.Cst <- ifelse( !is.na(lx$lex.new.scale)  &
+                                lx$lex.new.scale>0 &
+                         tmp.Cst %in% post.states,
+                         paste( tmp.Cst,"(",new.state,")",sep="" ),
+                         tmp.Cst )
+      tmp.Xst <- as.character( lx$lex.Xst )
+      tmp.Xst <- ifelse( !is.na(lx$lex.new.scale) &
+                         tmp.Xst %in% post.states,
+                         paste( tmp.Xst,"(",new.state,")",sep="" ),
+                         tmp.Xst )
+      all.levels <- unique( c(tmp.Cst,tmp.Xst) )
+      ## put all the new levels after the old ones
+      xtr.levels <- setdiff( all.levels, levels(lx$lex.Cst) )
+      new.levels <- c( levels(lx$lex.Cst), xtr.levels )
+      lx$lex.Cst <- factor( tmp.Cst, levels=new.levels )
+      lx$lex.Xst <- factor( tmp.Xst, levels=new.levels )
+      }
+    ## Include the new timescale
+    if( new.scale )
+      {
+      ## Rename the new timescale variable
+      names(lx)[match("lex.new.scale",names(lx))] <- scale.name
+      ## The timescales' position among columns - used to reorder columns
+      tn <- c( match( attr( data, "time.scales" ), names( lx ) ),
+               ncol(lx) )
+      oth <- setdiff( 1:ncol(lx), tn )
+      ## Reorder columns (lx will then lose attributes)
+      lx <- lx[order(lx$lex.id,lx[,timescale]),c(tn,oth)]
+      ## Update the attributes
+      new.br <- c( attr( data, "breaks" ), list(NULL) )
+      names( new.br )[length(new.br)] <- scale.name
+      attr( lx, "time.scales" ) <- c( attr( data, "time.scales" ), scale.name )
+      attr( lx, "breaks" )      <- new.br
+      attr( lx, "class" )       <- attr( data, "class" )
+      }
+    else
+      {
+      # Remove the new timescale
+      lx <- lx[,-match("lex.new.scale",names(lx))]
+      # and transfer all the other attributes
+      attr( lx, "time.scales" ) <- attr( data, "time.scales" )
+      attr( lx, "breaks" )      <- attr( data, "breaks" )
+      attr( lx, "class" )       <- attr( data, "class" )
+      }
+    lx
 }
-
 
 countLexis <- function(data, cut, timescale = 1)
 {
     if (!inherits(data, "Lexis"))
       stop("data must be a Lexis object")
 
-# Added by BxC
     if( inherits( cut, "data.frame" ) ){
       zz <- match.cut( data, cut )
       cut <- zz$cut
       new.state <- zz$new.state
-    }
+      }
     else if (length(cut) == 1) {
-# End of addition / change
         cut <- rep(cut, nrow(data))
-    }
+      }
     else if (length(cut) != nrow(data)) {
         stop("'cut' must have length 1 or nrow(data) (=", nrow(data),
              "),\n --- but it has length ", length(cut),".")
-    }
+      }
 
     timescale <- Epi:::check.time.scale(data, timescale)
     if (length(timescale) > 1) {
@@ -227,14 +292,10 @@ countLexis <- function(data, cut, timescale = 1)
     lx$lex.Xst[lx$lex.cut == 1] <- lx$lex.Cst[lx$lex.cut == 1] + 1
     lx$lex.Cst[lx$lex.cut == 2] <- lx$lex.Cst[lx$lex.cut == 2] + 1
     lx$lex.Xst[lx$lex.cut == 2] <- lx$lex.Xst[lx$lex.cut == 2] + 1
-    
     ## Remove redundant intervals
     lx <- lx[lx$lex.dur > 0,]
-
-# BxC addition
     ## Remove the lex.cut column
     lx <- lx[,-match("lex.cut",names(lx))]
-# end addition
 
     return(lx[order(lx$lex.id,lx[,timescale]),])
 }

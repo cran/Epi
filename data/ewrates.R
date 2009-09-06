@@ -1,6 +1,3 @@
-# England and Wales mortality rates from lung cancer, nasal cancer,
-# and all causes 1936 - 1980. (1936 rates repeated as 1931 rates).
-# From Breslow and Day, Vol II, Appendix IX.
 ewrates <-	
 structure(list(year = c(1931, 1931, 1931, 1931, 1931, 1931, 1931, 
 1931, 1931, 1931, 1931, 1931, 1931, 1931, 1931, 1936, 1936, 1936, 

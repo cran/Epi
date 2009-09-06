@@ -356,6 +356,26 @@ from alive, including the transitions to \texttt{HiExp}.
 Also note that (so far) it is necessary to specify the variable with
 the cutpoints in full, using only \texttt{cut=agehi} would give an error.
 
+\subsection{Subdivision of existing states}
+It may be of interest to subdivide the states following the
+intermediate event according to wheter the event has occurred or
+not. That is done by the argument \texttt{split.states=TRUE}.
+
+Moreover, it will also often be of interest to introduce a new
+timescale indicating the time since intermediate event. This can be
+done by the argument \texttt{new.scale=TRUE}, alternatively
+\texttt{new.scale="tfevent"}, as illustrated here:
+<<>>=
+nicC <- cutLexis( data = nicL, 
+                   cut = nicL$agehi, 
+             timescale = "age", 
+             new.state = "Hi",
+           split.states=TRUE, new.scale=TRUE,
+      precursor.states = "Alive" )
+subset( nicC, id %in% 8:10 )
+summary( nicC, scale=1000 )
+@ 
+
 \section{Multiple events of the same type (recurrent events)}
 Sometimes more events of the same type are recorded for each person and
 one would then like to count these and put follow-up time in states accordingly.

@@ -30,7 +30,7 @@ apc.plot(obj, r.txt = "Rate", ...)
   \url{http://www.pubhealth.ku.dk/~bxc}
 } 
 \seealso{
-  \code{\code{\link{apc.lines}} ,\code{\link{apc.frame}}, \code{\link{apc.fit}}}
+  \code{\link{apc.lines}} ,\code{\link{apc.frame}}, \code{\link{apc.fit}}
 }
 \examples{
 data( lungDK )
