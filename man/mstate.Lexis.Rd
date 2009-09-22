@@ -1,5 +1,6 @@
 \name{mstate.Lexis}
 \Rdversion{1.1}
+\alias{mstate}
 \alias{mstate.Lexis}
 \title{Create a dataframe suitable for use with the mstate package.
   }
@@ -10,11 +11,13 @@ function. The resulting dataframe contains the same information as the
 result of a call to \code{\link{stack.Lexis}}.
 }
 \usage{
-mstate.Lexis(obj, time.scale = timeScales(obj)[1])
+mstate(obj, ...)
+\method{mstate}{Lexis}(obj, time.scale = timeScales(obj)[1], ...)
 }
 \arguments{
   \item{obj}{A \code{\link{Lexis}} object.}
   \item{time.scale}{Name or number of timescale in the \code{Lexis} object.}
+  \item{\dots}{Not used.}
 }
 \value{
   A dataframe with the \code{Lexis} specific variables stripped, and

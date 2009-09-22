@@ -57,6 +57,9 @@ export(
   dbox,
   fillarr,
   boxarr,
+  boxes,
+  mstate,
+  tmat,
   mh,
   ncut,
   nice,
@@ -74,6 +77,9 @@ export(
   tabplot,
   twoby2,
   stat.table)
+# Import generic methods
+importFrom( utils, stack )
+# importFrom( mstate, mstate )
 # register S3 methods
 S3method(plot, Lexis)
 S3method(points, Lexis)
@@ -89,4 +95,3 @@ S3method(tmat, Lexis)
 S3method(boxes, Lexis)
 S3method(merge, data.frame)
 S3method(print, stat.table)
-

@@ -15,7 +15,12 @@ ci.cum( obj,
         Exp = TRUE )
 }
 \arguments{
-  \item{obj}{ A model object. }
+  \item{obj}{A model object (of class
+             \code{lm}, \code{glm},
+             \code{coxph}, \code{survreg},
+             \code{lme},\code{mer},\code{nls},\code{gnlm},
+             \code{MIresult}
+          or \code{polr}). }
   \item{ctr.mat}{ Contrast matrix defining the parameter functions from
     the parameters of the model. } 
   \item{subset}{ Subset of the parameters of the model to which

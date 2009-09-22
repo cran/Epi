@@ -1,3 +1,26 @@
+Changes in 1.1.7
+
+o boxes.Lexis has been furter enhanced with the facility to plot rates
+  instead of no. transitions on the arrows if required. The code has been
+  tidied a bit too.
+  
+o The man file for boxes.Lexis and subsidiaries have been renamed to
+  MS.boxes.Rd
+
+Changes in 1.1.5
+
+o boxes.Lexis have been enhanced to accomodate two-way transitions between
+  states. Annotation by number of transitions has been improved to accomodate
+  this too by always putting the number on the left side of the arrow.
+
+Changes in 1.1.3
+
+o ci.lin() and ci.cum() have been expanded to accept objects of class
+  "MIresult" from the mitools package (Esa L‰‰r‰).
+  
+o The boxes.Lexis() now gives a more versatile piece of code, which
+  computes the text widths and heights.
+
 Changes in 1.1.2
 
 o cutLexis crashed if new.state=TRUE and new.scale=FALSE were specified.

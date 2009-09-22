@@ -1,7 +1,7 @@
 # Functions to facilitate analysis of multistate models
 
-# The stack method
-stack <- function (x, ...) UseMethod("stack")
+# The stack method is already defined (in the utils package)
+# and hence imported in the NAMESPACE file
 
 stack.Lexis <-
 function( x, ... )
@@ -31,7 +31,7 @@ xx
 tmat <- function (x, ...) UseMethod("tmat")
 
 tmat.Lexis <-
-function( x )
+function( x, ... )
 {
 zz <- table(x$lex.Cst,x$lex.Xst)
 class(zz) <- "matrix"
@@ -45,7 +45,7 @@ mstate <- function (obj, ...) UseMethod("mstate")
 
 mstate.Lexis <-
 function( obj,
-   time.scale = timeScales(obj)[1] )
+   time.scale = timeScales(obj)[1], ... )
 {
 if( !require( mstate ) )
   stop( "You do not want this befor you have installed the 'mstate' package.\n" )
