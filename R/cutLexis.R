@@ -75,6 +75,7 @@ function( data,
     
     current.states <- levels(data$lex.Cst)
     new.states <- setdiff(new.state,current.states)
+    new.states <- new.states[!is.na(new.states)]
 
     ## Modify factor levels if necessary
     if (length(new.states) > 0) {
@@ -131,7 +132,6 @@ function( data, cut )
    }
 # End of addition / change
 
-
 cutLexis <- function(data,
                      cut,
                      timescale = 1,
@@ -141,7 +141,6 @@ cutLexis <- function(data,
                      progressive = FALSE,
                      precursor.states = NULL,
                      count = FALSE)
-
 {
     if (!inherits(data, "Lexis"))
       stop("data must be a Lexis object")
@@ -155,7 +154,7 @@ cutLexis <- function(data,
       new.state <- zz$new.state
       }
     else if (length(cut) == 1) {
-     cut <- rep(cut, nrow(data))
+      cut <- rep(cut, nrow(data))
       }
     else if (length(cut) != nrow(data)) {
         stop("'cut' must have length 1 or nrow(data) (=", nrow(data),
@@ -178,14 +177,14 @@ cutLexis <- function(data,
 
     if (missing(new.state)) {
         new.state <- data$lex.Cst       #Carry forward last state
-    }
+       }
     else if (length(new.state) == 1) {
         new.state <- rep(new.state, nrow(data))
-    }
+       }
     else if (length(new.state) != nrow(data)) {
         stop("'new.state' must have length 1 or nrow(data) (=", nrow(data),
              "),\n --- but it has length ", length(new.state))
-    }
+       }
 
     if (progressive) {
         if (is.factor(data$lex.Cst) && !is.ordered(data$lex.Cst)) {
@@ -199,13 +198,13 @@ cutLexis <- function(data,
     lx <- doCutLexis( data, cut, timescale, new.scale=TRUE )
     if (is.factor(data$lex.Cst)) {
         lx <- setStatus.factor(lx, new.state, precursor.states, progressive)
-    }
+      }
     else if (is.numeric(data$lex.Cst)) {
         lx <- setStatus.numeric(lx, new.state, precursor.states, progressive)
-    }
+      }
     else {
         lx <- setStatus.default(lx, new.state)
-    }
+      }
     
     ## Remove redundant intervals
     lx <- lx[lx$lex.dur > 0,]

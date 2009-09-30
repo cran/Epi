@@ -19,8 +19,12 @@ ci.lin( obj,
         Exp = FALSE )
 }
 \arguments{
-  \item{obj}{A model object (of class \code{lm}, \code{glm}, \code{lme},
-    \code{coxph} or \code{polr}). 
+  \item{obj}{A model object (of class
+             \code{lm}, \code{glm},
+             \code{coxph}, \code{survreg},
+             \code{lme},\code{mer},\code{nls},\code{gnlm},
+             \code{MIresult}
+          or \code{polr}).
   }
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
     vector, i.e. the desired linear function of the parameters.}
@@ -57,6 +61,7 @@ ci.lin( obj,
   Bendix Carstensen,
   \url{http://www.pubhealth.ku.dk/~bxc}
 }
+\seealso{ See also \code{\link{ci.cum}} }
 \examples{
 # Bogus data:
 f <- factor( sample( letters[1:5], 200, replace=TRUE ) )

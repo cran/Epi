@@ -1,6 +1,7 @@
 \name{stack.Lexis}
 \Rdversion{1.1}
 \alias{stack.Lexis}
+\alias{tmat}
 \alias{tmat.Lexis}
 \title{
 Functions to facilitate analysis of multistate models.
@@ -11,7 +12,8 @@ several transitions simultaneously.
 }
 \usage{
 \method{stack}{Lexis}(x, ...)
-\method{tmat}{Lexis}(x)
+tmat( x, ... )
+\method{tmat}{Lexis}(x, ...)
 }
 \arguments{
   \item{x}{A \code{\link{Lexis}} object.

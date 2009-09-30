@@ -19,6 +19,9 @@ if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) ) {
 } else if( inherits( obj, c("mer") ) ) {
        cf <- fixef( obj )
       vcv <- as.matrix( vcov( obj ) )
+} else if (inherits(obj, "MIresult")) {
+       cf <- obj$coefficients
+      vcv <- obj$variance
 } else if( inherits( obj, "polr" ) ) {
        cf <- summary( obj )$coefficients
       vcv <- vcov( obj )

@@ -8,12 +8,18 @@ function( obj,
 {
 # First extract all the coefficients and the variance-covariance matrix
 #
-if( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) {
+if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) ) {
        cf <- coef( obj )
       vcv <- vcov( obj )
 } else if( inherits( obj, c("lme") ) ) {
        cf <- fixed.effects( obj )
       vcv <- vcov( obj )
+} else if( inherits( obj, c("mer") ) ) {
+       cf <- fixef( obj )
+      vcv <- as.matrix( vcov( obj ) )
+} else if (inherits(obj, "MIresult")) {
+       cf <- obj$coefficients
+      vcv <- obj$variance
 } else if( inherits( obj, "polr" ) ) {
        cf <- summary( obj )$coefficients
       vcv <- vcov( obj )
@@ -21,7 +27,7 @@ if( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) {
        cf <- coef( obj )
       vcv <- obj$cov
 } else stop( "\"", deparse( substitute( obj ) ), "\" is of class \"",
-              class( obj ), "\" which is currently not supported." )
+              class( obj ), "\" which is not supported." )
 
 # Check if the intervals matches ctr.mat
 if( length( intl ) == 1 ) intl <- rep( intl, nrow( ctr.mat ) )
