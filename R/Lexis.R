@@ -318,7 +318,7 @@ points.Lexis.1D <- function(x, time.scale, ...)
   points(time.exit, x$lex.id, ...)
 }
 
-lines.Lexis.1D <- function(x, time.scale, col="darkgray", breaks="lightgray",
+lines.Lexis.1D <- function(x, time.scale, type="l", col="darkgray", breaks="lightgray",
                            ...)
 {
   x <- valid.times(x,time.scale)
@@ -406,12 +406,12 @@ plot.Lexis.2D <- function(x, time.scale, breaks="lightgray",
      for (yy in c(vgrid-diff(range(vgrid)),vgrid))
          abline( min(hgrid)-yy, 1, col=col.grid, lty=lty.grid )
      }
-# End of background grid(s) (PHEW!)
+# End of explicitly requested background grid(s) (PHEW!)
 
   if (type=="b" || type=="l") {
     segments(time.entry[[1]], time.entry[[2]], time.exit[[1]], time.exit[[2]],
              col=col, ...)
-  }
+    }
   if (type=="b" || type=="p") {
     points(time.exit[[1]], time.exit[[2]], col = col, ...)
   }
@@ -446,20 +446,22 @@ lines.Lexis.2D <- function(x, time.scale, col="darkgray", ...)
 
 ### Plotting generic functions
 
-plot.Lexis <- function(x, time.scale=NULL, breaks="lightgray", ...)
+plot.Lexis <- function(x, time.scale=NULL, type="l", breaks="lightgray", ...)
 {
   time.scale <- check.time.scale(x, time.scale)
   if (length(time.scale) > 2)
     time.scale <- time.scale[1:2]
-  
+  # Save the timescale(s) for use in subsequent calls
+  options( Lexis.time.scale = time.scale )
+
   if (length(time.scale) == 1)
-    plot.Lexis.1D(x, time.scale=time.scale, breaks=breaks, ...)
+    plot.Lexis.1D(x, time.scale=time.scale, type=type, breaks=breaks, ...)
   else if (length(time.scale) == 2)
-    plot.Lexis.2D(x, time.scale=time.scale, breaks=breaks, ...)
+    plot.Lexis.2D(x, time.scale=time.scale, type=type, breaks=breaks, ...)
 }
 
 
-lines.Lexis <- function(x, time.scale=NULL, ...)
+lines.Lexis <- function(x, time.scale=options()[["Lexis.time.scale"]], ...)
 {
   time.scale <- check.time.scale(x, time.scale)
   if (length(time.scale) > 2)
@@ -471,16 +473,31 @@ lines.Lexis <- function(x, time.scale=NULL, ...)
     lines.Lexis.2D(x, time.scale=time.scale, ...)
 }
 
-points.Lexis <- function(x, time.scale = NULL, ...)
+points.Lexis <- function(x, time.scale=options()[["Lexis.time.scale"]], ...)
 {
   time.scale <- check.time.scale(x, time.scale)
   if (length(time.scale) > 2)
     time.scale <- time.scale[1:2]
-  
   if (length(time.scale) == 1)
     points.Lexis.1D(x, time.scale=time.scale, ...)
   else if (length(time.scale) == 2)
     points.Lexis.2D(x, time.scale=time.scale, ...)
+}
+
+PY.ann <- function (x, ...) UseMethod("PY.ann")
+PY.ann.Lexis <-
+function( x, time.scale=options()[["Lexis.time.scale"]], digits=1, ... )
+{
+  if( !inherits(x,"Lexis") )
+    stop( "Only meaningful for Lexis objects not for objects of class ", class(x) )
+  wh.x <- x[,time.scale[1]] + x[,"lex.dur"]/2
+  if( two.scales <- length(time.scale)==2 )
+     wh.y <- x[,time.scale[2]] + x[,"lex.dur"]/2
+  else
+     wh.y <- x[,"lex.id"]
+  text( wh.x, wh.y,
+        formatC(x$lex.dur,format="f",digits=digits),
+        adj=c(0.5,-0.5), srt=if(two.scales) 45 else 0, ... )
 }
 
 ### Generic functions

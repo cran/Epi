@@ -2,6 +2,8 @@
 \alias{plot.Lexis}
 \alias{points.Lexis}
 \alias{lines.Lexis}
+\alias{PY.ann}
+\alias{PY.ann.Lexis}
 \title{Lexis diagrams}
 \description{
   The follow-up histories represented by a Lexis object can be plotted
@@ -9,17 +11,23 @@
   diagram showing follow-up time simultaneously on two time scales.
 }
 \usage{
-\method{plot}{Lexis}(x, time.scale = NULL, breaks="lightgray", ...)
-\method{points}{Lexis}(x, time.scale = NULL, ...)
-\method{lines}{Lexis}(x, time.scale = NULL, ...)
+\method{plot}{Lexis}(x, time.scale = NULL, type="l", breaks="lightgray", ...)
+\method{points}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]] , ...)
+\method{lines}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]], ...)
+\method{PY.ann}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]], digits=1, ...)
 }
 \arguments{
   \item{x}{An object of class \code{Lexis}}
   \item{time.scale}{A vector of length 1 or 2 giving the time scales to
     be plotted either by name or numerical order}
+  \item{type}{Character indication what to draw: "n" nothing (just set up the
+    diagram), "l" - liefelines, "p" - endpoints of follow-up, "b" - both
+    lifelines and endpoints.}
   \item{breaks}{a string giving the colour of grid lines to be drawn
     when plotting a split Lexis object. Grid lines can be suppressed by
     supplying the value \code{NULL} to the \code{breaks} argument}
+  \item{digits}{Numerical. How many digits after the demimal points should be
+       when plotting the person-years.}
   \item{\dots}{Further graphical parameters to be passed to the plotting
     methods.
 
@@ -49,12 +57,16 @@
   If \code{lex} has been split along one of the time axes by a call to
   \code{splitLexis}, then vertical or horizontal grid lines are plotted
   (on top of the life lines) at the break points.
+  
+  \code{PY.ann} writes the length of each (segment of) life line at the middle
+  of the line. Not advisable to use with large cohorts. Another example is
+  in the example file for \code{\link{occup}}.
 }
 \author{Martyn Plummer}
 \examples{
 # A small bogus cohort
 xcoh <- structure( list( id = c("A", "B", "C"),
-                      birth = c("14/07/1952", "01/04/1954", "10/06/1987"),
+                      birth = c("14/07/1952", "01/04/1957", "10/06/1987"),
                       entry = c("04/08/1965", "08/09/1972", "23/12/1991"),
                        exit = c("27/06/1997", "23/05/1995", "24/07/1998"),
                        fail = c(1, 0, 1) ),
@@ -78,6 +90,14 @@ Lcoh <- Lexis( entry = list( per=en ),
 
 # Default plot of follow-up
 plot( Lcoh )
+# Show follow-up time
+PY.ann( Lcoh )
+
+# Show exit status
+plot( Lcoh, type="b" )
+# Same but failures only
+plot( Lcoh, type="b", pch=c(NA,16)[Lcoh$fail+1] )
+
 # With a grid and deaths as endpoints
 plot( Lcoh, grid=0:10*10, col="black" )
 points( Lcoh, pch=c(NA,16)[Lcoh$lex.Xst+1] )
