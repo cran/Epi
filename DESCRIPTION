@@ -1,6 +1,6 @@
 Package: Epi
-Version: 1.1.7
-Date: 2009-09-22
+Version: 1.1.9
+Date: 2009-11-20
 Title: A package for statistical analysis in epidemiology.
 Author: Bendix Carstensen, Martyn Plummer, Esa Laara, Michael Hills et.
         al.
@@ -16,6 +16,6 @@ License: GPL (>= 2)
 URL: http://www.pubhealth.ku.dk/~bxc/Epi/
 Repository: CRAN
 Repository/R-Forge/Project: epi
-Repository/R-Forge/Revision: 74
-Date/Publication: 2009-09-30 18:55:50
-Packaged: 2009-09-24 20:07:12 UTC; rforge
+Repository/R-Forge/Revision: 77
+Date/Publication: 2009-11-22 16:10:57
+Packaged: 2009-11-21 21:03:14 UTC; rforge

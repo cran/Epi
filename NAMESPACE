@@ -35,6 +35,7 @@ export(
            plot.Lexis,
          points.Lexis,
           lines.Lexis,
+          PY.ann.Lexis,
          subset.Lexis,
         summary.Lexis,
   print.summary.Lexis,
@@ -58,6 +59,7 @@ export(
   fillarr,
   boxarr,
   boxes,
+  PY.ann,
   mstate,
   tmat,
   mh,
@@ -84,6 +86,7 @@ importFrom( utils, stack )
 S3method(plot, Lexis)
 S3method(points, Lexis)
 S3method(lines, Lexis)
+S3method(PY.ann, Lexis)
 S3method(merge, Lexis)
 S3method(subset, Lexis)
 S3method(summary, Lexis)

@@ -1,3 +1,17 @@
+Changes in 1.1.9
+
+o A function PY.ann.Lexis is added. It writes the length of (pieces of)
+  lifelines in a Lexis digram produced by plot.Lexis.
+
+o plot.Lexis now sets an option "Lexis.time.scale" which is queried by
+  lines.Lexis and points.Lexis, so that time.scale is only needed in
+  plot.Lexis.
+
+Changes in 1.1.8
+
+o apc.fit had a bug in the specification of knots when using the argument
+  model="bs". Fixed.
+
 Changes in 1.1.7
 
 o boxes.Lexis has been furter enhanced with the facility to plot rates
