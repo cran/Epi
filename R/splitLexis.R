@@ -24,7 +24,7 @@ function(lex, breaks, time.scale, tol)
     dur <- ex - en; dur[!valid] <- 0    # Time spent in interval
 
     ## Cumulative time since entry at the start of each interval
-    time.since.entry <- rbind(0, apply(dur,2,cumsum)[-NR,])
+    time.since.entry <- rbind(0, apply(dur,2,cumsum)[-NR,,drop=FALSE])
   
     cal.new.entry <- function(entry.time) {
         sweep(time.since.entry, 2, entry.time, "+")[valid]
