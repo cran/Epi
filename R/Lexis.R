@@ -208,7 +208,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     {
     # This as.character-business is necessary because we cannot assume
     # that the values of states are 1,2, etc.
-    st.lev <- unique( as.character( c(lex$lex.Cst,lex$lex.Xst) ) )
+    st.lev <- sort( unique( as.character( c(lex$lex.Cst,lex$lex.Xst) ) ) )
     lex$lex.Cst <- factor( as.character(lex$lex.Cst), levels=st.lev, labels=states )
     lex$lex.Xst <- factor( as.character(lex$lex.Xst), levels=st.lev, labels=states )
     }

@@ -1,3 +1,7 @@
+Changes in 1.1.12
+
+o Added function clogistic for conditional logistic regression.
+
 Changes in 1.1.9
 
 o A function PY.ann.Lexis is added. It writes the length of (pieces of)

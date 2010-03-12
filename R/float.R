@@ -85,21 +85,21 @@ function(object, factor, iter.max = 50)
   ## Get coefficients and variance matrix
   if(is.null(cnames <- colnames(C)))
     cnames <- 1:(nlevels-1)
-  contr.names <- c("(Intercept)", paste(xname, cnames, sep=""))
+  contr.names <- paste(xname, cnames, sep="")
   coef <- coef(object)[contr.names]
   V <- vcov(object)[contr.names, contr.names]
         
   ## Convert to treatment contrast parameterization
   if (identical(xcontrasts, "contr.treatment")) {
-    V.tc <- V[-1,-1]
-    coef.tc <- c(0, coef[-1])
+    V.tc <- V
+    coef.tc <- c(0, coef)
   }
   else {
-    D.inv <- diag(nlevels)
-    D.inv[-1,1] <- -1
+    D.inv <- cbind(rep(-1,nlevels-1), diag(nlevels-1))
     S <- D.inv %*% cbind(rep(1, nlevels), C) 
+    S <- S[,-1]
     ## coefficients
-    coef.tc <- c(0, S[-1,] %*% coef)
+    coef.tc <- c(0, S %*% coef)
     ## If we find a baseline level (implicitly defined
     ## by having a row of zeros in the contrast matrix)
     ## then adjust the coefficients
@@ -107,14 +107,15 @@ function(object, factor, iter.max = 50)
     if (any(is.base))
       coef.tc <- coef.tc - coef.tc[is.base]
     ## variance matrix
-    V.tc <- S[-1,] %*% V %*% t(S[-1,])
+    V.tc <- S %*% V %*% t(S)
   }
   names(coef.tc) <- xlevels
 
   float.out <- float.variance(V.tc, iter.max = iter.max)
   var <- float.out$var
   names(var) <- xlevels
-  ans <- list(coef=coef.tc, var=var, limits=float.out$error.limits, factor=factor)
+  ans <- list(coef=coef.tc, var=var, limits=float.out$error.limits,
+              factor=factor)
   class(ans) <- "floated"
   return(ans)
 }

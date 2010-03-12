@@ -57,7 +57,7 @@ linesEst( ests, y, pch=pch, cex=cex, lwd=lwd,
  # Finally the x-axis and the annotation of the estimates
  #
 axis( side = 1, at = xtic )
-mtext( side=1, xlab, line=par("mgp")[1] )
+mtext( side=1, xlab, line=par("mgp")[1], cex=par("cex")*par("cex.lab") )
 axis( side=2, at=txtpos, labels=txt, las=2, lty=0 )
 invisible( oldpar )
   }

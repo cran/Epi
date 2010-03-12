@@ -104,30 +104,6 @@ print(a)
 # Print the percentages rounded to the nearest integer
 print(a, digits=c(percent=0))
 
-# An Epidemiological example with follow-up time
-data(nickel)
-str(nickel)
-
-# Make a grouped version of the exposure variable
-nickel$egr <- cut( nickel$exposure, breaks=c(0, 0.5, 5, 10, 100), right=FALSE )
-stat.table( egr, list( count(), percent(egr), mean( age1st ) ), data=nickel )
-
-# Split the follow-up time by current age
-nickel.ex <-
-W.Lexis( entry=agein, exit=ageout, fail=icd \%in\% c(162,163),
-         origin=0, breaks=seq(0,100,20),
-         include=list( id, exposure, egr, age1st, icd ), data=nickel )
-str( nickel.ex )
-
-# Table of rates
-stat.table( Time, list( n=count(), N=count(id), D=sum(Fail),
-                        "Rate/1000"=ratio(Fail,Exit-Entry,1000) ),
-            margin=1, data=nickel.ex )
-# Two-way table of rates and no. persons contributing
-stat.table( list(age=Time, Exposure=egr),
-            list( N=count(id), D=sum(Fail), Y=sum((Exit-Entry)/1000),
-                  Rate=ratio(Fail,Exit-Entry,1000) ),
-            margin=TRUE, data=nickel.ex )
 }
 \keyword{iteration}
 \keyword{category}

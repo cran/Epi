@@ -17,6 +17,7 @@ function( data,
          )
 {
 # Get the arguments
+dist  <- match.arg( dist )
 model <- match.arg( model )
 drtyp <- match.arg( dr.extr )
 parm  <- toupper( match.arg( parm ) )
