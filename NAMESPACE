@@ -26,7 +26,6 @@ export(
   fit.add,
   fit.mult,
   ftrend,
-  W.Lexis,
   Lexis.diagram,
   Lexis.lines,
   Life.lines,
@@ -78,7 +77,8 @@ export(
   ROC,
   tabplot,
   twoby2,
-  stat.table)
+  stat.table,
+  clogistic)
 # Import generic methods
 importFrom( utils, stack )
 # importFrom( mstate, mstate )
@@ -98,3 +98,6 @@ S3method(tmat, Lexis)
 S3method(boxes, Lexis)
 S3method(merge, data.frame)
 S3method(print, stat.table)
+S3method(print, clogistic)
+S3method(coef, clogistic)
+S3method(vcov, clogistic)
