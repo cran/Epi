@@ -84,6 +84,9 @@
   scale.
 
   Side-effect: A plot with axes and grid lines but no points or curves.
+  Moreover, the option \code{apc.frame.par} is given the value
+  \code{c("cp.offset","RR.fac")}, which is recognized by \code{\link{apc.plot}}
+  and \code{\link{apc.lines}}.
 }
 \references{
   \url{http://www.pubhealth.ku.dk/~bxc/APC/notes.pdf}

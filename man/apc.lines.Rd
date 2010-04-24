@@ -1,7 +1,11 @@
 \name{apc.lines}
 \alias{apc.lines}
+\alias{pc.points}
+\alias{pc.lines}
+\alias{pc.matpoints}
+\alias{pc.matlines}
 \title{
-  Plot APC-estimates in an APC-frame.
+  Plot APC-estimates (and other things) in an APC-frame.
 }
 \description{
   When an APC-frame has been produced by \code{\link{apc.frame}}, this
@@ -12,7 +16,7 @@
 \usage{
  apc.lines( A, P, C,
         scale = c("log","ln","rates","inc","RR"),
-    frame.par = NULL,
+    frame.par = options()[["apc.frame.par"]],
         drift = 0,
            c0 = median( C[,1] ),
            a0 = median( A[,1] ),
@@ -24,6 +28,10 @@
          type = "l",
         knots = FALSE,
           ... )
+  pc.points( x, y, ... )
+  pc.lines( x, y, ... )
+  pc.matpoints( x, y, ... )
+  pc.matlines( x, y, ... )
 }
 \arguments{
   \item{A}{Age effects. A 4-column matrix with columns age, age-specific
@@ -59,14 +67,22 @@
   \item{col}{Colours for the three effects.}
   \item{type}{What type of lines / points should be used.}
   \item{knots}{Should knots from the model be shown?}
-  \item{...}{Further parameters to be transmitted to \code{matlines} used
+  \item{...}{Further parameters to be transmitted to \code{points}
+    \code{lines}, \code{matpoints} or \code{matlines} used
     for plotting the three sets of curves.}
+  \item{x}{vector of \code{x}-coordinates.}
+  \item{y}{vector of \code{y}-coordinates.}
 }
 \details{
   The drawing of three effects in an APC-frame is a rather trivial task,
   and the main purpose of the utility is to provide a function that
   easily adds the functionality of adding a drift so that several sets
   of lines can be easily produced in the same frame.
+  
+  Since the Age-part of the frame is referred to by its real coordinates
+  plotting in the calendar time part requires translation and scaling to
+  put things correctly there, that is done by the functions \code{pc.points}
+  etc.
 }
 \value{
   A list of three matrices with the effects plotted is

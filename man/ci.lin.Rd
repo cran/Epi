@@ -1,13 +1,14 @@
 \name{ci.lin}
 \alias{ci.lin}
+\alias{ci.mat}
 \title{
   Compute linear functions of parameters with s.e.
-}
+  }
 \description{
   For a given model object the function computes a linear function of
   the parameters and the corresponding standard errors, p-values and
   confidence intervals. 
-}
+  }
 \usage{
 ci.lin( obj,
     ctr.mat = NULL,
@@ -16,7 +17,9 @@ ci.lin( obj,
        fnam = !diffs,
        vcov = FALSE,
       alpha = 0.05,
+         df = Inf,
         Exp = FALSE )
+ci.mat( alpha = 0.05, df=Inf )
 }
 \arguments{
   \item{obj}{A model object (of class
@@ -46,21 +49,34 @@ ci.lin( obj,
   \item{vcov}{Should the covariance matrix of the set of parameters be
     returned? If this is set, \code{Exp} is ignored.}
   \item{alpha}{Significance level for the confidence intervals.}
+  \item{df}{Integer. Number of degrees of freedom in the t-distribution used
+    to compute the quantiles used to construct the confidence intervals.}
   \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns 1,5,6 ).}
-}
+  }
 \value{
-  A matrix with number of rows and rownames as \code{ctr.mat}. The
+  \code{ci.lin} returns
+  a matrix with number of rows and rownames as \code{ctr.mat}. The
   columns are Estimate, Std.Err, z, P, 2.5\% and 97.5\%.
   If \code{vcov=TRUE} a list with components \code{est}, the desired
   functional of the parameters and \code{vcov}, the variance
   covariance matrix of this, is returned but not printed.
   If \code{Exp==TRUE} the confidence intervals for the parameters are
   replaced with three columns: exp(estimate,c.i.).
-}
+  
+  \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
+  \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with
+  columns of estimates and standard errors, so as to produce a p by 3 matrix
+  of estimates and confidnece limits. Used internally in \code{ci.lin} and
+  \code{ci.cum}.
+  The 1.96 is replaced by the appropriate quantile from the normal or
+  t-distribution when arguments \code{alpha} and/or \code{df} are given.
+  }
 \author{
   Bendix Carstensen,
-  \url{http://www.pubhealth.ku.dk/~bxc}
-}
+  \url{http://www.pubhealth.ku.dk/~bxc} &
+  Michaal Hills
+  \url{http://www.mhills.pwp.blueyonder.co.uk/}
+  }
 \seealso{ See also \code{\link{ci.cum}} }
 \examples{
 # Bogus data:

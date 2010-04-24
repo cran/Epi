@@ -3,7 +3,7 @@ function( A,
           P,
           C,
       scale = c("log","ln","rates","inc","RR"),
-  frame.par = NULL,
+  frame.par = options()[["apc.frame.par"]],
       drift = 0,
          c0 = median( C[,1] ),
          a0 = median( A[,1] ),
@@ -88,4 +88,33 @@ if( p0 != c0+a0 )
   }             
   box()
   invisible( list( A=A, P=P, C=C ) )
+}
+
+# Useful functions to plot in the calendar time part of an apc frame.
+pc.points <-
+function( x, y, ... )
+{
+fp <- options()[["apc.frame.par"]]
+points( x - fp[1], y * fp[2], ... )
+}
+
+pc.lines <-
+function( x, y, ... )
+{
+fp <- options()[["apc.frame.par"]]
+lines( x - fp[1], y * fp[2], ... )
+}
+
+pc.matpoints <-
+function( x, y, ... )
+{
+fp <- options()[["apc.frame.par"]]
+matpoints( x - fp[1], y * fp[2], ... )
+}
+
+pc.matlines <-
+function( x, y, ... )
+{
+fp <- options()[["apc.frame.par"]]
+matlines( x - fp[1], y * fp[2], ... )
 }

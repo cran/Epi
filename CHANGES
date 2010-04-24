@@ -1,3 +1,27 @@
+Changes in 1.1.14
+
+o ci.lin now has an argument df to allow for t-quantiles in ci calculations.
+
+o lls() function revised to give nicer (left justified) output.
+
+Changes in 1.1.13
+
+o ci.lin now supports objects of class clogistic.
+
+o utility function ci.mat() added --- earlier defined inside ci.lin and ci.cum,
+  but also useful on its own.
+
+o lls() and clear() added, to ease overview and clearing of workspace 
+  (and attachements!)
+
+o apc.frame now sets the option "apc.frame.par" with the offset and 
+  scaling of calendar time part of the apc frame. This is recognised 
+  now by apc.lines automatically.
+
+o Function pc.points, pc.lines, pc.matlines, pc.matpoints added to 
+  ease plotting the calendar time region of an apc frame; live off the
+  option "apc.frame.par".
+
 Changes in 1.1.12
 
 o Added function clogistic for conditional logistic regression.
