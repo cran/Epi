@@ -44,43 +44,28 @@ cf[is.na(cf)] <- 0
 vcv <- vM
    }
 
+if( is.character( subset ) ) {
+  sb <- numeric(0)
+  for( i in 1:length( subset ) ) sb <- c(sb,grep( subset[i], names( cf )  ))
+  subset <- sb # unique( sb )
+  }
 # If subset is not given, make it the entire set
-#
-# if( is.null( subset ) ) subset <- 1:length( cf )
-
-# Useful function for constructing a matrix linking estimate, s.e. to
-# a confidence interval
-ci.mat <-
-function( alpha = 0.05 )
-{
-ciM <- rbind( c(1,1,1), qnorm(1-alpha/2)*c(0,-1,1) )
-colnames( ciM ) <- c("Estimate",
-   paste( formatC( 100*   alpha/2 , format="f", digits=1 ), "%", sep="" ),
-   paste( formatC( 100*(1-alpha/2), format="f", digits=1 ), "%", sep="" ) )
-ciM
-}
-
-  if( is.character( subset ) ) {
-    sb <- numeric(0)
-    for( i in 1:length( subset ) ) sb <- c(sb,grep( subset[i], names( cf )  ))
-    subset <- sb # unique( sb )
-    }
-  if( is.null( subset ) ) subset <- 1:length( cf )
-  # Exclude units where aliasing has produced NAs.
-  # Not needed after replacement with 0s
-  # subset <- subset[!is.na( cf[subset] )]
-   cf <-  cf[subset]
-  vcv <- vcv[subset,subset]
-  if( is.null( ctr.mat ) )
-    {
-    ctr.mat <- diag( length( cf ) )
-    rownames( ctr.mat ) <- names( cf )
-    }
-  if( dim( ctr.mat )[2] != length(cf) )
-      stop( paste("\n Dimension of ", deparse(substitute(ctr.mat)),
-            ": ", paste(dim(ctr.mat), collapse = "x"),
-            ", not compatible with no of parameters in ",
-            deparse(substitute(obj)), ": ", length(cf), sep = ""))
+if( is.null( subset ) ) subset <- 1:length( cf )
+# Exclude units where aliasing has produced NAs.
+# Not needed after replacement with 0s
+# subset <- subset[!is.na( cf[subset] )]
+ cf <-  cf[subset]
+vcv <- vcv[subset,subset]
+if( is.null( ctr.mat ) )
+  {
+  ctr.mat <- diag( length( cf ) )
+  rownames( ctr.mat ) <- names( cf )
+  }
+if( dim( ctr.mat )[2] != length(cf) )
+    stop( paste("\n Dimension of ", deparse(substitute(ctr.mat)),
+          ": ", paste(dim(ctr.mat), collapse = "x"),
+          ", not compatible with no of parameters in ",
+          deparse(substitute(obj)), ": ", length(cf), sep = ""))
 
 # Finally, here is the actual computation of the estimates
     ct <- ctr.mat %*% cf

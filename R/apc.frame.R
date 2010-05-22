@@ -68,5 +68,6 @@ if ( 4 %in% sides )
    mtext( side=4, rr.txt, line=2.5, las=0 )
    }
 # Return the offset for the cohort/period and the RR-factor.
+options( apc.frame.par = c("cp.offset"=cp,"RR.fac"=rr.ref) )
 invisible( c("cp.offset"=cp,"RR.fac"=rr.ref) )
   }
