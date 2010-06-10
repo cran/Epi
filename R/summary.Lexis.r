@@ -37,16 +37,13 @@ names( dimnames( rates ) ) <-
        paste("\nRates",
              if( scale != 1 ) paste(" (per ",scale,")",sep=""),
              ":\n     To", sep="") )
-
 if( simplify )
   {
   trans <- trans[!is.na(pyrs),]
   rates <- rates[!is.na(pyrs),]
   }
-if( nrow( trans )==2 )
-  {
-  trans <- trans[1,,drop=FALSE]
-  }
+if( nrow(trans)==2 )
+  trans <- trans[1,,drop = FALSE]
 res <- list( Transitions=trans, Rates=rates[-nrow(rates),,drop=FALSE] )
 class( res ) <- "summary.Lexis"
 res

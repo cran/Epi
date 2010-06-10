@@ -41,7 +41,7 @@ export(
            plot.Lexis,
          points.Lexis,
           lines.Lexis,
-          PY.ann.Lexis,
+         PY.ann.Lexis,
          subset.Lexis,
         summary.Lexis,
   print.summary.Lexis,
