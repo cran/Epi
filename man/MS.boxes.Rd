@@ -16,28 +16,35 @@
   can be used to generate displays with person-years and events.
   }
 \usage{
-   tbox( txt, x, y, w, h,
-         font = 2, txt.col = "black", lwd = 2,
-         border = "black", col = "transparent", ...)
-   dbox( x, y, w, h=w,
-         font=2, cross.col="black", cwd=5,
-         lwd=2, border="black", col="transparent" )
+   tbox( txt, x, y, wd, ht,
+         font=2, lwd=2,
+         col.txt="black",
+         col.border="black",
+         col.bg="transparent" )
+   dbox( x, y, wd, ht=wd,
+         font=2, lwd=2, cwd=5,
+         col.cross="black",
+         col.border="black",
+         col.bg="transparent"  )
    boxarr( b1, b2, offset=FALSE, pos=0.6, ... )
    boxes( obj, ... )
-   \method{boxes}{Lexis}( obj, file,
-               boxpos = FALSE,
-                wmult = 1.5,
-                hmult = 1.5*wmult,
-                  cex = 1.5,
-               show   = inherits( obj, "Lexis" ),
-               show.Y = show,
-              scale.Y = 1,
-             digits.Y = 1,
-               show.D = show,
-              scale.D = FALSE,
-             digits.D = as.numeric( as.logical(scale.D) ),
-                eq.wd = TRUE,
-                eq.ht = TRUE, ... )
+      \method{boxes}{Lexis}( obj, file,
+             boxpos = FALSE,
+              wmult = 1.5,
+              hmult = 1.5*wmult,
+                cex = 1.5,
+             show   = inherits( obj, "Lexis" ),
+             show.Y = show,
+            scale.Y = 1,
+           digits.Y = 1,
+             show.D = show,
+            scale.D = FALSE,
+           digits.D = as.numeric( as.logical(scale.D) ),
+              eq.wd = TRUE,
+              eq.ht = TRUE,
+             subset = NULL,
+            exclude = NULL,
+                ... )
    fillarr( x1, y1, x2, y2, gap=2, fr=0.8,
             angle=17, lwd=2, length=par("pin")[1]/30, ... )
    }
@@ -45,19 +52,19 @@
   \item{txt}{Text to be placed inside the box.}
   \item{x}{x-coordinate of center of box.}
   \item{y}{y-coordinate of center of box.}
-  \item{w}{width of box.}
-  \item{h}{height of box.}
-  \item{font}{Font for the text.}
-  \item{txt.col}{Color for the text.}
+  \item{wd}{width of box.}
+  \item{ht}{height of box.}
+  \item{font}{Font for the text. Defaults to 2 (=bold).}
   \item{lwd}{Line width of the box / arrow.}
-  \item{border}{Color of the box border.}
-  \item{col}{Background color for the interior of the box.}
+  \item{col.txt}{Color for the text.}
+  \item{col.border}{Color of the box border.}
+  \item{col.bg}{Background color for the interior of the box.}
   \item{\dots}{Arguments to be passed on to the call of other functions.}
-  \item{cross.col}{Color of the cross.}
   \item{cwd}{Width of the lines in the cross.}
+  \item{col.cross}{Color of the cross.}
   \item{b1}{Coordinates of the "from" box. A vector with 4 components,
-    \code{x}, \code{y}, \code{w}, \code{h}.}
-  \item{b2}{Coordinates of the "to" box.}
+            \code{x}, \code{y}, \code{w}, \code{h}.}
+  \item{b2}{Coordinates of the "to" box; like \code{b1}.}
   \item{offset}{Logical. Should the arrow be offset a bit to the left.}
   \item{pos}{Numerical between 0 and 1, determines the position of the point
              on the arrow which is returned.}
@@ -70,6 +77,24 @@
                 be a named list with elements \code{x} and
                 \code{y}, both numerical vectors, giving the centers of
                 the boxes.}
+%                Additional elements of the list can be supplied,
+%                defining colors, fonts etc. for the box texts.
+%                Possible values are: \code{col.txt},\code{col.border},
+%                \code{col.bg}, \code{ht}, \code{wd},
+%                see the corresponding arguments to \code{boxes}.
+%                Also list elements pertaining to the arrows can be supplied.
+%                These chould be either vectors referring to the non-NA elemts
+%                of the transition matrix in column-major order, or matrices of
+%                the same dimension as the transition matrix. Possible values
+%                are: \code{col.arr}, \code{lwd.arr}, \code{lty.arr},
+%                \code{angle.arr}, \code{length.arr}, se the correponding
+%                arguments to \code{boxarr}.}
+%  \item{arrows}{A named list. Alle elements should be square matrices of the
+%                a dimension as the number of states. Entries corresponding to
+%                arrrows drawn will be used, all other entries will be ignored.
+%                Possible values are: \code{lwd},\code{col},\code{gap},\code{fr},
+%                \code{angle},\code{length} --- see the corresponding arguments
+%                to \code{boxarr}.}
   \item{wmult}{Multiplier for the width of the box relative to the width of the
                text in the box.}
   \item{hmult}{Multiplier for the height of the box relative to the height of the
@@ -90,6 +115,11 @@
                   rates.}
   \item{eq.wd}{Should boxes all have the same width?}
   \item{eq.ht}{Should boxes all have the same height?}
+  \item{subset}{Draw only boxes and arrows for a subset of the states.
+                Can be given either as a numerical vector or character
+                vector state names.}
+  \item{exclude}{Exclude states from the plot. The complementary of \code{subset}.
+                 Ignored if \code{subset} is given.}
   \item{x1}{x-coordinate of the starting point.}
   \item{y1}{y-coordinate of the starting point.}
   \item{x2}{x-coordinate of the end point.}
@@ -153,12 +183,12 @@ par( mar=c(0,0,0,0), cex=1.5 )
 plot( NA,
       bty="n",
       xlim=0:1*100, ylim=0:1*100, xaxt="n", yaxt="n", xlab="", ylab="" )
-bw  <- tbox( "Well"    , 10, 60, 22, 10, txt.col="blue" )
-bo  <- tbox( "other Ca", 45, 80, 22, 10, txt.col="gray" )
-bc  <- tbox( "Ca"      , 45, 60, 22, 10, txt.col="red" )
-bd  <- tbox( "DM"      , 45, 40, 22, 10, txt.col="blue" )
-bcd <- tbox( "Ca + DM" , 80, 60, 22, 10, txt.col="gray" )
-bdc <- tbox( "DM + Ca" , 80, 40, 22, 10, txt.col="red" )
+bw  <- tbox( "Well"    , 10, 60, 22, 10, col.txt="blue" )
+bo  <- tbox( "other Ca", 45, 80, 22, 10, col.txt="gray" )
+bc  <- tbox( "Ca"      , 45, 60, 22, 10, col.txt="red" )
+bd  <- tbox( "DM"      , 45, 40, 22, 10, col.txt="blue" )
+bcd <- tbox( "Ca + DM" , 80, 60, 22, 10, col.txt="gray" )
+bdc <- tbox( "DM + Ca" , 80, 40, 22, 10, col.txt="red" )
       boxarr( bw, bo , col=gray(0.7), lwd=3 )
 # Note the argument adj= can takes values outside (0,1) 
 text( boxarr( bw, bc , col="blue", lwd=3 ),
@@ -183,13 +213,13 @@ dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
 # Split follow-up at Insulin
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )
-\dontrun{boxes( dmi, file="" )}
+boxes( dmi, boxpos=TRUE, file="" )
 # Set up a bogus recovery date
 dmi$dorec <- dmi$doins + runif(nrow(dmi),0.5,10)
 dmi$dorec[dmi$dorec>dmi$dox] <- NA
 dmR <- cutLexis( dmi, cut=dmi$dorec, new.state="DM", pre="Ins" )
 summary( dmR )
-\dontrun{boxes( dmR )}
+boxes( dmR, boxpos=TRUE, file="" )
     }
 \keyword{survival}
 \keyword{hplot}
