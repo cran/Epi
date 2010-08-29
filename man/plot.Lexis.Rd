@@ -11,13 +11,18 @@
   diagram showing follow-up time simultaneously on two time scales.
 }
 \usage{
-\method{plot}{Lexis}(x, time.scale = NULL, type="l", breaks="lightgray", ...)
+\method{plot}{Lexis}(x=Lexis( entry=list(Date=1900,Age=0), exit=list(Age=0) ),
+                     time.scale = NULL, type="l", breaks="lightgray", ...)
 \method{points}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]] , ...)
 \method{lines}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]], ...)
 \method{PY.ann}{Lexis}(x, time.scale = options()[["Lexis.time.scale"]], digits=1, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{Lexis}}
+  \item{x}{An object of class \code{Lexis}. The default is a bogus \code{Lexis}
+           object, so that \code{plot.Lexis} can be called without the first
+           argument and still produce a(n empty) Lexis diagram. Unless arguments
+           \code{xlim} and \code{ylim} are given in this case the diagram is
+           looking pretty daft.}
   \item{time.scale}{A vector of length 1 or 2 giving the time scales to
     be plotted either by name or numerical order}
   \item{type}{Character indication what to draw: "n" nothing (just set up the

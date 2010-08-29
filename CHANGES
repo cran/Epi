@@ -1,3 +1,23 @@
+Changes in 1.1.17
+
+o A comma was missing in the code-output from boxes.Lexis
+
+o mstate.Lexis function changed name to msdata.Lexis, according to the change
+  in convention in the mstate package. Code simplified as it is now using the
+  functionality in stack.Lexis.
+  
+o A factorize.Lexis function has been added, it basically changes the variables
+  lex.Cst and lex.Xst to factors with same set of levels. A useful facility when
+  we want boxes.Lexis to work.
+
+Changes in 1.1.16
+
+o boxes.Lexis now resets the graphical parameters (par()) on exit.
+
+o plot.Lexis now has a default Lexis object as argument, allowing use of the
+  function to plot empty Lexis diagrams without setting up a Lexis object first.
+  The bogus object has timescales c("Date","Age") but 0 follwo-up time.
+
 Changes in 1.1.14
 
 o ci.lin now has an argument df to allow for t-quantiles in ci calculations.
