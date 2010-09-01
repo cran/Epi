@@ -144,7 +144,10 @@ if( !is.null(subset) )
   }
 
 # Here comes the plot
-par( mar=c(0,0,0,0), cex=cex )
+# First setting up the plot area, and restoring the plot parameters later
+opar <- par( mar=c(0,0,0,0), cex=cex )
+on.exit( par(opar) )
+
 plot( NA,
       bty="n",
       xlim=0:1*100, ylim=0:1*100, xaxt="n", yaxt="n", xlab="", ylab="" )
@@ -219,7 +222,7 @@ boxes.Lexis( ', deparse( substitute( obj ) ),',
            boxpos = list( x=c(', paste( xx, collapse=", " ),'),
                           y=c(', paste( yy, collapse=", " ),') ),
               cex =', cex,',\t # How should text and numbers be scaled
-            wmult =', wmult,'\t # Extra box-width relative to string width
+            wmult =', wmult,',\t # Extra box-width relative to string width
             hmult =', hmult,',\t # Extra box-height relative to string height
             eq.wd =', eq.wd,',\t # All boxes the same width
             eq.ht =', eq.ht,',\t # All boxes the same height

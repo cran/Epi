@@ -40,46 +40,42 @@ zz[zz==0] <- NA
 zz
 }
 
-# The mstate method
-mstate <- function (obj, ...) UseMethod("mstate")
+# The factorize method
+factorize <- function (obj, ...) UseMethod("factorize")
 
-mstate.Lexis <-
+factorize.Lexis <-
+function( obj, ... )
+{
+   obj$lex.Cst <- factor( obj$lex.Cst )
+   obj$lex.Xst <- factor( obj$lex.Xst )
+   all.levels = union(levels(obj$lex.Cst),levels(obj$lex.Xst))
+   obj$lex.Cst <- factor( obj$lex.Cst, levels=all.levels )
+   obj$lex.Xst <- factor( obj$lex.Xst, levels=all.levels )
+   obj
+}
+
+# The msdata method
+msdata <- function (obj, ...) UseMethod("msdata")
+
+msdata.Lexis <-
 function( obj,
    time.scale = timeScales(obj)[1], ... )
 {
 if( !require( mstate ) )
-  stop( "You do not want this befor you have installed the 'mstate' package.\n" )
+  stop( "You do not want this before you have installed the 'mstate' package.\n" )
 tr.mat <- tmat(obj)
-new <- NULL
-for( i in 1:nrow(tr.mat) )
-for( j in 1:ncol(tr.mat) )
-{
-if( !is.na(tr.mat[i,j]) )
-  {
-  # Any transition out of state i generates a record
-  tmp <-  obj[obj$lex.Cst==rownames(tr.mat)[i],]
-  status <- ( tmp$lex.Xst==colnames(tr.mat)[j] )
-  from <- rownames(tr.mat)[i]
-  to   <- colnames(tr.mat)[j]
-  tmp  <- data.frame( from, to, status, tmp )
-  new  <- rbind( new, tmp )
-  }
-}
-id     <-          new[,"lex.id"]
-Tstart <-          new[,time.scale]
-Tstop  <- Tstart + new[,"lex.dur"]
-transition <- interaction( new$from, new$to )
-# Dump the old Lexis variables
-rm <- c( grep("lex.", names(new) ),
-         match( timeScales(obj), names(new) ) )
-new <- new[,-rm]
-new <- data.frame( id, Tstart, Tstop,
-                    from = as.integer(new[,1]),
-                      to = as.integer(new[,2]),
-                   trans = as.integer( interaction( new$from, new$to ) ),
-                   new[,-(1:2)] )
-new <- new[order(new$id,new$Tstart),]
-# expand.covs( new, tmat(obj), covs, append=TRUE )
-# class( new ) <- c("mstate","data.frame")
-return( new )
+# Essentially a msdata object is a stacked Lexis object with other variable names
+tmp <- stack.Lexis( factorize.Lexis(obj) )
+lv  <- c( match(timeScales(obj), names(tmp) ),
+          grep("lex\\.", names(tmp) ) )
+# The resulting dataframe is created by renaming columns in the stacked Lexis object
+data.frame( id = tmp$lex.id,
+          from = as.integer( tmp$lex.Cst ),
+            to = as.integer( tmp$lex.Xst ),
+         trans = as.integer( tmp$lex.Tr ),
+        Tstart = tmp[,time.scale],
+         Tstop = tmp[,time.scale] + tmp$lex.dur,
+          time = tmp$lex.dur,
+        status = as.integer( tmp$lex.Fail ),
+                 tmp[,-lv] )
 }

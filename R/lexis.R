@@ -3,10 +3,8 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
          merge=TRUE, states )
 {
   nmissing <- missing(entry) + missing(exit) + missing(duration)
-
   if (nmissing > 2)
-    stop("At least one of the arguments exit and duration must be supplied")
-
+        stop("At least one of the arguments exit and duration must be supplied")
   only.exit <- missing( entry.status ) && !missing( exit.status )
 
   ## If data argument is supplied, use it to evaluate arguments
@@ -445,8 +443,9 @@ lines.Lexis.2D <- function(x, time.scale, col="darkgray", ...)
 }
 
 ### Plotting generic functions
-
-plot.Lexis <- function(x, time.scale=NULL, type="l", breaks="lightgray", ...)
+plot.Lexis <-
+function( x = Lexis( entry=list(Date=1900,Age=0), exit=list(Age=0) ),
+          time.scale=NULL, type="l", breaks="lightgray", ...)
 {
   time.scale <- check.time.scale(x, time.scale)
   if (length(time.scale) > 2)

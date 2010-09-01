@@ -47,10 +47,11 @@ export(
   print.summary.Lexis,
            splitLexis,
       transform.Lexis,
+      factorize.Lexis,
              cutLexis,
            countLexis,
           stack.Lexis,
-         mstate.Lexis,
+         msdata.Lexis,
            tmat.Lexis,
           boxes.Lexis,
   entry,
@@ -65,8 +66,9 @@ export(
   fillarr,
   boxarr,
   boxes,
+  factorize,
   PY.ann,
-  mstate,
+  msdata,
   tmat,
   mh,
   ncut,
@@ -99,8 +101,9 @@ S3method(subset, Lexis)
 S3method(summary, Lexis)
 S3method(print, summary.Lexis)
 S3method(transform, Lexis)
+S3method(factorize, Lexis)
 S3method(stack, Lexis)
-S3method(mstate, Lexis)
+S3method(msdata, Lexis)
 S3method(tmat, Lexis)
 S3method(boxes, Lexis)
 S3method(merge, data.frame)
