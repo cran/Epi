@@ -2,12 +2,13 @@ ci.lin <-
 function( obj,
       ctr.mat = NULL,
        subset = NULL,
+       subint = NULL,
         diffs = FALSE,
          fnam = !diffs,
          vcov = FALSE,
         alpha = 0.05,
            df = Inf,
-          Exp = FALSE ) 
+          Exp = FALSE )
 {
 # First extract all the coefficients and the variance-covariance matrix
 #
@@ -76,7 +77,7 @@ ctr <- cbind( rep( 1:(nn-1), (nn-1):1 ), xx )
 # Now for the annotation:
 # Find out how large a proportion of rownames are identical
 i <- 1
-while( all( substr( nam, 1, i ) == substr( nam[1], 1, i ) ) ) i <- i+1 
+while( all( substr( nam, 1, i ) == substr( nam[1], 1, i ) ) ) i <- i+1
 
 # If a factor name is given, then use this, otherwise the identical part
 # of the parameter names
@@ -92,8 +93,8 @@ rn <- paste( if( pre ) prefix else "",
 
 # Finally, construct the contrast matrix and attach the rownames
 cm <- matrix( 0, nr, nn )
-cm[cbind(1:nr,ctr[,1])] <- 1 
-cm[cbind(1:nr,ctr[,2])] <- -1 
+cm[cbind(1:nr,ctr[,1])] <- 1
+cm[cbind(1:nr,ctr[,2])] <- -1
 rownames( cm ) <- rn
 cm
 }
@@ -125,11 +126,11 @@ if( diffs )
        } else {
          subset <- grep( subset, names( cf ) )
              cf <-  cf[subset]
-            vcv <- vcv[subset,subset] 
+            vcv <- vcv[subset,subset]
        }
     } else {
      cf <-  cf[subset]
-    vcv <- vcv[subset,subset] 
+    vcv <- vcv[subset,subset]
    }
    ctr.mat <- all.dif( cf, pre=fnam )
   }
@@ -141,7 +142,12 @@ if( !diffs )
     for( i in 1:length( subset ) ) sb <- c(sb,grep( subset[i], names( cf )  ))
     subset <- sb # unique( sb )
     }
-  if( is.null( subset ) ) subset <- 1:length( cf )
+  if( is.character( subint ) ) {
+    sb <- 1:length(cf)
+    for( i in 1:length(subint) ) sb <- intersect( sb, grep(subint[i],names(cf)) )
+    subset <- sb # unique( sb )
+    }
+  if( is.null( subset ) & is.null( subint ) ) subset <- 1:length( cf )
   # Exclude units where aliasing has produced NAs.
   # Not needed after replacement with 0s
   # subset <- subset[!is.na( cf[subset] )]
@@ -153,9 +159,9 @@ if( !diffs )
     rownames( ctr.mat ) <- names( cf )
     }
   if( dim( ctr.mat )[2] != length(cf) )
-      stop( paste("\n Dimension of ", deparse(substitute(ctr.mat)), 
+      stop( paste("\n Dimension of ", deparse(substitute(ctr.mat)),
             ": ", paste(dim(ctr.mat), collapse = "x"),
-            ", not compatible with no of parameters in ", 
+            ", not compatible with no of parameters in ",
             deparse(substitute(obj)), ": ", length(cf), sep = ""))
   }
 # Finally, here is the actual computation

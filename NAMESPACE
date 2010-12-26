@@ -1,6 +1,5 @@
 export(
   as.Date.cal.yr,
-  as.Date.numeric,
   apc.frame,
   apc.fit,
   apc.plot,

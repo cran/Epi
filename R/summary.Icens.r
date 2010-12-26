@@ -13,7 +13,7 @@ function( x, scale=1, ... )
           rate.est <- ci.lin( x$rates )
           rate.est[,-(3:4)] <- rate.est[,-(3:4)] * scale
           emat <- rbind( cbind( rate.est, RR=NA )[,c(1:4,7,5:6)],
-                        ci.lin( x$cov, E=T ) )
+                        ci.lin( x$cov, Exp=T ) )
         }
     }
   if( attr( x, "model" ) == "AER" )

@@ -7,12 +7,13 @@
 \description{
   For a given model object the function computes a linear function of
   the parameters and the corresponding standard errors, p-values and
-  confidence intervals. 
+  confidence intervals.
   }
 \usage{
 ci.lin( obj,
     ctr.mat = NULL,
      subset = NULL,
+     subint = NULL,
       diffs = FALSE,
        fnam = !diffs,
        vcov = FALSE,
@@ -35,7 +36,11 @@ ci.mat( alpha = 0.05, df=Inf )
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
     parameters may result from using a character vector. This is
-    considered a facility.} 
+    considered a facility.}
+  \item{subint}{Subset selection like for \code{subset}, except that
+    elements of a character vector given as argument will be used to
+    select subsets of parameters and only the intersection of these is
+    returned.}
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
@@ -62,7 +67,7 @@ ci.mat( alpha = 0.05, df=Inf )
   covariance matrix of this, is returned but not printed.
   If \code{Exp==TRUE} the confidence intervals for the parameters are
   replaced with three columns: exp(estimate,c.i.).
-  
+
   \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
   \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with
   columns of estimates and standard errors, so as to produce a p by 3 matrix
@@ -87,7 +92,7 @@ y <- 7 + as.integer( f ) * 3 + 2 * x + 1.7 * rnorm( 200 )
 
 # Fit a simple model:
 mm <- lm( y ~ x + f + g )
-ci.lin( mm ) 
+ci.lin( mm )
 ci.lin( mm, subset=3:6, diff=TRUE, fnam=FALSE )
 ci.lin( mm, subset=3:6, diff=TRUE, fnam=TRUE )
 ci.lin( mm, subset="f", diff=TRUE, fnam="f levels:" )

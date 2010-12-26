@@ -26,25 +26,38 @@
          col.cross="black",
          col.border="black",
          col.bg="transparent"  )
-   boxarr( b1, b2, offset=FALSE, pos=0.6, ... )
+   boxarr( b1, b2, offset=FALSE, pos=0.45, ... )
    boxes( obj, ... )
       \method{boxes}{Lexis}( obj, file,
-             boxpos = FALSE,
-              wmult = 1.5,
-              hmult = 1.5*wmult,
-                cex = 1.5,
-             show   = inherits( obj, "Lexis" ),
-             show.Y = show,
-            scale.Y = 1,
-           digits.Y = 1,
-             show.D = show,
-            scale.D = FALSE,
-           digits.D = as.numeric( as.logical(scale.D) ),
-              eq.wd = TRUE,
-              eq.ht = TRUE,
-             subset = NULL,
-            exclude = NULL,
-                ... )
+             detailed = FALSE,
+               boxpos = FALSE,
+                wmult = 1.5,
+                hmult = 1.5*wmult,
+                  cex = 1.5,
+               show   = inherits( obj, "Lexis" ),
+               show.Y = show,
+              scale.Y = 1,
+             digits.Y = 1,
+               show.D = show,
+              scale.D = FALSE,
+             digits.D = as.numeric(as.logical(scale.D)),
+                eq.wd = TRUE,
+                eq.ht = TRUE,
+                   wd,
+                   ht,
+               subset = NULL,
+              exclude = NULL,
+                 font = 2,
+                  lwd = 2,
+              col.txt = "black",
+           col.border = col.txt,
+               col.bg = "transparent",
+              col.arr = "black",
+              lwd.arr = 2,
+             font.arr = 2,
+              txt.arr = NULL,
+          col.txt.arr = col.arr,
+           offset.arr = 2, ... )
    fillarr( x1, y1, x2, y2, gap=2, fr=0.8,
             angle=17, lwd=2, length=par("pin")[1]/30, ... )
    }
@@ -55,8 +68,8 @@
   \item{wd}{width of box.}
   \item{ht}{height of box.}
   \item{font}{Font for the text. Defaults to 2 (=bold).}
-  \item{lwd}{Line width of the box / arrow.}
-  \item{col.txt}{Color for the text.}
+  \item{lwd}{Line width of the boxborders.}
+  \item{col.txt}{Color for the text in boxes.}
   \item{col.border}{Color of the box border.}
   \item{col.bg}{Background color for the interior of the box.}
   \item{\dots}{Arguments to be passed on to the call of other functions.}
@@ -71,30 +84,13 @@
   \item{obj}{A \code{\link{Lexis}} object, or a transition matrix; that
     is a matrix}
   \item{file}{Name of the file with the code reproducing the plot.}
+  \item{detailed}{Should the output of R-code be detailed, showing all parameters?}
   \item{boxpos}{If \code{TRUE} the boxes are positioned  equidistantly on a
                 circle, if \code{FALSE} (the default) you are queried to
                 click on the screen for the positions. This argument can also
                 be a named list with elements \code{x} and
                 \code{y}, both numerical vectors, giving the centers of
                 the boxes.}
-%                Additional elements of the list can be supplied,
-%                defining colors, fonts etc. for the box texts.
-%                Possible values are: \code{col.txt},\code{col.border},
-%                \code{col.bg}, \code{ht}, \code{wd},
-%                see the corresponding arguments to \code{boxes}.
-%                Also list elements pertaining to the arrows can be supplied.
-%                These chould be either vectors referring to the non-NA elemts
-%                of the transition matrix in column-major order, or matrices of
-%                the same dimension as the transition matrix. Possible values
-%                are: \code{col.arr}, \code{lwd.arr}, \code{lty.arr},
-%                \code{angle.arr}, \code{length.arr}, se the correponding
-%                arguments to \code{boxarr}.}
-%  \item{arrows}{A named list. Alle elements should be square matrices of the
-%                a dimension as the number of states. Entries corresponding to
-%                arrrows drawn will be used, all other entries will be ignored.
-%                Possible values are: \code{lwd},\code{col},\code{gap},\code{fr},
-%                \code{angle},\code{length} --- see the corresponding arguments
-%                to \code{boxarr}.}
   \item{wmult}{Multiplier for the width of the box relative to the width of the
                text in the box.}
   \item{hmult}{Multiplier for the height of the box relative to the height of the
@@ -119,7 +115,18 @@
                 Can be given either as a numerical vector or character
                 vector state names.}
   \item{exclude}{Exclude states from the plot. The complementary of \code{subset}.
-                 Ignored if \code{subset} is given.}
+    Ignored if \code{subset} is given.}
+  \item{col.arr}{Color of the arrows between boxes.
+    A vector of character strings, the arrows are referred to as the
+    row-wise sequence of non-NA elements of the transition matrix.
+    Thus the first ones refer to the transitions out of state 1, in
+    order of states.}
+  \item{lwd.arr}{Line withs of the arrows.}
+  \item{font.arr}{Font of the text annotation the arrows.}
+  \item{txt.arr}{Text put on the arrows.}
+  \item{col.txt.arr}{Colors for text on the arrows.}
+  \item{offset.arr}{The amount offset between arrows that go between the
+    same pair of boxes (two-way transitions).}
   \item{x1}{x-coordinate of the starting point.}
   \item{y1}{y-coordinate of the starting point.}
   \item{x2}{x-coordinate of the end point.}
@@ -132,7 +139,7 @@
   \item{length}{Length of the arrow head in inches. Defaults to 1/30 of the
                 physical width of the plot.}
   }
-  \details{    
+  \details{
   These functions are designed to facilitate the drawing of multistate
   models, mainly by automatic calculation of the arrows between boxes.
 
@@ -142,7 +149,7 @@
   symbolizing a death state. \code{boxarr} draws an arrow between two
   boxes, making sure it does not intersect the boxes. Only straight
   lines are drawn.
-  
+
   \code{boxes.Lexis} takes as input a Lexis object sets up an empty plot
   area (with axes 0 to 100 in both directions) and if \code{boxpos=FALSE}
   (the default) prompts you to click
@@ -164,7 +171,7 @@
   give the location of a point on the arrow used for printing (see argument
   \code{pos}) and the latter is a unit vector in the
   direction of the arrow, which is used by \code{boxes.Lexis} to
-  position the annotation of arrows with the number of transitions.  
+  position the annotation of arrows with the number of transitions.
   \code{fill.arr} is just a utility drawing nicer arrows than the default
   \code{\link{arrows}} command, basically by using filled arrow-heads; called
   by \code{boxarr}.
@@ -176,7 +183,7 @@
        The \code{boxarr} function returns the coordinates (as a named
        list with names \code{x} and \code{y}) of a point on the
        arrow, designated to be used for annotation of the arrow.
-       } 
+       }
 \author{Bendix Carstensen}
 \examples{
 par( mar=c(0,0,0,0), cex=1.5 )
@@ -190,7 +197,7 @@ bd  <- tbox( "DM"      , 45, 40, 22, 10, col.txt="blue" )
 bcd <- tbox( "Ca + DM" , 80, 60, 22, 10, col.txt="gray" )
 bdc <- tbox( "DM + Ca" , 80, 40, 22, 10, col.txt="red" )
       boxarr( bw, bo , col=gray(0.7), lwd=3 )
-# Note the argument adj= can takes values outside (0,1) 
+# Note the argument adj= can takes values outside (0,1)
 text( boxarr( bw, bc , col="blue", lwd=3 ),
       expression( lambda[Well] ), col="blue", adj=c(1,-0.2), cex=0.8 )
       boxarr( bw, bd , col=gray(0.7) , lwd=3 )
@@ -202,6 +209,13 @@ text( boxarr( bd, bdc, col="blue", lwd=3 ),
 tm <- rbind( c(NA,1,1), c(1,NA,1), c(NA,NA,NA) )
 rownames(tm) <- colnames(tm) <- c("Cancer","Recurrence","Dead")
 boxes.Lexis( tm, file="", boxpos=TRUE )
+boxes.Lexis( tm, file="", detailed=TRUE, boxpos=TRUE )
+# Illustrate texting of arrows
+boxes.Lexis( tm, boxpos=TRUE, txt.arr=c("en","to","tre","fire") )
+boxes.Lexis( tm, boxpos=TRUE, txt.arr=c(expression(lambda[C]),
+                                        expression(mu[C]),
+                                        "recovery",
+                                        expression(mu[R]) ) )
 
 # Set up a Lexis object
 data(DMlate)
