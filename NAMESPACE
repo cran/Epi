@@ -26,6 +26,7 @@ export(
   effx.match,
   float,
   print.floated,
+  gen.exp,
   Icens,
   print.Icens,
   plotevent,
@@ -53,6 +54,7 @@ export(
          msdata.Lexis,
            tmat.Lexis,
           boxes.Lexis,
+          boxes.matrix,
   entry,
   exit,
   status,
@@ -67,6 +69,7 @@ export(
   boxes,
   factorize,
   PY.ann,
+  N2Y,
   msdata,
   tmat,
   mh,
@@ -105,6 +108,7 @@ S3method(stack, Lexis)
 S3method(msdata, Lexis)
 S3method(tmat, Lexis)
 S3method(boxes, Lexis)
+S3method(boxes, matrix)
 S3method(merge, data.frame)
 S3method(print, stat.table)
 S3method(print, clogistic)

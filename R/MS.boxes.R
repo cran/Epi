@@ -5,7 +5,8 @@ function( txt, x, y, wd, ht,
           col.border="black",
           col.bg="transparent" )
 {
-rect( x-wd/2, y-ht/2, x+wd/2, y+ht/2, lwd=lwd, border=col.border, col=col.bg )
+rect( x-wd/2, y-ht/2, x+wd/2, y+ht/2,
+      lwd=lwd, border=col.border, col=col.bg )
 text( x, y, txt, font=font, col=col.txt )
 invisible( c( x, y, wd, ht ) )
 }
@@ -88,6 +89,12 @@ invisible( list( x = bx1*(1-pos)+bx2*pos,
 
 boxes <- function (obj, ...) UseMethod("boxes")
 
+boxes.matrix <-
+function( obj, ... )
+  {
+  Epi:::boxes.Lexis( obj, ... )
+  }
+
 boxes.Lexis <-
 function( obj, file, detailed=FALSE,
                boxpos = FALSE,
@@ -122,21 +129,18 @@ function( obj, file, detailed=FALSE,
 if( inherits(obj,"Lexis") )
   {
   obj <- factorize( obj )
-  tm <- tmat( obj )
+  tm <- tmat( obj, Y=TRUE )
   }
 else if( is.matrix(obj) & diff(dim(obj))==0 )
-       {
-       tm <- obj
-       # Put the transitions into D (only potentially used).
-       D <- tm
-       # Numbers in boxes ?
-       if( is.numeric(show.Y) )
-         {
-         Y <- show.Y
-         show.Y <- TRUE
-         }
-       }
+  {
+  tm <- obj
+  }
 else stop( "First argument must be a Lexis object or a square matrix.\n" )
+
+# Put the transitions into D and the diagnonal into Y.
+D <- tm
+diag( D ) <- NA
+Y <- diag( tm )
 
 # Derive state names, no. states and no. transitions
                       st.nam <- colnames( tm )
@@ -154,6 +158,13 @@ if( inherits(obj,"Lexis") )
     Y <- SM[[1]][1:n.st,"Risk time:"]
     D <- SM[[1+as.logical(scale.D)]][1:n.st,1:n.st] * ifelse(scale.D,scale.D,1)
     }
+  }
+
+# Explicitly given numbers in boxes ?
+if( is.numeric(show.Y) )
+  {
+  Y <- show.Y
+  show.Y <- TRUE
   }
 
 # No extra line with person-years when they are NA
@@ -282,7 +293,8 @@ for( i in subset ) for( j in subset )
     }
   }
 # Redraw the boxes with white background to remove any arrows
-for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i], col.bg="white" )
+for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
+                         lwd=lwd[i], col.bg="white" )
 # Then redraw the boxes again
 for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                                 font=font[i],

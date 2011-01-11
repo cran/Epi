@@ -297,9 +297,17 @@ function( data,
         Type <- paste("Sequential modelling", Dist, ": (", parm,
             "):\n")
     }
-    res <- list(Type = Type, Age = Age, Per = Per, Coh = Coh,
-        Drift = drift, Ref = c(Per = if (ref.p) p0 else NA, Coh = if (ref.c) c0 else NA),
-        Anova = AOV)
+    res <- list(Type = Type,
+                 Age = Age,
+                 Per = Per,
+                 Coh = Coh,
+               Drift = drift,
+                 Ref = c(Per = if ( parm %in%
+                                    c("APC","ADPC","Ad-P-C","AP-C") ) p0 else NA,
+                         Coh = if ( parm %in%
+                                    c("ACP","ADCP","Ad-C-P","AC-P") ) c0 else NA ),
+               Anova = AOV)
+    # If a spline model is used, add a "Knots" component to the apc-object
     if (model %in% c("ns", "bs"))
         res <- c(res, list(Knots = Knots))
     res$Age[, -1] <- res$Age[, -1] * scale
@@ -307,6 +315,15 @@ function( data,
         print(res$Type)
         print(res$Anova)
     }
+    # Print warnings about reference points:
+    if( !ref.p & parm %in% c("APC","ADPC") )
+        cat( "No reference period given:\n",
+             "Reference period for age-effects is chosen as\n",
+             "the median date of event: ", p0 )
+    if( !ref.c & parm %in% c("ACP","ADCP") )
+        cat( "No reference period given:\n",
+             "Reference period for age-effects is chosen as\n",
+             "the median date of birth for persons  with event: ", c0 )
     class(res) <- "apc"
     invisible(res)
 }

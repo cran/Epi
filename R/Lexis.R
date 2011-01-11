@@ -80,7 +80,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
           stop("Incompatible mode for entry and exit status")
       }
   }
-  
+
   ## If entry is missing and one of the others is given as a list of length
   ## one, entry is assumed to be 0 on this only timescale.
   if( nmissing==2 )
@@ -111,7 +111,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     }
 
   ## Coerce entry and exit lists to data frames
-  
+
   if(!missing(entry)) {
     entry <- as.data.frame(entry)
     if (is.null(names(entry)))
@@ -140,9 +140,9 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     ## Impute entry
     entry <- exit - duration
   }
-  
+
   if (missing(duration)) {
-    ## Impute duration 
+    ## Impute duration
     full.time.scales <- intersect(names(entry), names(exit))
     if (length(full.time.scales) == 0) {
       stop("Cannot calculate duration from entry and exit times")
@@ -180,9 +180,9 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
   if (any(duration<0)) {
     stop("Duration must be non-negative")
   }
-  
+
   ## Make sure id value - if supplied - is valid. Otherwise supply default id
-  
+
   if (missing(id)) {
     id <- 1:nrow(entry)
   }
@@ -237,10 +237,10 @@ check.time.scale <- function(lex, time.scale=NULL)
   ##Utility function, returns the names of the time scales in a Lexis object
   ##lex - a Lexis object
   ##time.scale - a numeric or character vector. The function checks that
-  ##             these are valid time scales for the Lexis object. 
+  ##             these are valid time scales for the Lexis object.
   ##Return value is a character vector containing the  names of the requested
   ##time scales
-  
+
   all.names <- timeScales(lex)
   if (is.null(time.scale))
     return(all.names)
@@ -270,9 +270,9 @@ function(x, time.scale=1)
   # A utility function that returns a data.frame / Lexis object with
   # rows with missing timescales removed
   x[complete.cases(x[,check.time.scale(x,time.scale)]),]
-  }    
+  }
 
-plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray", 
+plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray",
                           type="l", col="darkgray", xlim, ylim, xlab, ylab,
                           ...)
 {
@@ -295,7 +295,7 @@ plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray",
     xlab <- time.scale
   if (missing(ylab))
     ylab <- "id number"
-  
+
   plot(time.entry, id, type="n", xlab=xlab, ylab=ylab, xlim=xlim, ylim=ylim,
        ...)
   if (type=="b" || type=="l") {
@@ -311,7 +311,7 @@ plot.Lexis.1D <- function(x, time.scale=1, breaks="lightgray",
 
 points.Lexis.1D <- function(x, time.scale, ...)
 {
-  x <- valid.times(x,time.scale)  
+  x <- valid.times(x,time.scale)
   time.exit <- x[,time.scale] + x$lex.dur
   points(time.exit, x$lex.id, ...)
 }
@@ -343,7 +343,7 @@ plot.Lexis.2D <- function(x, time.scale, breaks="lightgray",
     stop("Two time scales are required")
 
   x <- valid.times(x,time.scale)
-  
+
   time.entry <- time.exit <- vector("list",2)
   for (i in 1:2) {
     time.entry[[i]] <- x[,time.scale[i]]
@@ -368,12 +368,12 @@ plot.Lexis.2D <- function(x, time.scale, breaks="lightgray",
   else if (missing(ylim)) {
     ylim <- c(min(time.entry[[2]]), max(time.exit[[2]]))
   }
-  
+
   if (missing(xlab))
     xlab <- time.scale[1]
   if (missing(ylab))
     ylab <- time.scale[2]
-      
+
   plot(time.entry[[1]], time.entry[[2]], type="n",
        xlab=xlab, ylab=ylab, xlim=xlim, ylim=ylim, ...)
 
@@ -465,7 +465,7 @@ lines.Lexis <- function(x, time.scale=options()[["Lexis.time.scale"]], ...)
   time.scale <- check.time.scale(x, time.scale)
   if (length(time.scale) > 2)
     time.scale <- time.scale[1:2]
-  
+
   if (length(time.scale) == 1)
     lines.Lexis.1D(x, time.scale=time.scale, ...)
   else if (length(time.scale) == 2)
@@ -516,7 +516,7 @@ merge.data.frame <- function(x, y, ...)
 {
   if (is.Lexis(x))
     merge.Lexis(x, y, ...)
-  else if (is.Lexis(y)) 
+  else if (is.Lexis(y))
     merge.Lexis(y, x, ...)
   else
     base::merge.data.frame(x, y, ...)
@@ -539,7 +539,7 @@ merge.Lexis <- function(x, y, id, by, ...)
       stop("x and y have no variable names in common")
     }
   }
-  
+
   z <-  base::merge.data.frame(x, y, ...)
   attr(z,"breaks") <- attr(x, "breaks")
   attr(z,"time.scales") <- attr(x, "time.scales")
@@ -550,47 +550,65 @@ merge.Lexis <- function(x, y, id, by, ...)
 
 ## Extractor functions
 
-entry <- function(x, time.scale = NULL)
+entry <- function(x, time.scale = NULL, by.id = FALSE )
 {
     time.scale <- check.time.scale(x, time.scale)
+    wh <- x[,time.scale[1]] ==
+     ave( x[,time.scale[1]], x$lex.id, FUN=if( by.id ) min else I )
     if (length(time.scale) > 1) {
-        return(as.matrix(x[, time.scale]))
+        res <- as.matrix(x[wh, time.scale])
+        if( by.id ) colnames( res ) <- x$lex.id[wh]
+        return( res )
     }
     else {
-        return(x[, time.scale])
+        res <- x[wh, time.scale]
+        if( by.id ) names( res ) <- x$lex.id[wh]
+        return( res )
     }
 }
 
-exit <- function(x, time.scale = NULL)
+exit <- function(x, time.scale = NULL, by.id = FALSE )
 {
     time.scale <- check.time.scale(x, time.scale)
+    wh <- x[,time.scale[1]] ==
+     ave( x[,time.scale[1]], x$lex.id, FUN=if( by.id ) max else I )
     if (length(time.scale) > 1) {
-        return(as.matrix(x[, time.scale]) + x$lex.dur)
+        res <- as.matrix(x[wh, time.scale]) + x$lex.dur[wh]
+        if( by.id ) rownames( res ) <- x$lex.id[wh]
+        return( res )
     }
     else {
-        return(x[, time.scale] + x$lex.dur)
+        res <- x[wh, time.scale] + x$lex.dur[wh]
+        if( by.id ) names( res ) <- x$lex.id[wh]
+        return( res )
     }
 }
 
-dur <- function(x)
+dur <- function(x, by.id=FALSE)
 {
-  return(x$lex.dur)
+  if( by.id ) return( tapply(x$lex.dur,x$lex.id,sum) )
+  else        return(        x$lex.dur               )
 }
 
-
-status <- function(x, at="exit")
+status <- function(x, at="exit", by.id = FALSE)
 {
   at <- match.arg(at, c("entry","exit"))
-  switch(at, "entry"=x$lex.Cst, "exit"=x$lex.Xst)
+  wh <- x[,timeScales(x)[1]] ==
+   ave( x[,timeScales(x)[1]], x$lex.id, FUN=if(by.id)
+                                             switch(at,
+                                                    "entry"=min,
+                                                    "exit"=max)
+                                             else I )
+  res <- switch(at, "entry"=x$lex.Cst, "exit"=x$lex.Xst)[wh]
+  if( by.id ) names( res ) <- x$lex.id[wh]
+  res
 }
 
-time.scales <-
 timeScales <- function(x)
 {
   return (attr(x,"time.scales"))
 }
 
-time.band <-
 timeBand <- function(lex, time.scale, type="integer")
 {
   time.scale <- check.time.scale(lex, time.scale)[1]
@@ -619,7 +637,7 @@ timeBand <- function(lex, time.scale, type="integer")
                    "left" = I1,
                    "right" = I2,
                    "middle" = (I1 + I2)/2)
-                   
+
   if(type=="factor") {
     return(factor(band, levels=0:length(breaks), labels=labels))
   }

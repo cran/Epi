@@ -8,11 +8,12 @@
 timeScales(x)
 }
 \arguments{
-  \item{x}{an object of class \code{Lexis}}
+  \item{x}{an object of class \code{Lexis}.}
 }
 \value{
   A character vector containing the names of the variables in \code{x}
-  that represent the time scales
+  that represent the time scales. Extracted from the \code{time.scales}
+  attribute of the object.
 }
 \author{Martyn Plummer}
 \seealso{\code{\link{Lexis}}, \code{\link{splitLexis}}}

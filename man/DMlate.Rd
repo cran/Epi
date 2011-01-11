@@ -15,13 +15,14 @@ with date of diagnosis after 1.1.1995.
 \usage{data(DMrand)
        data(DMlate)}
 \format{
-  A data frame with 10000 observations on the following 6 variables.
+  A data frame with 10000 observations on the following 7 variables.
   \describe{
     \item{\code{sex}}{Sex, a factor with levels \code{M} \code{F}}
     \item{\code{dobth}}{Date of birth}
     \item{\code{dodm}}{Date of inclusion in the register}
     \item{\code{dodth}}{Date of death}
-    \item{\code{doins}}{Date of first insulin prescription}
+    \item{\code{dooad}}{Date of 2nd prescription of OAD}
+    \item{\code{doins}}{Date of 2nd insulin prescription}
     \item{\code{dox}}{Date of exit from follow-up.}
   }
 }

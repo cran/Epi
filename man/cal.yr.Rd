@@ -15,7 +15,7 @@
   }
 \usage{
   cal.yr( x, format="\%Y-\%m-\%d", wh=NULL )
-  as.Date.cal.yr( x, ... )
+  \method{as.Date}{cal.yr}( x, ... )
 }
 \arguments{
   \item{x}{A factor or character vector, representing a date in format

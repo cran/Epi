@@ -54,7 +54,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
   
   ## Check that functions in the contents list are valid
   valid.functions <- c("count","mean","weighted.mean","sum","quantile",
-                       "median","IQR","max","min","ratio","percent")
+                       "median","IQR","max","min","ratio","percent","sd")
   table.fun <- character(length(contents) - 1)
   for (i in 2:length(contents)) {
     if (!is.call(contents[[i]]))
@@ -147,6 +147,10 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
       margin[margin==0] <- NA
       return(100*sweep(n, which(sweep.index), margin,"/"))
     }
+  }
+  sd <- function (..., na.rm = TRUE) 
+  {
+      tapply(..., INDEX=subindex, FUN = stats::sd, na.rm=na.rm)
   }
 
   ##Calculate dimension of the main table, excluding margins
@@ -448,7 +452,8 @@ pretty.print.stattable.2d <- function(x, width, digits)
 print.stat.table <- function(x, width=7,digits,...)
 {
   fun.digits <- c("count"=0,"mean"=2,"weighted.mean"=2,"sum"=2,"quantile"=2,
-                  "median"=2,"IQR"=2,"max"=2,"min"=2,"ratio"=2,"percent"=1)
+                  "median"=2,"IQR"=2,"max"=2,"min"=2,"ratio"=2,"percent"=1,
+                  "sd"=2)
   if (!missing(digits)) {
     if (is.null(names(digits))) {
       if (length(digits) > 1)

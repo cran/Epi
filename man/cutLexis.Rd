@@ -116,7 +116,10 @@ countLexis( data, cut, timescale = 1 )
   Martyn Plummer, IARC, \email{plummer@iarc.fr}.
 }
 \seealso{
-  \code{\link{splitLexis}}, \code{\link{Lexis}}, \code{\link{summary.Lexis}}
+  \code{\link{splitLexis}},
+  \code{\link{Lexis}},
+  \code{\link{summary.Lexis}},
+  \code{\link{boxes.Lexis}}
 }
 \examples{
 # A small artificial example
