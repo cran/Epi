@@ -1,7 +1,6 @@
 \name{cal.yr}
 \alias{cal.yr}
 \alias{as.Date.cal.yr}
-\alias{as.Date.numeric}
 \title{
   Functions to convert character, factor and various date objects into a number,
   and vice versa.
@@ -17,7 +16,6 @@
 \usage{
   cal.yr( x, format="\%Y-\%m-\%d", wh=NULL )
   as.Date.cal.yr( x, ... )
-  as.Date.numeric( x, ..., unit="d" )
 }
 \arguments{
   \item{x}{A factor or character vector, representing a date in format
@@ -37,8 +35,6 @@
                 Factors in the dataframe will be ignored.}
   \item{wh}{Indices of the variables to convert if \code{x} is a data frame.
             Can be either a numerical or character vector.}
-  \item{unit}{Which units are the date measured in, \code{"y"} for years,
-    \code{"d"} for days.}
   \item{...}{Arguments passed on from other methods.}
   }
 \value{
@@ -47,8 +43,7 @@
   a dataframe with some of the columns converted to class \code{"cal.yr"} is
   returned.
 
-  \code{as.Date.cal.yr} and \code{as.Date.numeric}
-  return \code{\link{Date}} objects.
+  \code{as.Date.cal.yr} returns a \code{\link{Date}} object.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
