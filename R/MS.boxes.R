@@ -119,7 +119,11 @@ function( obj, file, detailed=FALSE,
           col.txt.arr = col.arr,
            offset.arr = 2, ... )
 {
-if( inherits(obj,"Lexis") ) tm <- tmat( obj )
+if( inherits(obj,"Lexis") )
+  {
+  obj <- factorize( obj )
+  tm <- tmat( obj )
+  }
 else if( is.matrix(obj) & diff(dim(obj))==0 )
        {
        tm <- obj
@@ -180,9 +184,9 @@ subset <- sbst
 
 # Recycling of box-arguments
 if( !missing(ht) )
-if( length(ht         )<n.st ) font       <- rep(ht        ,n.st)[1:n.st]
+if( length(ht         )<n.st ) ht         <- rep(ht        ,n.st)[1:n.st]
 if( !missing(wd) )
-if( length(wd         )<n.st ) font       <- rep(wd        ,n.st)[1:n.st]
+if( length(wd         )<n.st ) wd         <- rep(wd        ,n.st)[1:n.st]
 if( length(font       )<n.st ) font       <- rep(font      ,n.st)[1:n.st]
 if( length(lwd        )<n.st ) lwd        <- rep(lwd       ,n.st)[1:n.st]
 if( length(col.border )<n.st ) col.border <- rep(col.border,n.st)[1:n.st]

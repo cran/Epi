@@ -4,8 +4,10 @@ function( obj,
        subset = NULL,
          intl = 1,
         alpha = 0.05,
-          Exp = TRUE )
+          Exp = TRUE,
+       sample = FALSE )
 {
+if( sample ) require( MASS )
 # First extract all the coefficients and the variance-covariance matrix
 #
 if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) ) {
@@ -70,6 +72,8 @@ if( dim( ctr.mat )[2] != length(cf) )
 # Finally, here is the actual computation of the estimates
     ct <- ctr.mat %*% cf
     vc <- ctr.mat %*% vcv %*% t( ctr.mat )
+# If a sample is requested replace the eatimate by a sample
+    if( sample ) ct <- t( mvrnorm( sample, ct, vc ) )
 # If Exp was requested, we take the exponential of the estimates
 # before we cumulate the sum
 if( Exp )
@@ -83,7 +87,12 @@ if( Exp )
     cum.mat <- t( intl * t( cum.mat ) )
 # This is then multiplied to the coefficients
     ct <- cum.mat %*% ct
+    if( sample ) ct
+    else
+    {
     vc <- cum.mat %*% vc %*% t( cum.mat )
     se <- sqrt( diag( vc ) )
-    cbind( cbind( ct, se ) %*% ci.mat( alpha=alpha ), Std.err.=se )
+    cum <- cbind( ct, se ) %*% ci.mat( alpha=alpha )
+    cbind( cum, Std.err.=se )
+    }
 }

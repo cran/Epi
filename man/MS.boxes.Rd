@@ -65,8 +65,8 @@
   \item{txt}{Text to be placed inside the box.}
   \item{x}{x-coordinate of center of box.}
   \item{y}{y-coordinate of center of box.}
-  \item{wd}{width of box.}
-  \item{ht}{height of box.}
+  \item{wd}{width of boxes in percentage of the plot width.}
+  \item{ht}{height of boxes in percentage of the plot height.}
   \item{font}{Font for the text. Defaults to 2 (=bold).}
   \item{lwd}{Line width of the boxborders.}
   \item{col.txt}{Color for the text in boxes.}
@@ -151,10 +151,10 @@
   lines are drawn.
 
   \code{boxes.Lexis} takes as input a Lexis object sets up an empty plot
-  area (with axes 0 to 100 in both directions) and if \code{boxpos=FALSE}
-  (the default) prompts you to click
-  on the locations for the state boxes, and then draws arrows implied by
-  the actual transitions in the \code{Lexis} object.
+  area (with axes 0 to 100 in both directions) and if
+  \code{boxpos=FALSE} (the default) prompts you to click on the
+  locations for the state boxes, and then draws arrows implied by the
+  actual transitions in the \code{Lexis} object.
 
   A transition matrix can also be supplied, in which case the row/column
   names are used as state names.

@@ -1,37 +1,37 @@
-doCutLexis <- function(data, cut, timescale, new.scale ) {
+doCutLexis <- function(data, cut, timescale, new.scale=FALSE ) {
 
-    ## new.scale is a charscter constant with the name of the new timescale
-    
+    ## new.scale is a character constant with the name of the new timescale
+
     ## Code each new interval using new variable lex.cut:
     ## 0 = unchanged interval (cut occurs after exit)
     ## 1 = first part of split interval
-    ## 2 = second part of split interval (or cut occurs before entry)
-    
+    ## 2 = second part of split interval (or cut occurs before interval)
+
     cut[is.na(cut)] <- Inf #If a cut time is missing, it never happens
 
     ## First intervals (before the cut)
-    in.1 <- entry(data, timescale)
+    in.1 <-          entry(data, timescale)
     ex.1 <- pmin(cut, exit(data, timescale))
 
     ## Create Lexis object for first intervals
     lx.1 <- data
-    lx.1$lex.dur  <- ex.1 - in.1
+    lx.1$lex.dur <- ex.1 - in.1
     lx.1$lex.cut <- ifelse(cut < exit(data, timescale), 1, 0)
-    if( new.scale) lx.1[,"lex.new.scale"] <- NA
-    
+    if( new.scale ) lx.1[,"lex.new.scale"] <- NA
+
     ## Second intervals (after the cut)
     in.2 <- pmax(cut, entry(data, timescale))
-    ex.2 <- exit(data, timescale)
+    ex.2 <-            exit(data, timescale)
 
     ## Create Lexis object for second intervals
     lx.2 <- data
     lx.2$lex.dur <- ex.2 - in.2
     lx.2$lex.cut <- 2
-    if( new.scale) lx.2[,"lex.new.scale"] <- in.2 - cut
+    if( new.scale ) lx.2[,"lex.new.scale"] <- in.2 - cut
 
     ## Update entry times
     lx.2[, timeScales(data)] <- exit(data) - lx.2$lex.dur
-    
+
     return(rbind(lx.1, lx.2))
 }
 
@@ -39,17 +39,17 @@ setStatus.default <- function(data, new.state)
 {
     data$lex.Xst[data$lex.cut == 1] <- new.state[data$lex.cut == 1]
     data$lex.Cst[data$lex.cut == 2] <- new.state
-    
+
     return(data)
 }
 
 setStatus.numeric <- function(data, new.state, precursor.states=NULL,
                               progressive=TRUE) {
-    
+
     if (!is.numeric(new.state)) {
         stop("If lex.Cst, lex.Xst are numeric, new.state must be numeric too")
     }
-    
+
     data$lex.Xst[data$lex.cut == 1] <- new.state[data$lex.cut == 1]
     data$lex.Cst[data$lex.cut == 2] <- new.state
 
@@ -72,7 +72,7 @@ function( data,
     if (!is.character(new.state)) {
         stop("new.state must be a character vector, but it is ",str(new.state))
     }
-    
+
     current.states <- levels(data$lex.Cst)
     new.states <- setdiff(new.state,current.states)
     new.states <- new.states[!is.na(new.states)]
@@ -194,7 +194,7 @@ cutLexis <- function(data,
             stop("Lexis object is not progressive before splitting")
         }
     }
-    
+
     lx <- doCutLexis( data, cut, timescale, new.scale=TRUE )
     if (is.factor(data$lex.Cst)) {
         lx <- setStatus.factor(lx, new.state, precursor.states, progressive)
@@ -205,7 +205,7 @@ cutLexis <- function(data,
     else {
         lx <- setStatus.default(lx, new.state)
       }
-    
+
     ## Remove redundant intervals
     lx <- lx[lx$lex.dur > 0,]
     ## Remove the lex.cut column
@@ -282,9 +282,9 @@ countLexis <- function(data, cut, timescale = 1)
 
     timescale <- Epi:::check.time.scale(data, timescale)
     if (length(timescale) > 1) {
-        stop("Multiple time scales")
+        stop("Multiple time scales not meaningful")
     }
-    
+
     lx <- doCutLexis(data, cut, timescale)
 
     ## Update status variables
@@ -295,6 +295,10 @@ countLexis <- function(data, cut, timescale = 1)
     lx <- lx[lx$lex.dur > 0,]
     ## Remove the lex.cut column
     lx <- lx[,-match("lex.cut",names(lx))]
+    ## Retain the attributes
+    attr( lx, "breaks" )      <- attr( data, "breaks" )
+    attr( lx, "time.scales" ) <- attr( data, "time.scales" )
+    attr( lx, "class" )       <- attr( data, "class" )
 
     return(lx[order(lx$lex.id,lx[,timescale]),])
 }

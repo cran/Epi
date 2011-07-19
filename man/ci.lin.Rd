@@ -1,6 +1,7 @@
 \name{ci.lin}
 \alias{ci.lin}
 \alias{ci.mat}
+\alias{Wald}
 \title{
   Compute linear functions of parameters with s.e.
   }
@@ -19,7 +20,9 @@ ci.lin( obj,
        vcov = FALSE,
       alpha = 0.05,
          df = Inf,
-        Exp = FALSE )
+        Exp = FALSE,
+     sample = FALSE )
+Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df=Inf )
 }
 \arguments{
@@ -37,9 +40,9 @@ ci.mat( alpha = 0.05, df=Inf )
     parameter names (using \code{grep}) to find the subset. Repeat
     parameters may result from using a character vector. This is
     considered a facility.}
-  \item{subint}{Subset selection like for \code{subset}, except that
+  \item{subint}{SUBset selection like for \code{subset}, except that
     elements of a character vector given as argument will be used to
-    select subsets of parameters and only the intersection of these is
+    select subsets of parameters and only the INTersection of these is
     returned.}
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
@@ -52,11 +55,19 @@ ci.mat( alpha = 0.05, df=Inf )
     with the annotation of contrasts? Ignored if \code{diffs==T}. If a
     sting is supplied this will be prefixed to the labels.}
   \item{vcov}{Should the covariance matrix of the set of parameters be
-    returned? If this is set, \code{Exp} is ignored.}
+    returned? If this is set, \code{Exp} is ignored. See details.}
   \item{alpha}{Significance level for the confidence intervals.}
   \item{df}{Integer. Number of degrees of freedom in the t-distribution used
     to compute the quantiles used to construct the confidence intervals.}
-  \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns 1,5,6 ).}
+  \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns
+    1,5,6 ).}
+  \item{sample}{Logical or numerical. If \code{TRUE} or numerical a
+    sample of the linear parameter function as defined by \code{subset}
+    and \code{ctr.mat} is returned.}
+  \item{H0}{The null values for the selected/transformed parameters to
+    be tested by a Wald test. Must have the same length as the selected
+    parameter vector.}
+  \item{\ldots}{Parameters passed on to \code{ci.lin}.}
   }
 \value{
   \code{ci.lin} returns
@@ -67,6 +78,13 @@ ci.mat( alpha = 0.05, df=Inf )
   covariance matrix of this, is returned but not printed.
   If \code{Exp==TRUE} the confidence intervals for the parameters are
   replaced with three columns: exp(estimate,c.i.).
+
+  \code{Wald} computes a Wald test for a subset of (possibly linearly
+  transformed) parameters. The selection of the subset of parameters is
+  the same as for \code{ci.lin}. Using the \code{ctr.mat} argument makes
+  it possible to do a Wald test for equality of parameters. \code{Wald}
+  returns a named numerical vector of lenght 3, with names \code{Chisq},
+  \code{d.f.} and \code{P}.
 
   \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
   \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with
@@ -100,6 +118,15 @@ print( ci.lin( mm, subset="g", diff=TRUE, fnam="gee!:", vcov=TRUE ) )
 
 # Use character defined subset to get ALL contrasts:
 ci.lin( mm, subset="f", diff=TRUE )
+
+# A Wald test of wheter the g-parameters are 0
+Wald( mm, subset="g" )
+# Wald test of whether the three first f-parameters are equal:
+( CM <- rbind( c(1,-1,0,0), c(1,0,-1,0)) )
+Wald( mm, subset="f", ctr.mat=CM )
+# or alternatively
+( CM <- rbind( c(1,-1,0,0), c(0,1,-1,0)) )
+Wald( mm, subset="f", ctr.mat=CM )
 }
 \keyword{models}
 \keyword{regression}

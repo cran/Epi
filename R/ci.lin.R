@@ -8,8 +8,10 @@ function( obj,
          vcov = FALSE,
         alpha = 0.05,
            df = Inf,
-          Exp = FALSE )
+          Exp = FALSE,
+       sample = FALSE )
 {
+if( sample ) require( MASS )
 # First extract all the coefficients and the variance-covariance matrix
 #
 if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic") ) ) ) {
@@ -24,6 +26,9 @@ if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic") 
 } else if (inherits(obj, "MIresult")) {
        cf <- obj$coefficients
       vcv <- obj$variance
+} else if (inherits(obj, "mipo")) {
+       cf <- obj$qbar
+      vcv <- obj$t
 } else if( inherits( obj, "polr" ) ) {
        cf <- summary( obj )$coefficients
       vcv <- vcov( obj )
@@ -167,16 +172,20 @@ if( !diffs )
 # Finally, here is the actual computation
     ct <- ctr.mat %*% cf
     vc <- ctr.mat %*% vcv %*% t( ctr.mat )
+    if( sample ) res <- t( mvrnorm( sample, ct, vc ) ) else {
     se <- sqrt( diag( vc ) )
     ci <- cbind( ct, se ) %*% ci.mat( alpha=alpha, df=df )
     t0 <- cbind( se, ct/se, 2 * ( 1 - pnorm( abs( ct / se ) ) ) )
     colnames(t0) <- c("StdErr", "z", "P")
     res <- cbind(ci, t0)[, c(1, 4:6, 2:3), drop=FALSE]
-    if( Exp ) {
+    if( Exp )
+      {
       res <- cbind(      res[,1:4     ,drop=FALSE],
                     exp( res[,c(1,5,6),drop=FALSE] ) )
       colnames( res )[5] <- "exp(Est.)"
+      }
     }
 # Return the requested structure
+if( sample ) invisible( res ) else
 if( vcov ) invisible( list( est=ct, vcov=vc ) ) else res
 }

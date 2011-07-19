@@ -12,6 +12,6 @@ pctab <- function( TT, margin=length( dim( TT ) ), dec=1 )
                 sw,
                 sum )/100,
          "/" )
-  print( round( rt, dec ) )
+  if( dec ) print( round( rt, dec ) )
   invisible( rt )
   }

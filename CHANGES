@@ -1,3 +1,47 @@
+Changes in 1.1.24
+
+o countLexis did not take the "timescales" and "breaks" attribute across to the
+  resulting Lexis object.
+
+Changes in 1.1.23
+
+o A missing defualt value for new.scale in doCutLexis caused a crash
+  when using the count=TRUE argument to cutLexis.
+
+Changes in 1.1.23
+
+o ci.lin and ci.cum now have a sample= argument that causes return of
+  a sample from the normal distribution with mean equal to the
+  estimates and variance equal to the estimated variance of the
+  estimates. To be used to do "parametric bootstrap" of complicated
+  functions of the parameters, such as state occupancey probabilities
+  from multistate models.
+
+o ci.lin now supports objects of class mipo (Multiple Imputation
+  Pooled Objects --- see the mice package).
+
+o tabplot removed --- it was a proper subset of the mosaicplot from
+  the graphics package
+
+Changes in 1.1.22
+
+o A bug in boxes.Lexis prevented the use of ht= and wd= arguments to
+  set boxes to a prespecified size. The scaling of these is now also
+  clarified in the man file for boxes.Lexis.
+
+Changes in 1.1.21
+
+o Specifying period of cohort effects with only two parameters caused
+  apc.fit to crash. Fixed by adding a few ",drop=FALSE" in subsetting
+  of matrices.
+
+o Since as.Date.cal.yr was not used anywhere, it has been removed from
+  the package.
+
+o A function Wald added to do Wald test of several parameters or
+  linear combinations of them. It is a small extension on top of
+  ci.lin.
+
 Changes in 1.1.20
 
 o CITATION file added.
@@ -9,8 +53,8 @@ o ci.lin amended by an argument subint= allowing to select subsets of
 
 Changes in 1.1.18
 
-o boxes.Lexis has been made a bit more versatile for prodution of
-  box-diagrams from multitste models.
+o boxes.Lexis has been made a bit more versatile for production of
+  box-diagrams from multistate models.
 
 Changes in 1.1.17
 
@@ -30,7 +74,7 @@ o boxes.Lexis now resets the graphical parameters (par()) on exit.
 
 o plot.Lexis now has a default Lexis object as argument, allowing use of the
   function to plot empty Lexis diagrams without setting up a Lexis object first.
-  The bogus object has timescales c("Date","Age") but 0 follwo-up time.
+  The bogus object has timescales c("Date","Age") but 0 follow-up time.
 
 Changes in 1.1.14
 

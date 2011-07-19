@@ -32,7 +32,7 @@ float(object, factor, iter.max=50)
   level.  Floating variances are not real variances, but they can be
   used to calculate the variance error of contrast by treating each
   level as independent.
-  
+
   Plummer (2003) showed that floating variances can be derived from a
   covariance structure model applied to the variance-covariance matrix
   of the contrast estimates. This model can be fitted by minimizing the
@@ -49,7 +49,7 @@ float(object, factor, iter.max=50)
   calculated over all possible contrasts. These should be within 5
   percent, or the use of the floating variances may lead to invalid
   confidence intervals.
-  
+
 }
 \value{
   An object of class \code{floated}. This is a list with the following
@@ -65,7 +65,7 @@ float(object, factor, iter.max=50)
   Menezes(1999) and Firth and Menezes (2004) take a slightly different
   approach to this problem, using a pseudo-likelihood approach to fit
   the quasi-variance model. Their work is implemented in the package
-  qvcalc. 
+  qvcalc.
 }
 \references{
   Easton DF, Peto J and Babiker GAG (1991) Floating absolute risk: An
