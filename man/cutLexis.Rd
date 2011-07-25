@@ -5,7 +5,7 @@
   Cut follow-up at a specified date for each person.
 }
 \description{
-  
+
   Follow-up intervals in a Lexis object are divided into two
   sub-intervals: one before and one after an intermediate event.  The
   intermediate event may denote a change of state, in which case the
@@ -14,16 +14,14 @@
 
 }
 \usage{
-cutLexis <- function(data,
-                     cut,
-                     timescale = 1,
+cutLexis( data, cut, timescale = 1,
                      new.state = nlevels(data$lex.Cst)+1,
                      new.scale = FALSE,
                      split.states = FALSE,
                      progressive = FALSE,
                      precursor.states = NULL,
                      count = FALSE)
-  countLexis(data, cut, timescale = 1)
+countLexis( data, cut, timescale = 1 )
 }
 \arguments{
   \item{data}{A \code{Lexis} object.}
@@ -31,12 +29,11 @@ cutLexis <- function(data,
     If a time is missing (\code{NA}) then the event is assumed to occur
     at time \code{Inf}. \code{cut} can also be a dataframe, see details.}
   \item{timescale}{The timescale that \code{cut} refers to. Numeric or character.}
-  \item{new.state}{The state to which a transition occur at time \code{cut}.
-    It may be a single value, which is then
-    applied to all rows of \code{data}, or a vector with a separate
-    value for each row}
+  \item{new.state}{The state to which a transition occur at time
+    \code{cut}. It may be a single value, which is then applied to all
+    rows of \code{data}, or a vector with a separate value for each row}
   \item{new.scale}{Name of the timescale defined as "time since entry to
-    new.state". If \code{TRUE} a name for the new scale is contructed.
+    new.state". If \code{TRUE} a name for the new scale is constructed.
     See details.}
   \item{split.states}{Should states that are not precursor states be split
     according to whether the intermediate event has occurred.}
@@ -44,15 +41,15 @@ cutLexis <- function(data,
     status. See details.}
   \item{precursor.states}{an optional vector of states to be considered
     as "less severe" than \code{new.state}. See Details below}
-  \item{count}{logical indicating wheter the \code{countLexis} options should
+  \item{count}{logical indicating whether the \code{countLexis} options should
     be used. Specifying \code{count=TRUE} amounts to calling \code{countLexis},
-    and the arguments \code{new.state}, \code{progressive} and
+    in which case the arguments \code{new.state}, \code{progressive} and
     \code{precursor.states} will be ignored. }
 }
 \value{
   A \code{Lexis} object, for which each follow-up interval
-  containing the cut point is split in two: one before
-  and one after the cut point. An extra time-scale is added; the time
+  containing the cutpoint is split in two: one before
+  and one after the cutpoint. An extra time-scale is added; the time
   since the event at \code{cut}. This is \code{NA} for any follow-up
   prior to the intermediate event.
   }
@@ -104,11 +101,15 @@ cutLexis <- function(data,
   the cutpoint marks a recurrent event, and the status variable is used
   to count the number of events that have occurred. Times given in \code{cut}
   represent times of new events. Splitting with
-  \code{countLexis} augments the status variable by 1. If the entry
-  status is \code{X} and the exit status is \code{Y} before splitting,
-  then after splitting the entry status is \code{X}, \code{X+1} for
+  \code{countLexis} increases the status variable by 1. If the current
+  status is \code{X} and the exit status is \code{Y} before cutting,
+  then after cutting the entry status is \code{X}, \code{X+1} for
   the first and second intervals, respectively, and the exit status is
-  \code{X+1}, \code{Y+1} respectively.
+  \code{X+1}, \code{Y+1} respectively. Moreover the values of the status
+  is increased by 1 for all intervals for all intervals after the cut
+  for the person in question. Hence, a call to \code{countLexis} is
+  needed for as many times as the person with most events. But also it
+  is immaterial in what order the cutpoints are entered.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},

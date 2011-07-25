@@ -10,7 +10,7 @@
   a fractional number. 1 January 1970 is converted to 1970.0, and other
   dates are converted by assuming that years are all 365.25 days long,
   so inaccuracies may arise, for example, 1 Jan 2000 is converted to
-  1999.999. Differences between converted values will be 1/365.25 of the 
+  1999.999. Differences between converted values will be 1/365.25 of the
   difference between corresponding \code{\link{Date}} objects.
   }
 \usage{
@@ -49,13 +49,13 @@
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
   University of Copenhagen, \email{bxc@steno.dk},
   \url{http://www.pubhealth.ku.dk/~bxc}
-} 
+}
 \seealso{
   \code{\link{DateTimeClasses}},
   \code{\link{Date}}
 }
 \examples{
- # Charcter vector of dates:
+ # Character vector of dates:
  birth <- c("14/07/1852","01/04/1954","10/06/1987","16/05/1990",
             "01/01/1996","01/01/1997","01/01/1998","01/01/1999")
  # Proper conversion to class "Date":

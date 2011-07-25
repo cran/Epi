@@ -10,7 +10,8 @@ pctab(TT, margin = length(dim(TT)), dec=1)
 \arguments{
   \item{TT}{A table or array object}
   \item{margin}{Which margin should be the the total?}
-  \item{dec}{How many decimals should be printed?}
+  \item{dec}{How many decimals should be printed? If 0 or \code{FALSE}
+    nothing is printed}
 }
 \value{
   A table, where all dimensions except the one specified \code{margin}

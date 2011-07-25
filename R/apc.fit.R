@@ -101,10 +101,8 @@ function( data,
             MA <- model.matrix(~factor(A) - 1)
             MP <- model.matrix(~factor(P) - 1)
             MC <- model.matrix(~factor(P - A) - 1)
-            Rp <- MP[abs(P - p0) == min(abs(P - p0)), , drop = FALSE][1,
-                ]
-            Rc <- MC[abs(P - A - c0) == min(abs(P - A - c0)),
-                , drop = FALSE][1, ]
+            Rp <- MP[abs(P - p0) == min(abs(P - p0)), , drop = FALSE][1, ]
+            Rc <- MC[abs(P - A - c0) == min(abs(P - A - c0)), , drop = FALSE][1, ]
         }
         if (model == "ns") {
             require(splines)
@@ -199,8 +197,8 @@ function( data,
     xP <- detrend(rbind(Rp, MP), c(p0, P), weight = c(0, wt))
     xC <- detrend(rbind(Rc, MC), c(c0, P - A), weight = c(0,
         wt))
-    MPr <- xP[-1, ] - ref.p * xP[rep(1, nrow(MP)), ]
-    MCr <- xC[-1, ] - ref.c * xC[rep(1, nrow(MC)), ]
+    MPr <- xP[-1,,drop=FALSE] - ref.p * xP[rep(1, nrow(MP)),,drop=FALSE]
+    MCr <- xC[-1,,drop=FALSE] - ref.c * xC[rep(1, nrow(MC)),,drop=FALSE]
     if (length(grep("-", parm)) == 0) {
         if (parm %in% c("ADPC", "ADCP", "APC", "ACP"))
             m.APC <- update(m.0, . ~ . - 1 + MA + I(P - p0) +
@@ -221,13 +219,13 @@ function( data,
             m.APC <- update(m.0, . ~ . - 1 + MA + MPr + MCr)
         }
         Age <- cbind(Age = A.pt, ci.lin(m.APC, subset = "MA",
-            ctr.mat = MA[A.pos, ], Exp = TRUE, alpha = alpha)[,
+            ctr.mat = MA[A.pos,,drop=FALSE], Exp = TRUE, alpha = alpha)[,
             5:7])[order(A.pt), ]
         Per <- cbind(Per = P.pt, ci.lin(m.APC, subset = "MPr",
-            ctr.mat = MPr[P.pos, ], Exp = TRUE, alpha = alpha)[,
+            ctr.mat = MPr[P.pos,,drop=FALSE], Exp = TRUE, alpha = alpha)[,
             5:7])[order(P.pt), ]
         Coh <- cbind(Coh = C.pt, ci.lin(m.APC, subset = "MCr",
-            ctr.mat = MCr[C.pos, ], Exp = TRUE, alpha = alpha)[,
+            ctr.mat = MCr[C.pos,,drop=FALSE], Exp = TRUE, alpha = alpha)[,
             5:7])[order(C.pt), ]
         colnames(Age)[-1] <- c("Rate", lu)
         colnames(Per)[-1] <- c("P-RR", lu)

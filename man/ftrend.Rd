@@ -21,9 +21,9 @@ ftrend(object, ...)
   level of this factor.  However, the interpretation of these
   parameters,  and their variance-covariance matrix, depends on the
   numerical coding used for the  covariates. If an arbitrary constant is
-  added to the covariate values, then   the variance matrix is changed. 
+  added to the covariate values, then   the variance matrix is changed.
 
-  The \code{ftrend()} function takes the fitted model and works out an optimal 
+  The \code{ftrend()} function takes the fitted model and works out an optimal
   constant to add to the covariate values so that the covariance matrix is
   approximately diagonal.  The parameter estimates can then be treated as
   approximately independent, thus simplifying their presentation. This is
@@ -32,7 +32,7 @@ ftrend(object, ...)
 
   Greenland et al. (1999) originally suggested centring the covariates so that
   their weighted mean, using the fitted weights from the model, is zero.  This
-  heuristic criterion is improved upon by \code{ftrend()} which uses the same 
+  heuristic criterion is improved upon by \code{ftrend()} which uses the same
   minimum information divergence criterion as used by Plummer (2003) for
   floating variance calculations. \code{ftrend()} calls \code{nlm()} to
   do the minimization and will pass optional arguments to control it.
