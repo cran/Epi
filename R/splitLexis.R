@@ -2,7 +2,7 @@ split.lexis.1D <-
 function(lex, breaks, time.scale, tol)
 {
     time.scale <- Epi:::check.time.scale(lex, time.scale)
-  
+
     ## Entry and exit times on the time scale that we are splitting
     time1 <- lex[,time.scale, drop=FALSE]
     time2 <- time1 + lex$lex.dur
@@ -11,7 +11,7 @@ function(lex, breaks, time.scale, tol)
     breaks <- sort( unique( breaks ) )
     I1 <- c(-Inf, breaks)
     I2 <- c(breaks,Inf)
-  
+
     ## Arrays containing data on each interval (rows) for each subject (cols)
     en <- apply(time1, 1, pmax, I1)     # Entry time
     ex <- apply(time2, 1, pmin, I2)     # Exit time
@@ -25,7 +25,7 @@ function(lex, breaks, time.scale, tol)
 
     ## Cumulative time since entry at the start of each interval
     time.since.entry <- rbind(0, apply(dur,2,cumsum)[-NR,,drop=FALSE])
-  
+
     cal.new.entry <- function(entry.time) {
         sweep(time.since.entry, 2, entry.time, "+")[valid]
     }
@@ -47,7 +47,7 @@ function(lex, breaks, time.scale, tol)
                      "id" = rep(lex$lex.id, n.interval),
                      "entry.status" = rep(lex$lex.Cst, n.interval),
                      "exit.status" = new.Xst[valid])
-  
+
     ## Update breaks attribute
     breaks.attr <- attr(lex, "breaks")
     breaks.attr[[time.scale]] <- sort(c(breaks.attr[[time.scale]], breaks))
@@ -64,14 +64,25 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
     stop( "It makes no sense to time-split after stacking ---\n",
     "split your original Lexis object and stack that to get what you want.\n")
 
+
   ## Set temporary, unique, id variable
   lex$lex.tempid <- lex$lex.id
-  lex$lex.id <- 1:nrow(lex) 
-  
+  lex$lex.id <- 1:nrow(lex)
+
   ## Save auxiliary data
   aux.data.names <- setdiff(names(lex), timeScales(lex))
   aux.data.names <- aux.data.names[substr(aux.data.names,1,4) != "lex."]
   aux.data <- lex[, c("lex.id","lex.tempid", aux.data.names), drop=FALSE]
+
+  ## Check for NAs in the timescale
+  ts <- Epi:::check.time.scale(lex, time.scale)
+  ts.miss <- any(is.na(lex[,ts]))
+  if( ts.miss )
+    {
+    na.lex <- lex[ is.na(lex[,ts]),]
+       lex <- lex[!is.na(lex[,ts]),]
+    cat( "Note: NAs in the time-scale \"", ts, "\", you split on\n")
+    }
 
   ## If states are factors convert to numeric while splitting
   factor.states <- is.factor( lex$lex.Cst )
@@ -82,7 +93,7 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
     lex$lex.Cst <- as.integer( lex$lex.Cst )
     lex$lex.Xst <- as.integer( lex$lex.Xst )
     }
-  
+
   ## Split the data
   lex <- split.lexis.1D(lex, breaks, time.scale, tol)
 
@@ -93,9 +104,12 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
     lex$lex.Xst <- factor( lex$lex.Xst, levels=1:nstates, labels=state.levels )
     }
 
+  ## Put the NA-rows back
+  if( ts.miss ) lex <- rbind( lex, na.lex[,colnames(lex)] )
+
   ## Save attributes
   lex.attr <- attributes(lex)
-  ## Merge 
+  ## Merge
   lex <- merge.data.frame(lex, aux.data, by="lex.id")
   ## Restore attributes
   attr(lex,"breaks") <- lex.attr$breaks

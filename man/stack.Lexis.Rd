@@ -13,17 +13,20 @@ several transitions simultaneously.
 \usage{
 \method{stack}{Lexis}(x, ...)
 tmat( x, ... )
-\method{tmat}{Lexis}(x, ...)
+\method{tmat}{Lexis}(x, Y=FALSE, ...)
 }
 \arguments{
-  \item{x}{A \code{\link{Lexis}} object.
-}
+  \item{x}{A \code{\link{Lexis}} object.}
+  \item{Y}{Logical. Should the risk time be put in the diagonal? This is
+  a facility which is used by \code{\link{boxes.Lexis}}.}
   \item{\dots}{Not used.}
 }
 \value{
 \code{tmat.Lexis} returns a square transition matrix, classified by the
-levels of \code{lex.Cst} and \code{lex.Xst}, it has a 1 for every
-transition occurring and \code{NA} in all oter entries.
+levels of \code{lex.Cst} and \code{lex.Xst}, for every transition
+occurring the entry is the number of transitions occurring and \code{NA}
+in all oter entries. If \code{Y=TRUE}, the diagonal will contain the
+risk time in each of the states.
 
 \code{stack.Lexis} returns a dataframe to be used for analysis of
 multistate data when all transitions are modelled together, for example

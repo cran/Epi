@@ -31,27 +31,17 @@ xx
 tmat <- function (x, ...) UseMethod("tmat")
 
 tmat.Lexis <-
-function( x, ... )
+function( x, Y=FALSE, ... )
 {
 zz <- table(x$lex.Cst,x$lex.Xst)
 class(zz) <- "matrix"
-diag(zz) <- NA
+if( Y )
+  {
+  diag(zz) <- summary( x, simplify=FALSE )[[1]][1:nrow(zz),"Risk time:"]
+  }
+else diag(zz) <- NA
 zz[zz==0] <- NA
 zz
-}
-
-# The factorize method
-factorize <- function (obj, ...) UseMethod("factorize")
-
-factorize.Lexis <-
-function( obj, ... )
-{
-   Cst <- factor( obj$lex.Cst )
-   Xst <- factor( obj$lex.Xst )
-   all.levels = union(levels(Cst),levels(Xst))
-   obj$lex.Cst <- factor( Cst, levels=all.levels )
-   obj$lex.Xst <- factor( Xst, levels=all.levels )
-   obj
 }
 
 # The msdata method
@@ -68,7 +58,7 @@ tr.mat <- tmat(obj)
 tmp <- stack.Lexis( factorize.Lexis(obj) )
 lv  <- c( match(timeScales(obj), names(tmp) ),
           grep("lex\\.", names(tmp) ) )
-# The transitions that we refer to are extracted form lex.Tr:
+# The transitions that we refer to are extracted from lex.Tr:
 ss <- strsplit( as.character(tmp$lex.Tr), "->" )
 # The resulting dataframe is created by renaming columns in the stacked Lexis object
 data.frame( id = tmp$lex.id,

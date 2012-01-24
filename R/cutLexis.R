@@ -166,7 +166,7 @@ cutLexis <- function(data,
         stop("Multiple time scales")
     }
 
-    ## If we want to add a new timescale, contruct the name
+    ## If we want to add a new timescale, construct the name
     if( is.logical(new.scale) ) {
       if( new.scale ) scale.name <- paste( new.state[1], "dur", sep="." )
       }
@@ -241,7 +241,7 @@ cutLexis <- function(data,
       tn <- c( match( attr( data, "time.scales" ), names( lx ) ),
                ncol(lx) )
       oth <- setdiff( 1:ncol(lx), tn )
-      ## Reorder columns (lx will then lose attributes)
+      ## Reorder columns (lx will then lose attributes) and sort rows
       lx <- lx[order(lx$lex.id,lx[,timescale]),c(tn,oth)]
       ## Update the attributes
       new.br <- c( attr( data, "breaks" ), list(NULL) )
@@ -252,8 +252,8 @@ cutLexis <- function(data,
       }
     else
       {
-      # Remove the new timescale
-      lx <- lx[,-match("lex.new.scale",names(lx))]
+      # Remove the new timescale and sort rows
+      lx <- lx[order(lx$lex.id,lx[,timescale]),-match("lex.new.scale",names(lx))]
       # and transfer all the other attributes
       attr( lx, "time.scales" ) <- attr( data, "time.scales" )
       attr( lx, "breaks" )      <- attr( data, "breaks" )

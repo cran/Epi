@@ -6,14 +6,16 @@
 \alias{boxarr}
 \alias{boxes}
 \alias{boxes.Lexis}
+\alias{boxes.matrix}
 \title{
   Draw boxes and arrows for illustration of multistate models.
   }
-\description{
-  Boxes can be drawn with text (\code{tbox}) or a cross (\code{dbox}), and
-  arrows pointing between the boxes (\code{boxarr}) can be drawn
-  automatically not overlapping the boxes. \code{\link{Lexis}} objects
-  can be used to generate displays with person-years and events.
+  \description{
+  Boxes can be drawn with text (\code{tbox}) or a cross (\code{dbox}),
+  and arrows pointing between the boxes (\code{boxarr}) can be drawn
+  automatically not overlapping the boxes. The \code{boxes} method for
+  \code{\link{Lexis}} objects generates displays of states with
+  person-years and transitions with events or rates.
   }
 \usage{
    tbox( txt, x, y, wd, ht,
@@ -27,8 +29,7 @@
          col.border="black",
          col.bg="transparent"  )
    boxarr( b1, b2, offset=FALSE, pos=0.45, ... )
-   boxes( obj, ... )
-      \method{boxes}{Lexis}( obj, file,
+\method{boxes}{Lexis}( obj, file,
              detailed = FALSE,
                boxpos = FALSE,
                 wmult = 1.5,
@@ -58,6 +59,7 @@
               txt.arr = NULL,
           col.txt.arr = col.arr,
            offset.arr = 2, ... )
+\method{boxes}{matrix}( obj, ... )
    fillarr( x1, y1, x2, y2, gap=2, fr=0.8,
             angle=17, lwd=2, length=par("pin")[1]/30, ... )
    }
@@ -80,9 +82,14 @@
   \item{b2}{Coordinates of the "to" box; like \code{b1}.}
   \item{offset}{Logical. Should the arrow be offset a bit to the left.}
   \item{pos}{Numerical between 0 and 1, determines the position of the point
-             on the arrow which is returned.}
-  \item{obj}{A \code{\link{Lexis}} object, or a transition matrix; that
-    is a matrix}
+    on the arrow which is returned.}
+  \item{obj}{A \code{\link{Lexis}} object or a transition matrix; that
+    is a square matrix indexed by state in both dimensions, and the
+    \eqn{(i,j)}th entry different from \code{NA} if a transition \eqn{i}
+    to \eqn{j} can occur. If \code{show.D=TRUE}, the arrows between
+    states are annotated by these numbers. If \code{show.Y=TRUE}, the
+    boxes representing states are annotated by the numbers in the
+    diagonal of \code{obj}.}
   \item{file}{Name of the file with the code reproducing the plot.}
   \item{detailed}{Should the output of R-code be detailed, showing all parameters?}
   \item{boxpos}{If \code{TRUE} the boxes are positioned  equidistantly on a
@@ -98,8 +105,8 @@
   \item{cex}{Character expansion for text in the box.}
   \item{show}{Should person-years and transitions be put in the plot.
               Ignored if \code{obj} is not a \code{Lexis} object.}
-  \item{show.Y}{Should person-years be put in the boxes.
-              Ignored if \code{obj} is not a \code{Lexis} object.}
+  \item{show.Y}{If logical: Should person-years be put in the boxes.
+              If numeric: Numbers to put in boxes.}
   \item{scale.Y}{What scale should be used for annotation of person-years.}
   \item{digits.Y}{How many digits after the decimal point should be used for the
                   person-years.}
@@ -157,7 +164,8 @@
   actual transitions in the \code{Lexis} object.
 
   A transition matrix can also be supplied, in which case the row/column
-  names are used as state names.
+  names are used as state names, diagnonal elements taken as
+  person-years, and off-diagnonal elements as number of transitions.
 
   Optionally returns the R-code reproducing the plot in a file, which
   can be useful if you want to produce exactly the same plot with
@@ -227,14 +235,17 @@ dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
 # Split follow-up at Insulin
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )
-boxes( dmi, boxpos=TRUE, file="" )
+boxes( dmi, boxpos=TRUE )
 # Set up a bogus recovery date
 dmi$dorec <- dmi$doins + runif(nrow(dmi),0.5,10)
 dmi$dorec[dmi$dorec>dmi$dox] <- NA
 dmR <- cutLexis( dmi, cut=dmi$dorec, new.state="DM", pre="Ins" )
 summary( dmR )
-boxes( dmR, boxpos=TRUE, file="" )
+boxes( dmR, boxpos=TRUE )
     }
+\seealso{
+   \code{\link{tmat.Lexis}}
+   }
 \keyword{survival}
 \keyword{hplot}
 \keyword{iplot}

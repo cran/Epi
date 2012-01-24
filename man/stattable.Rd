@@ -47,8 +47,8 @@ stat.table(index, contents = count(), data, margins = FALSE)
   \code{contents} argument  are: \code{\link{count}},
   \code{\link{mean}}, \code{\link{weighted.mean}}, \code{\link{sum}},
   \code{\link{quantile}}, \code{\link{median}}, \code{\link{IQR}},
-  \code{\link{max}}, \code{\link{min}}, \code{\link{ratio}}, and
-  \code{\link{percent}}.
+  \code{\link{max}}, \code{\link{min}}, \code{\link{ratio}}, 
+  \code{\link{percent}}, and \code{\link{sd}}.
   
   The \code{count()} function, which is the default, simply creates a
   contingency table of counts.  The other functions are applied to
@@ -74,7 +74,7 @@ stat.table(index, contents = count(), data, margins = FALSE)
 \code{\link{sum}}, \code{\link{quantile}},
 \code{\link{median}}, \code{\link{IQR}},
 \code{\link{max}}, \code{\link{min}}, \code{\link{ratio}},
-\code{\link{percent}}, \code{\link{count}}}
+\code{\link{percent}}, \code{\link{count}}, \code{\link{sd}}.}
 \examples{
 data(warpbreaks)
 # A one-way table

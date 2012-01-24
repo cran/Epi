@@ -96,7 +96,7 @@ ci.mat( alpha = 0.05, df=Inf )
   }
 \author{
   Bendix Carstensen,
-  \url{http://www.pubhealth.ku.dk/~bxc} &
+  \url{BendixCarstensen.com} &
   Michaal Hills
   \url{http://www.mhills.pwp.blueyonder.co.uk/}
   }

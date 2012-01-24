@@ -2,8 +2,8 @@
 \alias{Lexis}
 \title{Create a Lexis object}
 \description{
-  Create an object of class \code{Lexis} to represent follow-up on
-  multiple time scales.
+  Create an object of class \code{Lexis} to represent follow-up in
+  multiple states on multiple time scales.
 }  
 \usage{
 Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
@@ -14,7 +14,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
     a numeric variable representing the entry time on the named time
     scale. All time scales must have the same units (e.g. years).
     The names of the timescales must be different from any column name in
-    \code{date}.}
+    \code{data}.}
   \item{exit}{a named list of exit times.}
   \item{duration}{a numeric vector giving the duration of follow-up.}
   \item{entry.status}{a vector or a factor giving the status at
@@ -61,8 +61,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
 \note{
   Only two of the three arguments \code{entry}, \code{exit} and
   \code{duration} need to be given.  If the third parameter is missing,
-  it is imputed. If duration is given, it must be the same on
-  all time scales.
+  it is imputed.
   
   \code{entry}, \code{exit} must be numeric, using  \code{\link{Date}}
   variables will cause some of the utilites to crash. Transformation by
@@ -75,32 +74,35 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   If any of \code{entry.status} or \code{exit.status} are of mode character,
   they will both be converted to factors.
   
-  If \code{entry.status} is not given, then
-  its class is automatically set to that of \code{exit.status}. If
-  \code{exit.status} is factor, the value of \code{entry.status} is set to the
-  first level. This may be highly undesirable, and therefore noted. For example,
-  if \code{exit.status} is character the first level will be the first in the
-  alphabetical ordering; slightly unfortunate if values are
-  \code{c("Well","Diseased")}. If \code{exit.status} is logical, the value of
-  \code{entry.status} set to \code{FALSE}.
+  If \code{entry.status} is not given, then its class is automatically
+  set to that of \code{exit.status}. If \code{exit.status} is factor,
+  the value of \code{entry.status} is set to the first level. This may
+  be highly undesirable, and therefore noted. For example, if
+  \code{exit.status} is character the first level will be the first in
+  the alphabetical ordering; slightly unfortunate if values are
+  \code{c("Well","Diseased")}. If \code{exit.status} is logical, the
+  value of \code{entry.status} set to \code{FALSE}. If
+  \code{exit.status} is numeric, the value of \code{entry.status} set to
+  0.
 
-  If \code{entry.status} or \code{exit.status} are factors or character, the
-  corresponding state variables in the returned \code{Lexis} object,
-  \code{lex.Cst} and \code{lex.Xst} will be
-  (unordered) factors with identical levels, namely the union of the levels
-  of \code{entry.status} and \code{exit.status}.
+  If \code{entry.status} or \code{exit.status} are factors or character,
+  the corresponding state variables in the returned \code{Lexis} object,
+  \code{lex.Cst} and \code{lex.Xst} will be (unordered) factors with
+  identical set of levels, namely the union of the levels of
+  \code{entry.status} and \code{exit.status}. 
   }
 \value{
   An object of class \code{Lexis}. This is represented as a data frame
   with a column for each time scale, and additional columns with the
   following names:
-  \item{lex.id}{Identification of the inidvidual}
-  \item{lex.dur}{Duration of follow-up}
+  \item{lex.id}{Identification of the inidvidual (record in \code{data},
+  that is).}
+  \item{lex.dur}{Duration of follow-up.}
   \item{lex.Cst}{Entry status (Current state),
                  i.e. the state in which the follow up takes place.}
   \item{lex.Xst}{Exit status (eXit state),
                  i.e. that state taken up after \code{dur} in \code{lex.Cst}.}
-  If \code{merge=TRUE} then the \code{Lexis} object will also contain
+  If \code{merge=TRUE} (the default) then the \code{Lexis} object will also contain
   all variables from the \code{data} argument.
   }
 \author{Martyn Plummer}
@@ -142,17 +144,17 @@ Lexis( entry = list( per=entry ),
         data = xcoh )
 }
 \seealso{
-   \code{\link{plot.Lexis}},
-   \code{\link{splitLexis}},
-   \code{\link{cutLexis}},
-   \code{\link{merge.Lexis}},
-   \code{\link{subset.Lexis}},
-   \code{\link{transform.Lexis}},
-   \code{\link{summary.Lexis}},
-   \code{\link{timeScales}},
-   \code{\link{timeBand}},
-   \code{\link{entry}},
-   \code{\link{exit}},
+   \code{\link{plot.Lexis}}, 
+   \code{\link{splitLexis}}, 
+   \code{\link{cutLexis}}, 
+   \code{\link{merge.Lexis}}, 
+   \code{\link{subset.Lexis}}, 
+   \code{\link{transform.Lexis}}, 
+   \code{\link{summary.Lexis}}, 
+   \code{\link{timeScales}}, 
+   \code{\link{timeBand}}, 
+   \code{\link{entry}}, 
+   \code{\link{exit}}, 
    \code{\link{dur}}
    }
 \keyword{survival}

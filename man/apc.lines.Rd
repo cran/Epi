@@ -4,6 +4,10 @@
 \alias{pc.lines}
 \alias{pc.matpoints}
 \alias{pc.matlines}
+\alias{cp.points}
+\alias{cp.lines}
+\alias{cp.matpoints}
+\alias{cp.matlines}
 \title{
   Plot APC-estimates (and other things) in an APC-frame.
 }
@@ -32,6 +36,10 @@
   pc.lines( x, y, ... )
   pc.matpoints( x, y, ... )
   pc.matlines( x, y, ... )
+  cp.points( x, y, ... )
+  cp.lines( x, y, ... )
+  cp.matpoints( x, y, ... )
+  cp.matlines( x, y, ... )
 }
 \arguments{
   \item{A}{Age effects. A 4-column matrix with columns age, age-specific
@@ -46,14 +54,14 @@
     \code{"RR"}. If \code{"log"} or \code{"ln"} it is assumed that
     effects are log(rates) and log(RRs) otherwise the actual effects are
     assumed given in \code{A}, \code{P} and \code{C}. If \code{A} is of
-    class \code{apc}, it is assumed to be \code{"rates"}.} 
+    class \code{apc}, it is assumed to be \code{"rates"}.}
   \item{frame.par}{2-element vector with the cohort-period offset and
     RR multiplicator. This will typically be the result from the call of
-    \code{\link{apc.frame}}. See this for details.} 
+    \code{\link{apc.frame}}. See this for details.}
   \item{drift}{The drift parameter to be added to the period effect. If
     \code{scale="log"} this is assumed to be on the log-scale, otherwise
     it is assumed to be a multiplicative factor per unit of the first
-    columns of  \code{A}, \code{P} and \code{C} } 
+    columns of  \code{A}, \code{P} and \code{C} }
   \item{c0}{The cohort where the drift is assumed to be 0; the subtracted
   drift effect is \code{drift*(C[,1]-c0)}.}
   \item{a0}{The age where the drift is assumed to be 0.}
@@ -78,20 +86,22 @@
   and the main purpose of the utility is to provide a function that
   easily adds the functionality of adding a drift so that several sets
   of lines can be easily produced in the same frame.
-  
+
   Since the Age-part of the frame is referred to by its real coordinates
   plotting in the calendar time part requires translation and scaling to
-  put things correctly there, that is done by the functions \code{pc.points}
-  etc.
+  put things correctly there, that is done by the functions
+  \code{pc.points} etc. The functions \code{cp.points} etc. are just
+  synonyms for these, in recognition of the fact that you can never
+  remember whether it is "pc" pr "cp".
 }
 \value{
-  A list of three matrices with the effects plotted is
-  returned invisibly.
+  \code{APC.lines} returns (invisibly) a list of three matrices with the
+  effects plotted. The functions \code{cp.points} etc. return nothing.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
   \url{http://www.pubhealth.ku.dk/~bxc}
-} 
+}
 \seealso{
   \code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}
 }
