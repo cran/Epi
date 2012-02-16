@@ -110,16 +110,16 @@ function( data,
             if (knl)
                 nk <- sapply(npar, length)
             MA <- if (knl)
-                ns(A, knots = npar[["A"]][-c(1, nk[1])], Bo = npar[["A"]][c(1,
+                ns(A, knots = npar[["A"]][-c(1, nk[1])], Boundary.knots = npar[["A"]][c(1,
                   nk[1])])
             else ns(A, df = npar[["A"]])
             MP <- if (knl)
-                ns(P, knots = npar[["P"]][-c(1, nk[2])], Bo = npar[["P"]][c(1,
+                ns(P, knots = npar[["P"]][-c(1, nk[2])], Boundary.knots = npar[["P"]][c(1,
                   nk[2])])
             else ns(P, df = npar[["P"]])
             MC <- if (knl)
                 ns(P - A, knots = npar[["C"]][-c(1, nk[3])],
-                  Bo = npar[["C"]][c(1, nk[3])])
+                  Boundary.knots = npar[["C"]][c(1, nk[3])])
             else ns(P - A, df = npar[["C"]])
             Rp <- ns(p0, knots = attr(MP, "knots"), Boundary.knots = attr(MP,
                 "Boundary.knots"))
@@ -137,16 +137,16 @@ function( data,
             if (knl)
                 nk <- sapply(npar, length)
             MA <- if (knl)
-                bs(A, knots = npar[["A"]][-c(1, nk[1])], Bo = npar[["A"]][c(1,
+                bs(A, knots = npar[["A"]][-c(1, nk[1])], Boundary.knots = npar[["A"]][c(1,
                   nk[1])], degree = deg)
             else bs(A, df = npar[["A"]], degree = deg)
             MP <- if (knl)
-                bs(P, knots = npar[["P"]][-c(1, nk[2])], Bo = npar[["P"]][c(1,
+                bs(P, knots = npar[["P"]][-c(1, nk[2])], Boundary.knots = npar[["P"]][c(1,
                   nk[2])], degree = deg)
             else bs(P, df = npar[["P"]], degree = deg)
             MC <- if (knl)
                 bs(P - A, knots = npar[["C"]][-c(1, nk[3])],
-                  Bo = npar[["C"]][c(1, nk[3])], degree = deg)
+                  Boundary.knots = npar[["C"]][c(1, nk[3])], degree = deg)
             else bs(P - A, df = npar[["C"]], degree = deg)
             Rp <- bs(p0, knots = attr(MP, "knots"), Boundary.knots = attr(MP,
                 "Boundary.knots"), degree = attr(MP, "degree"))

@@ -189,3 +189,13 @@ if( !diffs )
 if( sample ) invisible( res ) else
 if( vcov ) invisible( list( est=ct, vcov=vc ) ) else res
 }
+
+# Handy wrapper
+ci.exp <-
+function( ..., Exp=TRUE )
+{
+if( Exp )
+ci.lin( ..., Exp=TRUE )[,5:7,drop=FALSE]
+else
+ci.lin( ..., Exp=FALSE )[,-(2:4),drop=FALSE]
+}

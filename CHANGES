@@ -1,3 +1,22 @@
+Changes in 1.1.34
+
+o plotEst now has an arguments col.txt and font.txt which allows the
+  use of different colors and fonts for the annotation of the
+  estimates. Models likely to be multiplicative incurs a logarithmic
+  x-axis in the plot.
+
+o ci.exp introduces - a wrapper for ci.lin, getting the exponentiated
+  parameters with CIs.
+
+o A bug causing unintended reordering of levels using boxes.Lexis is
+  fixed.
+
+o Method etm for Lexis objects included. This just takes a Lexis
+  object, and fishes out the relevant information to be able to call
+  the function etm from the etm package (empirical transition matrix).
+  This function is now physically defined in the file(s)
+  foreign.Lexis.R(d).
+
 Changes in 1.1.32
 
 o gen.exp was re-written and simplified.
