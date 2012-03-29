@@ -132,8 +132,9 @@
   \item{font.arr}{Font of the text annotation the arrows.}
   \item{txt.arr}{Text put on the arrows.}
   \item{col.txt.arr}{Colors for text on the arrows.}
-  \item{offset.arr}{The amount offset between arrows that go between the
-    same pair of boxes (two-way transitions).}
+  \item{offset.arr}{The amount offset between arrows representing
+    two-way transitions, that is where there are arrows both ways
+    between two boxes.}
   \item{x1}{x-coordinate of the starting point.}
   \item{y1}{y-coordinate of the starting point.}
   \item{x2}{x-coordinate of the end point.}
@@ -166,6 +167,7 @@
   A transition matrix can also be supplied, in which case the row/column
   names are used as state names, diagnonal elements taken as
   person-years, and off-diagnonal elements as number of transitions.
+  This also works for \code{boxes.matrix}.
 
   Optionally returns the R-code reproducing the plot in a file, which
   can be useful if you want to produce exactly the same plot with
@@ -191,6 +193,21 @@
        The \code{boxarr} function returns the coordinates (as a named
        list with names \code{x} and \code{y}) of a point on the
        arrow, designated to be used for annotation of the arrow.
+
+       The function \code{boxes.Lexis} returns (invisibly) a list with
+       two elements: \code{Boxes} - a dataframe with one row
+       per box and columns
+       \code{pl.nam},
+       \code{xx},
+       \code{yy},
+       \code{wd},
+       \code{ht},
+       \code{font},
+       \code{lwd},
+       \code{col.txt},
+       \code{col.border} and
+       \code{col.bg},
+       and \code{Tmat}, the transition matrix.
        }
 \author{Bendix Carstensen}
 \examples{

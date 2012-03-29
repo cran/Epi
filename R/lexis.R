@@ -662,3 +662,4 @@ transform.Lexis <- function(`_data`, ... )
     attributes(y) <- save.at
     y
 }
+

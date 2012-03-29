@@ -31,7 +31,7 @@ xx
 tmat <- function (x, ...) UseMethod("tmat")
 
 tmat.Lexis <-
-function( x, Y=FALSE, ... )
+function( x, Y=FALSE, mode="numeric", ... )
 {
 zz <- table(x$lex.Cst,x$lex.Xst)
 class(zz) <- "matrix"
@@ -41,33 +41,6 @@ if( Y )
   }
 else diag(zz) <- NA
 zz[zz==0] <- NA
+if( mode != "numeric" ) zz <- !is.na(zz)
 zz
-}
-
-# The msdata method
-msdata <- function (obj, ...) UseMethod("msdata")
-
-msdata.Lexis <-
-function( obj,
-   time.scale = timeScales(obj)[1], ... )
-{
-if( !require( mstate ) )
-  stop( "You do not want this before you have installed the 'mstate' package.\n" )
-tr.mat <- tmat(obj)
-# Essentially a msdata object is a stacked Lexis object with other variable names
-tmp <- stack.Lexis( factorize.Lexis(obj) )
-lv  <- c( match(timeScales(obj), names(tmp) ),
-          grep("lex\\.", names(tmp) ) )
-# The transitions that we refer to are extracted from lex.Tr:
-ss <- strsplit( as.character(tmp$lex.Tr), "->" )
-# The resulting dataframe is created by renaming columns in the stacked Lexis object
-data.frame( id = tmp$lex.id,
-          from = sapply( ss, FUN=function(x) x[1] ),
-            to = sapply( ss, FUN=function(x) x[2] ),
-         trans = as.integer( tmp$lex.Tr ),
-        Tstart = tmp[,time.scale],
-         Tstop = tmp[,time.scale] + tmp$lex.dur,
-          time = tmp$lex.dur,
-        status = as.integer( tmp$lex.Fail ),
-                 tmp[,-lv] )
 }

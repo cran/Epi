@@ -13,12 +13,15 @@ several transitions simultaneously.
 \usage{
 \method{stack}{Lexis}(x, ...)
 tmat( x, ... )
-\method{tmat}{Lexis}(x, Y=FALSE, ...)
+\method{tmat}{Lexis}(x, Y=FALSE, mode = "numeric", ...)
 }
 \arguments{
   \item{x}{A \code{\link{Lexis}} object.}
   \item{Y}{Logical. Should the risk time be put in the diagonal? This is
-  a facility which is used by \code{\link{boxes.Lexis}}.}
+    a facility which is used by \code{\link{boxes.Lexis}}.}
+  \item{mode}{Should the matrix be returned as a numeric matrix with
+    \code{NA}s at unused places or (\code{mode="logical"}) as a logical
+    matrix with \code{FALSE} on the diagonal.}
   \item{\dots}{Not used.}
 }
 \value{

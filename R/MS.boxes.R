@@ -39,6 +39,7 @@ arrows( x1 + (x2-x1)*(1-fr)/2,
         x2 - (x2-x1)*(1-fr)/2,
         y2 - (y2-y1)*(1-fr)/2, angle=a, lwd=lwd, ... )
 }
+
 std.vec <-
 function( a, b )
 {
@@ -128,7 +129,7 @@ function( obj, file, detailed=FALSE,
 {
 if( inherits(obj,"Lexis") )
   {
-  obj <- factorize( obj )
+  if( !is.factor(obj$lex.Cst) | !is.factor(obj$lex.Xst) ) obj <- factorize( obj )
   tm <- tmat( obj, Y=TRUE )
   }
 else if( is.matrix(obj) & diff(dim(obj))==0 )
@@ -356,4 +357,15 @@ boxes.Lexis( ', deparse( substitute( obj ) ),',
        offset.arr =', offset.arr, ')\t\t # offset of parallel arrows \n',
  file=file )
 }
+invisible( list( Boxes = data.frame( pl.nam = pl.nam,
+                                         xx = xx,
+                                         yy = yy,
+                                         wd = wd,
+                                         ht = ht,
+                                       font = font,
+                                        lwd = lwd,
+                                    col.txt = col.txt,
+                                 col.border = col.border,
+                                     col.bg = col.bg ),
+                  Tmat = tm ) )
 }

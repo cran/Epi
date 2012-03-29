@@ -1,6 +1,7 @@
 \name{ci.lin}
 \alias{ci.lin}
 \alias{ci.mat}
+\alias{ci.exp}
 \alias{Wald}
 \title{
   Compute linear functions of parameters with s.e.
@@ -22,16 +23,22 @@ ci.lin( obj,
          df = Inf,
         Exp = FALSE,
      sample = FALSE )
+ci.exp( ..., Exp = TRUE )
 Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df=Inf )
 }
 \arguments{
   \item{obj}{A model object (of class
-             \code{lm}, \code{glm},
-             \code{coxph}, \code{survreg},
-             \code{lme},\code{mer},\code{nls},\code{gnlm},
-             \code{MIresult}
-          or \code{polr}).
+    \code{lm},
+    \code{glm},
+    \code{coxph},
+    \code{survreg},
+    \code{lme},
+    \code{mer},
+    \code{nls},
+    \code{gnlm},
+    \code{MIresult}
+ or \code{polr}).
   }
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
     vector, i.e. the desired linear function of the parameters.}
@@ -42,8 +49,8 @@ ci.mat( alpha = 0.05, df=Inf )
     considered a facility.}
   \item{subint}{SUBset selection like for \code{subset}, except that
     elements of a character vector given as argument will be used to
-    select subsets of parameters and only the INTersection of these is
-    returned.}
+    select a number of subsets of parameters and only the INTersection
+    of these is returned.}
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
@@ -62,34 +69,37 @@ ci.mat( alpha = 0.05, df=Inf )
   \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns
     1,5,6 ).}
   \item{sample}{Logical or numerical. If \code{TRUE} or numerical a
-    sample of the linear parameter function as defined by \code{subset}
-    and \code{ctr.mat} is returned.}
+    sample of size \code{as.numeric(sample)} of the linear parameter
+    function as defined by \code{subset} and \code{ctr.mat} is returned.}
   \item{H0}{The null values for the selected/transformed parameters to
     be tested by a Wald test. Must have the same length as the selected
     parameter vector.}
   \item{\ldots}{Parameters passed on to \code{ci.lin}.}
   }
 \value{
-  \code{ci.lin} returns
-  a matrix with number of rows and rownames as \code{ctr.mat}. The
-  columns are Estimate, Std.Err, z, P, 2.5\% and 97.5\%.
-  If \code{vcov=TRUE} a list with components \code{est}, the desired
-  functional of the parameters and \code{vcov}, the variance
-  covariance matrix of this, is returned but not printed.
-  If \code{Exp==TRUE} the confidence intervals for the parameters are
+  \code{ci.lin} returns a matrix with number of rows and rownames as
+  \code{ctr.mat}. The columns are Estimate, Std.Err, z, P, 2.5\% and
+  97.5\%.  If \code{vcov=TRUE} a list with components \code{est}, the
+  desired functional of the parameters and \code{vcov}, the variance
+  covariance matrix of this, is returned but not printed.  If
+  \code{Exp==TRUE} the confidence intervals for the parameters are
   replaced with three columns: exp(estimate,c.i.).
+
+  \code{ci.exp} returns only the exponentiated parameter estimates with
+  confidence intervals. It is merely a wrapper for \code{ci.lin},
+  fishing out the last 3 columns from \code{ci.lin(...,Exp=TRUE)}.
 
   \code{Wald} computes a Wald test for a subset of (possibly linearly
   transformed) parameters. The selection of the subset of parameters is
   the same as for \code{ci.lin}. Using the \code{ctr.mat} argument makes
   it possible to do a Wald test for equality of parameters. \code{Wald}
-  returns a named numerical vector of lenght 3, with names \code{Chisq},
+  returns a named numerical vector of length 3, with names \code{Chisq},
   \code{d.f.} and \code{P}.
 
   \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
   \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with
   columns of estimates and standard errors, so as to produce a p by 3 matrix
-  of estimates and confidnece limits. Used internally in \code{ci.lin} and
+  of estimates and confidence limits. Used internally in \code{ci.lin} and
   \code{ci.cum}.
   The 1.96 is replaced by the appropriate quantile from the normal or
   t-distribution when arguments \code{alpha} and/or \code{df} are given.
@@ -97,7 +107,7 @@ ci.mat( alpha = 0.05, df=Inf )
 \author{
   Bendix Carstensen,
   \url{BendixCarstensen.com} &
-  Michaal Hills
+  Michael Hills
   \url{http://www.mhills.pwp.blueyonder.co.uk/}
   }
 \seealso{ See also \code{\link{ci.cum}} }
