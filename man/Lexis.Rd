@@ -7,7 +7,7 @@
 }  
 \usage{
 Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
-      merge=TRUE, states )
+      merge=TRUE, states, tol=.Machine$double.eps^0.5 )
 }
 \arguments{
   \item{entry}{a named list of entry times. Each element of the list is
@@ -33,6 +33,8 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   \item{states}{A vector of labels for the states. If given, the state
     variables \code{lex.Cst} and \code{lex.Xst} are returned as factors with
     identical levels attributes.}
+  \item{tol}{Numerical tolerance for follow-up time. Rows with duration
+    less than this value are automatically dropped.}
 }
 \details{
   The analysis of long-term population-based follow-up studies typically

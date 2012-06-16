@@ -1,4 +1,4 @@
-doCutLexis <- function(data, cut, timescale, new.scale=FALSE ) {
+ doCutLexis <- function(data, cut, timescale, new.scale=FALSE ) {
 
     ## new.scale is a character constant with the name of the new timescale
 

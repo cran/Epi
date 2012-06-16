@@ -1,6 +1,6 @@
 Lexis <-
 function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
-         merge=TRUE, states )
+         merge=TRUE, states, tol=.Machine$double.eps^0.5)
 {
   nmissing <- missing(entry) + missing(exit) + missing(duration)
   if (nmissing > 2)
@@ -218,6 +218,16 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     }
     lex <- cbind(lex, data)
   }
+
+  ## Drop rows with short duration for consistency with splitLexis
+  short.dur <- lex$lex.dur <= tol
+  if (any(short.dur)) {
+      warning("Dropping ", sum(short.dur),
+              " rows with duration of follow up < tol")
+      lex <- subset(lex, !short.dur)
+  }
+
+  ## Return Lexis object
   attr(lex,"time.scales") <- all.time.scales
   breaks <- vector("list", length(all.time.scales))
   names(breaks) <- all.time.scales

@@ -180,8 +180,12 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     llim <- rep(1,n.dim) + ifelse(in.subtable,rep(0,n.dim),tab.dim)
     ulim <- tab.dim + ifelse(in.subtable,rep(0,n.dim),rep(1, n.dim))
     subindex <- index[in.subtable]
+    if (length(subindex) == 0) {
+        ## Marginalizing out all dimensions
+        subindex <- list(rep(1, length(index[[1]])))
+    }
     subtable.list <- if(missing(data))
-        ###eval(contents, parent.frame())
+        ##eval(contents, parent.frame())
         eval(contents)
     else
       eval(as.expression(contents), data)

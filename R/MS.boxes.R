@@ -131,10 +131,11 @@ if( inherits(obj,"Lexis") )
   {
   if( !is.factor(obj$lex.Cst) | !is.factor(obj$lex.Xst) ) obj <- factorize( obj )
   tm <- tmat( obj, Y=TRUE )
+  tt <- tmat( obj, Y=FALSE )
   }
 else if( is.matrix(obj) & diff(dim(obj))==0 )
   {
-  tm <- obj
+  tm <- tt <- obj
   }
 else stop( "First argument must be a Lexis object or a square matrix.\n" )
 
@@ -273,13 +274,13 @@ for( i in subset ) b[[i]] <- tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
 # Arrows and text on them
 for( i in subset ) for( j in subset )
   {
-  if( !is.na(tm[i,j]) & i!=j )
+  if( !is.na(tt[i,j]) & i!=j )
     {
     arrowtext <- NULL
     # Which number of arrow is currently processed?
-    a <- sum(!is.na(tm[1:i,])) - sum(!is.na(tm[i,j:n.st])) + 1
+    a <- sum(!is.na(tt[1:i,])) - sum(!is.na(tt[i,j:n.st])) + 1
     arr <- boxarr( b[[i]], b[[j]],
-                   offset=(!is.na(tm[j,i]))*offset.arr,
+                   offset=(!is.na(tt[j,i]))*offset.arr,
                    lwd=lwd.arr[a], col=col.arr[a], ... )
     if( show.D & D[i,j]>0 )
       arrowtext <- formatC( D[i,j], format="f", digits=digits.D, big.mark="," )
