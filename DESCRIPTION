@@ -1,11 +1,12 @@
 Package: Epi
-Version: 1.1.34
-Date: 2012-02-16
+Version: 1.1.36
+Date: 2012-06-16
 Title: A package for statistical analysis in epidemiology.
-Author: Bendix Carstensen, Martyn Plummer, Esa Laara, Michael Hills et.
-        al.
-Maintainer: Bendix Carstensen <bxc@steno.dk>
-Depends: R (>= 2.10), utils
+Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
+        email = "bxc@steno.dk"), person("Martyn", "Plummer", role =
+        "aut", email = "plummerm@iarc.fr"), person("Michael", "Hills",
+        role = "aut"), person("Esa", "Laara", role = "ctb"))
+Depends: R (>= 2.14.0), utils
 Suggests: splines, nlme, survival, mstate, etm, MASS
 Description: Functions for demographic and epidemiological analysis in
         the Lexis diagram, i.e. register and cohort follow-up data,
@@ -14,8 +15,11 @@ Description: Functions for demographic and epidemiological analysis in
         plotting. Contains some epidemiological datasets.
 License: GPL-2
 URL: http://BendixCarstensen.com/Epi/
+Author: Bendix Carstensen [aut, cre], Martyn Plummer [aut], Michael
+        Hills [aut], Esa Laara [ctb]
+Maintainer: Bendix Carstensen <bxc@steno.dk>
 Repository: CRAN
 Repository/R-Forge/Project: epi
-Repository/R-Forge/Revision: 133
-Packaged: 2012-03-27 10:15:33 UTC; rforge
-Date/Publication: 2012-03-29 08:24:12
+Repository/R-Forge/Revision: 139
+Packaged: 2012-06-25 14:15:21 UTC; rforge
+Date/Publication: 2012-06-29 08:58:11

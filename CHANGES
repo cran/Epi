@@ -1,3 +1,13 @@
+Changes in 1.1.36
+
+o A bug in boxes.Lexis causing arrow-coloring to go out of sync fixed
+
+o Array problems in stat.table fixed
+
+Changes in 1.1.35
+
+o none. Just compiled for the archive with R 2.15.0
+
 Changes in 1.1.34
 
 o plotEst now has an arguments col.txt and font.txt which allows the
@@ -5,7 +15,7 @@ o plotEst now has an arguments col.txt and font.txt which allows the
   estimates. Models likely to be multiplicative incurs a logarithmic
   x-axis in the plot.
 
-o ci.exp introduces - a wrapper for ci.lin, getting the exponentiated
+o ci.exp introduced - a wrapper for ci.lin, getting the exponentiated
   parameters with CIs.
 
 o A bug causing unintended reordering of levels using boxes.Lexis is

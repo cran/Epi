@@ -14,7 +14,7 @@ function( obj,
 if( sample ) require( MASS )
 # First extract all the coefficients and the variance-covariance matrix
 #
-if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic") ) ) ) {
+if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic","cch") ) ) ) {
        cf <- coef( obj )
       vcv <- vcov( obj )
 } else if( inherits( obj, c("lme") ) ) {
