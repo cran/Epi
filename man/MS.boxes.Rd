@@ -248,7 +248,7 @@ str(DMlate)
 dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
                exit=list(Per=dox),
         exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
-               data=DMlate )
+               data=DMlate[1:1000,] )
 # Split follow-up at Insulin
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )

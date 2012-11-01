@@ -6,7 +6,7 @@ ci.pd <-
             digits = 3,
              print = TRUE,
        detail.labs = FALSE )
-  {    
+  {
 # Computes the approximate c.i. for the probability difference
 # Optional methods:
 # -- "AC", Agresti and Caffo, Am Statistician (2000),
@@ -51,7 +51,7 @@ if( missing( conf.level ) ) conf.level <- 1 - alpha
   hi <- ifelse( Dee >= 0, ( -Bee + sqrt( Dee ) ) / ( 2 * Aye ), NA )
   cbind( lo, hi )
   }
-# Put the data in the right form  
+# Put the data in the right form
   x1 <- aa
   n1 <- aa+cc
   p1 <- x1/n1
@@ -82,10 +82,10 @@ if( missing( conf.level ) ) conf.level <- 1 - alpha
        B2 <- -2*x2/n2 - zz / n2
        C2 <-          ( x2 / n2 )^2
        r2 <- pol2( A2, B2, C2 )
-       dlt <- sqrt( ( x1/n1 - r1[1] )^2 +
-                    ( x2/n2 - r2[2] )^2 )
-       eps <- sqrt( ( x1/n1 - r1[2] )^2 +
-                    ( x2/n2 - r2[1] )^2 )             
+       dlt <- sqrt( ( x1/n1 - r1[,1] )^2 +
+                    ( x2/n2 - r2[,2] )^2 )
+       eps <- sqrt( ( x1/n1 - r1[,2] )^2 +
+                    ( x2/n2 - r2[,1] )^2 )
        res <- cbind(n1, p1, n2, p2, pd, pd-dlt, pd+eps )
       }
   colnames( res ) <- c("n1","p1","n2","p2",

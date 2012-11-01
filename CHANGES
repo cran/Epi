@@ -1,3 +1,31 @@
+Changes in 1.1.39
+
+o effx has been expanded with an extra argument eff=, which defaults
+  to NULL, allows "RR" for relative risk for binary data, and "RD" for
+  rate differences for failure data. Also logical response is admitted
+  for binomial and failure responses.
+
+o factorize and Relevel are now synonyms. Methods for Relevel are
+  Relevel.default, Relevel.factor, Relevel.Lexis, for factorise only
+  the factorize.default and factorize.Lexis exist.
+
+o A mistake in estimating sequential residuals in apc.fit() has been
+  corrected. The wrong model (adc instead of rc, in the case parm ==
+  "AD-C-P") was used for the basis of residuals. Thanks to Shih-Yung
+  Su from Taiwan.
+
+o as.Date.cal.yr is added, even though it was removed earlier: cal.yr
+  is a class for date variables and the conversion function should be
+  around.
+
+o A bug in ci.pd causing calculations to go wrong if vectors were
+  supplied as input. Correction thanks to Patrick Rymer.
+
+o A bug in factorize.Lexis is fixed. Now appropriately groups factor
+  levels in the state factors lex.Cst and lex.Xst.
+  Relevel.Lexis is defined as an alias for factorize.Lexis. Thus the
+  functins Relevel() and factorize() are now identical.
+
 Changes in 1.1.36
 
 o A bug in boxes.Lexis causing arrow-coloring to go out of sync fixed

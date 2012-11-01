@@ -63,20 +63,17 @@ str(DMlate)
 dml <- Lexis( entry=list(Per=dodm,Age=dodm-dobth,DMdur=0),
                exit=list(Per=dox),
         exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
-               data=DMlate )
+               data=DMlate[1:1000,] )
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )
 ms.dmi <- msdata.Lexis( dmi )
-summary( dmi )
 # Check that all the transitions and person-years got across.
 with( ms.dmi, rbind( table(status,trans),
                      tapply(Tstop-Tstart,trans,sum) ) )
 
 # Use the etm package directly with a Lexis object
 dmi <- subset(dmi,lex.id<1000)
-etm.A <- etm.Lexis( dmi, time.scale=2 )
 etm.D <- etm.Lexis( dmi, time.scale=3 )
-plot( etm.A, col=rainbow(5), lwd=2, lty=1, xlab="Age" )
 plot( etm.D, col=rainbow(5), lwd=2, lty=1, xlab="DM duration" )
 }
 \seealso{

@@ -46,15 +46,14 @@ dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
                exit=list(Per=dox),
         exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
                data=DMlate )
-# Split follow-up at Insulin
-dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
-summary( dmi )
-# Introduce a new timescale
-dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM", new.scale=TRUE )
-head( dmi )
-# Split the states following insulin and explictily name the new timescale
-dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins",
-                      pre="DM", new.scale="Instime", split.states=TRUE )
+# Split follow-up at insulin, introduce a new timescale,
+# and split non-precursor states
+system.time(
+dmi <- cutLexis( dml, cut = dml$doins,
+                      pre = "DM",
+                new.state = "Ins",
+                new.scale = "t.Ins",
+             split.states = TRUE ) )
 summary( dmi )
 }
 \keyword{datasets}
