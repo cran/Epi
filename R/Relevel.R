@@ -1,20 +1,36 @@
-Relevel <-
-  function( f, ref, first=TRUE, collapse="+" )
+# The Relevel method
+Relevel <- function (x, ...) UseMethod("Relevel")
+
+# The factor method is the default method
+Relevel.default <-
+Relevel.factor <-
+  function( x, ref, first=TRUE, collapse="+", ... )
   {
   # Function that collapses multiple sets of levels of a factor
   # Bendix Carstensen, January 2004
   #
+  if( !is.factor(x) )
+    {
+    argnam <- deparse( substitute(obj) )
+    f <- factor( x )
+    cat( "Warning: ", argnam,
+         "has been converted to a factor with levels:\n",
+         levels( f ) )
+    }
+  else
+    f <- x
+
   # This is a copy of the relevel function from the base package:
   #
-  relev <- function (x, ref, ...) 
+  relev <- function (x, ref, ...)
   {
     lev <- levels(x)
-    if ( is.character( ref ) ) 
+    if ( is.character( ref ) )
          ref <- match(ref, lev)
-    if ( any( is.na( ref ) ) ) 
+    if ( any( is.na( ref ) ) )
          stop( "any values in ref must be an existing level" )
     nlev <- length( lev )
-    if ( any( ref < 1 ) || any( ref > nlev ) ) 
+    if ( any( ref < 1 ) || any( ref > nlev ) )
          stop( paste( "ref=", paste( ref, collapse="," ),
                       ": All elements must be in 1:", nlev, sep="" ) )
     factor(x, levels = lev[c(ref, seq(along = lev)[-ref])])
@@ -22,7 +38,7 @@ Relevel <-
 
   # If called with a non-list argument assume reshuffling of levels
   #
-  if( !is.list( ref ) ) 
+  if( !is.list( ref ) )
     fnew <- relev( f, ref )
 
   # If called with a list collapse levels in each list element.

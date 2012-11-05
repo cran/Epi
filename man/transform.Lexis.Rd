@@ -1,5 +1,6 @@
 \name{transform.Lexis}
 \alias{transform.Lexis}
+\alias{Relevel.Lexis}
 \alias{factorize}
 \alias{factorize.Lexis}
 \title{Transform a Lexis objects}
@@ -9,11 +10,12 @@
 \usage{
 %transform(`_data`, \dots)
 \method{transform}{Lexis}( `_data`, \dots)
-\method{factorize}{Lexis}( obj, states, print = TRUE, \dots )
+\method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
+\method{factorize}{Lexis}( x, states, print = TRUE, \dots )
 }
 \arguments{
   \item{_data}{an object of class \code{Lexis}.}
-  \item{obj}{an object of class \code{Lexis}.}
+  \item{x}{an object of class \code{Lexis}.}
   \item{states}{Names of the factor levels (states) for \code{lex.Cst}
     and \code{lex.Xst}. Can be a list, in which case some levels are
     collapsed, see the documentation for \code{\link{Relevel}}. No
@@ -27,8 +29,11 @@
   method for data frames. \code{factorize} transforms the variables
   \code{lex.Cst} and \code{lex.Xst} to factors with identical set of
   levels, optionally with names given in \code{states}, and optionally
-  collapsing states. The default is to produce a table of old states
-  versus new states if \code{states} is a list.
+  collapsing states. \code{Relevel} is merely an alias for
+  \code{factorize}, since the function does the same as
+  \code{\link{Relevel}}, but for both the factors \code{lex.Cst} and
+  \code{lex.Xst} The default is to produce a table of old states versus
+  new states if \code{states} is a list.
   }
 \value{
   A transformed \code{Lexis} object.
@@ -36,7 +41,8 @@
 \author{Martyn Plummer, Bendix Carstensen}
 \seealso{\code{\link{Lexis}},
          \code{\link{merge.Lexis}},
-         \code{\link{subset.Lexis}}}
+         \code{\link{subset.Lexis}},
+         \code{\link{Relevel}}}
 \examples{
 data( nickel )
 nic <- Lexis( data = nickel,
@@ -52,7 +58,7 @@ str( nit )
 summary( nic )
 nix <- factorize.Lexis( nic, c("Alive","Lung","Dead"))
 niw <- factorize.Lexis( nix, c("Alive","Pulm","Mort"))
-niz <- factorize.Lexis( nic, states=list("Alive",c("Pulm","Mort")), coll=" \n& ")
+niz <- factorize.Lexis( niw, states=list("Alive",c("Pulm","Mort")), coll=" \n& ")
 boxes( niw, boxpos=TRUE )
 par( new=TRUE )
 boxes( niz, boxpos=TRUE )

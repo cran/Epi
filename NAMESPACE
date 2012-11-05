@@ -8,7 +8,8 @@ export(
    pc.lines,
    pc.matpoints,
    pc.matlines,
-  cal.yr,
+          cal.yr,
+  as.Date.cal.yr,
   ccwc,
   ci.pd,
   ci.cum,
@@ -48,6 +49,7 @@ export(
   print.summary.Lexis,
            splitLexis,
       transform.Lexis,
+        Relevel.Lexis,
       factorize.Lexis,
              cutLexis,
            countLexis,
@@ -97,24 +99,28 @@ export(
 importFrom( utils, stack )
 # importFrom( mstate, mstate )
 # register S3 methods
-S3method(plot, Lexis)
-S3method(points, Lexis)
-S3method(lines, Lexis)
-S3method(PY.ann, Lexis)
-S3method(merge, Lexis)
-S3method(subset, Lexis)
-S3method(summary, Lexis)
-S3method(print, summary.Lexis)
+S3method(     plot, Lexis)
+S3method(   points, Lexis)
+S3method(    lines, Lexis)
+S3method(   PY.ann, Lexis)
+S3method(    merge, Lexis)
+S3method(   subset, Lexis)
+S3method(  summary, Lexis)
+S3method(    print, summary.Lexis)
 S3method(transform, Lexis)
+S3method(  Relevel, Lexis)
+S3method(  Relevel, factor)
+S3method(  Relevel, default)
 S3method(factorize, Lexis)
-S3method(stack, Lexis)
-S3method(tmat, Lexis)
-S3method(boxes, Lexis)
-S3method(boxes, matrix)
-S3method(msdata, Lexis)
-S3method(etm, Lexis)
-S3method(merge, data.frame)
-S3method(print, stat.table)
-S3method(print, clogistic)
-S3method(coef, clogistic)
-S3method(vcov, clogistic)
+S3method(    stack, Lexis)
+S3method(     tmat, Lexis)
+S3method(    boxes, Lexis)
+S3method(    boxes, matrix)
+S3method(   msdata, Lexis)
+S3method(      etm, Lexis)
+S3method(    merge, data.frame)
+S3method(    print, stat.table)
+S3method(    print, clogistic)
+S3method(     coef, clogistic)
+S3method(     vcov, clogistic)
+S3method(  as.Date, cal.yr)
