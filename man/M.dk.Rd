@@ -19,10 +19,9 @@
 }
 \details{
   Deaths in ages over 100 are in the class labelled 99. Risk time is
-  computed by tabulation of the risk time in \code{\link{Y.dk}, except
-    for the class 99+ where the average of the population size in ages
-    99+ at the first and last date of the year is used.}
-}
+  computed by tabulation of the risk time in \code{\link{Y.dk}}, except
+  for the class 99+ where the average of the population size in ages
+  99+ at the first and last date of the year is used.}
 \source{
   \url{http://www.statistikbanken.dk/statbank5a/SelectTable/omrade0.asp?SubjectCode=02&PLanguage=1&ShowNews=OFF}
 }

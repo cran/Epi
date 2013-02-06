@@ -1,10 +1,10 @@
 Lexis.lines <-
-function( entry.date = NA, 
+function( entry.date = NA,
            exit.date = NA,
           birth.date = NA,
            entry.age = NA,
             exit.age = NA,
-           risk.time = NA, 
+           risk.time = NA,
             col.life = "black",
             lwd.life = 2,
                 fail = NA,
@@ -12,13 +12,17 @@ function( entry.date = NA,
             pch.fail = c(NA,16),
             col.fail = col.life,
                 data = NULL
-          ) 
+          )
 {
-if( !is.null( data ) )
-  {
-  attach( data, 2 )
-  on.exit( detach( pos=2 ) )
-  }
+    ## Get variables from data argument, if supplied, or from parent
+    ## frame if not.
+    entry.date <- eval(substitute(entry.date), data)
+    entry.age  <- eval(substitute(entry.age ), data)
+    exit.date  <- eval(substitute(exit.date ), data)
+    exit.age   <- eval(substitute(exit.age  ), data)
+    risk.time  <- eval(substitute(birth.date), data)
+    birth.date <- eval(substitute(birth.date), data)
+    fail       <- eval(substitute(fail      ), data)
 
 # If fail is numeric make it logical
 if( is.numeric( fail ) ) fail <- ( fail > 0 )
@@ -62,7 +66,7 @@ if( attr( XX, "Date" ) )
   LL[,c(1,3,5)] <- LL[,c(1,3,5)] / 365.25 + 1970
   LL[,c(2,4,6)] <- LL[,c(2,4,6)] / 365.25
   } else LL <- XX
-  
+
 # Find age and date ranges in the current plot.
 #
 date <- par( "usr" )[1:2]

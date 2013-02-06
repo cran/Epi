@@ -42,17 +42,15 @@ Ytab <- Ytab * A.int
 # Convert to a data frame if required (the default)
 if( return.dfr )
   {
-  # If a dataframe is requires as resturn
-  Ytab <- as.data.frame(as.table(Ytab))
-  # Retrieve the numerical values of left endpoints of intervals
-  Ytab <- transform( Ytab,
-                     A = as.numeric(as.character(Ytab[,1])),
-                     P = as.numeric(as.character(Ytab[,2])) )
-  # Compute the correct midpoints from the supplied data
-  Ytab <- transform( Ytab,
-                     A = A + A.int*(1+(wh=="up"))/3,
-                     P = P + P.int*(2-(wh=="up"))/3,
-                     Y = Freq )[,c("A","P","Y")]
+      ## If a dataframe is required as return value
+      Ytab <- data.frame(expand.grid(dimnames(Ytab)), Y=c(Ytab))
+      ## Retrieve the numerical values of left endpoints of intervals
+      Ytab$A <- as.numeric(as.character(Ytab$A))
+      Ytab$P <- as.numeric(as.character(Ytab$P))
+      ## Compute the correct midpoints from the supplied data
+      Ytab$A <- Ytab$A + A.int * (1 + (Ytab$wh == "up"))/3
+      Ytab$P <- Ytab$P + P.int * (1 + (Ytab$wh == "lo"))/3
+      Ytab <- Ytab[, c("A","P","Y")]
   }
 Ytab
 }

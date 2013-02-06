@@ -1,5 +1,5 @@
-steplines <- 
-function( x, 
+steplines <-
+function( x,
           y,
        left = TRUE,
       right = !left,
@@ -19,7 +19,7 @@ function( x,
          y[ord[dbl[yv]]], ... )
 }
 
-interp <- 
+interp <-
 function ( target, fv, res )
 {
 # Linear interpolaton of the values in the N by 2 matrix res,
@@ -32,10 +32,10 @@ where <- which( fv>target )[1] - 1:0
 wt[2] <- 1-wt
 t( res[where,] ) %*% wt
 }
-          
-ROC.tic <- 
+
+ROC.tic <-
 function ( tt,
-          txt = formatC(tt,digits=2,format="f"), 
+          txt = formatC(tt,digits=2,format="f"),
          dist = 0.02,
         angle = +135,
           col = "black",
@@ -49,7 +49,7 @@ for (i in 1:length(tt))
     {
     pnt <- interp ( tt[i], fv, res )
     x <- 1-pnt[2]
-    y <- pnt[1] 
+    y <- pnt[1]
     lines( c( x, x+dist*cos(pi*angle/180) ),
            c( y, y+dist*sin(pi*angle/180) ), col=col )
     text( x+dist*cos(pi*angle/180),
@@ -57,13 +57,13 @@ for (i in 1:length(tt))
           adj=c( as.numeric(abs(angle)>=90),
                  as.numeric(    angle <= 0)), cex=cex )
     }
-}       
+}
 
-ROC <- 
+ROC <-
 function ( test = NULL,
            stat = NULL,
            form = NULL,
-           plot = c( "sp", "ROC" ),  
+           plot = c( "sp", "ROC" ),
              PS = is.null(test),      # Curves on probability scale
              PV = TRUE,               # sn, sp, PV printed at "optimality" point
              MX = TRUE,               # tick at "optimality" point
@@ -79,7 +79,7 @@ function ( test = NULL,
 # First all the computations
 #
 # Name of the response
-  rnam <- if ( !missing( test ) ) 
+  rnam <- if ( !missing( test ) )
              deparse( substitute( test ) ) else
              "lr.eta"
 # Fit the model and get the info for the two possible types of input
@@ -94,35 +94,33 @@ function ( test = NULL,
     }
   else
     {
-    lr <- glm( form, family=binomial )#, data=data )
-    resp <- eval( parse( text=deparse( form[[2]] ) ) )
+    lr <- glm(form, family = binomial, data = data)
+    resp <- eval( parse(text = deparse(form[[2]])), envir=lr$model )
     Model.inf <- paste("Model: ",paste(paste(form)[c(2,1,3)], collapse=" "))
     }
 # Form the empirical distribution function for test for each of
 # the two categories of resp.
-  
-# First a table of the test (continuous variable) vs. the response
+
+# First a table of the test (continuous variable) vs. the response and
+# adding a row of 0s so that we have all points fro the ROC curve
   m  <- as.matrix( base:::table( switch( PS+1, test, lr$fit ), resp ) )
-# What values do they refer to
-  fv <-     sort( unique( switch( PS+1, test, lr$fit ) ) )
-# How may different values of the test variable do we have?
-  nr <- dim( m )[1]
-# Number in the two outcome categories
-  a <- apply( m, 2, sum )
-# Add a the sum for each value of test
-  m <- addmargins( m, 2 )
-# The calculate the empirical distribution functions:
-  m <- apply( m[nr:1,], 2, cumsum )[nr:1,]
+  m  <- addmargins( rbind( 0, m ), 2 )
+# What values of test/eta do the rows refer to
+  fv <- c( -Inf, sort( unique( switch( PS+1, test, lr$fit ) ) ) )
+# How many rows in this matrix
+  nr <- nrow(m)
+# Calculate the empirical distribution functions (well, cumulative numbers):
+  m <- apply( m, 2, cumsum )
 # Then the relevant measures are computed.
-  sn <- c( m[,2] / a[2], 0 )
-  sp <- c( (a[1]-m[,1]) / a[1], 1 )
-  pvp <- c( m[,2] / m[,3], 1 )
-  pvn <- (a[1] - m[,1]) / ( sum(a) - m[,3] )
-  pvn <- c( pvn, rev( pvn )[1] )
-  res <- data.frame( cbind( sn, sp, pvp, pvn, c(NA,fv) ) )
-  auc <- sum( ( res[-1,1] + res[-nr,1] ) / 2 * diff( res[,2] ) )
-  names( res ) <- c( "sens", "spec", "PV+", "PV-", rnam )
-                          
+  sns <- (m[nr,2]-m[,2]) /   m[nr,2]
+  spc <-          m[,1]  /   m[nr,1]
+  pvp <-          m[,2]  /           m[,3]
+  pvn <- (m[nr,1]-m[,1]) / ( m[nr,3]-m[,3] )
+  res <- data.frame( cbind( sns, spc, pvp, pvn, fv ) )
+  names( res ) <- c( "sens", "spec", "pvp", "pvn", rnam )
+  # AUC by triangulation
+  auc <- sum( (res[-1,"sens"]+res[-nr,"sens"])/2 * abs(diff(1-res[,"spec"])) )
+
 # Plot of sens, spec, PV+, PV-:
 if ( any( !is.na( match( c( "SP", "SNSP", "SPV" ), toupper( plot ) ) ) ) )
 {
@@ -138,19 +136,19 @@ if ( PS ) {
        steplines( fv, res[,j], lty=1, lwd=lwd, col=gray((j+1)/7)) }
        text( 0, 1.01, "Sensitivity", cex=0.7, adj=c(0,0), font=2 )
        text( 1, 1.01, "Specificity", cex=0.7, adj=c(1,0), font=2 )
-       text( 0,  a[2]/sum(a)-0.01, "PV+", cex=0.7, adj=c(0,1), font=2 )
-       text( 0 + strwidth( "PV+", cex=0.7 ),  a[2]/sum(a)-0.01,
-             paste( " (= ", a[2],"/", sum(a), " =",
-                    formatC( 100*a[2]/sum(a), digits=3 ),
-                    "%)", sep=""),      
-             adj=c(0,1), cex=0.7 ) 
-       text( 1, 1-a[2]/sum(a)-0.01, "PV-", cex=0.7, adj=c(1,1), font=2 )
+       text( 0,  m[nr,2]/m[nr,3]-0.01, "PV+", cex=0.7, adj=c(0,1), font=2 )
+       text( 0 + strwidth( "PV+", cex=0.7 ),  m[nr,2]/m[nr,3]-0.01,
+             paste( " (= ", m[nr,2],"/", m[nr,3], " =",
+                    formatC( 100*m[nr,2]/m[nr,3], digits=3 ),
+                    "%)", sep=""),
+             adj=c(0,1), cex=0.7 )
+       text( 1, 1-m[nr,2]/m[nr,3]-0.01, "PV-", cex=0.7, adj=c(1,1), font=2 )
             }
 # then for test-variable scale
 else {
-       xl <- range( test ) 
+       xl <- range( test )
        plot( xl, 0:1,
-             xlim=xl, 
+             xlim=xl,
              xlab=paste( deparse( substitute( test ) ), "(quantiles)" ),
              ylim=0:1,         ylab=" ",
              type="n" )
@@ -161,50 +159,50 @@ else {
        steplines( fv, res[,j], lty=1, lwd=lwd, col=gray((j+1)/7))}
        text( xl[1], 1.01, "Sensitivity", cex=0.7, adj=c(0,0), font=2 )
        text( xl[2], 1.01, "Specificity", cex=0.7, adj=c(1,0), font=2 )
-       text( xl[1],  a[2]/sum(a)-0.01, "PV+", cex=0.7, adj=c(0,1), font=2 )
-       text( xl[1] + strwidth( "PV+", cex=0.7 ),  a[2]/sum(a)-0.01,
-             paste( " (= ", a[2],"/", sum(a), " =",
-                    formatC( 100*a[2]/sum(a), digits=3 ),
-                    "%)", sep=""),      
-             adj=c(0,1), cex=0.7 ) 
-       text( xl[2], 1-a[2]/sum(a)-0.01, "PV-", cex=0.7, adj=c(1,1), font=2 )
+       text( xl[1],  m[nr,2]/m[nr,3]-0.01, "PV+", cex=0.7, adj=c(0,1), font=2 )
+       text( xl[1] + strwidth( "PV+", cex=0.7 ),  m[nr,2]/m[nr,3]-0.01,
+             paste( " (= ", m[nr,2],"/", m[nr,3], " =",
+                    formatC( 100*m[nr,2]/m[nr,3], digits=3 ),
+                    "%)", sep=""),
+             adj=c(0,1), cex=0.7 )
+       text( xl[2], 1-m[nr,2]/m[nr,3]-0.01, "PV-", cex=0.7, adj=c(1,1), font=2 )
        }
 }
 
 # Plot of ROC-curve:
 if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
-{       
-       plot( 1-res[,2], res[,1], 
+{
+       plot( 1-res[,2], res[,1],
              xlim=0:1, xlab="1-Specificity",
              ylim=0:1, ylab=  "Sensitivity",
              type="n", ...)
        if( is.numeric( grid ) ) abline( h=grid/100, v=grid/100, col=gray( 0.9 ) )
        abline( 0, 1, col=gray( 0.4 ) )
        box()
-       lines( 1-res[,2], res[,1], lwd=lwd )
+       lines( 1-res[,"spec"], res[,"sens"], lwd=lwd )
 
   # Tickmarks on the ROC-curve
-       if ( !is.null(cuts) ) 
+       if ( !is.null(cuts) )
        {
-       ROC.tic( cuts, 
-                txt=formatC( cuts, digits=2, format="f" ), 
+       ROC.tic( cuts,
+                txt=formatC( cuts, digits=2, format="f" ),
                 fv=fv, res=res, dist=0.03, cex=0.7)
-       }       
+       }
 
   # Plot of optimality point
-       if (MX) 
+       if (MX)
        {
        mx <- max( res[,1]+res[,2] )
        mhv <- which( (res[,1]+res[,2])==mx )[1]
        mxf <- fv[mhv]
        abline( mx-1, 1, col=gray(0.4) )
-       ROC.tic( mxf, 
+       ROC.tic( mxf,
                 txt=paste( rnam, "=", formatC( mxf, format="f", digits=3 ) ),
                 fv=fv, res=res, dist=0.03, cex=0.7, angle=135 )
        }
 
   # Model information
-       if (MI) 
+       if (MI)
        {
        crn <- par()$usr
        text(0.95*crn[2]+0.05*crn[1], 0.07, Model.inf,
@@ -212,8 +210,8 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
        cf <- summary(lr)$coef[,1:2]
        nf <- dimnames(cf)[[1]]
 
-       text(0.95*crn[2]+0.05*crn[1], 0.10, 
-            paste("Variable\ \ \ \ \ \ est.\ \ \ \ \ (s.e.) \ \ \n", 
+       text(0.95*crn[2]+0.05*crn[1], 0.10,
+            paste("Variable\ \ \ \ \ \ est.\ \ \ \ \ (s.e.) \ \ \n",
                   paste(rbind(nf,
                               rep("\ \ \ \ ",length(nf)),
                               formatC(cf[,1],digits=3,format="f"),
@@ -222,22 +220,22 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
                               rep(")",length(nf)),
                               rep("\n",length(nf))),
                         collapse=""),
-                  collapse=""), 
+                  collapse=""),
             adj=c(1,0), cex=0.7 )
        }
 
   # Print the area under the curve
-       if (AUC) 
+       if (AUC)
        {
        crn <- par()$usr
-       text( 0.95*crn[2]+0.05*crn[1], 0.00, 
-             paste( "Area under the curve:", 
-                    formatC( auc, format="f", digits=3, width=5 ) ), 
+       text( 0.95*crn[2]+0.05*crn[1], 0.00,
+             paste( "Area under the curve:",
+                    formatC( auc, format="f", digits=3, width=5 ) ),
              adj=c(1,0), cex=0.7 )
        }
 
   # Predictive values at maximum
-       if (PV) 
+       if (PV)
        {
        if(!MX) { mx <- max(res[,1]+res[,2])
                  mhv <- which((res[,1]+res[,2])==mx)
@@ -250,11 +248,11 @@ if ( any( !is.na( match( "ROC", toupper( plot ) ) ) ) )
                                 formatC(100*res[mhv,2],digits=1,format="f"),
                          "%\n", "PV+: ",
                                 formatC(100*res[mhv,3],digits=1,format="f"),
-                         "%\n", "PV-: ", 
+                         "%\n", "PV-: ",
                                 formatC(100*res[mhv,4],digits=1,format="f"),
                          "%", sep="" ),
                     dist=0.1, cex=0.7, angle=-45 )
-       } 
+       }
 }
 invisible( list( res=res, AUC=auc, lr=lr ) )
-}       
+}

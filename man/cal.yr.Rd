@@ -48,7 +48,7 @@
 \author{
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
   University of Copenhagen, \email{bxc@steno.dk},
-  \url{http://www.pubhealth.ku.dk/~bxc}
+  \url{http://BendixCarstensen.com}
 }
 \seealso{
   \code{\link{DateTimeClasses}},
@@ -57,7 +57,7 @@
 \examples{
  # Character vector of dates:
  birth <- c("14/07/1852","01/04/1954","10/06/1987","16/05/1990",
-            "01/01/1996","01/01/1997","01/01/1998","01/01/1999")
+            "12/11/1980","01/01/1997","01/01/1998","01/01/1999")
  # Proper conversion to class "Date":
  birth.dat <- as.Date( birth, format="\%d/\%m/\%Y" )
  # Converson of character to class "cal.yr"

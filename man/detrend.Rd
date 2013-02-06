@@ -28,7 +28,7 @@
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://www.pubhealth.ku.dk/~bxc}, with help from Peter Dalgaard.
+  \url{http://BendixCarstensen.com}, with help from Peter Dalgaard.
 }
 \seealso{ \code{\link{projection.ip}} }
 \keyword{array}

@@ -2,7 +2,8 @@
 \alias{ccwc}
 \title{Generate a nested case-control study}
 \usage{
-ccwc(entry=0, exit, fail, origin=0, controls=1, match=list(), include=list(), data=NULL, silent=F)
+ccwc( entry=0, exit, fail, origin=0, controls=1, match=list(),
+      include=list(), data=NULL, silent=FALSE )
 }
 \arguments{
   \item{entry}{
@@ -31,12 +32,12 @@ ccwc(entry=0, exit, fail, origin=0, controls=1, match=list(), include=list(), da
     Data frame in which to look for input variables
   }
   \item{silent}{
-    If  False, echos a . to the screen for each case-control set
+    If FALSE, echos a . to the screen for each case-control set
     created; otherwise produces no output.
   }
 }
 \description{
-Given the basic outcome variables for a cohort study: the time of entry 
+Given the basic outcome variables for a cohort study: the time of entry
 to the cohort, the time of exit and the reason for exit ("failure" or
 "censoring"), this function computes risk sets and generates a matched
 case-control study in which each case is compared with a set of controls
@@ -76,7 +77,7 @@ matched when selecting controls.
 # using the age scale and matching on job
 #
 data(diet)
-dietcc <- ccwc(doe, dox, chd, origin=dob, controls=2, data=diet,
-               include=energy, match=job)
+dietcc <- ccwc( doe, dox, chd, origin=dob, controls=2, data=diet,
+                include=energy, match=job)
 }
 \keyword{datagen}

@@ -1,4 +1,4 @@
-\name{tbox}
+\name{boxes.MS}
 \Rdversion{1.1}
 \alias{tbox}
 \alias{dbox}
@@ -7,6 +7,7 @@
 \alias{boxes}
 \alias{boxes.Lexis}
 \alias{boxes.matrix}
+\alias{boxes.MS}
 \title{
   Draw boxes and arrows for illustration of multistate models.
   }
@@ -20,46 +21,51 @@
 \usage{
    tbox( txt, x, y, wd, ht,
          font=2, lwd=2,
-         col.txt="black",
-         col.border="black",
+         col.txt=par("fg"),
+         col.border=par("fg"),
          col.bg="transparent" )
    dbox( x, y, wd, ht=wd,
          font=2, lwd=2, cwd=5,
-         col.cross="black",
-         col.border="black",
+         col.cross=par("fg"),
+         col.border=par("fg"),
          col.bg="transparent"  )
    boxarr( b1, b2, offset=FALSE, pos=0.45, ... )
-\method{boxes}{Lexis}( obj, file,
-             detailed = FALSE,
-               boxpos = FALSE,
-                wmult = 1.5,
-                hmult = 1.5*wmult,
-                  cex = 1.5,
-               show   = inherits( obj, "Lexis" ),
-               show.Y = show,
-              scale.Y = 1,
-             digits.Y = 1,
-               show.D = show,
-              scale.D = FALSE,
-             digits.D = as.numeric(as.logical(scale.D)),
-                eq.wd = TRUE,
-                eq.ht = TRUE,
-                   wd,
-                   ht,
-               subset = NULL,
-              exclude = NULL,
-                 font = 2,
-                  lwd = 2,
-              col.txt = "black",
-           col.border = col.txt,
-               col.bg = "transparent",
-              col.arr = "black",
-              lwd.arr = 2,
-             font.arr = 2,
-              txt.arr = NULL,
-          col.txt.arr = col.arr,
-           offset.arr = 2, ... )
+\method{boxes}{Lexis}( obj,
+                    boxpos = FALSE,
+                     wmult = 1.5,
+                     hmult = 1.5*wmult,
+                       cex = 1.5,
+                    show   = inherits( obj, "Lexis" ),
+                    show.Y = show,
+                   scale.Y = 1,
+                  digits.Y = 1,
+                    show.D = show,
+                   scale.D = FALSE,
+                  digits.D = as.numeric(as.logical(scale.D)),
+                    show.R = is.numeric(scale.R),
+                   scale.R = scale.D,
+                  digits.R = as.numeric(as.logical(scale.R)),
+                    DR.sep = if( show.D ) c("\n(",")") else c("",""),
+                     eq.wd = TRUE,
+                     eq.ht = TRUE,
+                        wd,
+                        ht,
+                    subset = NULL,
+                   exclude = NULL,
+                      font = 2,
+                       lwd = 2,
+                   col.txt = par("fg"),
+                col.border = col.txt,
+                    col.bg = "transparent",
+                   col.arr = par("fg"),
+                   lwd.arr = 2,
+                  font.arr = 2,
+                   pos.arr = 0.45,
+                   txt.arr = NULL,
+               col.txt.arr = col.arr,
+                offset.arr = 2, ... )
 \method{boxes}{matrix}( obj, ... )
+\method{boxes}{MS}( obj, sub.st, sub.tr, cex=1.5, ... )
    fillarr( x1, y1, x2, y2, gap=2, fr=0.8,
             angle=17, lwd=2, length=par("pin")[1]/30, ... )
    }
@@ -89,9 +95,10 @@
     to \eqn{j} can occur. If \code{show.D=TRUE}, the arrows between
     states are annotated by these numbers. If \code{show.Y=TRUE}, the
     boxes representing states are annotated by the numbers in the
-    diagonal of \code{obj}.}
-  \item{file}{Name of the file with the code reproducing the plot.}
-  \item{detailed}{Should the output of R-code be detailed, showing all parameters?}
+    diagonal of \code{obj}.
+
+    For \code{boxes.matrix} \code{obj} is a matrix and for
+    \code{boxes.MS}, \code{obj} is an \code{MS.boxes} object (see below).}
   \item{boxpos}{If \code{TRUE} the boxes are positioned  equidistantly on a
                 circle, if \code{FALSE} (the default) you are queried to
                 click on the screen for the positions. This argument can also
@@ -110,12 +117,17 @@
   \item{scale.Y}{What scale should be used for annotation of person-years.}
   \item{digits.Y}{How many digits after the decimal point should be used for the
                   person-years.}
-  \item{show.D}{Should transitions be put alongside the arrows.
-              Ignored if \code{obj} is not a \code{Lexis} object.}
-  \item{scale.D}{If this a scalar, rates instead of no. transitions are printed
-                 at the arrows, scaled by \code{scale.D}.}
-  \item{digits.D}{How many digits after the decimal point should be used for the
+  \item{show.D}{Should no. transitions be put alongside the arrows.
+                Ignored if \code{obj} is not a \code{Lexis} object.}
+  \item{scale.D}{Synonumous with \code{scale.R}, retained for compatability.}
+  \item{digits.D}{Synonumous with \code{digits.R}, retained for compatability.}
+  \item{show.R}{Should the transition rates be shown on the arrows?}
+  \item{scale.R}{If this a scalar, rates instead of no. transitions are printed
+                 at the arrows, scaled by \code{scale.R}.}
+  \item{digits.R}{How many digits after the decimal point should be used for the
                   rates.}
+  \item{DR.sep}{Character vector of length 2. If rates are shown, the
+    first element is inserted before and the second after the rate.}
   \item{eq.wd}{Should boxes all have the same width?}
   \item{eq.ht}{Should boxes all have the same height?}
   \item{subset}{Draw only boxes and arrows for a subset of the states.
@@ -130,11 +142,15 @@
     order of states.}
   \item{lwd.arr}{Line withs of the arrows.}
   \item{font.arr}{Font of the text annotation the arrows.}
+  \item{pos.arr}{Numerical between 0 and 1, determines the position on
+    the arrows where the text is written.}
   \item{txt.arr}{Text put on the arrows.}
   \item{col.txt.arr}{Colors for text on the arrows.}
   \item{offset.arr}{The amount offset between arrows representing
     two-way transitions, that is where there are arrows both ways
     between two boxes.}
+  \item{sub.st}{Subset of the states to be drawn.}
+  \item{sub.tr}{Subset of the transitions to be drawn.}
   \item{x1}{x-coordinate of the starting point.}
   \item{y1}{y-coordinate of the starting point.}
   \item{x2}{x-coordinate of the end point.}
@@ -162,7 +178,8 @@
   area (with axes 0 to 100 in both directions) and if
   \code{boxpos=FALSE} (the default) prompts you to click on the
   locations for the state boxes, and then draws arrows implied by the
-  actual transitions in the \code{Lexis} object.
+  actual transitions in the \code{Lexis} object. The default is to
+  annotate the transitions with the number of transitions.
 
   A transition matrix can also be supplied, in which case the row/column
   names are used as state names, diagnonal elements taken as
@@ -182,6 +199,13 @@
   \code{pos}) and the latter is a unit vector in the
   direction of the arrow, which is used by \code{boxes.Lexis} to
   position the annotation of arrows with the number of transitions.
+
+  \code{boxes.MS} re-draws what \code{boxes.Lexis} has done based on the
+  object of class \code{MS} produced by \code{boxes.Lexis}. The point
+  being that the \code{MS} object is easily modifiable, and thus it is a
+  machinery to make variations of the plot with different color
+  annotations etc.
+
   \code{fill.arr} is just a utility drawing nicer arrows than the default
   \code{\link{arrows}} command, basically by using filled arrow-heads; called
   by \code{boxarr}.
@@ -194,10 +218,9 @@
        list with names \code{x} and \code{y}) of a point on the
        arrow, designated to be used for annotation of the arrow.
 
-       The function \code{boxes.Lexis} returns (invisibly) a list with
-       two elements: \code{Boxes} - a dataframe with one row
+       The function \code{boxes.Lexis} returns an \code{MS} object, a list with
+       five elements: 1) \code{Boxes} - a dataframe with one row
        per box and columns
-       \code{pl.nam},
        \code{xx},
        \code{yy},
        \code{wd},
@@ -207,7 +230,25 @@
        \code{col.txt},
        \code{col.border} and
        \code{col.bg},
-       and \code{Tmat}, the transition matrix.
+       2) an object \code{State.names} with names of states (possibly an
+       expression, hence not possible to include as a column in \code{Boxes}),
+       3) a matrix \code{Tmat}, the transition matrix, 4) a data
+       frame, \code{Arrows} with one row per transition and columns:
+       \code{lwd.arr},
+       \code{col.arr},
+       \code{pos.arr},
+       \code{col.txt.arr},
+       \code{font.arr} and
+       \code{offset.arr} and
+       5) an object \code{Arrowtext} with names of states (possibly an
+       expression, hence not possible to include as a column in
+       \code{Arrows})
+
+       An \code{MS} object is used as input to
+       \code{boxes.MS}, the primary use is to modify selected entries in
+       the \code{MS} object first, e.g. colors, or supply
+       subsetting arguments in order to produce displays that have the
+       same structure, but with different colors etc.
        }
 \author{Bendix Carstensen}
 \examples{
@@ -233,14 +274,19 @@ text( boxarr( bd, bdc, col="blue", lwd=3 ),
 # Set up a transition matrix allowing recovery
 tm <- rbind( c(NA,1,1), c(1,NA,1), c(NA,NA,NA) )
 rownames(tm) <- colnames(tm) <- c("Cancer","Recurrence","Dead")
-boxes.Lexis( tm, file="", boxpos=TRUE )
-boxes.Lexis( tm, file="", detailed=TRUE, boxpos=TRUE )
+tm
+boxes.matrix( tm, boxpos=TRUE )
+
 # Illustrate texting of arrows
 boxes.Lexis( tm, boxpos=TRUE, txt.arr=c("en","to","tre","fire") )
-boxes.Lexis( tm, boxpos=TRUE, txt.arr=c(expression(lambda[C]),
+zz <- boxes( tm, boxpos=TRUE, txt.arr=c(expression(lambda[C]),
                                         expression(mu[C]),
                                         "recovery",
                                         expression(mu[R]) ) )
+
+# Change color of a box
+zz$Boxes[3,c("col.bg","col.border")] <- "green"
+boxes( zz )
 
 # Set up a Lexis object
 data(DMlate)
@@ -249,16 +295,28 @@ dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
                exit=list(Per=dox),
         exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
                data=DMlate[1:1000,] )
+
 # Split follow-up at Insulin
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )
 boxes( dmi, boxpos=TRUE )
-# Set up a bogus recovery date
+
+# Set up a bogus recovery date jut to illustrate two-way transitions
 dmi$dorec <- dmi$doins + runif(nrow(dmi),0.5,10)
 dmi$dorec[dmi$dorec>dmi$dox] <- NA
 dmR <- cutLexis( dmi, cut=dmi$dorec, new.state="DM", pre="Ins" )
 summary( dmR )
 boxes( dmR, boxpos=TRUE )
+boxes( dmR, boxpos=TRUE, show.D=FALSE )
+boxes( dmR, boxpos=TRUE, show.D=FALSE, show.Y=FALSE )
+boxes( dmR, boxpos=TRUE, scale.R=1000 )
+MSobj <- boxes( dmR, boxpos=TRUE, scale.R=1000, show.D=FALSE )
+MSobj <- boxes( dmR, boxpos=TRUE, scale.R=1000, DR.sep=c(" (",")") )
+class( MSobj )
+boxes( MSobj )
+MSobj$Boxes[1,c("col.txt","col.border")] <- "red"
+MSobj$Arrows[1:2,"col.arr"] <- "red"
+boxes( MSobj )
     }
 \seealso{
    \code{\link{tmat.Lexis}}

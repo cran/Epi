@@ -1,11 +1,13 @@
-ccwc <- 
-function(entry=0, exit, fail, origin=0, controls=1, match=list(), 
-         include=list(), data=NULL, silent=F) {
-                                        # Check arguments
-  if (!is.null(data)) {
-    attach(data, 2)
-    on.exit(detach(pos=2))
-  }
+ccwc <-
+function(entry=0, exit, fail, origin=0, controls=1, match=list(),
+         include=list(), data=NULL, silent=FALSE)
+{
+# Check arguments
+  entry <- eval(substitute(entry), data)
+  exit <- eval(substitute(exit), data)
+  fail <- eval(substitute(fail), data)
+  origin <- eval(substitute(origin), data)
+
   n <- length(fail)
   if (length(exit)!=n)
     stop("All vectors must have same length")
@@ -15,16 +17,16 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
     origin <- rep(origin, n)
   }
   else {
-    if (length(origin)!=n) 
+    if (length(origin)!=n)
       stop("All vectors must have same length")
   }
-                                        # Transform times to correct scale
+# Transform times to correct scale
   t.entry <- as.numeric(entry - origin)
   t.exit <- as.numeric(exit - origin)
-                                        # match= argument
+# match= argument
   marg <- substitute(match)
   if (mode(marg)=="name") {
-    match <- list(match)
+    match <- list(eval(marg, data))
     names(match) <- as.character(marg)
   }
   else if (mode(marg)=="call" && marg[[1]]=="list") {
@@ -35,7 +37,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
         for (i in 2:nm) {
           if (mode(marg[[i]])=="name")
             mnames[i] <- as.character(marg[[i]])
-          else 
+          else
             stop("illegal argument (match)")
         }
       }
@@ -50,7 +52,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
       }
     }
     names(marg) <- mnames
-    match <- eval(marg)
+    match <- eval(marg, data)
   }
   else {
     stop("illegal argument (match)")
@@ -67,7 +69,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
                                         # include= argument
   iarg <- substitute(include)
   if (mode(iarg)=="name") {
-    include <- list(include)
+    include <- list(eval(iarg, data))
     names(include) <- as.character(iarg)
   }
   else if (mode(iarg)=="call" && iarg[[1]]=="list") {
@@ -78,13 +80,13 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
         for (i in 2:ni) {
           if (mode(iarg[[i]])=="name")
             inames[i] <- as.character(iarg[[i]])
-          else 
+          else
             stop("illegal argument (include)")
         }
       }
       else {
         for (i in 2:ni) {
-          if (mode(iarg[[i]])=="name") 
+          if (mode(iarg[[i]])=="name")
             inames[i] <- as.character(iarg[[i]])
           else
             stop("illegal argument (include)")
@@ -93,7 +95,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
       }
     }
     names(iarg) <- inames
-    include <- eval(iarg)
+    include <- eval(iarg, data)
   }
   else {
     stop("illegal argument (include)")
@@ -140,7 +142,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
   for (g in fg) {
                                         # Failure times
     ft <- unique( t.exit[(grp==g) & (fail!=0)] )
-                                        # Create case-control sets 
+                                        # Create case-control sets
     for (tf in ft) {
       if (!silent) {
         cat(".")
@@ -160,11 +162,11 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
       if (ncont>0) {
         newnn <- nn+ncase+ncont
         sr[(nn+1):newnn] <- set
-        tr[(nn+1):newnn] <- tf 
+        tr[(nn+1):newnn] <- tf
         fr[(nn+1):(nn+ncase)] <- 1
         fr[(nn+ncase+1):newnn] <- 0
         pr[(nn+1):(nn+ncase)] <- (1:n)[case]
-        pr[(nn+ncase+1):(newnn)] <- 
+        pr[(nn+ncase+1):(newnn)] <-
           sample((1:n)[noncase], size=ncont)
         nn <- newnn
       }
@@ -194,7 +196,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
     }
   }
   names(res) <- c("Set", "Map", "Time", "Fail", mnames, inames)
-  if (incomplete>0) 
+  if (incomplete>0)
     warning(paste(incomplete, "case-control sets are incomplete"))
   if (nomatch>0)
     warning(paste(nomatch, "cases could not be matched"))

@@ -5,7 +5,7 @@
 \alias{dur}
 \title{Time series methods for Lexis objects}
 \description{
-  Extract the entry time, exit time, status, or duration of follow-up from a
+  Extract the entry time, exit time, status or duration of follow-up from a
   \code{Lexis} object.
 }
 \usage{

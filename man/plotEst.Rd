@@ -3,7 +3,7 @@
 \alias{pointsEst}
 \alias{linesEst}
 \title{
-  Plot estimates with confidence limits
+  Plot estimates with confidence limits (forest plot)
 }
 \description{
   Plots parameter estimates with confidence intervals, annotated with
@@ -87,7 +87,7 @@ pointsEst( ests, y = dim(ests)[1]:1, pch = 16, cex = 1, lwd = 2,
 \author{
   Bendix Carstensen,
   \email{bxc@steno.dk},
-  \url{http://www.pubhealth.ku.dk/~bxc}}
+  \url{http://BendixCarstensen.com}}
 \seealso{
   ci.lin
 }

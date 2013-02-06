@@ -5,7 +5,7 @@
   Age-Period-Cohort-models.
 }
 \description{
-  
+
   A plot is generated where both the age-scale and the cohort/period
   scale is on the x-axis. The left vertical axis will be a logarithmic
   rate scale referring to age-effects and the right a logarithmic
@@ -14,7 +14,7 @@
 
   Only an empty plot frame is generated. Curves or points must be added
   with \code{points}, \code{lines} or the special utility function
-  \code{\link{apc.lines}}. 
+  \code{\link{apc.lines}}.
 }
 \usage{
   apc.frame( a.lab,
@@ -36,7 +36,7 @@
           col.grid = gray(0.85),
              sides = c(1,2,4) )
 }
-\arguments{ 
+\arguments{
   \item{a.lab}{Numerical vector of labels for the age-axis.}
   \item{cp.lab}{Numerical vector of labels for the cohort-period axis.}
   \item{r.lab}{Numerical vector of labels for the rate-axis (left vertical)}
@@ -58,7 +58,7 @@
   \item{col.grid}{Colour of the grid put in the plot.}
   \item{sides}{Numerical vector indicating on which sides axes should
     be drawn and annotated. This option is aimed for multi-panel
-    displays where axes only are put on the outer plots.} 
+    displays where axes only are put on the outer plots.}
 }
 \details{
   The function produces an empty plot frame for display of results
@@ -68,7 +68,7 @@
   age-axis and the calendar time axis, vertical grid lines at
   \code{c(a.lab,a.tic,cp.lab,cp.tic)}, and horizontal grid lines at
   \code{c(r.lab,r.tic)}.
-  
+
   The function returns a numerical vector of
   length 2, with names \code{c("cp.offset","RR.fac")}. The y-axis for
   the plot will be a rate scale for the age-effects, and the x-axis will
@@ -89,12 +89,13 @@
   and \code{\link{apc.lines}}.
 }
 \references{
-  \url{http://www.pubhealth.ku.dk/~bxc/APC/notes.pdf}
+  B. Carstensen: Age-Period-Cohort models for the Lexis
+  diagram. Statistics in Medicine, 26: 3018-3045, 2007.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://www.pubhealth.ku.dk/~bxc/}
-} 
+  \url{http://BendixCarstensen.com}
+}
 \examples{
 par( mar=c(4,4,1,4) )
 res <-

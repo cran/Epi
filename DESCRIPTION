@@ -1,6 +1,6 @@
 Package: Epi
-Version: 1.1.40
-Date: 2012-11-01
+Version: 1.1.44
+Date: 2013-02-06
 Title: A package for statistical analysis in epidemiology.
 Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
         email = "bxc@steno.dk"), person("Martyn", "Plummer", role =
@@ -16,8 +16,8 @@ Description: Functions for demographic and epidemiological analysis in
         plotting. Contains some epidemiological datasets.
 License: GPL-2
 URL: http://BendixCarstensen.com/Epi/
-Packaged: 2012-11-05 12:45:44 UTC; BXC
+Packaged: 2013-02-07 10:08:57 UTC; bxc
 Author: Bendix Carstensen [aut, cre], Martyn Plummer [aut], Michael
         Hills [aut], Esa Laara [ctb]
 Repository: CRAN
-Date/Publication: 2012-11-05 15:05:40
+Date/Publication: 2013-02-07 12:36:25

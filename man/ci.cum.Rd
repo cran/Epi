@@ -52,7 +52,7 @@ models are the most common the \code{Exp} parameter defaults to TRUE.
  }
 \author{
   Bendix Carstensen,
-  \url{http://www.pubhealth.ku.dk/~bxc}
+  \url{http://BendixCarstensen.com}
 }
 \seealso{ See also \code{\link{ci.lin}} }
 \examples{
