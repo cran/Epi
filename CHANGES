@@ -1,3 +1,49 @@
+Changes in 1.2.44
+
+o A number of dead links in the documentation have been resurrected.
+
+o attach() purged from Lexis.diagram, Lexis.lines and ccwc.
+
+o Bug in computing AUC in ROC fixed, thanks to Karl Ove Hufthammer.
+  Documentation clarified with respect to definition of test.
+
+o Bug fix to remove warning when more than one variable name was
+  supplied in the by= argument of summary.Lexis.
+
+Changes in 1.2.43
+
+o N2Y fixed so that local variable bindings are recognized (M. Plummer)
+
+o summary.Lexis expanded with the argument by=, allowing a summary by a
+  factor. Also, the default behaviour is now to return only the
+  transition summary, and only optionally the transition rates;
+  giverned by the Rates= argument
+
+Changes in 1.2.42
+
+o Bug that caused a crash of ROC when vaiables in the "form" argument
+  were only in the "data" argument data frame and not in the global
+  environmant. Now fixed thanks to Ben Barnes of the Robert Koch
+  Institute, German Center for Cancer Registry Data
+
+Changes in 1.2.41
+
+o boxes.Lexis now returns an object of class MS, which easily allows
+  plotting of slightly modified multistate displays using the new
+  command boxes.MS. The facility in boxes.Lexis to produce weedy code
+  for the same purpose has been removed.
+
+o boxes.Lexis now allows to show *both* number of transitions *and*
+  rates between the states.
+
+o stack.Lexis now takes the Lexis attributes "time.scales" and "breaks"
+  across from the Lexis object to the stacked.Lexis object.
+
+Changes in 1.1.40
+
+o subset, transform and Relevel methods have been added for objects of
+  type stacked.Lexis.
+
 Changes in 1.1.39
 
 o effx has been expanded with an extra argument eff=, which defaults

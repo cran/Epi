@@ -8,7 +8,7 @@ Functions to facilitate analysis of multistate models.
 }
 \description{
 \code{stack.Lexis} produces a stacked object suited for analysis of
-several transitions simultaneously.
+several transition intensities simultaneously.
 }
 \usage{
 \method{stack}{Lexis}(x, ...)
@@ -34,17 +34,22 @@ risk time in each of the states.
 \code{stack.Lexis} returns a dataframe to be used for analysis of
 multistate data when all transitions are modelled together, for example
 if some parameters are required to be the same for different transitions.
+The dataframe has class \code{stacked.Lexis}, and inherits the
+attributes \code{time.scales} and \code{breaks} from the \code{Lexis}
+object, and so function \code{\link{timeBand}} applies to a
+\code{stacked.Lexis} object too.
 
 The dataframe has same variables as the original \code{Lexis} object,
 but with each record duplicated as many times as there are possible
 exits from the current state, \code{lex.Cst}. Two variables are added:
 \code{lex.Fail}, an indicator of wheter an event for the transition
-names in \code{lex.Tr} has occurred or not. \code{lex.Tr} is a factor
-with levels made up of combinations of the levels of \code{lex.Cst} and
-\code{lex.Xst} that do occur together in \code{x}, joined by a
-"\code{->}".  }
+named in the factor \code{lex.Tr} has occurred or not. \code{lex.Tr} is
+a factor with levels made up of combinations of the levels of
+\code{lex.Cst} and \code{lex.Xst} that do occur together in \code{x},
+joined by a "\code{->}".}
+
 \author{
-Bendix Carstensen, \email{bxc@steno.dk}, \url{www.biostat.ku.dk/~bxc}
+Bendix Carstensen, \email{bxc@steno.dk}, \url{http://BendixCarstensen.com}
 }
 \examples{
 data(DMlate)

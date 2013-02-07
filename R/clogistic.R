@@ -54,8 +54,8 @@ fitClogit <- function(X, y, offset, strata, init, iter.max, eps, toler.chol)
     if (!is.matrix(X)) {
         X <- as.matrix(X)
     }
-    if (!is.real(X)) {
-        X <- matrix(as.real(X), nrow(X), ncol(X))
+    if (!is.double(X)) {
+        X <- matrix(as.double(X), nrow(X), ncol(X))
     }
     if (is.null(offset)) {
         offset <- rep(0, nrow(X))

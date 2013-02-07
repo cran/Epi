@@ -4,7 +4,7 @@
 \description{
   Create an object of class \code{Lexis} to represent follow-up in
   multiple states on multiple time scales.
-}  
+}
 \usage{
 Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
       merge=TRUE, states, tol=.Machine$double.eps^0.5 )
@@ -27,7 +27,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   \item{data}{an optional data frame, list, or environment containing
     the variables. If  not found in \code{data}, the variables are
     taken from the environment from which \code{Lexis} was called.}
-  \item{merge}{a logical flag. If \code{TRUE} then the \code{data} 
+  \item{merge}{a logical flag. If \code{TRUE} then the \code{data}
     argument will be coerced to a data frame and then merged with
     the resulting \code{Lexis} object.}
   \item{states}{A vector of labels for the states. If given, the state
@@ -50,7 +50,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   Lexis (1837-1914), who is credited with the invention of the
   "Lexis diagram" for representing population dynamics simultaneously
   by several timescales.
-  
+
   The \code{Lexis} function creates a minimal \code{Lexis} object with
   only those variables required to define the follow-up history in each
   row. Additional variables can be merged into the \code{Lexis} object
@@ -64,7 +64,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   Only two of the three arguments \code{entry}, \code{exit} and
   \code{duration} need to be given.  If the third parameter is missing,
   it is imputed.
-  
+
   \code{entry}, \code{exit} must be numeric, using  \code{\link{Date}}
   variables will cause some of the utilites to crash. Transformation by
   \code{\link{cal.yr}} is recommended.
@@ -72,10 +72,10 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   If only either \code{exit} or \code{duration} are supplied it is assumed that
   \code{entry} is 0. This is only meaningful (and therefore checked) if there
   is only one timescale.
-  
+
   If any of \code{entry.status} or \code{exit.status} are of mode character,
   they will both be converted to factors.
-  
+
   If \code{entry.status} is not given, then its class is automatically
   set to that of \code{exit.status}. If \code{exit.status} is factor,
   the value of \code{entry.status} is set to the first level. This may
@@ -91,7 +91,7 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   the corresponding state variables in the returned \code{Lexis} object,
   \code{lex.Cst} and \code{lex.Xst} will be (unordered) factors with
   identical set of levels, namely the union of the levels of
-  \code{entry.status} and \code{exit.status}. 
+  \code{entry.status} and \code{exit.status}.
   }
 \value{
   An object of class \code{Lexis}. This is represented as a data frame
@@ -146,17 +146,17 @@ Lexis( entry = list( per=entry ),
         data = xcoh )
 }
 \seealso{
-   \code{\link{plot.Lexis}}, 
-   \code{\link{splitLexis}}, 
-   \code{\link{cutLexis}}, 
-   \code{\link{merge.Lexis}}, 
-   \code{\link{subset.Lexis}}, 
-   \code{\link{transform.Lexis}}, 
-   \code{\link{summary.Lexis}}, 
-   \code{\link{timeScales}}, 
-   \code{\link{timeBand}}, 
-   \code{\link{entry}}, 
-   \code{\link{exit}}, 
+   \code{\link{plot.Lexis}},
+   \code{\link{splitLexis}},
+   \code{\link{cutLexis}},
+   \code{\link{merge.Lexis}},
+   \code{\link{subset.Lexis}},
+   \code{\link{transform.Lexis}},
+   \code{\link{summary.Lexis}},
+   \code{\link{timeScales}},
+   \code{\link{timeBand}},
+   \code{\link{entry}},
+   \code{\link{exit}},
    \code{\link{dur}}
    }
 \keyword{survival}

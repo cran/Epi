@@ -5,26 +5,23 @@
 \description{
 Computes sensitivity, specificity and positive and negative predictive
 values for a test based on dichotomizing along the variable
-\code{test}, for prediction of \code{stat}. Alternatively a
-model formula may given, in which case the the linear predictor is the
-test variable and the response is taken as the true status variable.
-Plots curves of these and a ROC-curve.
+\code{test}, for prediction of \code{stat}. Plots curves of these and a ROC-curve.
 }
 \usage{
 ROC( test = NULL,
      stat = NULL,
      form = NULL,
      plot = c("sp", "ROC"),
-       PS = is.null(test),    
-       PV = TRUE,             
-       MX = TRUE,             
-       MI = TRUE,             
-      AUC = TRUE,             
+       PS = is.null(test),
+       PV = TRUE,
+       MX = TRUE,
+       MI = TRUE,
+      AUC = TRUE,
      grid = seq(0,100,10),
  col.grid = gray( 0.9 ),
      cuts = NULL,
       lwd = 2,
-     data = parent.frame(), 
+     data = parent.frame(),
       ... )
 }
 \arguments{
@@ -59,20 +56,32 @@ maximal) be indicated on the ROC curve?}
   \item{\dots}{Additional arguments for the plotting of the
     ROC-curve. Passed on to \code{plot}}
 }
-%\details{
-%}
+\details{
+ As an alternative to a \code{test} and a \code{status} variable, a
+model formula may given, in which case the the linear predictor is the
+test variable and the response is taken as the true status variable.
+The test used to derive  sensitivity, specificity, PV+ and PV- as a
+function of \eqn{x} is \code{test}\eqn{\geq x}{>=x} as a predictor of
+\code{stat}=TRUE.
+}
 \value{
   A list with two components:
-  \item{res}{dataframe with variables sn, sp, pvp, pvn and fv. The
-latter is the unique values of test (for PS==FALSE ) or linear predictor from the
-logistic regression}
+
+  \item{res}{dataframe with variables \code{sens}, \code{spec},
+    \code{pvp}, \code{pvn} and name of the test variable. The latter is
+    the unique values of test or linear predictor from the logistic
+    regression in ascending order with -Inf prepended. Since the
+    sensitivity is defined as \eqn{P(test>x)|status=TRUE}, the first row
+    has \code{sens} equal to 1 and \code{spec} equal to 0, corresponding
+    to drawing the ROC curve from the upper right to the lower left corner.}
+
   \item{lr}{glm object with the logistic regression result used for
 construction of the ROC curve}
   0, 1 or 2 plots are produced according to the setting of \code{plot}.
 }
 \author{Bendix Carstensen, Steno Diabetes Center \& University of
   Copenhagen,
-  \url{http://www.biostat.ku.dk/~bxc} }
+  \url{http://BendixCarstensen.com} }
 \examples{
 x <- rnorm( 100 )
 z <- rnorm( 100 )

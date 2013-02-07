@@ -100,7 +100,7 @@
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://www.pubhealth.ku.dk/~bxc}
+  \url{http://BendixCarstensen.com}
 }
 \seealso{
   \code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}

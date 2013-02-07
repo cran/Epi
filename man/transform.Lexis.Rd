@@ -1,9 +1,10 @@
 \name{transform.Lexis}
 \alias{transform.Lexis}
 \alias{Relevel.Lexis}
+\alias{transform.stacked.Lexis}
 \alias{factorize}
 \alias{factorize.Lexis}
-\title{Transform a Lexis objects}
+\title{Transform a Lexis (or stacked.Lexis) objects}
 \description{
   Modify a Lexis object.
 }
@@ -12,6 +13,7 @@
 \method{transform}{Lexis}( `_data`, \dots)
 \method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
 \method{factorize}{Lexis}( x, states, print = TRUE, \dots )
+\method{transform}{stacked.Lexis}( `_data`, \dots)
 }
 \arguments{
   \item{_data}{an object of class \code{Lexis}.}
@@ -32,8 +34,13 @@
   collapsing states. \code{Relevel} is merely an alias for
   \code{factorize}, since the function does the same as
   \code{\link{Relevel}}, but for both the factors \code{lex.Cst} and
-  \code{lex.Xst} The default is to produce a table of old states versus
-  new states if \code{states} is a list.
+  \code{lex.Xst}. A default sideeffect is to produce a table of old
+  states versus new states if \code{states} is a list.
+
+  If \code{states} is \code{NULL}, as when for example the argument is
+  not passed to the function, the returned object have levels of
+  \code{lex.Cst}, \code{lex.Xst} (and for \code{stacked.Lexis} objects
+  \code{lex.Tr}) shaved down to the actually occurring values.
   }
 \value{
   A transformed \code{Lexis} object.
@@ -42,6 +49,7 @@
 \seealso{\code{\link{Lexis}},
          \code{\link{merge.Lexis}},
          \code{\link{subset.Lexis}},
+         \code{\link{subset.stacked.Lexis}},
          \code{\link{Relevel}}}
 \examples{
 data( nickel )
@@ -62,5 +70,7 @@ niz <- factorize.Lexis( niw, states=list("Alive",c("Pulm","Mort")), coll=" \n& "
 boxes( niw, boxpos=TRUE )
 par( new=TRUE )
 boxes( niz, boxpos=TRUE )
+siw <- stack( niw )
+str( siw )
 }
 \keyword{manip}

@@ -111,9 +111,9 @@ countLexis( data, cut, timescale = 1 )
   needed for as many times as the person with most events. But also it
   is immaterial in what order the cutpoints are entered.
 }
-\author{
-  Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
-  Martyn Plummer, IARC, \email{plummer@iarc.fr}.
+\author{Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
+
+  Martyn Plummer, IARC, \email{plummer@iarc.fr}
 }
 \seealso{
   \code{\link{splitLexis}},

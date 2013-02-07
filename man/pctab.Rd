@@ -14,13 +14,13 @@ pctab(TT, margin = length(dim(TT)), dec=1)
     nothing is printed}
 }
 \value{
-  A table, where all dimensions except the one specified \code{margin}
+  A table of percentages, where all dimensions except the one specified \code{margin}
   has two extra levels named "All" (where all entries are 100) and "N".
   The function prints the table with \code{dec} decimals.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://www.biostat.ku.dk/~bxc}.
+  \url{http://BendixCarstensen.com}.
   }
 \seealso{
   \code{\link{addmargins}}

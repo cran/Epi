@@ -12,9 +12,9 @@ ncut(x, breaks, type="left" )
 \arguments{
   \item{x}{A numerical vector.}
   \item{breaks}{Vector of breakpoints. \code{NA} will results for values
-    below \code{min(x)} if \code{type="left"}, for values
-    above \code{max(x)} if \code{type="right"} and for values
-    outside \code{range(x)} if \code{type="mid"}}
+    below \code{min(breaks)} if \code{type="left"}, for values
+    above \code{max(breaks)} if \code{type="right"} and for values
+    outside \code{range(breaks)} if \code{type="mid"}}
   \item{type}{Character: one of \code{c("left","right","mid")},
     indicating whether the left, right or midpoint of the intervals
     defined in breaks is returned.}
@@ -27,7 +27,7 @@ A numerical vector of the same length as \code{x}.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
-  \url{http://www.biostat.ku.dk/~bxc/}, with essential input
+  \url{http://BendixCarstensen.com}, with essential input
   from Martyn Plummer, IARC.
 }
 \seealso{

@@ -18,7 +18,7 @@ float(object, factor, iter.max=50)
 \details{
 
   The \code{float()} function implements the "floating absolute risk"
-  proposal of Easton, Peto and Babiker(1992). This is an alternative way
+  proposal of Easton, Peto and Babiker (1992). This is an alternative way
   of presenting parameter estimates for factors in regression models,
   which avoids some of the difficulties of treatment contrasts. It was
   originally designed for epidemiological studies of relative risk, but

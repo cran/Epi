@@ -22,7 +22,10 @@
   The risk time is computed from the population size figures in \code{\link{N.dk}},
   using the formulae devised in B. Carstensen:
   "Demography and epidemiology: Age-Period-Cohort models in the computer age",
-  \url{http://www.pubhealth.ku.dk/bs/publikationer/rr-06-1.pdf/}
+  \url{http://biostat.ku.dk/reports/2006/ResearchReport06-1.pdf/}, later
+   published as:
+   B. Carstensen: Age-period-cohort models for the Lexis diagram.
+   Statistics in Medicine, 10; 26(15):3018-45, 2007.
 }
 \source{
   \url{http://www.statistikbanken.dk/statbank5a/SelectTable/omrade0.asp?SubjectCode=02&PLanguage=1&ShowNews=OFF}

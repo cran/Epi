@@ -1,8 +1,8 @@
 tbox <-
 function( txt, x, y, wd, ht,
           font=2, lwd=2,
-          col.txt="black",
-          col.border="black",
+          col.txt=par("fg"),
+          col.border=par("fg"),
           col.bg="transparent" )
 {
 rect( x-wd/2, y-ht/2, x+wd/2, y+ht/2,
@@ -14,8 +14,8 @@ invisible( c( x, y, wd, ht ) )
 dbox <-
 function( x, y, wd, ht=wd,
           font=2, lwd=2, cwd=5,
-          col.cross="black",
-          col.border="black",
+          col.cross=par("fg"),
+          col.border=par("fg"),
           col.bg="transparent" )
 {
 rect( x-wd/2, y-ht/2, x+wd/2, y+ht/2, lwd=lwd, border=col.border, col=col.bg )
@@ -51,29 +51,26 @@ function( a, b )
 }
 
 boxarr <-
-function( b1, b2, offset=FALSE, pos=0.45, ... )
+function (b1, b2, offset = FALSE, pos = 0.45, ...)
 {
-# If we want to offset the arrow a bit to the left, we compute
-# A unit vector in the direction of the arrow and add twice
-# the orthogonal of this to the coordinates
-d  <- std.vec( b2[1]-b1[1], b2[2]-b1[2] )
-dd <- d * offset
-x1 <- b1[1] - dd[2]
-y1 <- b1[2] + dd[1]
-w1 <- b1[3]
-h1 <- b1[4]
-x2 <- b2[1] - dd[2]
-y2 <- b2[2] + dd[1]
-w2 <- b2[3]
-h2 <- b2[4]
-hx1 <- x1 + ifelse( (y2-y1)!=0, (x2-x1)*((h1/2)/abs(y2-y1)), sign(x2-x1)*w1/2 )
-vx1 <- x1 + ifelse( (x2-x1)!=0, (x2-x1)*((w1/2)/abs(x2-x1)), 0    )
-hx2 <- x2 + ifelse( (y1-y2)!=0, (x1-x2)*((h2/2)/abs(y1-y2)), sign(x1-x2)*w2/2 )
-vx2 <- x2 + ifelse( (x1-x2)!=0, (x1-x2)*((w2/2)/abs(x1-x2)), 0    )
-hy1 <- y1 + ifelse( (y2-y1)!=0, (y2-y1)*((h1/2)/abs(y2-y1)), 0    )
-vy1 <- y1 + ifelse( (x2-x1)!=0, (y2-y1)*((w1/2)/abs(x2-x1)), sign(y2-y1)*h1/2 )
-hy2 <- y2 + ifelse( (y1-y2)!=0, (y1-y2)*((h2/2)/abs(y1-y2)), 0    )
-vy2 <- y2 + ifelse( (x1-x2)!=0, (y1-y2)*((w2/2)/abs(x1-x2)), sign(y1-y2)*h2/2 )
+    d <- std.vec(b2[1] - b1[1], b2[2] - b1[2])
+    dd <- d * offset
+    x1 <- b1[1] - dd[2]
+    y1 <- b1[2] + dd[1]
+    w1 <- b1[3]
+    h1 <- b1[4]
+    x2 <- b2[1] - dd[2]
+    y2 <- b2[2] + dd[1]
+    w2 <- b2[3]
+    h2 <- b2[4]
+    hx1 <- x1 + ifelse((y2-y1) != 0, (x2-x1) * ((h1/2)/abs(y2-y1)), sign(x2-x1) * w1/2)
+    vx1 <- x1 + ifelse((x2-x1) != 0, (x2-x1) * ((w1/2)/abs(x2-x1)), 0)
+    hx2 <- x2 + ifelse((y1-y2) != 0, (x1-x2) * ((h2/2)/abs(y1-y2)), sign(x1-x2) * w2/2)
+    vx2 <- x2 + ifelse((x1-x2) != 0, (x1-x2) * ((w2/2)/abs(x1-x2)), 0)
+    hy1 <- y1 + ifelse((y2-y1) != 0, (y2-y1) * ((h1/2)/abs(y2-y1)), 0)
+    vy1 <- y1 + ifelse((x2-x1) != 0, (y2-y1) * ((w1/2)/abs(x2-x1)), sign(y2-y1) * h1/2)
+    hy2 <- y2 + ifelse((y1-y2) != 0, (y1-y2) * ((h2/2)/abs(y1-y2)), 0)
+    vy2 <- y2 + ifelse((x1-x2) != 0, (y1-y2) * ((w2/2)/abs(x1-x2)), sign(y1-y2) * h2/2)
 if( abs(vy1-y1) < h1/2 ) { bx1 <- vx1
                            by1 <- vy1 }
                     else { bx1 <- hx1
@@ -97,8 +94,7 @@ function( obj, ... )
   }
 
 boxes.Lexis <-
-function( obj, file, detailed=FALSE,
-               boxpos = FALSE,
+function( obj, boxpos = FALSE,
                 wmult = 1.5,
                 hmult = 1.5*wmult,
                   cex = 1.5,
@@ -109,6 +105,10 @@ function( obj, file, detailed=FALSE,
                show.D = show,
               scale.D = FALSE,
              digits.D = as.numeric(as.logical(scale.D)),
+               show.R = is.numeric(scale.R),
+              scale.R = scale.D,
+             digits.R = as.numeric(as.logical(scale.R)),
+               DR.sep = if( show.D ) c("\n(",")") else c("",""),
                 eq.wd = TRUE,
                 eq.ht = TRUE,
                    wd,
@@ -117,12 +117,13 @@ function( obj, file, detailed=FALSE,
               exclude = NULL,
                  font = 2,
                   lwd = 2,
-              col.txt = "black",
+              col.txt = par("fg"),
            col.border = col.txt,
                col.bg = "transparent",
-              col.arr = "black",
+              col.arr = par("fg"),
               lwd.arr = 2,
              font.arr = 2,
+              pos.arr = 0.45,
               txt.arr = NULL,
           col.txt.arr = col.arr,
            offset.arr = 2, ... )
@@ -138,6 +139,8 @@ else if( is.matrix(obj) & diff(dim(obj))==0 )
   tm <- tt <- obj
   }
 else stop( "First argument must be a Lexis object or a square matrix.\n" )
+na <- sum( tt>0, na.rm=TRUE )
+if( length(pos.arr) < na ) pos.arr <- rep(pos.arr,na)[1:na]
 
 # Put the transitions into D and the diagnonal into Y.
 D <- tm
@@ -149,16 +152,17 @@ Y <- diag( tm )
 if( is.null(st.nam) ) st.nam <- paste(1:ncol(tm))
             pl.nam <- st.nam
       n.st <- length( st.nam )
-      n.tr <- sum( !is.na(tm) )
+      n.tr <- sum( !is.na(tm) ) - sum( !is.na(diag(tm)) )
 
-# If we want to show person-years and events we compute them
+# If we want to show person-years and events or rates we compute them
 if( inherits(obj,"Lexis") )
   {
   if( show )
     {
-    SM <- summary(obj,simplify=FALSE,scale=scale.Y)
+    SM <- summary(obj,simplify=FALSE,scale=scale.Y,Rates=TRUE)
     Y <- SM[[1]][1:n.st,"Risk time:"]
-    D <- SM[[1+as.logical(scale.D)]][1:n.st,1:n.st] * ifelse(scale.D,scale.D,1)
+    D <- SM$Transitions[1:n.st,1:n.st]
+    R <- SM$Rates[1:n.st,1:n.st] * ifelse(scale.R,scale.R,1)
     }
   }
 
@@ -215,9 +219,7 @@ if( length(font.arr   )<n.tr ) font.arr   <- rep(font.arr   ,n.tr)[1:n.tr]
 # First setting up the plot area, and restoring the plot parameters later
 opar <- par( mar=c(0,0,0,0), cex=cex )
 on.exit( par(opar) )
-
-plot( NA,
-      bty="n",
+plot( NA, bty="n",
       xlim=0:1*100, ylim=0:1*100, xaxt="n", yaxt="n", xlab="", ylab="" )
 # String height and width only meaningful after a plot has been called
 if( missing(ht) )
@@ -249,7 +251,7 @@ if( is.logical(boxpos) )
   xx <- cos( ang ) * 35 + 50
   yy <- sin( ang ) * 35 + 50
   }
-  else
+else
   {
   xx <- yy <- numeric(n.st)
   for( i in subset )
@@ -263,6 +265,7 @@ if( is.logical(boxpos) )
      }
   cat( "\n" )
   }
+
 # Plot the boxes and record position and size
 b <- list()
 for( i in subset ) b[[i]] <- tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
@@ -272,31 +275,40 @@ for( i in subset ) b[[i]] <- tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                     col.border=col.border[i],
                             col.bg=col.bg[i] )
 # Arrows and text on them
+arrowtext <- character(0)
 for( i in subset ) for( j in subset )
   {
   if( !is.na(tt[i,j]) & i!=j )
     {
-    arrowtext <- NULL
     # Which number of arrow is currently processed?
     a <- sum(!is.na(tt[1:i,])) - sum(!is.na(tt[i,j:n.st])) + 1
     arr <- boxarr( b[[i]], b[[j]],
                    offset=(!is.na(tt[j,i]))*offset.arr,
-                   lwd=lwd.arr[a], col=col.arr[a], ... )
+                   lwd=lwd.arr[a], col=col.arr[a], pos=pos.arr[a], ... )
+    if( show.D | show.R )
+      {
     if( show.D & D[i,j]>0 )
-      arrowtext <- formatC( D[i,j], format="f", digits=digits.D, big.mark="," )
+      arrowtext[a] <- formatC( D[i,j], format="f", digits=0, big.mark="," )
+    else arrowtext[a] <- ""
+    if( show.R & R[i,j]>0 )
+      arrowtext[a] <- paste( if( !is.null(arrowtext[a]) )
+                                   paste( arrowtext[a], DR.sep[1], sep="" ),
+                           formatC( R[i,j], format="f", digits=digits.R, big.mark="," ),
+                          if( length(DR.sep) > 1 ) DR.sep[2], sep="" )
+      }
     else
     if( !is.null(txt.arr) )
-      arrowtext <- txt.arr[a]
-    if( !is.null(arrowtext) )
+      arrowtext[a] <- txt.arr[a]
+    if( !is.null(arrowtext[a]) )
     text( arr$x-arr$d[2], arr$y+arr$d[1],
-          arrowtext,
+          arrowtext[a],
           adj=as.numeric(c(arr$d[2]>0,arr$d[1]<0)),
           font=font.arr[a], col=col.txt.arr[a] )
     }
   }
 # Redraw the boxes with white background to remove any arrows
 for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
-                         lwd=lwd[i], col.bg="white" )
+                         lwd=lwd[i], col.bg=par("bg") )
 # Then redraw the boxes again
 for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                                 font=font[i],
@@ -305,68 +317,97 @@ for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                     col.border=col.border[i],
                             col.bg=col.bg[i] )
 
-
-#################################################################
-# If we want the code we just print the entire function code,
-# where we have replaced the query for the coordinates of the
-# boxes with the values we obtained from locator()
-if( !missing(file) )
-{
-xx <- round(xx)
-yy <- round(yy)
-# Here we write the code-file which will reproduce the plot
-
-# Simple plot
-if( !detailed )
-cat('
-boxes.Lexis( ', deparse( substitute( obj ) ),',
-           boxpos = list( x=c(', paste( xx, collapse=", " ),'),
-                          y=c(', paste( yy, collapse=", " ),') ),
-              cex =', cex,',\t # How should text and numbers be scaled
-            wmult =', wmult,',\t # Extra box-width relative to string width
-            hmult =', hmult,',\t # Extra box-height relative to string height
-            eq.wd =', eq.wd,',\t # All boxes the same width
-            eq.ht =', eq.ht,',\t # All boxes the same height
-           show.Y =', show.Y,',\t # Show number of person-years in boxes
-          scale.Y =', scale.Y,',\t\t # How should person-years be scaled
-         digits.Y =', digits.Y,',\t\t # How should person-years be printed
-           show.D =', show.D,',\t # Show number of events on arrows
-          scale.D =', scale.D,',\t # How should rates be scaled
-         digits.D =', digits.D,')\t\t # How should rates be printed \n',
- file=file )
-else
-cat('
-boxes.Lexis( ', deparse( substitute( obj ) ),',
-           boxpos = list( x=c(', paste( xx, collapse="," ),'),
-                          y=c(', paste( yy, collapse="," ),') ),
-              cex =', cex,',\t # How should text and numbers be scaled
-               wd = c(', paste( round(wd), collapse="," ),'),\t # Width of boxes
-               ht = c(', paste( round(ht), collapse="," ),'),\t # Height of boxes
-           show.Y =', show.Y,',\t # Show number of person-years in boxes
-          scale.Y =', scale.Y,',\t\t # How should person-years be scaled
-         digits.Y =', digits.Y,',\t\t # How should person-years be printed
-           show.D =', show.D,',\t # Show number of events on arrows
-          scale.D =', scale.D,',\t # How should rates be scaled
-         digits.D =', digits.D,',\t\t # How should rates be printed
-          col.txt = c("', paste(col.txt   ,collapse="\",\""), '"),\t # color of the text
-       col.border = c("', paste(col.border,collapse="\",\""), '"),\t # color of the borders
-           col.bg = c("', paste(col.bg    ,collapse="\",\""), '"),\t # color of the backgrounds
-          col.arr = c("', paste(col.arr   ,collapse="\",\""), '"),\t # color of the arrows
-          lwd.arr = c(', paste( lwd.arr   ,collapse="," ),'),
-         font.arr = c(', paste( font.arr  ,collapse="," ),'),
-      col.txt.arr = c("', paste(col.txt.arr,collapse="\",\""), '"),\t # color of the text on arrows
-       offset.arr =', offset.arr, ')\t\t # offset of parallel arrows \n',
- file=file )
+# Finally create an object with all information to re-draw the display
+MSboxes <- list( Boxes = data.frame( xx = xx,
+                                     yy = yy,
+                                     wd = wd,
+                                     ht = ht,
+                                   font = font,
+                                    lwd = lwd,
+                                col.txt = col.txt,
+                             col.border = col.border,
+                                 col.bg = col.bg, stringsAsFactors=FALSE ),
+           State.names = pl.nam,
+                  Tmat = tt,
+                Arrows = data.frame( lwd.arr = lwd.arr,
+                                     col.arr = col.arr,
+                                     pos.arr = pos.arr,
+                                 col.txt.arr = col.txt.arr,
+                                    font.arr = font.arr,
+                                  offset.arr = offset.arr, stringsAsFactors=FALSE ),
+             Arrowtext = arrowtext )
+class( MSboxes ) <- "MS"
+invisible( MSboxes )
 }
-invisible( list( Boxes = data.frame( pl.nam = pl.nam,
-                                         xx = xx,
-                                         yy = yy,
-                                         wd = wd,
-                                         ht = ht,
-                                       font = font,
-                                        lwd = lwd,
-                                    col.txt = col.txt,
-                                 col.border = col.border,
-                                     col.bg = col.bg ),
-                  Tmat = tm ) )
+
+boxes.MS <-
+function( obj, sub.st, sub.tr, cex=1.5, ... )
+{
+if( !inherits(obj,"MS") )
+  stop( "You must supply an object of class 'MSboxes'" )
+
+n.st <- nrow( obj$Boxes )
+n.tr <- nrow( obj$Arrows )
+if( missing(sub.st) ) sub.st <- 1:n.st
+if( missing(sub.tr) ) sub.tr <- 1:n.tr
+
+# First setting up the plot area, and restoring the plot parameters later
+opar <- par( mar=c(0,0,0,0), cex=cex )
+on.exit( par(opar) )
+plot( NA, bty="n",
+      xlim=0:1*100, ylim=0:1*100, xaxt="n", yaxt="n", xlab="", ylab="" )
+
+# Exercise the subsets by putting the relevant colors to "transparent"
+obj$Boxes[-sub.st,c("col.txt",
+                    "col.border",
+                    "col.bg")] <- "transparent"
+obj$Arrows[-sub.tr,c("col.arr",
+                     "col.txt.arr")] <- "transparent"
+# Then draw the boxes
+b <- list()
+for( i in 1:n.st ) b[[i]] <- with( obj$Boxes,
+                    tbox( obj$State.names[i], xx[i], yy[i], wd[i], ht[i],
+                                font=font[i],
+                                  lwd=lwd[i],
+                          col.txt=col.txt[i],
+                    col.border=col.border[i],
+                            col.bg=col.bg[i] ) )
+
+# and the arrows
+for( i in 1:n.st ) for( j in 1:n.st )
+   {
+  if( !is.na(obj$Tmat[i,j]) & i!=j )
+    {
+    a <- sum(!is.na(obj$Tmat[1:i,])) - sum(!is.na(obj$Tmat[i,j:n.st])) + 1
+    arr <- with( obj$Arrows,
+           boxarr( b[[i]], b[[j]],
+                   offset=(!is.na(obj$Tmat[j,i]))*offset.arr,
+                   lwd=lwd.arr[a],
+                   col=col.arr[a],
+                   pos=pos.arr[a], ... ) )
+    with( obj$Arrows,
+    text( arr$x-arr$d[2], arr$y+arr$d[1], obj$Arrowtext[a],
+          adj=as.numeric(c(arr$d[2]>0,arr$d[1]<0)),
+         font=font.arr[a],
+          col=col.txt.arr[a] ) )
+    }
+   }
+# Redraw the boxes with "bg" background to remove any arrows crossing
+for( i in sub.st ) with( obj$Boxes,
+           tbox( obj$State.names[i], xx[i], yy[i], wd[i], ht[i],
+                       font=font[i],
+                         lwd=lwd[i],
+                     col.txt=par("bg"),
+                  col.border=par("bg"),
+                      col.bg=par("bg") ) )
+# Then redraw the boxes again
+for( i in sub.st ) with( obj$Boxes,
+                   tbox( obj$State.names[i], xx[i], yy[i], wd[i], ht[i],
+                               font=font[i],
+                                 lwd=lwd[i],
+                         col.txt=col.txt[i],
+                   col.border=col.border[i],
+                           col.bg=col.bg[i] ) )
+# Done!
+invisible( NULL )
 }

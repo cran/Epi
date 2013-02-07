@@ -33,7 +33,8 @@
 }
 \references{
  For a more thorough exposition of statistical inference in the Lexis
- diagram, see: \url{http://staff.pubhealth.ku.dk/~bxc/APC/notes.pdf}
+ diagram, see: B. Carstensen: Age-Period-Cohort models for the Lexis
+ diagram. Statistics in Medicine, 26: 3018-3045, 2007.  
 }
 \examples{
 data( lungDK )
