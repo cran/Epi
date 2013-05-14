@@ -58,8 +58,14 @@ countLexis( data, cut, timescale = 1 )
   \code{splitLexis} function. However, the \code{splitLexis} function
   splits on a vector of common cut-points for all rows of the Lexis
   object, whereas the \code{cutLexis} function splits on a single time
-  point, which may be distinct for each row, modifies
-  the status variables, and adds a new timescale.
+  point, which may be distinct for each row, modifies the status
+  variables, adds a new timescale and updates the attribute
+  "time.since". This attribute is a character vector of the same length
+  as the "time.scales" attribute, whose value is '""' if the
+  corresponding timescale is defined for any piece of follow-up, and if
+  the corresponding time scale is defined by say
+  \code{cutLexis(obj,new.state="A",new.scale=TRUE)}, it has the value
+  "A".
   }
 \details{
   The \code{cutLexis} function allows a number of different ways
@@ -72,11 +78,10 @@ countLexis( data, cut, timescale = 1 )
   be applied to all records in \code{data} with the corresponding \code{lex.id}.
   This makes it possible to apply \code{cutLexis} to a split \code{Lexis} object.
 
-  If a \code{new.state} argument is supplied, the
-  status variable is only modified at the time of the cut
-  point. However, it is often useful to modify the status variable after
-  the cutpoint when an important event occurs. There are three distinct
-  ways of doing this.
+  If a \code{new.state} argument is supplied, the status variable is
+  only modified at the time of the cut point. However, it is often
+  useful to modify the status variable after the cutpoint when an
+  important event occurs. There are three distinct ways of doing this.
 
   If the \code{progressive=TRUE} argument is given, then a "progressive"
   model is assumed, in which the status can either remain the same or
@@ -112,8 +117,7 @@ countLexis( data, cut, timescale = 1 )
   is immaterial in what order the cutpoints are entered.
 }
 \author{Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
-
-  Martyn Plummer, IARC, \email{plummer@iarc.fr}
+        Martyn Plummer, IARC, \email{plummer@iarc.fr}
 }
 \seealso{
   \code{\link{splitLexis}},
@@ -160,5 +164,6 @@ xC <- cutLexis( xx, rl, pre=0 )
 xC
 xCs <- splitLexis( xC, breaks=seq(0,100,10), time.scale="age" )
 xCs
+str(xCs)
 }
 \keyword{survival}

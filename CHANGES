@@ -1,3 +1,30 @@
+Changes in 1.2.48
+
+o Default of "border" argument to plot.pState changed to "transparent"
+
+Changes in 1.2.48
+
+o Slight tidying of code in apc.fit. Automatic determination of
+  reference points for period and cohort fixed to produce median
+  correctly.
+
+Changes in 1.2.47
+
+o Bug in simLexis (specifically in Epi:::simX) where factor levels
+  were wrongly used, is now corrected. Versions earlier are likely to
+  produce wrong state allocation in simulated dataset and not crash.
+
+Changes in 1.2.46
+
+o lex.id handling in simLexis changed, allows for easier simulation in
+  chunks which may be necessary to avoid memory problems.
+
+Changes in 1.2.45
+
+o simLexis introduced. Allows simulation from multiple timescale
+  mulitste models. Accompanying utilities supplied too: pr.Lexis, prev
+  and plot.prev.
+
 Changes in 1.2.44
 
 o A number of dead links in the documentation have been resurrected.

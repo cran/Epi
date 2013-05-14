@@ -60,8 +60,10 @@ export(
           boxes.MS,
          msdata.Lexis,
             etm.Lexis,
+             simLexis,
          subset.stacked.Lexis,
       transform.stacked.Lexis,
+           plot.pState,
   entry,
   exit,
   status,
@@ -78,6 +80,8 @@ export(
   PY.ann,
   N2Y,
   tmat,
+  nState,
+  pState,
   msdata,
   etm,
   mh,
@@ -103,6 +107,7 @@ importFrom( utils, stack )
 # importFrom( mstate, mstate )
 # register S3 methods
 S3method(     plot, Lexis)
+S3method(     plot, pState)
 S3method(   points, Lexis)
 S3method(    lines, Lexis)
 S3method(   PY.ann, Lexis)

@@ -51,10 +51,11 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   "Lexis diagram" for representing population dynamics simultaneously
   by several timescales.
 
-  The \code{Lexis} function creates a minimal \code{Lexis} object with
-  only those variables required to define the follow-up history in each
-  row. Additional variables can be merged into the \code{Lexis} object
-  using the \code{merge} method for \code{Lexis} objects. This is the default.
+  The \code{Lexis} function can create a minimal \code{Lexis} object
+  with only those variables required to define the follow-up history in
+  each row. Additional variables can be merged into the \code{Lexis}
+  object using the \code{merge} method for \code{Lexis} objects. The
+  latter is the default.
 
   There are also \code{merge}, \code{subset} and \code{transform} methods for
   \code{Lexis} objects. They work as the corresponding methods for data-frames

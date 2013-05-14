@@ -35,6 +35,9 @@ if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic","
 } else if( inherits( obj, "gnlm" ) ) {
        cf <- coef( obj )
       vcv <- obj$cov
+} else if( inherits( obj, "rq" ) ) {
+       cf <- coef( obj )
+      vcv <- summary( obj, cov=TRUE )$cov
 } else stop( "\"", deparse( substitute( obj ) ), "\" is of class \"",
               class( obj ), "\" which is not supported." )
 

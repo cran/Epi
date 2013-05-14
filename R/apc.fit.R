@@ -48,8 +48,9 @@ function( data,
         }
     }
     med <- function(x, y) {
-        a <- y
-        names(a) <- x
+        o <- order(x)
+        a <- y[o]
+        names(a) <- x[o]
         return(as.numeric(names(a[cumsum(a)/sum(a) > 0.5][1])))
     }
     p0 <- ifelse(missing(ref.p), med(P, D), ref.p)
@@ -119,16 +120,18 @@ function( data,
             else ns(P, df = npar[["P"]])
             MC <- if (knl)
                 ns(P - A, knots = npar[["C"]][-c(1, nk[3])],
-                  Boundary.knots = npar[["C"]][c(1, nk[3])])
-            else ns(P - A, df = npar[["C"]])
-            Rp <- ns(p0, knots = attr(MP, "knots"), Boundary.knots = attr(MP,
-                "Boundary.knots"))
-            Rc <- ns(c0, knots = attr(MC, "knots"), Boundary.knots = attr(MC,
-                "Boundary.knots"))
-            Knots <- list(Age = sort(c(attr(MA, "knots"), attr(MA,
-                "Boundary.knots"))), Per = sort(c(attr(MP, "knots"),
-                attr(MP, "Boundary.knots"))), Coh = sort(c(attr(MC,
-                "knots"), attr(MC, "Boundary.knots"))))
+                 Boundary.knots = npar[["C"]][c(1, nk[3])])
+                  else ns(P - A, df = npar[["C"]])
+            Rp <- ns(p0, knots = attr(MP, "knots"),
+                Boundary.knots = attr(MP, "Boundary.knots"))
+            Rc <- ns(c0, knots = attr(MC, "knots"),
+                Boundary.knots = attr(MC, "Boundary.knots"))
+            Knots <- list( Age = sort(c(attr(MA, "knots"),
+                                        attr(MA, "Boundary.knots"))),
+                           Per = sort(c(attr(MP, "knots"),
+                                        attr(MP, "Boundary.knots"))),
+                           Coh = sort(c(attr(MC, "knots"),
+                                        attr(MC, "Boundary.knots"))))
         }
         if (model %in% c("bs", "ls")) {
             deg <- switch(model, ls = 1, bs = 3)
@@ -201,15 +204,12 @@ function( data,
     MCr <- xC[-1,,drop=FALSE] - ref.c * xC[rep(1, nrow(MC)),,drop=FALSE]
     if (length(grep("-", parm)) == 0) {
         if (parm %in% c("ADPC", "ADCP", "APC", "ACP"))
-            m.APC <- update(m.0, . ~ . - 1 + MA + I(P - p0) +
-                MPr + MCr)
-        drift <- rbind(ci.lin(m.APC, subset = "I\\(", Exp = TRUE,
-            alpha = alpha)[, 5:7], ci.lin(m.Ad, subset = "I\\(",
-            Exp = TRUE, alpha = alpha)[, 5:7])
+            m.APC <- update(m.0, . ~ . - 1 + MA + I(P - p0) + MPr + MCr)
+        drift <- rbind( ci.exp(m.APC, subset = "I\\(", alpha = alpha),
+                        ci.exp(m.Ad , subset = "I\\(", alpha = alpha) )
         rownames(drift) <- c("APC", "A-d")
         if (parm == "ADCP")
-            m.APC <- update(m.0, . ~ . - 1 + MA + I(P - A - c0) +
-                MPr + MCr)
+            m.APC <- update(m.0, . ~ . - 1 + MA + I(P - A - c0) + MPr + MCr)
         if (parm == "APC") {
             MPr <- cbind(P - p0, MPr)
             m.APC <- update(m.0, . ~ . - 1 + MA + MPr + MCr)

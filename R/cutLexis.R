@@ -247,6 +247,7 @@ cutLexis <- function(data,
       new.br <- c( attr( data, "breaks" ), list(NULL) )
       names( new.br )[length(new.br)] <- scale.name
       attr( lx, "time.scales" ) <- c( attr( data, "time.scales" ), scale.name )
+      attr( lx, "time.since" )  <- c( attr( data, "time.since" ), names(table(new.state)) )
       attr( lx, "breaks" )      <- new.br
       attr( lx, "class" )       <- attr( data, "class" )
       }
@@ -256,6 +257,7 @@ cutLexis <- function(data,
       lx <- lx[order(lx$lex.id,lx[,timescale]),-match("lex.new.scale",names(lx))]
       # and transfer all the other attributes
       attr( lx, "time.scales" ) <- attr( data, "time.scales" )
+      attr( lx, "time.since" )  <- attr( data, "time.since" )
       attr( lx, "breaks" )      <- attr( data, "breaks" )
       attr( lx, "class" )       <- attr( data, "class" )
       }

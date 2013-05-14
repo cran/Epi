@@ -48,11 +48,11 @@ function(lex, breaks, time.scale, tol)
                      "entry.status" = rep(lex$lex.Cst, n.interval),
                      "exit.status" = new.Xst[valid])
 
-    ## Update breaks attribute
+    ## Update breaks attribute and tranfer time.since attribute
     breaks.attr <- attr(lex, "breaks")
     breaks.attr[[time.scale]] <- sort(c(breaks.attr[[time.scale]], breaks))
     attr(new.lex, "breaks") <- breaks.attr
-
+    attr(new.lex, "time.since") <- attr(lex, "time.since")
     return(new.lex)
 }
 
@@ -114,6 +114,7 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
   ## Restore attributes
   attr(lex,"breaks") <- lex.attr$breaks
   attr(lex,"time.scales") <- lex.attr$time.scales
+  attr(lex,"time.since") <- lex.attr$time.since
   class(lex) <- c("Lexis", "data.frame")
   ## Restore id variable
   lex$lex.id <- lex$lex.tempid

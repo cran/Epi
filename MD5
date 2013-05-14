@@ -1,8 +1,8 @@
-fefd4204333fa29e983358713e0d72ba *CHANGES
-a8dfee9e80e1b7ab3fcbee1a27cee6f7 *DESCRIPTION
+e57db01e68aec041229e541be9c73483 *CHANGES
+27d25dd5a245efd1e92684407952d3d5 *DESCRIPTION
 5debf3866332c0f5d1e2823e40b4e01b *Examples/apc.fit-ex.R
 8200991cba19d6262a7692ae67250855 *Examples/stat.table.R
-0deb397ab95701ed2f63e13826f67951 *NAMESPACE
+f7f6a1278104d4216f4b4143dcd50ba5 *NAMESPACE
 fac3c7f01ab0bd6930cf3cbea20e6bcc *R/Aplot.R
 75d172080863bd6e3b2286a0c94b0d34 *R/Cplot.R
 6a1c4f4cbbf509d1f3c40b9f0adb6399 *R/Icens.R
@@ -14,7 +14,7 @@ e9f582b5dc17d07bf2df96de74441963 *R/Pplot.R
 5f1dbd736cde0016307d0f2290ce2095 *R/ROC.R
 0a4f88f26d8b509b92624b4cf494f64c *R/Relevel.R
 28a0ec0c8584e22759b516ff69e5bd78 *R/Wald.R
-0c2b823b49143a6a3829b7fc150ed448 *R/apc.fit.R
+b970cebc8f39ace38524f80afb89d240 *R/apc.fit.R
 16fb210cea20989377f0863dd8a200e9 *R/apc.frame.R
 e284c7e95305fa3b22ef5fa76287ef56 *R/apc.plot.R
 8ce5a4c989947cb9d93becdecfde642c *R/as.Date.cal.yr.R
@@ -22,7 +22,7 @@ e2346d299341512fe0f0c829b4ffdfe7 *R/boxes.MS.R
 11d3966379eacdc164f2d50c4da8bb70 *R/cal.yr.R
 6988e76eb64f004a8c5029c23f8603af *R/ccwc.R
 58de307ab6ea80df72ce29037d392602 *R/ci.cum.R
-65da775f0c9a8b06deeb31dd194b161d *R/ci.lin.R
+994a4d18bfed7e1f829890f2a4c8b15d *R/ci.lin.R
 6f80c7b2b2120068cd16c043fbc29db3 *R/ci.mat.R
 886f87cbd08266fa281e2ed7b3b3c253 *R/ci.pd.R
 acab8b478be5a44a36561e65d70f2b78 *R/clear.R
@@ -31,7 +31,7 @@ d365bc4739ebb104b0318c1c9ee226fd *R/contr.2nd.R
 bcd4142d3bf3e4517397387fe43fdf95 *R/contr.cum.R
 8064804ee2b1cfa0cea2b44a58106b0a *R/contr.diff.R
 8ffc3eabb90b6b9b710109015779d853 *R/contr.orth.R
-0c641940007d9c49498a9f132fa571ad *R/cutLexis.R
+85f1daf809e34f9efb1ac2b3b8ca3c46 *R/cutLexis.R
 fec0dc23d1a224dbe4fa55893bc28bf4 *R/detrend.R
 a86250cce524f9fa2215c0c0cac4c6e7 *R/effx.match.r
 9b46438b1c6fdc926ac1a253a85096aa *R/effx.r
@@ -44,7 +44,7 @@ a86250cce524f9fa2215c0c0cac4c6e7 *R/effx.match.r
 c51d69b14d7a850df5eeae798b35b9aa *R/foreign.R
 da7b5d41fe7876ef6bab01839b613939 *R/ftrend.R
 a3676957e1ca1092c81b11e47f6070c6 *R/gen.exp.R
-24ec5f31c91320bc71e86c93997ebeb1 *R/lexis.R
+457350b73f6c4e4a499d0e867cca732d *R/lexis.R
 9c575049aa6c3841e7e92f563a6fc450 *R/lls.R
 79d6e0b02a2c4e98fbbfcd936b21d377 *R/mh.R
 9e48e47769874a34f63a2e2d4e6ffffc *R/ncut.r
@@ -55,7 +55,8 @@ c0229c2819d977a8c557a22dea1dd5fa *R/print.Icens.r
 cca51283f637927702fbe217367011eb *R/print.floated.R
 98111ca3d269248b2797f89b257b7361 *R/projection.ip.r
 0c2a2e493c190c4e74587b5127e9bef6 *R/rateplot.R
-3b40bdedc3edef29d89750875a0297ee *R/splitLexis.R
+d5f69f9d15c9c1ada802c0b1e8be60e9 *R/simLexis.R
+0853a2ae446f6d87a688ee5a7a752559 *R/splitLexis.R
 4a0a2bf0f8524678da0ebd7f8e9a3770 *R/stack.Lexis.R
 fb143d532001643d3f74fbd2e114e976 *R/stattable.R
 889282ea37a5a9d9bf7155d790cd9036 *R/summary.Icens.r
@@ -86,14 +87,16 @@ deb94384c7380312f9b33f75cf6d8559 *data/nickel.rda
 4640a31484934cccc1d626104af1365f *data/occup.rda
 1953ddd7d750051c5682fa08b11cb777 *data/thoro.rda
 e0f7d0bbeb4f050e41a55dd412548816 *inst/CITATION
-aea6a90f001d7733b96327165301e0d9 *inst/doc/Follow-up.pdf
+eaed3cf134149b62618f208d0bd941b3 *inst/doc/Follow-up.R
+7c42730b5043b764cbf18f9de2ceb117 *inst/doc/Follow-up.pdf
 bc350349661120c39543661d3070c72e *inst/doc/Follow-up.rnw
-c1b446d8c83750aaa84a920cc7eafcd5 *inst/doc/index.html
+f8b0dcb25edd9b399f82625546e508e2 *inst/doc/index.html
+51f461961fbff72bfc843ca72d6c9c74 *inst/doc/sim-Lexis.pdf
 317bb6ebeaec5e7376b609d7e382c166 *man/B.dk.Rd
 3abc5c20e62c874d70dcb2688ad2cce5 *man/DMconv.Rd
 bdbcc985e2ddb741eb0f443961b210be *man/DMlate.Rd
 38f9ae52c47f70d01f46eb437fca0f16 *man/Icens.Rd
-e25b23bab1f017ca94006fa4783e0984 *man/Lexis.Rd
+7142cdd5ef3e9f7db8b93c3b10ca70fe *man/Lexis.Rd
 c97dabafce248e4d47c5b18b6f04efe0 *man/Lexis.diagram.Rd
 2e71ca58213788c8a358708e776e2112 *man/Lexis.lines.Rd
 b4b2ca144feacece204f86bc6640d51a *man/Life.lines.Rd
@@ -121,7 +124,7 @@ effba2c17ade00f0afd10184a073d34c *man/ccwc.Rd
 e7477402aa4746d653a0c72b2239d185 *man/ci.pd.Rd
 23f65e361e47229172d33f0a43609db6 *man/clogistic.Rd
 cf5e5a6e18e07b7bb8d70dc0417e6166 *man/contr.cum.Rd
-8ef96d67cc95076b16e25a676d8fe7b6 *man/cutLexis.Rd
+b6ece2eb3b57ea902b737e87db9d9fb3 *man/cutLexis.Rd
 a1ab8c14b721360ba0cb17da598bfa84 *man/detrend.Rd
 386d0a4aa3515cf754ef458e1f32089c *man/diet.Rd
 64dd6599bb830e98f4717b1a34ee12ab *man/effx.Rd
@@ -154,6 +157,7 @@ febaa46e11a7458c23ed0513a594a8da *man/occup.Rd
 b0047a7bab6a20b153485db9bd338394 *man/plotevent.rd
 84f78d69f1b5691653cab655bd5bc77d *man/projection.ip.rd
 a04f5841de6a7a9cf9a21e5caa8e54a5 *man/rateplot.Rd
+02d9bf272421dffdde01074d2947d2f6 *man/simLexis.Rd
 d397ebec12521fce49ee461de3dae858 *man/splitLexis.Rd
 c146b743be57cba543822ae2f613b08b *man/stack.Lexis.Rd
 eaad8ae22bd68a18750a94352f65f9c3 *man/start.Lexis.Rd
