@@ -229,6 +229,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
 
   ## Return Lexis object
   attr(lex,"time.scales") <- all.time.scales
+  attr(lex,"time.since") <- rep( "", length(all.time.scales) )
   breaks <- vector("list", length(all.time.scales))
   names(breaks) <- all.time.scales
   attr(lex,"breaks") <- breaks
@@ -519,6 +520,7 @@ subset.Lexis <- function(x, ...)
   y <-  subset.data.frame(x, ...)
   attr(y,"breaks") <- attr(x, "breaks")
   attr(y,"time.scales") <- attr(x, "time.scales")
+  attr(y,"time.since") <- attr(x, "time.since")
   return(y)
 }
 
@@ -553,6 +555,7 @@ merge.Lexis <- function(x, y, id, by, ...)
   z <-  base::merge.data.frame(x, y, ...)
   attr(z,"breaks") <- attr(x, "breaks")
   attr(z,"time.scales") <- attr(x, "time.scales")
+  attr(z,"time.since") <- attr(x, "time.since")
   class(z) <- c("Lexis", "data.frame")
   return(z)
 }
@@ -567,7 +570,7 @@ entry <- function(x, time.scale = NULL, by.id = FALSE )
      ave( x[,time.scale[1]], x$lex.id, FUN=if( by.id ) min else I )
     if (length(time.scale) > 1) {
         res <- as.matrix(x[wh, time.scale])
-        if( by.id ) colnames( res ) <- x$lex.id[wh]
+        if( by.id ) rownames( res ) <- x$lex.id[wh]
         return( res )
     }
     else {
