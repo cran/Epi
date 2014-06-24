@@ -45,7 +45,8 @@ pointsEst( ests, y = dim(ests)[1]:1, pch = 16, cex = 1, lwd = 2,
     limit. If a model object is supplied, \code{\link{ci.lin}} is
     invoked for this object first.}
   \item{y}{Vertical position of the lines.}
-  \item{txt}{Annotation of the estimates.}
+  \item{txt}{Annotation of the estimates. Either a character vector or
+          an expression vector.}
   \item{txtpos}{Vertical position of the text. Defaults to \code{y}.}
   \item{ylim}{Extent of the vertical axis.}
   \item{xlab}{Annotation of the horizontal axis.}
@@ -104,13 +105,20 @@ m1 <- lm( y ~ f )
 # Plots with increasing amounts of bells and whistles
 par( mfcol=c(3,2), mar=c(3,3,2,1) )
 plotEst( cf )
-plotEst( cf, grid=TRUE )
 plotEst( cf, grid=TRUE, cex=2, lwd=3 )
 plotEst( cf, grid=TRUE, cex=2, col.points="red", col.lines="green" )
 plotEst( cf, grid=TRUE, cex=2, col.points="red", col.lines="green",
              xlog=TRUE, xtic=c(1:8), xlim=c(0.8,6) )
-rownames( cf )[1] <- "Contrast to fa:\n\n fb"
-plotEst( cf, grid=TRUE, cex=2, col.points=rainbow(4), col.lines=rainbow(4), vref=1 )
+rownames( cf )[1] <- "Contrast to fa:\n fb"
+plotEst( cf, grid=TRUE, cex=2, col.points=rainbow(4),
+                                col.lines=rainbow(4), vref=1 )
+#
+etxt <- expression("Plain text, qouted",
+                   "combined with maths:"*sqrt(a)*phi[c],
+                   f^d*"  Hb"*A[1][c],
+                   eff^e*"  kg/"*m^2)
+plotEst( cf, txt=etxt, grid=TRUE, cex=2, col.points=rainbow(4),
+                                         col.lines =rainbow(4), vref=1 )
   }
 \keyword{hplot}
 \keyword{models}

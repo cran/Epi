@@ -115,16 +115,15 @@ fu  <- data.frame( id = 1:3,
                   doe = c(1995,1997,1996)+1:3/4,
                   dox = c(2001,2003,2002)+1:3/5 )
 round( fu, 3 )
-dpos <- gen.exp( dfr,
-                  fu = fu,
-              breaks = seq(1990,2015,0.5),
-                lags = 2:3/5 )
-xpos <- gen.exp( dfr,
-                  fu = fu,
-             use.dpt = FALSE,
-              breaks = seq(1990,2015,0.5),
-                lags = 2:3/5 )
-cbind( xpos, dpos )
+( dpos <- gen.exp( dfr,
+                    fu = fu,
+                breaks = seq(1990,2015,0.5),
+                  lags = 2:3/5 ) )
+( xpos <- gen.exp( dfr,
+                    fu = fu,
+               use.dpt = FALSE,
+                breaks = seq(1990,2015,0.5),
+                  lags = 2:3/5 ) )
 
 # How many relevant columns
 nvar <- ncol(xpos)-3

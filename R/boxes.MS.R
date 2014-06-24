@@ -85,28 +85,39 @@ invisible( list( x = bx1*(1-pos)+bx2*pos,
                  d = d ) )
 }
 
+wh.no <-
+function( tt, i, j )
+{
+## Utility to count the number of non-NA off diagonal elements with
+## row<i or ( col=i & col<=j )
+diag(tt) <- NA
+sum(!is.na(tt[1:i,])) - sum(!is.na(tt[i,])) + sum(!is.na(tt[i,1:j]))
+}
+
 boxes <- function (obj, ...) UseMethod("boxes")
 
 boxes.matrix <-
 function( obj, ... )
   {
-  Epi:::boxes.Lexis( obj, ... )
+  Epi::boxes.Lexis( obj, ... )
   }
 
 boxes.Lexis <-
 function( obj, boxpos = FALSE,
-                wmult = 1.5,
-                hmult = 1.5*wmult,
+                wmult = 1.3,
+                hmult = 1.3*wmult,
                   cex = 1.5,
                show   = inherits( obj, "Lexis" ),
                show.Y = show,
               scale.Y = 1,
              digits.Y = 1,
+              show.BE = FALSE,
+               BE.sep = c("","","          ",""),
                show.D = show,
               scale.D = FALSE,
              digits.D = as.numeric(as.logical(scale.D)),
                show.R = is.numeric(scale.R),
-              scale.R = scale.D,
+              scale.R = 1,
              digits.R = as.numeric(as.logical(scale.R)),
                DR.sep = if( show.D ) c("\n(",")") else c("",""),
                 eq.wd = TRUE,
@@ -117,10 +128,10 @@ function( obj, boxpos = FALSE,
               exclude = NULL,
                  font = 2,
                   lwd = 2,
-              col.txt = par("fg"),
+           col.txt    = par("fg"),
            col.border = col.txt,
-               col.bg = "transparent",
-              col.arr = par("fg"),
+           col.bg     = "transparent",
+           col.arr    = par("fg"),
               lwd.arr = 2,
              font.arr = 2,
               pos.arr = 0.45,
@@ -133,19 +144,60 @@ if( inherits(obj,"Lexis") )
   if( !is.factor(obj$lex.Cst) | !is.factor(obj$lex.Xst) ) obj <- factorize( obj )
   tm <- tmat( obj, Y=TRUE )
   tt <- tmat( obj, Y=FALSE )
+  # If show.BE is a character, check if zeros should be printed
+  noz <- FALSE
+  if( is.character( show.BE ) )
+    {
+    noz <- ( tolower(show.BE) %in% c("nz","noz","nozero","nozeros") )
+    show.BE <- TRUE
+    }
+  if( show.BE )
+    {
+    # Derive the persons at start and at end of study in each state
+    Beg <- table( status( obj, at="entry", by.id=TRUE ) )
+    End <- table( status( obj, at="exit" , by.id=TRUE ) )
+    BE.line <- paste( ifelse( noz & Beg==0,
+                              rep("  ",nchar(BE.sep[1])+2),
+                              paste(BE.sep[1],
+                                    formatC( Beg,
+                                             format="f",
+                                             digits=0,
+                                             big.mark="," ),
+                                    BE.sep[2],sep="") ),
+                      ifelse( noz & End==0,
+                              rep("  ",nchar(BE.sep[2])+nchar(BE.sep[3])+2),
+                              paste(BE.sep[3],
+                                    formatC( End,
+                                             format="f",
+                                             digits=0,
+                                             big.mark="," ),
+                                    BE.sep[4],sep="") ),
+                      sep="" )
+    }
   }
 else if( is.matrix(obj) & diff(dim(obj))==0 )
   {
   tm <- tt <- obj
   }
 else stop( "First argument must be a Lexis object or a square matrix.\n" )
-na <- sum( tt>0, na.rm=TRUE )
-if( length(pos.arr) < na ) pos.arr <- rep(pos.arr,na)[1:na]
 
-# Put the transitions into D and the diagnonal into Y.
+# Put the transitions into D and the diagonal into Y.
 D <- tm
 diag( D ) <- NA
-Y <- diag( tm )
+Y <- diag( tm ) / scale.Y
+
+# Explicitly given numbers to be put in boxes ?
+if( is.numeric(show.Y) )
+  {
+  Y <- show.Y
+  show.Y <- TRUE
+  }
+
+# Compute the rates - vectors are automatically expanded to matrices columnwise
+R <- D / Y * ifelse(scale.R,scale.R,1)
+
+# If no person-years available anywhere, they or rates cannot be shown
+if( all(is.na(Y)) ) show.Y <- show.R <- FALSE
 
 # Derive state names, no. states and no. transitions
                       st.nam <- colnames( tm )
@@ -154,34 +206,16 @@ if( is.null(st.nam) ) st.nam <- paste(1:ncol(tm))
       n.st <- length( st.nam )
       n.tr <- sum( !is.na(tm) ) - sum( !is.na(diag(tm)) )
 
-# If we want to show person-years and events or rates we compute them
-if( inherits(obj,"Lexis") )
-  {
-  if( show )
-    {
-    SM <- summary(obj,simplify=FALSE,scale=scale.Y,Rates=TRUE)
-    Y <- SM[[1]][1:n.st,"Risk time:"]
-    D <- SM$Transitions[1:n.st,1:n.st]
-    R <- SM$Rates[1:n.st,1:n.st] * ifelse(scale.R,scale.R,1)
-    }
-  }
-
-# Explicitly given numbers in boxes ?
-if( is.numeric(show.Y) )
-  {
-  Y <- show.Y
-  show.Y <- TRUE
-  }
-
-# No extra line with person-years when they are NA
-if( show.Y ) pl.nam <- gsub( "\\\nNA",
-                             "",
+# No extra line with person-years when they are NA, put in no at
+# beginnning / end of study
+if( show.Y ) pl.nam <- gsub( "\\\nNA", "",
                              paste( st.nam,
                                     formatC( Y,
                                              format="f",
                                              digits=digits.Y,
                                              big.mark="," ),
                                     sep="\n" ) )
+if( show.BE ) pl.nam <- paste( pl.nam, BE.line, sep="\n" )
 
 # Any subsetting:
 sbst <- 1:nrow(tm)
@@ -214,6 +248,7 @@ if( length(col.arr    )<n.tr ) col.arr    <- rep(col.arr    ,n.tr)[1:n.tr]
 if( length(col.txt.arr)<n.tr ) col.txt.arr<- rep(col.txt.arr,n.tr)[1:n.tr]
 if( length(lwd.arr    )<n.tr ) lwd.arr    <- rep(lwd.arr    ,n.tr)[1:n.tr]
 if( length(font.arr   )<n.tr ) font.arr   <- rep(font.arr   ,n.tr)[1:n.tr]
+if( length(pos.arr    )<n.tr ) pos.arr    <- rep(pos.arr    ,n.tr)[1:n.tr]
 
 # Here comes the plot
 # First setting up the plot area, and restoring the plot parameters later
@@ -274,6 +309,7 @@ for( i in subset ) b[[i]] <- tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                           col.txt=col.txt[i],
                     col.border=col.border[i],
                             col.bg=col.bg[i] )
+
 # Arrows and text on them
 arrowtext <- character(0)
 for( i in subset ) for( j in subset )
@@ -281,7 +317,7 @@ for( i in subset ) for( j in subset )
   if( !is.na(tt[i,j]) & i!=j )
     {
     # Which number of arrow is currently processed?
-    a <- sum(!is.na(tt[1:i,])) - sum(!is.na(tt[i,j:n.st])) + 1
+    a <- wh.no( tt, i, j )
     arr <- boxarr( b[[i]], b[[j]],
                    offset=(!is.na(tt[j,i]))*offset.arr,
                    lwd=lwd.arr[a], col=col.arr[a], pos=pos.arr[a], ... )
@@ -378,7 +414,7 @@ for( i in 1:n.st ) for( j in 1:n.st )
    {
   if( !is.na(obj$Tmat[i,j]) & i!=j )
     {
-    a <- sum(!is.na(obj$Tmat[1:i,])) - sum(!is.na(obj$Tmat[i,j:n.st])) + 1
+    a <- wh.no( obj$Tmat, i, j )
     arr <- with( obj$Arrows,
            boxarr( b[[i]], b[[j]],
                    offset=(!is.na(obj$Tmat[j,i]))*offset.arr,

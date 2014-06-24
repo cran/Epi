@@ -1,31 +1,136 @@
-Changes in 1.2.48
+Changes in 1.1.65
+
+o Despite the note, dropped rows from construction of a Lexis objects
+  were not put in the "dropped" attribute.
+
+Changes in 1.1.64
+
+o Fixed the sim-Lexis vignette
+
+Changes in 1.1.64
+
+o Added function ZArray, which generates an array of 0s just as NArray
+  generates an array of NAs.
+
+o Updated code to avoid "::" and ":::" as far as possible, as well as
+  "<<-". Hence excluded records from construction of a Lexis object is
+  now put in an attribute "dropped" of the Lexis object.
+
+Changes in 1.1.62
+
+o Bug fix in the example code for boxes.Lexis
+
+Changes in 1.1.61
+
+o ci.lin updated to recognize objects of class "lmerMod" from lmer.
+
+Changes in 1.1.60
+
+o Documentation for DMlate updated.
+
+Changes in 1.1.59
+
+o boxes.Lexis updated so that also no. of beginners and enders are
+  properly formatted if larger than 999
+
+Changes in 1.1.57
+
+o boxes.Lexis updated with arguments show.BE and BE.pre, allowing
+  annotation of boxes by the *number* of persons strating and ending
+  in different states.
+
+Changes in 1.1.57
+
+o simLexis substantially updated and groomed to accept Cox-models for
+  transitions too. Example in the documentation and vignette is
+  expanded accordingly.
+
+Changes in 1.1.56
+
+o Typos in documentation corrected.
+
+o When records with too short follow-up are encountered by Lexis, they
+  are dropped from the resulting object, but they will be availabe in
+  the object drop.sh in the global environment.
+
+o The col and border arguments to plot.pState were not repeated
+  automatically, so needed fixing.
+
+o More elaborate warning and error-messages if initiators in absorbing
+  states are handed to simLexis.
+
+Changes in 1.1.55
+
+o Documentation of clogistic is clarified w.r.t. likelihood
+  contributions of matched sets.
+
+Changes in 1.1.54
+
+o apc.fit updated to use the Ns wrapper, and automatically use knots
+  located so that the marginal number of events is the same between
+  knots.
+
+o plot.apc and lines.apc defined as methods for apc objects. They are
+  just wrappers for apc.plot and apc.lines.
+
+o gen.exp example slightly modified to give better output.
+
+Changes in 1.1.53
+
+o Population figures in N.dk, M.dk and Y.dk updated
+
+Changes in 1.1.52
+
+o col.txt argument to plotEst was not working properly. Fixed
+
+o txt argument to plotEst can now be an expression vector allowing
+  sub- and superscripts and mathematical expressions.
+
+o Relevel did not issue warning or error when a given level was being
+  specified as member of more than one new level. It now stops with an
+  error.
+
+o The convenience wrappers Ns (for ns) and NArray (for array) have
+  been added
+
+Changes in 1.1.51
+
+o boxes.Lexis fixed so that rates could be computed from matrix input
+  to.
+
+Changes in 1.1.50
+
+o Calculation of p-values in ci.lin has been modified, thyanks to
+  Krista Fischer.
+
+Changes in 1.1.49
 
 o Default of "border" argument to plot.pState changed to "transparent"
 
-Changes in 1.2.48
+Changes in 1.1.48
 
 o Slight tidying of code in apc.fit. Automatic determination of
   reference points for period and cohort fixed to produce median
   correctly.
 
-Changes in 1.2.47
+Changes in 1.1.47
 
 o Bug in simLexis (specifically in Epi:::simX) where factor levels
   were wrongly used, is now corrected. Versions earlier are likely to
   produce wrong state allocation in simulated dataset and not crash.
 
-Changes in 1.2.46
+Changes in 1.1.46
 
 o lex.id handling in simLexis changed, allows for easier simulation in
   chunks which may be necessary to avoid memory problems.
 
-Changes in 1.2.45
+Changes in 1.1.45
 
 o simLexis introduced. Allows simulation from multiple timescale
   mulitste models. Accompanying utilities supplied too: pr.Lexis, prev
   and plot.prev.
 
-Changes in 1.2.44
+Changes in 1.1.44
 
 o A number of dead links in the documentation have been resurrected.
 
@@ -37,7 +142,7 @@ o Bug in computing AUC in ROC fixed, thanks to Karl Ove Hufthammer.
 o Bug fix to remove warning when more than one variable name was
   supplied in the by= argument of summary.Lexis.
 
-Changes in 1.2.43
+Changes in 1.1.43
 
 o N2Y fixed so that local variable bindings are recognized (M. Plummer)
 
@@ -46,14 +151,14 @@ o summary.Lexis expanded with the argument by=, allowing a summary by a
   transition summary, and only optionally the transition rates;
   giverned by the Rates= argument
 
-Changes in 1.2.42
+Changes in 1.1.42
 
 o Bug that caused a crash of ROC when vaiables in the "form" argument
   were only in the "data" argument data frame and not in the global
   environmant. Now fixed thanks to Ben Barnes of the Robert Koch
   Institute, German Center for Cancer Registry Data
 
-Changes in 1.2.41
+Changes in 1.1.41
 
 o boxes.Lexis now returns an object of class MS, which easily allows
   plotting of slightly modified multistate displays using the new

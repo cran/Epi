@@ -2,7 +2,6 @@ projection.ip <-
 function( X, M, orth = FALSE, weight=rep(1,nrow(X)) )
 # Generate the projection of M on span(X) w.r.t the inner
 # product <x|y>=sum( x*w*y).
-# ( Stolen from PD, modified from stats:::proj.matrix )
 # Avoids computing the entire projection matrix
 #   X %*% inverse( X'WX ) %*% (XW)'  by first computing
 #         inverse( X'WX ) %*% (XW)'M

@@ -63,9 +63,11 @@ Lcoh <- Lexis( entry = list( per=en ),
 
 # Default plot of follow-up
 plot( Lcoh )
+
 # With a grid and deaths as endpoints
 plot( Lcoh, grid=0:10*10, col="black" )
 points( Lcoh, pch=c(NA,16)[Lcoh$lex.Xst+1] )
+
 # With a lot of bells and whistles:
 plot( Lcoh, grid=0:20*5, col="black", xaxs="i", yaxs="i",
       xlim=c(1960,2010), ylim=c(0,50), lwd=3, las=1 )
@@ -73,7 +75,7 @@ points( Lcoh, pch=c(NA,16)[Lcoh$lex.Xst+1], col="red", cex=1.5 )
 
 # Split time along two time-axes
 ( x2 <- splitLexis( Lcoh, breaks = seq(1900,2000,5), time.scale="per") )
-( x2 <- splitLexis( x2, breaks = seq(0,80,5), time.scale="age" ) ) 
+( x2 <- splitLexis( x2, breaks = seq(0,80,5), time.scale="age" ) )
 str( x2 )
 
 # Tabulate the cases and the person-years

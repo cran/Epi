@@ -66,7 +66,7 @@ apc.fit( data,
     weighted average (by marginal no. cases, \code{D}) of the estimated
     period and cohort effects have 0 slope. \code{"Holford"} uses the
     naive average over all values for the estimated effects,
-    disregarding the no. cases.} 
+    disregarding the no. cases.}
   \item{parm}{Character. Indicates the parametrization of the effects.
     The first four refer to the ML-fit of the Age-Period-Cohort model, the last four
     give Age-effects from a smaller model and residuals relative to
@@ -93,12 +93,12 @@ apc.fit( data,
       cohort in the Age-drift model (cohort drift). Cohort effects are from the model
       with cohort alone, using log(fitted values) from the Age-drift
       model as offset. Period effects are from the model with period
-      alone using log(fitted values) from the cohort model as offset.      
+      alone using log(fitted values) from the cohort model as offset.
       \item \code{"Ad-P-C"}: Age effects are rates for the reference
       period in the Age-drift model (period drift). Period effects are from the model
       with period alone, using log(fitted values) from the Age-drift
       model as offset. Cohort effects are from the model with cohort
-      alone using log(fitted values) from the period model as offset.      
+      alone using log(fitted values) from the period model as offset.
       \item \code{"AC-P"}: Age effects are rates for the reference
       cohort in the Age-Cohort model, cohort effects are RR relative to
       the reference cohort. Period effects are from the model
@@ -110,10 +110,17 @@ apc.fit( data,
       with cohort alone, using log(fitted values) from the Age-Period
       model as offset.
     } }
-  \item{npar}{The number of parameters to use for each of the terms in
-    the model. It can be a list of three numerical vectors, in which case
-    these taken as the knots for the age, period and cohort effect, the first
-    and last element in each vector are used as the boundary knots.}
+  \item{npar}{The number of parameters/knots to use for each of the terms in
+    the model. If it is vector of length 3, the numbers are taken as the
+    no. of knots for Age, Period and Cohort, respctively. Unless it has
+    a names attribute with vales "A", "P" and "C" in which case these
+    will be used. The knots chosen are the quantiles
+    \code{(1:nk+0.1)/(nk+0.2)} of the events (i.e. of \code{rep(A,D)})
+
+    \code{npar} may also be a named list of three numerical vectors with
+    names "A", "P" and "C", in which case these taken as the knots for
+    the age, period and cohort effect, the first and last element in
+    each vector are used as the boundary knots.}
   \item{alpha}{The significance level. Estimates are given with
     (1-\code{alpha}) confidence limits.}
   \item{scale}{numeric(1), factor multiplied to the rate estimates before output.}
@@ -121,17 +128,19 @@ apc.fit( data,
     be printed?}
   }
 \value{
-  An object of class "apc" (recognized by \code{\link{apc.lines}} and
-  \code{\link{apc.plot}}) --- a list with components:
+  An object of class "apc" (recognized by \code{\link{apc.plot}} and
+  \code{\link{apc.lines}}) --- a list with components:
+  \item{Type}{Text describing the model and parametrization returned}
+  \item{Model}{The model object(s) on which the parametrization is based.}
   \item{Age}{Matrix with 4 colums: \code{A.pt} with the ages (equals
     \code{unique(A)}) and three columns giving the estimated rates with
-    c.i.s.} 
+    c.i.s.}
   \item{Per}{Matrix with 4 colums: \code{P.pt} with the dates of
     diagnosis (equals \code{unique(P)}) and three columns giving the
-    estimated RRs with c.i.s.} 
+    estimated RRs with c.i.s.}
   \item{Coh}{Matrix with 4 colums: \code{C.pt} with the dates of birth
     (equals \code{unique(P-A)}) and three columns giving the estimated
-    RRs with c.i.s.} 
+    RRs with c.i.s.}
   \item{Drift}{A 3 column matrix with drift-estimates and c.i.s: The first row is
     the ML-estimate of the drift (as defined by \code{drift}), the
     second row is the estimate from the Age-drift model. For the
@@ -153,7 +162,7 @@ apc.fit( data,
   \url{http://biostat.ku.dk/reports/2006/ResearchReport06-1.pdf/}, later
    published as:
    B. Carstensen: Age-period-cohort models for the Lexis diagram.
-   Statistics in Medicine, 10; 26(15):3018-45, 2007. 
+   Statistics in Medicine, 10; 26(15):3018-45, 2007.
    }
 \author{
    Bendix Carstensen, \url{http://BendixCarstensen.com}

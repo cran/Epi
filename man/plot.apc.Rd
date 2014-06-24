@@ -1,4 +1,5 @@
-\name{apc.plot}
+\name{plot.apc}
+\alias{plot.apc}
 \alias{apc.plot}
 \title{Plot the estimates from a fitted Age-Period-Cohort model}
 \description{
@@ -8,10 +9,11 @@ values of the parameters, and subsequently plots the estimates using
 \code{\link{apc.lines}}.
 }
 \usage{
-apc.plot(obj, r.txt = "Rate", ...)
+\method{plot}{apc}( x, r.txt="Rate", ...)
+          apc.plot( x, r.txt="Rate", ...)
 }
 \arguments{
-  \item{obj}{ An object of class \code{apc}. }
+  \item{x}{ An object of class \code{apc}. }
   \item{r.txt}{ The text to put on the vertical rate axis. }
   \item{\dots}{ Additional arguments passed on to \code{\link{apc.lines}}. }
 }
@@ -24,14 +26,16 @@ apc.plot(obj, r.txt = "Rate", ...)
   \code{=(x-res[1],y/res[2])}.
   This vector should be supplied for the parameter \code{frame.par} to
   \code{\link{apc.lines}} if more sets of estimates is plotted in the
-  same graph.
+  same graph, however see \code{\link{cp.points}}.
 }
+\details{\code{plot.apc} is just a wrapper for \code{apc.plot}.}
 \author{
   Bendix Carstensen, Steno Diabetes Center,
   \url{http://BendixCarstensen.com}
 }
 \seealso{
-  \code{\link{apc.lines}} ,\code{\link{apc.frame}}, \code{\link{apc.fit}}
+  \code{\link{apc.lines}}, \code{\link{lines.apc}},
+  \code{\link{apc.frame}}, \code{\link{apc.fit}}
 }
 \examples{
 data( lungDK )

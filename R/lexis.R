@@ -1,6 +1,7 @@
 Lexis <-
 function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
-         merge=TRUE, states, tol=.Machine$double.eps^0.5)
+         merge=TRUE, states, tol=.Machine$double.eps^0.5,
+         keep.dropped=FALSE )
 {
   nmissing <- missing(entry) + missing(exit) + missing(duration)
   if (nmissing > 2)
@@ -176,10 +177,11 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
       stop("Duration is not the same on all time scales")
     }
   }
-  ## Check that duration is positive
-  if (any(duration<0)) {
-    stop("Duration must be non-negative")
-  }
+#  Taken care of by the code that detects whether lex.du <= tol
+#  ## Check that duration is positive
+#  if (any(duration<0)) {
+#    stop("Duration must be non-negative")
+#  }
 
   ## Make sure id value - if supplied - is valid. Otherwise supply default id
 
@@ -219,13 +221,18 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     lex <- cbind(lex, data)
   }
 
-  ## Drop rows with short duration for consistency with splitLexis
+  ## Drop rows with short or negantive duration for consistency with splitLexis
   short.dur <- lex$lex.dur <= tol
-  if (any(short.dur)) {
+  if ( any(short.dur) ) {
       warning("Dropping ", sum(short.dur),
-              " rows with duration of follow up < tol")
+              " rows with duration of follow up < tol\n",
+      if( keep.dropped ) "  The dropped rows are in the attribute 'dropped'\n",
+      if( keep.dropped ) "  To see them type attr(Obj,'dropped'),\n",
+      if( keep.dropped ) "  to get rid of them type attr(Obj,'dropped') <- NULL\n",
+      if( keep.dropped ) "  - where 'Obj' is the name of your Lexis object" )
       lex <- subset(lex, !short.dur)
-  }
+      if( keep.dropped ) attr(lex,"dropped") <- subset(data, short.dur)
+      }
 
   ## Return Lexis object
   attr(lex,"time.scales") <- all.time.scales
@@ -245,12 +252,12 @@ is.Lexis <- function(x)
 check.time.scale <- function(lex, time.scale=NULL)
 {
 
-  ##Utility function, returns the names of the time scales in a Lexis object
-  ##lex - a Lexis object
-  ##time.scale - a numeric or character vector. The function checks that
-  ##             these are valid time scales for the Lexis object.
-  ##Return value is a character vector containing the  names of the requested
-  ##time scales
+  ## Utility function, returns the names of the time scales in a Lexis object
+  ## lex - a Lexis object
+  ## time.scale - a numeric or character vector. The function checks that
+  ##              these are valid time scales for the Lexis object.
+  ## Return value is a character vector containing the  names of the requested
+  ## time scales
 
   all.names <- timeScales(lex)
   if (is.null(time.scale))
@@ -261,12 +268,12 @@ check.time.scale <- function(lex, time.scale=NULL)
   if (is.character(time.scale)) {
     for (i in 1:nscale) {
       if (is.null(lex[[time.scale[i]]]))
-        stop("invalid time scale name")
+        stop(time.scale[i], " is not a valid time scale name")
     }
   }
   else if (is.numeric(time.scale)) {
     if (any(time.scale > length(all.names))  || any(time.scale < 1))
-      stop("invalid time scale column number")
+      stop(time.scale, " not valid time scale column number(s)")
     time.scale <- all.names[time.scale]
   }
   else {
@@ -670,7 +677,7 @@ transform.Lexis <- function(`_data`, ... )
     save.at <- attributes(`_data`)
     ## We can't use NextMethod here because of the special scoping rules
     ## used by transform.data.frame
-    y <- base:::transform.data.frame(`_data`, ...)
+    y <- base::transform.data.frame(`_data`, ...)
     save.at[["names"]] <- attr(y, "names")
     attributes(y) <- save.at
     y

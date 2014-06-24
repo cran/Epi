@@ -54,7 +54,7 @@ if( missing(xlog) ) xlog <- mult
  # sufficient place can be made for the text in the margin
  #
 plot.new()
-mx <- max( strwidth( unlist( strsplit( txt, "\n" ) ), units="in" ) )
+mx <- max( strwidth( txt, units="in" ) )
 oldpar <- par( mai=par("mai") + c(0,mx,0,0) )
 if( restore.par ) on.exit( par( oldpar ) )
 
@@ -78,9 +78,9 @@ linesEst( ests, y, pch=pch, cex=cex, lwd=lwd,
 
  # Finally the x-axis and the annotation of the estimates
  #
-axis( side = 1, at = xtic )
+axis( side=1, at=xtic )
 mtext( side=1, xlab, line=par("mgp")[1], cex=par("cex")*par("cex.lab") )
-axis( side=2, at=txtpos, labels=txt, las=2, lty=0, col=col.txt )
+axis( side=2, at=txtpos, labels=txt, las=1, lty=0, col.axis=col.txt )
 invisible( oldpar )
   }
 

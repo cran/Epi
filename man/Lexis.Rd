@@ -6,8 +6,8 @@
   multiple states on multiple time scales.
 }
 \usage{
-Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
-      merge=TRUE, states, tol=.Machine$double.eps^0.5 )
+Lexis( entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
+       merge=TRUE, states, tol=.Machine$double.eps^0.5, keep.dropped=FALSE )
 }
 \arguments{
   \item{entry}{a named list of entry times. Each element of the list is
@@ -22,8 +22,8 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   \item{exit.status}{a vector or factor giving status at exit. Any
     change in status during follow-up is assumed to take place exactly
     at the exit time.}
-  \item{id}{a vector giving a unique identity value for each row of the
-    Lexis object.}
+  \item{id}{a vector giving a unique identity value for each person
+    represented in the Lexis object. Defaults to \code{1:nrow(data)}}
   \item{data}{an optional data frame, list, or environment containing
     the variables. If  not found in \code{data}, the variables are
     taken from the environment from which \code{Lexis} was called.}
@@ -32,9 +32,11 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
     the resulting \code{Lexis} object.}
   \item{states}{A vector of labels for the states. If given, the state
     variables \code{lex.Cst} and \code{lex.Xst} are returned as factors with
-    identical levels attributes.}
+    identical levels attributes equal to \code{states}.}
   \item{tol}{Numerical tolerance for follow-up time. Rows with duration
     less than this value are automatically dropped.}
+  \item{keep.dropped}{Logical. Should dropped rows from \code{data} be
+    saved as an attribute with the object for inspection?}
 }
 \details{
   The analysis of long-term population-based follow-up studies typically
@@ -78,12 +80,12 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   they will both be converted to factors.
 
   If \code{entry.status} is not given, then its class is automatically
-  set to that of \code{exit.status}. If \code{exit.status} is factor,
-  the value of \code{entry.status} is set to the first level. This may
-  be highly undesirable, and therefore noted. For example, if
-  \code{exit.status} is character the first level will be the first in
-  the alphabetical ordering; slightly unfortunate if values are
-  \code{c("Well","Diseased")}. If \code{exit.status} is logical, the
+  set to that of \code{exit.status}. If \code{exit.status} is a
+  character or factor, the value of \code{entry.status} is set to the
+  first level. This may be highly undesirable, and therefore noted. For
+  example, if \code{exit.status} is character the first level will be
+  the first in the alphabetical ordering; slightly unfortunate if values
+  are \code{c("Well","Diseased")}. If \code{exit.status} is logical, the
   value of \code{entry.status} set to \code{FALSE}. If
   \code{exit.status} is numeric, the value of \code{entry.status} set to
   0.
@@ -96,19 +98,19 @@ Lexis(entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   }
 \value{
   An object of class \code{Lexis}. This is represented as a data frame
-  with a column for each time scale, and additional columns with the
+  with a column for each time scale (with neaes equal to the union of
+  the names of \code{entry} and \code{exit}), and additional columns with the
   following names:
-  \item{lex.id}{Identification of the inidvidual (record in \code{data},
-  that is).}
+  \item{lex.id}{Identification of the persons.}
   \item{lex.dur}{Duration of follow-up.}
-  \item{lex.Cst}{Entry status (Current state),
+  \item{lex.Cst}{Entry status (\code{C}urrent \code{st}ate),
                  i.e. the state in which the follow up takes place.}
-  \item{lex.Xst}{Exit status (eXit state),
+  \item{lex.Xst}{Exit status (e\code{X}it \code{st}ate),
                  i.e. that state taken up after \code{dur} in \code{lex.Cst}.}
   If \code{merge=TRUE} (the default) then the \code{Lexis} object will also contain
   all variables from the \code{data} argument.
   }
-\author{Martyn Plummer}
+\author{Martyn Plummer with contributions from Bendix Carstensen}
 \examples{
 # A small bogus cohort
 xcoh <- structure( list( id = c("A", "B", "C"),
@@ -124,6 +126,7 @@ xcoh <- structure( list( id = c("A", "B", "C"),
 xcoh <- cal.yr( xcoh, format="\%d/\%m/\%Y", wh=2:4 )
 # See how it looks
 xcoh
+str( xcoh )
 
 # Define as Lexis object with timescales calendar time and age
 Lcoh <- Lexis( entry = list( per=entry ),
@@ -139,7 +142,7 @@ Lexis( entry = list( per=entry ),
  exit.status = Fail,
         data = xcoh )
 
-# unless you order the levels correctly
+# ...unless you order the levels correctly
 ( xcoh$Fail <- factor( xcoh$Fail, levels=c("Well","Dead") ) )
 Lexis( entry = list( per=entry ),
         exit = list( per=exit, age=exit-birth ),

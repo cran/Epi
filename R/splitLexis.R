@@ -1,7 +1,7 @@
 split.lexis.1D <-
 function(lex, breaks, time.scale, tol)
 {
-    time.scale <- Epi:::check.time.scale(lex, time.scale)
+    time.scale <- check.time.scale(lex, time.scale)
 
     ## Entry and exit times on the time scale that we are splitting
     time1 <- lex[,time.scale, drop=FALSE]
@@ -75,7 +75,7 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
   aux.data <- lex[, c("lex.id","lex.tempid", aux.data.names), drop=FALSE]
 
   ## Check for NAs in the timescale
-  ts <- Epi:::check.time.scale(lex, time.scale)
+  ts <- check.time.scale(lex, time.scale)
   ts.miss <- any(is.na(lex[,ts]))
   if( ts.miss )
     {

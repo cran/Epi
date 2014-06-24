@@ -1,15 +1,8 @@
 \name{apc.lines}
+\alias{lines.apc}
 \alias{apc.lines}
-\alias{pc.points}
-\alias{pc.lines}
-\alias{pc.matpoints}
-\alias{pc.matlines}
-\alias{cp.points}
-\alias{cp.lines}
-\alias{cp.matpoints}
-\alias{cp.matlines}
 \title{
-  Plot APC-estimates (and other things) in an APC-frame.
+  Plot APC-estimates in an APC-frame.
 }
 \description{
   When an APC-frame has been produced by \code{\link{apc.frame}}, this
@@ -18,7 +11,7 @@
   subtracted from the cohort and age parameters.
 }
 \usage{
- apc.lines( A, P, C,
+\method{lines}{apc}( x, P, C,
         scale = c("log","ln","rates","inc","RR"),
     frame.par = options()[["apc.frame.par"]],
         drift = 0,
@@ -32,21 +25,30 @@
          type = "l",
         knots = FALSE,
           ... )
-  pc.points( x, y, ... )
-  pc.lines( x, y, ... )
-  pc.matpoints( x, y, ... )
-  pc.matlines( x, y, ... )
-  cp.points( x, y, ... )
-  cp.lines( x, y, ... )
-  cp.matpoints( x, y, ... )
-  cp.matlines( x, y, ... )
+ apc.lines( x, P, C,
+        scale = c("log","ln","rates","inc","RR"),
+    frame.par = options()[["apc.frame.par"]],
+        drift = 0,
+           c0 = median( C[,1] ),
+           a0 = median( A[,1] ),
+           p0 = c0 + a0,
+           ci = rep( FALSE, 3 ),
+          lwd = c(3,1,1),
+          lty = 1,
+          col = "black",
+         type = "l",
+        knots = FALSE,
+          ... )
 }
 \arguments{
-  \item{A}{Age effects. A 4-column matrix with columns age, age-specific
-    rates, lower and upper c.i. If A is of class \code{apc} (see
-    \code{\link{apc.fit}}, \code{P}, \code{C}, \code{c0},
-    \code{a0} and \code{p0} are ignored, and the estimates from there
-    plotted.}
+  \item{x}{If an \code{apc}-object, (see \code{\link{apc.fit}}), then
+    the arguments \code{P}, \code{C}, \code{c0}, \code{a0} and \code{p0}
+    are ignored, and the estimates from \code{x} plotted.
+
+    Can also be a 4-column matrix with columns age, age-specific
+    rates, lower and upper c.i., in which case period and cohort effects
+    are taken from the arguments \code{P} and \code{C}.
+    }
   \item{P}{Period effects. Rate-ratios. Same form as for the age-effects.}
   \item{C}{Cohort effects. Rate-ratios. Same form as for the age-effects.}
   \item{scale}{Are effects given on a log-scale? Character variable, one
@@ -78,31 +80,22 @@
   \item{...}{Further parameters to be transmitted to \code{points}
     \code{lines}, \code{matpoints} or \code{matlines} used
     for plotting the three sets of curves.}
-  \item{x}{vector of \code{x}-coordinates.}
-  \item{y}{vector of \code{y}-coordinates.}
 }
 \details{
   The drawing of three effects in an APC-frame is a rather trivial task,
   and the main purpose of the utility is to provide a function that
   easily adds the functionality of adding a drift so that several sets
   of lines can be easily produced in the same frame.
-
-  Since the Age-part of the frame is referred to by its real coordinates
-  plotting in the calendar time part requires translation and scaling to
-  put things correctly there, that is done by the functions
-  \code{pc.points} etc. The functions \code{cp.points} etc. are just
-  synonyms for these, in recognition of the fact that you can never
-  remember whether it is "pc" pr "cp".
 }
 \value{
-  \code{APC.lines} returns (invisibly) a list of three matrices with the
-  effects plotted. The functions \code{cp.points} etc. return nothing.
+  \code{APC.lines} returns (invisibly) a list of three matrices of the
+  effects plotted.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
   \url{http://BendixCarstensen.com}
 }
 \seealso{
-  \code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}
+  \code{\link{apc.frame}}, \code{\link{pc.lines}}, \code{\link{apc.fit}}, \code{\link{apc.plot}}
 }
 \keyword{hplot}

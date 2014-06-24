@@ -4,7 +4,8 @@
 \alias{ci.exp}
 \alias{Wald}
 \title{
-  Compute linear functions of parameters with s.e.
+  Compute linear functions of parameters with standard erros and
+  confidence limits
   }
 \description{
   For a given model object the function computes a linear function of
@@ -25,7 +26,7 @@ ci.lin( obj,
      sample = FALSE )
 ci.exp( ..., Exp = TRUE )
 Wald( obj, H0=0, ... )
-ci.mat( alpha = 0.05, df=Inf )
+ci.mat( alpha = 0.05, df = Inf )
 }
 \arguments{
   \item{obj}{A model object (of class
@@ -33,12 +34,18 @@ ci.mat( alpha = 0.05, df=Inf )
     \code{glm},
     \code{coxph},
     \code{survreg},
+    \code{clogistic},
+    \code{cch},
     \code{lme},
     \code{mer},
+    \code{lmerMod},
+    \code{gls},
     \code{nls},
     \code{gnlm},
-    \code{MIresult}
- or \code{polr}).
+    \code{MIresult},
+    \code{mipo},
+    \code{polr},
+ or \code{rq}).
   }
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
     vector, i.e. the desired linear function of the parameters.}
@@ -77,7 +84,7 @@ ci.mat( alpha = 0.05, df=Inf )
   \item{\ldots}{Parameters passed on to \code{ci.lin}.}
   }
 \value{
-  \code{ci.lin} returns a matrix with number of rows and rownames as
+  \code{ci.lin} returns a matrix with number of rows and row names as
   \code{ctr.mat}. The columns are Estimate, Std.Err, z, P, 2.5\% and
   97.5\%.  If \code{vcov=TRUE} a list with components \code{est}, the
   desired functional of the parameters and \code{vcov}, the variance
@@ -87,14 +94,16 @@ ci.mat( alpha = 0.05, df=Inf )
 
   \code{ci.exp} returns only the exponentiated parameter estimates with
   confidence intervals. It is merely a wrapper for \code{ci.lin},
-  fishing out the last 3 columns from \code{ci.lin(...,Exp=TRUE)}.
+  fishing out the last 3 columns from \code{ci.lin(...,Exp=TRUE)}. If
+  you just want the estimaes and confidnece limits, but not
+  exponentiated, use \code{ci.exp(...,Exp=FALSE)}.
 
   \code{Wald} computes a Wald test for a subset of (possibly linearly
-  transformed) parameters. The selection of the subset of parameters is
-  the same as for \code{ci.lin}. Using the \code{ctr.mat} argument makes
-  it possible to do a Wald test for equality of parameters. \code{Wald}
-  returns a named numerical vector of length 3, with names \code{Chisq},
-  \code{d.f.} and \code{P}.
+  transformed) parameters being equal to the null value. The selection
+  of the subset of parameters is the same as for \code{ci.lin}. Using
+  the \code{ctr.mat} argument makes it possible to do a Wald test for
+  equality of parameters. \code{Wald} returns a named numerical vector
+  of length 3, with names \code{Chisq}, \code{d.f.} and \code{P}.
 
   \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
   \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with

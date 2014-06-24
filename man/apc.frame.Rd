@@ -32,7 +32,7 @@
              r.txt = "Rate per 100,000 person-years",
             rr.txt = "Rate ratio",
           ref.line = TRUE,
-               gap = diff(range(c(a.lab, a.tic)))/3,
+               gap = diff(range(c(a.lab, a.tic)))/10,
           col.grid = gray(0.85),
              sides = c(1,2,4) )
 }

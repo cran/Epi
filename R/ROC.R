@@ -103,7 +103,7 @@ function ( test = NULL,
 
 # First a table of the test (continuous variable) vs. the response and
 # adding a row of 0s so that we have all points fro the ROC curve
-  m  <- as.matrix( base:::table( switch( PS+1, test, lr$fit ), resp ) )
+  m  <- as.matrix( base::table( switch( PS+1, test, lr$fit ), resp ) )
   m  <- addmargins( rbind( 0, m ), 2 )
 # What values of test/eta do the rows refer to
   fv <- c( -Inf, sort( unique( switch( PS+1, test, lr$fit ) ) ) )

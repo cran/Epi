@@ -33,13 +33,13 @@ iter.max=20, eps=1e-6, toler.chol = sqrt(.Machine$double.eps))
   }
   \item{iter.max}{maximum number of iterations}
   \item{eps}{
-    Convergence tolerence.  Iteration continues until the relative
+    Convergence tolerance.  Iteration continues until the relative
     change in the conditional log likelihood is less than \code{eps}.
     Must be positive.
   }
   \item{toler.chol}{
     Tolerance used for detection of a singularity during a Cholesky
-    decomposition of the variance martrix. This is used to detect
+    decomposition of the variance matrix. This is used to detect
     redundant predictor variables. Must be less than \code{eps}.
   }
 }
@@ -65,15 +65,18 @@ iter.max=20, eps=1e-6, toler.chol = sqrt(.Machine$double.eps))
   \item{n}{
     number of observations used. Observations may be dropped
     either because they are missing, or because they belong to a
-    homogenous stratum. For more details on which observations were
+    homogeneous stratum. For more details on which observations were
     used, see \code{informative} below.
   }
   \item{informative}{
     if \code{model=TRUE}, a logical vector of length equal to the number
     of rows in the model frame.  This indicates whether an observation
-    is informative, in the sense that it makes a non-zero contribution
-    to the log-likelihood. If \code{model=FALSE}, this is NULL.
+    is informative. Strata that are homogeneous with respect to either
+    the outcome variable or the predictor variables are uninformative,
+    in the sense that they can be removed without modifying the
+    estimates or standard errors. If \code{model=FALSE}, this is NULL.
   }
+  
   The output will also contain the following, for documentation see the
   \code{glm} object: \code{terms}, \code{formula},
   \code{call},  \code{contrasts}, \code{xlevels}, and, optionally,

@@ -60,10 +60,10 @@ Bendix Carstensen, \email{bxc@steno.dk}, \url{http://BendixCarstensen.com}
 \examples{
 data(DMlate)
 str(DMlate)
-dml <- Lexis( entry=list(Per=dodm,Age=dodm-dobth,DMdur=0),
-               exit=list(Per=dox),
-        exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
-               data=DMlate[1:1000,] )
+dml <- Lexis( entry = list(Per=dodm,Age=dodm-dobth,DMdur=0),
+               exit = list(Per=dox),
+        exit.status = factor(!is.na(dodth),labels=c("DM","Dead")),
+               data = DMlate[1:1000,] )
 dmi <- cutLexis( dml, cut=dml$doins, new.state="Ins", pre="DM" )
 summary( dmi )
 

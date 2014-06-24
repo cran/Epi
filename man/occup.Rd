@@ -34,8 +34,8 @@ plot( sx )
 # Plot with a bit more paraphernalia and a device to get
 # the years on the same physical scale on both axes
 ypi <- 2.5 # Years per inch
-x11( height=15/ypi+1, width=20/ypi+1 )    # add an inch in each direction for
-par( mai=c(3,3,1,1)/4, mgp=c(3,1,0)/1.6 ) # the margins set in inches by mai=
+dev.new( height=15/ypi+1, width=20/ypi+1 ) # add an inch in each direction for
+par( mai=c(3,3,1,1)/4, mgp=c(3,1,0)/1.6 )  # the margins set in inches by mai=
 plot(sx,las=1,col="black",lty.grid=1,lwd=2,type="l",
      xlim=c(1940,1960),ylim=c(40,55),xaxs="i",yaxs="i",yaxt="n",
      xlab="Calendar year", ylab="Age (years)")

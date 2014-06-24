@@ -14,7 +14,7 @@ function( a.lab,
           r.txt = "Rate per 100,000 person-years",
          rr.txt = "Rate ratio",
        ref.line = TRUE,
-            gap = diff( range( c(a.lab,a.tic) ) ) / 3,
+            gap = diff(range(c(a.lab,a.tic)))/10,
        col.grid = gray( 0.85 ),
           sides = c(1,2,4) )
   {
@@ -48,8 +48,8 @@ if ( 1 %in% sides )
    }
 if ( 2 %in% sides )
    {
-   axis( side=2, at=r.lab, labels=paste( r.lab ) ) 
-   axis( side=2, at=r.tic, labels=NA, tcl=par("tcl")/tic.fac ) 
+   axis( side=2, at=r.lab, labels=paste( r.lab ) )
+   axis( side=2, at=r.tic, labels=NA, tcl=par("tcl")/tic.fac )
    mtext( side=2, r.txt, line=2.5, las=0 )
    }
 if ( 3 %in% sides )

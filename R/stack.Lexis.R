@@ -45,7 +45,7 @@ transform.stacked.Lexis <- function(`_data`, ... )
     save.at <- attributes(`_data`)
     ## We can't use NextMethod here because of the special scoping rules
     ## used by transform.data.frame
-    y <- base:::transform.data.frame(`_data`, ...)
+    y <- base::transform.data.frame(`_data`, ...)
     save.at[["names"]] <- attr(y, "names")
     attributes(y) <- save.at
     y

@@ -10,7 +10,8 @@ The Danish National Diabetes Register.
 These two datasets each contain a random sample of 10,000 persons from
 the Danish National Diabetes Register. \code{DMrand} is a random sample
 from the register, whereas \code{DMlate} is a random sample among those
-with date of diagnosis after 1.1.1995.
+with date of diagnosis after 1.1.1995. All dates are radomly jittered by
+adding a U(-7,7) (days).
 }
 \usage{data(DMrand)
        data(DMlate)}
@@ -46,7 +47,8 @@ dml <- Lexis( entry=list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
                exit=list(Per=dox),
         exit.status=factor(!is.na(dodth),labels=c("DM","Dead")),
                data=DMlate )
-# Split follow-up at insulin, introduce a new timescale,
+
+# Cut the follow-up at insulin start, and introduce a new timescale,
 # and split non-precursor states
 system.time(
 dmi <- cutLexis( dml, cut = dml$doins,

@@ -7,13 +7,12 @@ Relevel.factor <-
   function( x, ref, first=TRUE, collapse="+", ... )
   {
   # Function that collapses multiple sets of levels of a factor
-  # Bendix Carstensen, January 2004
   #
   if( !is.factor(x) )
     {
-    argnam <- deparse( substitute(obj) )
+    argnam <- deparse( substitute(x) )
     f <- factor( x )
-    cat( "Warning: ", argnam,
+    cat( "WARNING: ", argnam,
          "has been converted to a factor with levels:\n",
          levels( f ) )
     }
@@ -48,14 +47,23 @@ Relevel.factor <-
       fnew <- f
       newnames <- levels( f )
       uninames <- character( length( ref ) )
-      for( s in 1:length( ref ) )
-        {
-          if ( is.character( ref[[s]] ) ) ref[[s]] <- match( ref[[s]], levels(f) )
-          uninames[s] <- if( is.null( names( ref ) ) ) {
-                             paste( levels( f )[ref[[s]]], collapse=collapse )
-                        } else if( names( ref )[s]=="" ) {
-                             paste( levels( f )[ref[[s]]], collapse=collapse )
-                        } else names( ref )[s]
+      for( s in 1:length(ref) )
+         if ( is.character( ref[[s]] ) ) ref[[s]] <- match( ref[[s]], levels(f) )
+      # Check for replicates in levels to be grouped
+      if( any( (tt<-table(unlist(ref))) > 1 ) )
+        stop("Factor level(s) ", levels( f )[as.numeric(names(tt)[tt>1])],
+             " has been allocated to more than one new level.")
+      for( s in 1:length(ref) )
+         {
+         uninames[s] <- if( is.null( names( ref ) ) )
+                          {
+                          paste( levels( f )[ref[[s]]], collapse=collapse )
+                          }
+                        else if( names( ref )[s]=="" )
+                          {
+                          paste( levels( f )[ref[[s]]], collapse=collapse )
+                          }
+                        else names( ref )[s]
           newnames[ref[[s]]] <- rep( uninames[s], length( ref[[s]] ) )
         }
       levels( fnew ) <- newnames

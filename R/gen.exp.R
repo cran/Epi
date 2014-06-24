@@ -1,3 +1,9 @@
+# Acronyms:
+# dop: date of purchase
+# dpt: dose per time
+# amt: amount
+# dur: duration
+
 use.amt.dpt <-
 function( purchase,
           push.max = Inf,
@@ -107,21 +113,21 @@ if( use.dpt )
   # This is to allow dpt to be entered as numerical scalar common for all
   if( is.numeric(dpt) )
     {
-    if( length(dpt) > 1 ) stop( "If dpt is numeric it must have lenght 1" )
+    if( length(dpt) > 1 ) stop( "If dpt is numeric it must have length 1" )
     purchase$dpt <- dpt
     }
   else
   names( purchase )[match(c(dpt),names(purchase))] <- "dpt"
-  tmp.dfr <- Epi:::use.amt.dpt( purchase,
-                                    lags = lags,
-                                push.max = push.max,
-                                 lag.dec = lag.dec )
+  tmp.dfr <- use.amt.dpt( purchase,
+                              lags = lags,
+                          push.max = push.max,
+                           lag.dec = lag.dec )
   }
 else
-  tmp.dfr <- Epi:::use.only.amt( purchase,
-                                     lags = lags,
-                                 pred.win = pred.win,
-                                  lag.dec = lag.dec )
+  tmp.dfr <- use.only.amt( purchase,
+                               lags = lags,
+                           pred.win = pred.win,
+                            lag.dec = lag.dec )
 
 
 # Merge in the follow-up period for the persons

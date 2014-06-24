@@ -161,7 +161,7 @@ cutLexis <- function(data,
              "),\n --- but it has length ", length(cut),".")
       }
 
-    timescale <- Epi:::check.time.scale(data, timescale)
+    timescale <- check.time.scale(data, timescale)
     if (length(timescale) > 1) {
         stop("Multiple time scales")
     }
@@ -282,7 +282,7 @@ countLexis <- function(data, cut, timescale = 1)
              "),\n --- but it has length ", length(cut),".")
       }
 
-    timescale <- Epi:::check.time.scale(data, timescale)
+    timescale <- check.time.scale(data, timescale)
     if (length(timescale) > 1) {
         stop("Multiple time scales not meaningful")
     }

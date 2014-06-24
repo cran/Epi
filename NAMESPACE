@@ -4,6 +4,8 @@ export(
   apc.fit,
   apc.plot,
   apc.lines,
+ plot.apc,
+lines.apc,
    pc.points,
    pc.lines,
    pc.matpoints,
@@ -64,6 +66,7 @@ export(
          subset.stacked.Lexis,
       transform.stacked.Lexis,
            plot.pState,
+          lines.pState,
   entry,
   exit,
   status,
@@ -87,6 +90,9 @@ export(
   mh,
   ncut,
   nice,
+  NArray,
+  ZArray,
+  Ns,
   pctab,
   plotEst,
   pointsEst,
@@ -106,8 +112,11 @@ export(
 importFrom( utils, stack )
 # importFrom( mstate, mstate )
 # register S3 methods
+S3method(     plot, apc)
+S3method(    lines, apc)
 S3method(     plot, Lexis)
 S3method(     plot, pState)
+S3method(    lines, pState)
 S3method(   points, Lexis)
 S3method(    lines, Lexis)
 S3method(   PY.ann, Lexis)

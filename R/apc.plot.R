@@ -1,14 +1,15 @@
+plot.apc <-
 apc.plot <-
-function( obj, r.txt="Rate", ... )
+function( x, r.txt="Rate", ... )
 {
-if( !inherits( obj, "apc" ) ) stop( "Argument must be an apc-object" )
+if( !inherits( x, "apc" ) ) stop( "Argument must be an apc-object" )
 
 # Determine the ranges of the horizontal axes
- a.lab = nice( obj$Age[,1] )
-cp.lab = nice( c(obj$Per[,1],obj$Coh[,1]), high=0.1 )[-1]
+ a.lab = nice( x$Age[,1] )
+cp.lab = nice( c(x$Per[,1],x$Coh[,1]), high=0.1 )[-1]
 # The necessary range of the two vertical axes
- r.rg  <- range( obj$Age[,-1] )
-rr.rg  <- range( rbind( obj$Per[,-1], obj$Coh[,-1] ) )
+ r.rg  <- range( x$Age[,-1] )
+rr.rg  <- range( rbind( x$Per[,-1], x$Coh[,-1] ) )
 # Align the RR with the rates on an integer power of 10
 rr.ref <- 10^floor( log10(r.rg[2])-log10(rr.rg[2]) )
 # Find the tic-marks for the two vertical axes
@@ -34,12 +35,13 @@ apc.frame( a.lab=a.lab,
            r.txt=r.txt )
 # - and the reference line
 segments( min(cp.lab)-fpar[1], fpar[2], max(cp.lab)-fpar[1], fpar[2] )
-apc.lines( obj, frame.par=fpar, ... )
+apc.lines( x, frame.par=fpar, ... )
 fpar
 }
 
+lines.apc <-
 apc.lines <-
-function( A,
+function( x,
           P,
           C,
       scale = c("log","ln","rates","inc","RR"),
@@ -57,6 +59,8 @@ function( A,
         ...
         )
 {
+# To make the lines method work, the first argument must be called x
+A <- x
 # What scale are we using:
 log.scale <- ( match.arg( scale ) %in% c("log","ln") )
 # Are confidence intervals requested ?
