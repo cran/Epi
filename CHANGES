@@ -1,3 +1,19 @@
+Changes in 1.1.67
+
+o The simLexis vignette has been groomed a bit
+
+o The function ci.pred (a wrapper for predict.glm) added
+
+Changes in 1.1.66
+
+o A crr.Lexis method has been added to simplify the use of the
+  Fine-Gray model when data are set up in a Lexis object.
+
+o ci.lin and ci.exp now recognises crr objects.
+
+o A wrapper, ci.pred, for predict.glm has been added, it returns
+  predictions with confidence intervals.
+
 Changes in 1.1.65
 
 o Despite the note, dropped rows from construction of a Lexis objects

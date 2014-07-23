@@ -17,6 +17,9 @@ if( sample ) require( MASS )
 if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg","clogistic","cch") ) ) ) {
        cf <- coef( obj )
       vcv <- vcov( obj )
+} else if( inherits( obj, c("crr") ) ) {
+       cf <- obj$coef
+      vcv <- obj$var
 } else if( inherits( obj, c("lme") ) ) {
        cf <- fixed.effects( obj )
       vcv <- vcov( obj )
@@ -201,4 +204,16 @@ if( Exp )
 ci.lin( ..., Exp=TRUE )[,5:7,drop=FALSE]
 else
 ci.lin( ..., Exp=FALSE )[,-(2:4),drop=FALSE]
+}
+
+# Wrapper for predict.lm / predict.glm
+ci.pred <-
+function( obj, newdata,
+         Exp = TRUE,
+       alpha = 0.05,
+          df = Inf )
+{
+zz <- predict( obj, newdata=newdata, se.fit=TRUE, type="link" )
+zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha, df=df )
+if( Exp ) exp( zz ) else zz
 }

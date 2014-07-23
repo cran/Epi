@@ -4,6 +4,7 @@
 \alias{transform.stacked.Lexis}
 \alias{factorize}
 \alias{factorize.Lexis}
+\alias{levels.Lexis}
 \title{Transform a Lexis (or stacked.Lexis) objects}
 \description{
   Modify a Lexis object.
@@ -12,6 +13,7 @@
 %transform(`_data`, \dots)
 \method{transform}{Lexis}( `_data`, \dots)
 \method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
+\method{levels}{Lexis}( x )
 \method{factorize}{Lexis}( x, states, print = TRUE, \dots )
 \method{transform}{stacked.Lexis}( `_data`, \dots)
 }
@@ -44,6 +46,9 @@
   }
 \value{
   A transformed \code{Lexis} object.
+
+  The function \code{levels} returns the names of the states (levels of
+  the factors \code{lex.Cst} and \code{lex.Xst}.
   }
 \author{Martyn Plummer, Bendix Carstensen}
 \seealso{\code{\link{Lexis}},
@@ -60,6 +65,7 @@ nic <- Lexis( data = nickel,
     ## Lung cancer deaths are coded 2 and other deaths are coded 1
        exit.status = ( (icd > 0) + (icd \%in\% c(162,163)) ) )
 str( nic )
+levels( nic )
 nit <- transform( nic, cumex = exposure*(agein-age1st) )
 str( nit )
 ## It is still a Lexis object!

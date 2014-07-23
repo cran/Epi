@@ -1,0 +1,754 @@
+
+%\VignetteIndexEntry{Follow-up data with the Epi package}
+\documentclass[a4paper,twoside,12pt]{article}
+
+\usepackage[english]{babel}
+\usepackage{booktabs,rotating,graphicx,amsmath,verbatim,fancyhdr,Sweave}
+\usepackage[colorlinks,linkcolor=red,urlcolor=blue]{hyperref}
+\newcommand{\R}{\textsf{\bf R}}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.9}
+\DeclareGraphicsExtensions{.pdf,.jpg}
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
+\oddsidemargin 1mm
+\evensidemargin 1mm
+\textwidth 160mm
+\textheight 230mm
+\topmargin -5mm
+\headheight 8mm
+\headsep 5mm
+\footskip 15mm
+
+\begin{document}
+
+\raggedleft
+\pagestyle{empty}
+\vspace*{0.1\textheight}
+\Huge
+{\bf Follow-up data with the\\ \texttt{Epi} package}
+\noindent\rule[-1ex]{\textwidth}{5pt}\\[2.5ex]
+\Large
+Spring 2009.
+\vfill
+\normalsize
+\begin{tabular}{rl}
+ Michael Hills & Retired \\
+               & Highgate, London \\[1em]
+Martyn Plummer & International Agency for Research on Cancer, Lyon\\
+               & \texttt{plummer@iarc.fr} \\[1em]
+Bendix Carstensen & Steno Diabetes Center, Gentofte, Denmark\\
+                  & \small \& Department of Biostatistics,
+                    University of Copenhagen\\
+                  & \normalsize \texttt{bxc@steno.dk} \\
+                  & \url{www.pubhealth.ku.dk/~bxc}
+\end{tabular}
+\normalsize
+\newpage
+\raggedright
+\parindent 3ex
+\parskip 0ex
+\tableofcontents
+\cleardoublepage
+\setcounter{page}{1}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection #1}{\thesection \ #1}}
+\fancyhead[OL]{\sl Follow-up data with the \texttt{Epi} package.}
+\fancyhead[ER]{\sl \rightmark}
+\fancyhead[EL,OR]{\bf \thepage}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0.1pt}
+
+\begin{Schunk}
+\begin{Sinput}
+> library(Epi)
+> print( sessionInfo(), l=F )
+\end{Sinput}
+\begin{Soutput}
+R version 3.1.0 (2014-04-10)
+Platform: i386-w64-mingw32/i386 (32-bit)
+
+attached base packages:
+[1] utils     datasets  graphics  grDevices stats     methods   base     
+
+other attached packages:
+[1] Epi_1.1.64     foreign_0.8-61
+
+loaded via a namespace (and not attached):
+[1] tools_3.1.0
+\end{Soutput}
+\end{Schunk}
+
+\section{Follow-up data in the \texttt{Epi} package}
+
+In the \texttt{Epi}-package, follow-up data is represented by adding
+some extra variables to a dataframe. Such a dataframe is called a
+\texttt{Lexis} object. The tools for handling follow-up data then use
+the structure of this for special plots, tabulations etc.
+
+Follow-up data basically consists of a time of entry, a time of exit
+and an indication of the status at exit (normally either ``alive'' or
+``dead''). Implicitly is also assumed a status \emph{during} the
+follow-up (usually ``alive'').
+
+\begin{figure}[htbp]
+  \centering
+\setlength{\unitlength}{1pt}
+\begin{picture}(210,70)(0,75)
+%\scriptsize
+\thicklines
+ \put(  0,80){\makebox(0,0)[r]{Age-scale}}
+ \put( 50,80){\line(1,0){150}}
+ \put( 50,80){\line(0,1){5}}
+ \put(100,80){\line(0,1){5}}
+ \put(150,80){\line(0,1){5}}
+ \put(200,80){\line(0,1){5}}
+ \put( 50,77){\makebox(0,0)[t]{35}}
+ \put(100,77){\makebox(0,0)[t]{40}}
+ \put(150,77){\makebox(0,0)[t]{45}}
+ \put(200,77){\makebox(0,0)[t]{50}}
+
+ \put(  0,115){\makebox(0,0)[r]{Follow-up}}
+
+ \put( 80,105){\makebox(0,0)[r]{\small Two}}
+ \put( 90,105){\line(1,0){87}}
+ \put( 90,100){\line(0,1){10}}
+ \put(100,100){\line(0,1){10}}
+ \put(150,100){\line(0,1){10}}
+ \put(180,105){\circle{6}}
+ \put( 95,110){\makebox(0,0)[b]{1}}
+ \put(125,110){\makebox(0,0)[b]{5}}
+ \put(165,110){\makebox(0,0)[b]{3}}
+
+ \put( 50,130){\makebox(0,0)[r]{\small One}}
+ \put( 60,130){\line(1,0){70}}
+ \put( 60,125){\line(0,1){10}}
+ \put(100,125){\line(0,1){10}}
+ \put(130,130){\circle*{6}}
+ \put( 80,135){\makebox(0,0)[b]{4}}
+ \put(115,135){\makebox(0,0)[b]{3}}
+\end{picture}
+  \caption{\it Follow-up of two persons}
+  \label{fig:fu2}
+\end{figure}
+
+\section{Timescales}
+
+A timescale is a variable that varies deterministically \emph{within}
+each person during follow-up, \textit{e.g.}:
+\begin{itemize}
+  \item Age
+  \item Calendar time
+  \item Time since treatment
+  \item Time since relapse
+\end{itemize}
+All timescales advance at the same pace, so the time followed is the
+same on all timescales. Therefore, it suffices to use only the entry
+point on each of the time scale, for example:
+\begin{itemize}
+  \item Age at entry.
+  \item Date of entry.
+  \item Time since treatment (\emph{at} treatment this is 0).
+  \item Time since relapse (\emph{at} relapse this is 0)..
+\end{itemize}
+In the \texttt{Epi} package, follow-up in a cohort is represented in a
+\texttt{Lexis} object.  A \texttt{Lexis} object is a dataframe with a
+bit of extra structure representing the follow-up. For the
+\texttt{nickel} data we would construct a \texttt{Lexis} object by:
+\begin{Schunk}
+\begin{Sinput}
+> data( nickel )
+> nicL <- Lexis( entry = list( per=agein+dob,
++                              age=agein,
++                              tfh=agein-age1st ),
++                 exit = list( age=ageout ),
++          exit.status = ( icd %in% c(162,163) )*1,
++                 data = nickel )
+\end{Sinput}
+\end{Schunk}
+The \texttt{entry} argument is a \emph{named} list with the entry
+points on each of the timescales we want to use. It defines the names
+of the timescales and the entry points. The \texttt{exit} argument
+gives the exit time on \emph{one} of the timescales, so the name of
+the element in this list must match one of the neames of the
+\texttt{entry} list. This is sufficient, because the follow-up time on
+all time scales is the same, in this case \texttt{ageout - agein}. Now
+take a look at the result:
+\begin{Schunk}
+\begin{Sinput}
+> str( nickel )
+\end{Sinput}
+\begin{Soutput}
+'data.frame':	679 obs. of  7 variables:
+ $ id      : num  3 4 6 8 9 10 15 16 17 18 ...
+ $ icd     : num  0 162 163 527 150 163 334 160 420 12 ...
+ $ exposure: num  5 5 10 9 0 2 0 0.5 0 0 ...
+ $ dob     : num  1889 1886 1881 1886 1880 ...
+ $ age1st  : num  17.5 23.2 25.2 24.7 30 ...
+ $ agein   : num  45.2 48.3 53 47.9 54.7 ...
+ $ ageout  : num  93 63.3 54.2 69.7 76.8 ...
+\end{Soutput}
+\begin{Sinput}
+> str( nicL )
+\end{Sinput}
+\begin{Soutput}
+Classes 'Lexis' and 'data.frame':	679 obs. of  14 variables:
+ $ per     : num  1934 1934 1934 1934 1934 ...
+ $ age     : num  45.2 48.3 53 47.9 54.7 ...
+ $ tfh     : num  27.7 25.1 27.7 23.2 24.8 ...
+ $ lex.dur : num  47.75 15 1.17 21.77 22.1 ...
+ $ lex.Cst : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ lex.Xst : num  0 1 1 0 0 1 0 0 0 0 ...
+ $ lex.id  : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ id      : num  3 4 6 8 9 10 15 16 17 18 ...
+ $ icd     : num  0 162 163 527 150 163 334 160 420 12 ...
+ $ exposure: num  5 5 10 9 0 2 0 0.5 0 0 ...
+ $ dob     : num  1889 1886 1881 1886 1880 ...
+ $ age1st  : num  17.5 23.2 25.2 24.7 30 ...
+ $ agein   : num  45.2 48.3 53 47.9 54.7 ...
+ $ ageout  : num  93 63.3 54.2 69.7 76.8 ...
+ - attr(*, "time.scales")= chr  "per" "age" "tfh"
+ - attr(*, "time.since")= chr  "" "" ""
+ - attr(*, "breaks")=List of 3
+  ..$ per: NULL
+  ..$ age: NULL
+  ..$ tfh: NULL
+\end{Soutput}
+\begin{Sinput}
+> head( nicL )
+\end{Sinput}
+\begin{Soutput}
+       per     age     tfh lex.dur lex.Cst lex.Xst lex.id id icd exposure
+1 1934.246 45.2273 27.7465 47.7535       0       0      1  3   0        5
+2 1934.246 48.2684 25.0820 15.0028       0       1      2  4 162        5
+3 1934.246 52.9917 27.7465  1.1727       0       1      3  6 163       10
+4 1934.246 47.9067 23.1861 21.7727       0       0      4  8 527        9
+5 1934.246 54.7465 24.7890 22.0977       0       0      5  9 150        0
+6 1934.246 44.3314 23.0437 18.2099       0       1      6 10 163        2
+       dob  age1st   agein  ageout
+1 1889.019 17.4808 45.2273 92.9808
+2 1885.978 23.1864 48.2684 63.2712
+3 1881.255 25.2452 52.9917 54.1644
+4 1886.340 24.7206 47.9067 69.6794
+5 1879.500 29.9575 54.7465 76.8442
+6 1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\end{Schunk}
+The \texttt{Lexis} object \texttt{nicL} has a variable for each
+timescale which is the entry point on this timescale. The follow-up
+time is in the variable \texttt{lex.dur} (\textbf{dur}ation).
+
+There is a \texttt{summary} function for \texttt{Lexis} objects that
+list the numer of transitions and records as well as the total
+follow-up time:
+\begin{Schunk}
+\begin{Sinput}
+> summary( nicL )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From   0   1  Records:  Events: Risk time:  Persons:
+   0 542 137       679      137   15348.06       679
+\end{Soutput}
+\end{Schunk}
+We defined the exit status to be death from lung cancer (ICD7
+162,163), i.e. this variable is 1 if follow-up ended with a death from
+this cause. If follow-up ended alive or by death from another cause,
+the exit status is coded 0, i.e. as a censoring.
+
+Note that the exit status is in the variable \texttt{lex.Xst}
+(e\textbf{X}it \textbf{st}atus. The variable \texttt{lex.Cst} is the
+state where the follow-up takes place (\textbf{C}urrent
+\textbf{st}atus), in this case 0 (alive).
+
+It is possible to get a visualization of the follow-up along the
+timescales chosen by using the \texttt{plot} method for \texttt{Lexis}
+objects. \texttt{nicL} is an object of \emph{class} \texttt{Lexis}, so
+using the function \texttt{plot()} on it means that \R\ will look for
+the function \texttt{plot.Lexis} and use this function.
+\begin{Schunk}
+\begin{Sinput}
+> plot( nicL )
+\end{Sinput}
+\end{Schunk}
+The function allows a lot of control over the output, and a
+\texttt{points.Lexis} function allows plotting of the endpoints of
+follow-up:
+\begin{Schunk}
+\begin{Sinput}
+> par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
+> plot( nicL, 1:2, lwd=1, col=c("blue","red")[(nicL$exp>0)+1],
++       grid=TRUE, lty.grid=1, col.grid=gray(0.7),
++       xlim=1900+c(0,90), xaxs="i",
++       ylim=  10+c(0,90), yaxs="i", las=1 )
+> points( nicL, 1:2, pch=c(NA,3)[nicL$lex.Xst+1],
++         col="lightgray", lwd=3, cex=1.5 )
+> points( nicL, 1:2, pch=c(NA,3)[nicL$lex.Xst+1],
++         col=c("blue","red")[(nicL$exp>0)+1], lwd=1, cex=1.5 )
+\end{Sinput}
+\end{Schunk}
+The results of these two plotting commands are in figure \ref{fig:Lexis-diagram}.
+\begin{figure}[tb]
+\centering
+\label{fig:Lexis-diagram}
+\includegraphics[width=0.39\textwidth]{Follow-up-nicL1}
+\includegraphics[width=0.59\textwidth]{Follow-up-nicL2}
+\caption{\it Lexis diagram of the \texttt{nickel} dataset, left panel
+  the default version, the right one with bells
+  and whistles. The red lines are for persons with exposure$>0$, so it
+  is pretty evident that the oldest ones are the exposed part of the
+  cohort.}
+\end{figure}
+
+\section{Splitting the follow-up time along a timescale}
+
+The follow-up time in a cohort can be subdivided by for example
+current age. This is achieved by the \texttt{splitLexis} (note that it
+is \emph{not} called \texttt{split.Lexis}). This requires that the
+timescale and the breakpoints on this timescale are supplied. Try:
+\begin{Schunk}
+\begin{Sinput}
+> nicS1 <- splitLexis( nicL, "age", breaks=seq(0,100,10) )
+> summary( nicL )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From   0   1  Records:  Events: Risk time:  Persons:
+   0 542 137       679      137   15348.06       679
+\end{Soutput}
+\begin{Sinput}
+> summary( nicS1 )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From    0   1  Records:  Events: Risk time:  Persons:
+   0 2073 137      2210      137   15348.06       679
+\end{Soutput}
+\end{Schunk}
+So we see that the number of events and the amount of follow-up is the
+same in the two datasets; only the number of records differ.
+
+To see how records are split for each individual, it is useful to list
+the results for a few individuals:
+\begin{Schunk}
+\begin{Sinput}
+> round( subset( nicS1, id %in% 8:10 ), 2 )
+\end{Sinput}
+\begin{Soutput}
+   lex.id     per   age   tfh lex.dur lex.Cst lex.Xst id icd exposure     dob
+11      4 1934.25 47.91 23.19    2.09       0       0  8 527        9 1886.34
+12      4 1936.34 50.00 25.28   10.00       0       0  8 527        9 1886.34
+13      4 1946.34 60.00 35.28    9.68       0       0  8 527        9 1886.34
+14      5 1934.25 54.75 24.79    5.25       0       0  9 150        0 1879.50
+15      5 1939.50 60.00 30.04   10.00       0       0  9 150        0 1879.50
+16      5 1949.50 70.00 40.04    6.84       0       0  9 150        0 1879.50
+17      6 1934.25 44.33 23.04    5.67       0       0 10 163        2 1889.91
+18      6 1939.91 50.00 28.71   10.00       0       0 10 163        2 1889.91
+19      6 1949.91 60.00 38.71    2.54       0       1 10 163        2 1889.91
+   age1st agein ageout
+11  24.72 47.91  69.68
+12  24.72 47.91  69.68
+13  24.72 47.91  69.68
+14  29.96 54.75  76.84
+15  29.96 54.75  76.84
+16  29.96 54.75  76.84
+17  21.29 44.33  62.54
+18  21.29 44.33  62.54
+19  21.29 44.33  62.54
+\end{Soutput}
+\end{Schunk}
+The resulting object, \texttt{nicS1}, is again a \texttt{Lexis}
+object, and so follow-up may be split further along another
+timescale. Try this and list the results for individuals 8, 9 and 10 again:
+\begin{Schunk}
+\begin{Sinput}
+> nicS2 <- splitLexis( nicS1, "tfh", breaks=c(0,1,5,10,20,30,100) )
+> round( subset( nicS2, id %in% 8:10 ), 2 )
+\end{Sinput}
+\begin{Soutput}
+   lex.id     per   age   tfh lex.dur lex.Cst lex.Xst id icd exposure     dob
+13      4 1934.25 47.91 23.19    2.09       0       0  8 527        9 1886.34
+14      4 1936.34 50.00 25.28    4.72       0       0  8 527        9 1886.34
+15      4 1941.06 54.72 30.00    5.28       0       0  8 527        9 1886.34
+16      4 1946.34 60.00 35.28    9.68       0       0  8 527        9 1886.34
+17      5 1934.25 54.75 24.79    5.21       0       0  9 150        0 1879.50
+18      5 1939.46 59.96 30.00    0.04       0       0  9 150        0 1879.50
+19      5 1939.50 60.00 30.04   10.00       0       0  9 150        0 1879.50
+20      5 1949.50 70.00 40.04    6.84       0       0  9 150        0 1879.50
+21      6 1934.25 44.33 23.04    5.67       0       0 10 163        2 1889.91
+22      6 1939.91 50.00 28.71    1.29       0       0 10 163        2 1889.91
+23      6 1941.20 51.29 30.00    8.71       0       0 10 163        2 1889.91
+24      6 1949.91 60.00 38.71    2.54       0       1 10 163        2 1889.91
+   age1st agein ageout
+13  24.72 47.91  69.68
+14  24.72 47.91  69.68
+15  24.72 47.91  69.68
+16  24.72 47.91  69.68
+17  29.96 54.75  76.84
+18  29.96 54.75  76.84
+19  29.96 54.75  76.84
+20  29.96 54.75  76.84
+21  21.29 44.33  62.54
+22  21.29 44.33  62.54
+23  21.29 44.33  62.54
+24  21.29 44.33  62.54
+\end{Soutput}
+\end{Schunk}
+If we want to model the effect of these timescales we will for each
+interval use either the value of the left endpoint in each interval or
+the middle. There is a function \texttt{timeBand} which returns these.
+Try:
+\begin{Schunk}
+\begin{Sinput}
+> timeBand( nicS2, "age", "middle" )[1:20]
+\end{Sinput}
+\begin{Soutput}
+ [1] 45 45 55 65 75 85 95 45 55 55 65 55 45 55 55 65 55 55 65 75
+\end{Soutput}
+\begin{Sinput}
+> # For nice printing and column labelling use the data.frame() function:
+> data.frame( nicS2[,c("id","lex.id","per","age","tfh","lex.dur")],
++             mid.age=timeBand( nicS2, "age", "middle" ),
++             mid.tfh=timeBand( nicS2, "tfh", "middle" ) )[1:20,]
+\end{Sinput}
+\begin{Soutput}
+   id lex.id      per     age     tfh lex.dur mid.age mid.tfh
+1   3      1 1934.246 45.2273 27.7465  2.2535      45      25
+2   3      1 1936.500 47.4808 30.0000  2.5192      45      65
+3   3      1 1939.019 50.0000 32.5192 10.0000      55      65
+4   3      1 1949.019 60.0000 42.5192 10.0000      65      65
+5   3      1 1959.019 70.0000 52.5192 10.0000      75      65
+6   3      1 1969.019 80.0000 62.5192 10.0000      85      65
+7   3      1 1979.019 90.0000 72.5192  2.9808      95      65
+8   4      2 1934.246 48.2684 25.0820  1.7316      45      25
+9   4      2 1935.978 50.0000 26.8136  3.1864      55      25
+10  4      2 1939.164 53.1864 30.0000  6.8136      55      65
+11  4      2 1945.978 60.0000 36.8136  3.2712      65      65
+12  6      3 1934.246 52.9917 27.7465  1.1727      55      25
+13  8      4 1934.246 47.9067 23.1861  2.0933      45      25
+14  8      4 1936.340 50.0000 25.2794  4.7206      55      25
+15  8      4 1941.060 54.7206 30.0000  5.2794      55      65
+16  8      4 1946.340 60.0000 35.2794  9.6794      65      65
+17  9      5 1934.246 54.7465 24.7890  5.2110      55      25
+18  9      5 1939.457 59.9575 30.0000  0.0425      55      65
+19  9      5 1939.500 60.0000 30.0425 10.0000      65      65
+20  9      5 1949.500 70.0000 40.0425  6.8442      75      65
+\end{Soutput}
+\end{Schunk}
+Note that these are the midpoints of the intervals defined by
+\texttt{breaks=}, \emph{not} the midpoints of the actual follow-up
+intervals. This is because the variable to be used in modelling must
+be independent of the consoring and mortality pattern --- it should
+only depend on the chosen grouping of the timescale.
+
+\section{Splitting time at a specific date}
+
+If we have a recording of the date of a specific event as for example
+recovery or relapse, we may classify follow-up time as being before of
+after this intermediate event. This is achieved with the function
+\texttt{cutLexis}, which takes three arguments: the time point, the
+timescale, and the value of the (new) state following the date.
+
+Now we define the age for the nickel vorkers where the cumulative
+exposure exceeds 50 exposure years:
+\begin{Schunk}
+\begin{Sinput}
+> subset( nicL, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+       per     age     tfh lex.dur lex.Cst lex.Xst lex.id id icd exposure
+4 1934.246 47.9067 23.1861 21.7727       0       0      4  8 527        9
+5 1934.246 54.7465 24.7890 22.0977       0       0      5  9 150        0
+6 1934.246 44.3314 23.0437 18.2099       0       1      6 10 163        2
+       dob  age1st   agein  ageout
+4 1886.340 24.7206 47.9067 69.6794
+5 1879.500 29.9575 54.7465 76.8442
+6 1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\begin{Sinput}
+> agehi <- nicL$age1st + 50 / nicL$exposure
+> nicC <- cutLexis( data=nicL, cut=agehi, timescale="age",
++                   new.state=2, precursor.states=0 )
+> subset( nicC, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+          per     age     tfh lex.dur lex.Cst lex.Xst lex.id id icd exposure
+4100 1934.246 47.9067 23.1861 21.7727       2       2      4  8 527        9
+5    1934.246 54.7465 24.7890 22.0977       0       0      5  9 150        0
+6    1934.246 44.3314 23.0437  1.9563       0       2      6 10 163        2
+680  1936.203 46.2877 25.0000 16.2536       2       1      6 10 163        2
+          dob  age1st   agein  ageout
+4100 1886.340 24.7206 47.9067 69.6794
+5    1879.500 29.9575 54.7465 76.8442
+6    1889.915 21.2877 44.3314 62.5413
+680  1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\end{Schunk}
+(The \texttt{precursor.states=} argument is explained below).
+Note that individual 6 has had his follow-up split at age 25 where 50
+exposure-years were attained. This could also have been achieved in
+the split dataset \texttt{nicS2} instead of \texttt{nicL}, try:
+\begin{Schunk}
+\begin{Sinput}
+> subset( nicS2, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+   lex.id      per     age     tfh lex.dur lex.Cst lex.Xst id icd exposure
+13      4 1934.246 47.9067 23.1861  2.0933       0       0  8 527        9
+14      4 1936.340 50.0000 25.2794  4.7206       0       0  8 527        9
+15      4 1941.060 54.7206 30.0000  5.2794       0       0  8 527        9
+16      4 1946.340 60.0000 35.2794  9.6794       0       0  8 527        9
+17      5 1934.246 54.7465 24.7890  5.2110       0       0  9 150        0
+18      5 1939.457 59.9575 30.0000  0.0425       0       0  9 150        0
+19      5 1939.500 60.0000 30.0425 10.0000       0       0  9 150        0
+20      5 1949.500 70.0000 40.0425  6.8442       0       0  9 150        0
+21      6 1934.246 44.3314 23.0437  5.6686       0       0 10 163        2
+22      6 1939.915 50.0000 28.7123  1.2877       0       0 10 163        2
+23      6 1941.203 51.2877 30.0000  8.7123       0       0 10 163        2
+24      6 1949.915 60.0000 38.7123  2.5413       0       1 10 163        2
+        dob  age1st   agein  ageout
+13 1886.340 24.7206 47.9067 69.6794
+14 1886.340 24.7206 47.9067 69.6794
+15 1886.340 24.7206 47.9067 69.6794
+16 1886.340 24.7206 47.9067 69.6794
+17 1879.500 29.9575 54.7465 76.8442
+18 1879.500 29.9575 54.7465 76.8442
+19 1879.500 29.9575 54.7465 76.8442
+20 1879.500 29.9575 54.7465 76.8442
+21 1889.915 21.2877 44.3314 62.5413
+22 1889.915 21.2877 44.3314 62.5413
+23 1889.915 21.2877 44.3314 62.5413
+24 1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\begin{Sinput}
+> agehi <- nicS2$age1st + 50 / nicS2$exposure
+> nicS2C <- cutLexis( data=nicS2, cut=agehi, timescale="age",
++                     new.state=2, precursor.states=0 )
+> subset( nicS2C, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+     lex.id      per     age     tfh lex.dur lex.Cst lex.Xst id icd exposure
+3142      4 1934.246 47.9067 23.1861  2.0933       2       2  8 527        9
+3143      4 1936.340 50.0000 25.2794  4.7206       2       2  8 527        9
+3144      4 1941.060 54.7206 30.0000  5.2794       2       2  8 527        9
+3145      4 1946.340 60.0000 35.2794  9.6794       2       2  8 527        9
+17        5 1934.246 54.7465 24.7890  5.2110       0       0  9 150        0
+18        5 1939.457 59.9575 30.0000  0.0425       0       0  9 150        0
+19        5 1939.500 60.0000 30.0425 10.0000       0       0  9 150        0
+20        5 1949.500 70.0000 40.0425  6.8442       0       0  9 150        0
+21        6 1934.246 44.3314 23.0437  1.9563       0       2 10 163        2
+3150      6 1936.203 46.2877 25.0000  3.7123       2       2 10 163        2
+3151      6 1939.915 50.0000 28.7123  1.2877       2       2 10 163        2
+3152      6 1941.203 51.2877 30.0000  8.7123       2       2 10 163        2
+3153      6 1949.915 60.0000 38.7123  2.5413       2       1 10 163        2
+          dob  age1st   agein  ageout
+3142 1886.340 24.7206 47.9067 69.6794
+3143 1886.340 24.7206 47.9067 69.6794
+3144 1886.340 24.7206 47.9067 69.6794
+3145 1886.340 24.7206 47.9067 69.6794
+17   1879.500 29.9575 54.7465 76.8442
+18   1879.500 29.9575 54.7465 76.8442
+19   1879.500 29.9575 54.7465 76.8442
+20   1879.500 29.9575 54.7465 76.8442
+21   1889.915 21.2877 44.3314 62.5413
+3150 1889.915 21.2877 44.3314 62.5413
+3151 1889.915 21.2877 44.3314 62.5413
+3152 1889.915 21.2877 44.3314 62.5413
+3153 1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\end{Schunk}
+Note that follow-up subsequent to the event is classified as being
+in state 2, but that the final transition to state 1 (death from lung
+cancer) is preserved. This is the point of the \texttt{precursor.states=}
+argument. It names the states (in this case 0, ``Alive'') that will be
+over-witten by \texttt{new.state} (in this case state 2, ``High
+exposure''). Clearly, state 1 (``Dead'') should not be updated even if
+it is after the time where the persons moves to state 2. In other
+words, only state 0 is a precursor to state 2, state 1 is always
+subsequent to state 2.
+
+Note if the intermediate event is to be used as a time-dependent
+variable in a Cox-model, then \texttt{lex.Cst} should be used as the
+time-dependent variable, and \texttt{lex.Xst==1} as the event.
+
+\section{Competing risks --- multiple types of events}
+
+If we want to consider death from lung cancer and death from other
+causes as separate events we can code these as for example 1 and 2.
+\begin{Schunk}
+\begin{Sinput}
+> data( nickel )
+> nicL <- Lexis( entry = list( per=agein+dob,
++                              age=agein,
++                              tfh=agein-age1st ),
++                 exit = list( age=ageout ),
++          exit.status = ( icd > 0 ) + ( icd %in% c(162,163) ),
++                 data = nickel )
+> summary( nicL )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From  0   1   2  Records:  Events: Risk time:  Persons:
+   0 47 495 137       679      632   15348.06       679
+\end{Soutput}
+\begin{Sinput}
+> subset( nicL, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+       per     age     tfh lex.dur lex.Cst lex.Xst lex.id id icd exposure
+4 1934.246 47.9067 23.1861 21.7727       0       1      4  8 527        9
+5 1934.246 54.7465 24.7890 22.0977       0       1      5  9 150        0
+6 1934.246 44.3314 23.0437 18.2099       0       2      6 10 163        2
+       dob  age1st   agein  ageout
+4 1886.340 24.7206 47.9067 69.6794
+5 1879.500 29.9575 54.7465 76.8442
+6 1889.915 21.2877 44.3314 62.5413
+\end{Soutput}
+\end{Schunk}
+If we want to label the states, we can enter the names of these in the
+\texttt{states} parameter, try for example:
+\begin{Schunk}
+\begin{Sinput}
+> nicL <- Lexis( entry = list( per=agein+dob,
++                              age=agein,
++                              tfh=agein-age1st ),
++                 exit = list( age=ageout ),
++          exit.status = ( icd > 0 ) + ( icd %in% c(162,163) ),
++                 data = nickel,
++               states = c("Alive","D.oth","D.lung") )
+> summary( nicL )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From    Alive D.oth D.lung  Records:  Events: Risk time:  Persons:
+  Alive    47   495    137       679      632   15348.06       679
+\end{Soutput}
+\end{Schunk}
+
+Note that the \texttt{Lexis} function automatically assumes that all
+persons enter in the first level (given in the \texttt{states=}
+argument)
+
+When we cut at a date as in this case, the date where cumulative
+exposure exceeds 50 exposure-years, we get the follow-up \emph{after}
+the date classified as being in the new state if the exit
+(\texttt{lex.Xst}) was to a state we defined as one of the
+\texttt{precursor.states}:
+\begin{Schunk}
+\begin{Sinput}
+> nicL$agehi <- nicL$age1st + 50 / nicL$exposure
+> nicC <- cutLexis( data = nicL,
++                    cut = nicL$agehi,
++              timescale = "age",
++              new.state = "HiExp",
++       precursor.states = "Alive" )
+> subset( nicC, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+          per     age     tfh lex.dur lex.Cst lex.Xst lex.id id icd exposure
+4100 1934.246 47.9067 23.1861 21.7727   HiExp   D.oth      4  8 527        9
+5    1934.246 54.7465 24.7890 22.0977   Alive   D.oth      5  9 150        0
+6    1934.246 44.3314 23.0437  1.9563   Alive   HiExp      6 10 163        2
+680  1936.203 46.2877 25.0000 16.2536   HiExp  D.lung      6 10 163        2
+          dob  age1st   agein  ageout    agehi
+4100 1886.340 24.7206 47.9067 69.6794 30.27616
+5    1879.500 29.9575 54.7465 76.8442      Inf
+6    1889.915 21.2877 44.3314 62.5413 46.28770
+680  1889.915 21.2877 44.3314 62.5413 46.28770
+\end{Soutput}
+\begin{Sinput}
+> summary( nicC, scale=1000 )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From    Alive HiExp D.oth D.lung  Records:  Events: Risk time:  Persons:
+  Alive    39    83   279     65       466      427      10.77       466
+  HiExp     0     8   216     72       296      288       4.58       296
+  Sum      39    91   495    137       762      715      15.35       679
+\end{Soutput}
+\end{Schunk}
+Note that the persons-years is the same, but that the number of events
+has changed. This is because events are now defined as any transition
+from alive, including the transitions to \texttt{HiExp}.
+
+Also note that (so far) it is necessary to specify the variable with
+the cutpoints in full, using only \texttt{cut=agehi} would give an error.
+
+\subsection{Subdivision of existing states}
+It may be of interest to subdivide the states following the
+intermediate event according to wheter the event has occurred or
+not. That is done by the argument \texttt{split.states=TRUE}.
+
+Moreover, it will also often be of interest to introduce a new
+timescale indicating the time since intermediate event. This can be
+done by the argument \texttt{new.scale=TRUE}, alternatively
+\texttt{new.scale="tfevent"}, as illustrated here:
+\begin{Schunk}
+\begin{Sinput}
+> nicC <- cutLexis( data = nicL,
++                    cut = nicL$agehi,
++              timescale = "age",
++              new.state = "Hi",
++            split.states=TRUE, new.scale=TRUE,
++       precursor.states = "Alive" )
+> subset( nicC, id %in% 8:10 )
+\end{Sinput}
+\begin{Soutput}
+          per     age     tfh   Hi.dur lex.dur lex.Cst    lex.Xst lex.id id icd
+4100 1934.246 47.9067 23.1861 17.63054 21.7727      Hi  D.oth(Hi)      4  8 527
+5    1934.246 54.7465 24.7890       NA 22.0977   Alive      D.oth      5  9 150
+6    1934.246 44.3314 23.0437       NA  1.9563   Alive         Hi      6 10 163
+680  1936.203 46.2877 25.0000  0.00000 16.2536      Hi D.lung(Hi)      6 10 163
+     exposure      dob  age1st   agein  ageout    agehi
+4100        9 1886.340 24.7206 47.9067 69.6794 30.27616
+5           0 1879.500 29.9575 54.7465 76.8442      Inf
+6           2 1889.915 21.2877 44.3314 62.5413 46.28770
+680         2 1889.915 21.2877 44.3314 62.5413 46.28770
+\end{Soutput}
+\begin{Sinput}
+> summary( nicC, scale=1000 )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From    Alive Hi D.oth D.lung D.lung(Hi) D.oth(Hi)  Records:  Events:
+  Alive    39 83   279     65          0         0       466      427
+  Hi        0  8     0      0         72       216       296      288
+  Sum      39 91   279     65         72       216       762      715
+       
+Transitions:
+     To
+From    Risk time:  Persons:
+  Alive      10.77       466
+  Hi          4.58       296
+  Sum        15.35       679
+\end{Soutput}
+\end{Schunk}
+
+\section{Multiple events of the same type (recurrent events)}
+Sometimes more events of the same type are recorded for each person and
+one would then like to count these and put follow-up time in states accordingly.
+Essentially, each set of cutpoints represents progressions from one
+state to the next. Therefore the states should be numbered, and the
+numbering of states subsequently occupied be increased accordingly.
+
+This is a behaviour different from the one outlined above, and it is
+achieved by the argument \texttt{count=TRUE} to
+\texttt{cutLexis}. When \texttt{count} is set to \texttt{TRUE}, the
+value of the arguments \texttt{new.state} and
+\texttt{precursor.states} are ignored.  Actually, when using the
+argument \texttt{count=TRUE}, the function \texttt{countLexis} is
+called, so an alternative is to use this directly.
+
+\end{document}
+
+

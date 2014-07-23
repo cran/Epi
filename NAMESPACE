@@ -14,9 +14,10 @@ lines.apc,
   as.Date.cal.yr,
   ccwc,
   ci.pd,
-  ci.cum,
   ci.lin,
   ci.exp,
+  ci.cum,
+  ci.pred,
   ci.mat,
   lls,
   clear,
@@ -51,6 +52,7 @@ lines.apc,
   print.summary.Lexis,
            splitLexis,
       transform.Lexis,
+         levels.Lexis,
         Relevel.Lexis,
       factorize.Lexis,
              cutLexis,
@@ -62,6 +64,7 @@ lines.apc,
           boxes.MS,
          msdata.Lexis,
             etm.Lexis,
+            crr.Lexis,
              simLexis,
          subset.stacked.Lexis,
       transform.stacked.Lexis,
@@ -127,6 +130,7 @@ S3method(  summary, Lexis)
 S3method(    print, summary.Lexis)
 S3method(transform, Lexis)
 S3method(transform, stacked.Lexis)
+S3method(   levels, Lexis)
 S3method(  Relevel, Lexis)
 S3method(  Relevel, factor)
 S3method(  Relevel, default)

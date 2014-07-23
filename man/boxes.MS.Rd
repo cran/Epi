@@ -32,9 +32,9 @@
    boxarr( b1, b2, offset=FALSE, pos=0.45, ... )
 \method{boxes}{Lexis}( obj,
                     boxpos = FALSE,
-                     wmult = 1.3,
-                     hmult = 1.3*wmult,
-                       cex = 1.5,
+                     wmult = 1.15,
+                     hmult = 1.15,
+                       cex = 1.45,
                     show   = inherits( obj, "Lexis" ),
                     show.Y = show,
                    scale.Y = 1,

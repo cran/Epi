@@ -617,7 +617,7 @@ status <- function(x, at="exit", by.id = FALSE)
    ave( x[,timeScales(x)[1]], x$lex.id, FUN=if(by.id)
                                              switch(at,
                                                     "entry"=min,
-                                                    "exit"=max)
+                                                     "exit"=max)
                                              else I )
   res <- switch(at, "entry"=x$lex.Cst, "exit"=x$lex.Xst)[wh]
   if( by.id ) names( res ) <- x$lex.id[wh]
@@ -682,4 +682,3 @@ transform.Lexis <- function(`_data`, ... )
     attributes(y) <- save.at
     y
 }
-

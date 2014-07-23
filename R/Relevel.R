@@ -1,3 +1,12 @@
+
+# The levels method is already defined (in the utils package)
+# and hence imported in the NAMESPACE file
+levels.Lexis <-
+function( x )
+{
+union( levels(x$lex.Cst), levels(x$lex.Xst) )
+}
+
 # The Relevel method
 Relevel <- function (x, ...) UseMethod("Relevel")
 

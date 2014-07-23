@@ -2,6 +2,7 @@
 \alias{ci.lin}
 \alias{ci.mat}
 \alias{ci.exp}
+\alias{ci.pred}
 \alias{Wald}
 \title{
   Compute linear functions of parameters with standard erros and
@@ -27,6 +28,10 @@ ci.lin( obj,
 ci.exp( ..., Exp = TRUE )
 Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df = Inf )
+ci.pred( obj, newdata,
+         Exp = TRUE,
+       alpha = 0.05,
+          df = Inf )
 }
 \arguments{
   \item{obj}{A model object (of class
@@ -82,6 +87,7 @@ ci.mat( alpha = 0.05, df = Inf )
     be tested by a Wald test. Must have the same length as the selected
     parameter vector.}
   \item{\ldots}{Parameters passed on to \code{ci.lin}.}
+  \item{newdata}{Data frame of covariates where prediction is made.}
   }
 \value{
   \code{ci.lin} returns a matrix with number of rows and row names as
@@ -95,7 +101,7 @@ ci.mat( alpha = 0.05, df = Inf )
   \code{ci.exp} returns only the exponentiated parameter estimates with
   confidence intervals. It is merely a wrapper for \code{ci.lin},
   fishing out the last 3 columns from \code{ci.lin(...,Exp=TRUE)}. If
-  you just want the estimaes and confidnece limits, but not
+  you just want the estimates and confidnece limits, but not
   exponentiated, use \code{ci.exp(...,Exp=FALSE)}.
 
   \code{Wald} computes a Wald test for a subset of (possibly linearly
@@ -112,6 +118,13 @@ ci.mat( alpha = 0.05, df = Inf )
   \code{ci.cum}.
   The 1.96 is replaced by the appropriate quantile from the normal or
   t-distribution when arguments \code{alpha} and/or \code{df} are given.
+
+  \code{ci.pred} returns a 3-column matrix with estimates and upper and
+  lower confidence intervals as columns. This is just a convenient
+  wrapper for \code{predict(obj,se.fit=TRUE)} which returns a rather
+  unhandy structure. The prediction is made in the \code{link} scale,
+  and by default transformed by the exponential, since the most common
+  use for this is for multiplicative Poisson models.
   }
 \author{
   Bendix Carstensen,
