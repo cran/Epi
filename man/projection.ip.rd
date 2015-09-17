@@ -19,7 +19,7 @@ projection.ip(X, M, orth = FALSE, weight = rep(1, nrow(X)))
   length \code{nrow(X)}. }
 }
 \value{
-  A matrix of full rank with columns in \code{span(X)}.
+  A matrix of full rank with columns in \code{span(X)}
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,

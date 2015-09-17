@@ -1,3 +1,38 @@
+Changes in 1.1.71
+
+o Bug from calling lme4::vcov from within ci.lin fixed
+
+Changes in 1.1.70
+
+o Bug in calling lme4::fixef from within ci.lin fixed
+
+o ci.lin with sample=TRUE now samples from the posterior of the
+  parameter vector and then transforms this by the contrast matrix
+  (earlier the sampling was from the posterior of the ctr.mat
+  transformed parameters). 
+
+Changes in 1.1.69
+
+o ci.cum now has an argument ci.Exp (defaults to FALSE) that computes
+  the ci of the cum.haz on the log-scale. This is useful if you want to
+  transform c.i.s to the survival scale and want the c.i.s for the
+  survival function to stay inside [0,1].
+
+o ci.pred updated to automatically use the inverse link for
+  transformation of results. Also now only accepts glm objects.
+  
+o Ns now have arguents ref= and detrend=. ref= allows a reference
+  value to be specified (where the Ns is 0); this is independent of
+  the supplied data. detrend= projects the columns of Ns() on the
+  orthogonal of the variable supplied; this is strongly dependent on
+  the data.
+
+Changes in 1.1.68
+
+o ci.lin has been groomed to use internally (newly, from 1.1.68)
+  defined methods COEF and VCOV to extract coefficients and
+  variance-covariances of these from different types of objects.
+
 Changes in 1.1.67
 
 o The simLexis vignette has been groomed a bit

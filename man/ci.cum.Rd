@@ -13,6 +13,7 @@ ci.cum( obj,
        intl = 1,
       alpha = 0.05,
         Exp = TRUE,
+     ci.Exp = FALSE,
      sample = FALSE )
 }
 \arguments{
@@ -31,17 +32,23 @@ ci.cum( obj,
   \item{alpha}{ Significance level used when computing confidence limits. }
   \item{Exp}{ Should the parameter function be exponentiated before it is
     cumulated?}
+  \item{ci.Exp}{ Should the confidence limits for the cumulative rate be
+  computed on the log-scale, thus ensuring that exp(-cum.rate) is always
+  in [0,1]?}
   \item{sample}{Should a sample of the original parameters be used to
     compute a cumulative rate?}
 }
 \details{
-The purpose of this function is to compute cumulative rate based on a
-model for the rates. If the model is a multiplicative model for the
-rates, the purpose of \code{ctr.mat} is to return a vector of rates or
-log-rates when applied to the coefficients of the model. If log-rates
-are returned from the model, the they should be exponentiated before
-cumulated, and the variances computed accordingly. Since log-linear
-models are the most common the \code{Exp} parameter defaults to TRUE.
+  The purpose of this function is to compute cumulative rate based on a
+  model for the rates. If the model is a multiplicative model for the
+  rates, the purpose of \code{ctr.mat} is to return a vector of rates or
+  log-rates when applied to the coefficients of the model. If log-rates
+  are returned from the model, the they should be exponentiated before
+  cumulated, and the variances computed accordingly. Since the primary
+  use is for log-linear Poisson models the \code{Exp} parameter defaults
+  to TRUE.
+
+  The \code{ci.Exp} argumen ensures that the confidence intervals for
 }
 \value{
    A matrix with 4 columns: Estimate, lower and upper c.i. and standard
@@ -49,7 +56,7 @@ models are the most common the \code{Exp} parameter defaults to TRUE.
    \code{sample} is numeric a matrix with \code{sample} columns is
    returned, each column a cumulative rate based on a random sample from
    the distribution of the parameter estimates.
- }
+}
 \author{
   Bendix Carstensen,
   \url{http://BendixCarstensen.com}

@@ -104,15 +104,26 @@ pState( nSt, perm = 1:ncol(nSt) )
   cumulative transition rates over intervals of length \code{lex.dur}.
 
   The pre-\code{Lexis} object \code{init} must contain values of all
-  variables used in any of the objects in \code{Tr}. Moreover the
+  variables used in any of the objects in \code{Tr}, as well as all
+  timescales - even those not used in the models. Moreover, the
   attributes \code{time.scales} and \code{time.since} must be
   present. The attribute \code{time.since} is a character vector of the
-  same length as \code{time.scales} and an element has value \code{"A"} if
-  the corresponding time scale is defined as "time since entry into
-  state \code{A}", otherwise the value is \code{""}. If not present it will be
-  set to a vector of \code{""}s, which is only OK if no time scales are
-  defined as time since entry to a state.
+  same length as \code{time.scales} and an element has value \code{"A"}
+  if the corresponding time scale is defined as
+  "time since entry into state \code{A}", otherwise the value is
+  \code{""}. If not present it will be set to a vector of \code{""}s,
+  which is only OK if no time scales are defined as time since entry to
+  a state.
 
+  Note that the variables pre-\code{Lexis} object \code{init} must have
+  the same mode and class as in the dataset used for fitting the models
+  --- hence the indexing of rows by brackets in the assignment of values used in
+  the example below - this way the variables have their attributes
+  preserved; using \code{init[,"var"] <-} or \code{init$var <-} replaces
+  the variable, whereas  \code{init[1:4,"var"] <-} or
+  \code{init$var[1:4] <-} replaces values only and prevents you from
+  entering non-existing factor levels etc.
+  
   The function \code{\link{Lexis}} automatically generates an attribute
   \code{time.since}, and \code{\link{cutLexis}} updates it when new time
   scales are defined. Hence, the simplest way of defining a initial

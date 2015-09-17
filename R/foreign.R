@@ -5,8 +5,6 @@ msdata.Lexis <-
 function( obj,
    time.scale = timeScales(obj)[1], ... )
 {
-if( !require( mstate ) )
-  stop( "You do not want this before you have installed the 'mstate' package.\n" )
 tr.mat <- tmat(obj)
 # Essentially a msdata object is a stacked Lexis object with other variable names
 tmp <- stack.Lexis( factorize.Lexis(obj) )
@@ -46,8 +44,6 @@ function( obj,
           ...
          )
 {
-if( !require( etm ) )
-  stop( "You do not want this before you have installed the 'etm' package.\n" )
 dfr <- data.frame( id = obj$lex.id,
                  from = as.character(obj$lex.Cst),
                    to = as.character(obj$lex.Xst),

@@ -5,31 +5,12 @@ function( obj,
          intl = 1,
         alpha = 0.05,
           Exp = TRUE,
+       ci.Exp = FALSE,
        sample = FALSE )
 {
-if( sample ) require( MASS )
 # First extract all the coefficients and the variance-covariance matrix
-#
-if( any( inherits( obj, c("coxph","glm","gls","lm","nls","survreg") ) ) ) {
-       cf <- coef( obj )
-      vcv <- vcov( obj )
-} else if( inherits( obj, c("lme") ) ) {
-       cf <- fixed.effects( obj )
-      vcv <- vcov( obj )
-} else if( inherits( obj, c("mer") ) ) {
-       cf <- fixef( obj )
-      vcv <- as.matrix( vcov( obj ) )
-} else if (inherits(obj, "MIresult")) {
-       cf <- obj$coefficients
-      vcv <- obj$variance
-} else if( inherits( obj, "polr" ) ) {
-       cf <- summary( obj )$coefficients
-      vcv <- vcov( obj )
-} else if( inherits( obj, "gnlm" ) ) {
-       cf <- coef( obj )
-      vcv <- obj$cov
-} else stop( "\"", deparse( substitute( obj ) ), "\" is of class \"",
-              class( obj ), "\" which is not supported." )
+cf  <- COEF( obj )
+vcv <- VCOV( obj )
 
 # Check if the intervals matches ctr.mat
 if( length( intl ) == 1 ) intl <- rep( intl, nrow( ctr.mat ) )
@@ -77,22 +58,30 @@ if( dim( ctr.mat )[2] != length(cf) )
 # If Exp was requested, we take the exponential of the estimates
 # before we cumulate the sum
 if( Exp )
-{
-    ct <- exp( ct )
-    vc <- ( ct[,1] %*% t(ct[,1]) ) * vc
-}
+  {
+  ct <- exp( ct )
+  vc <- ( ct[,1] %*% t(ct[,1]) ) * vc
+  }
 # Here is the cumulation matrix
-    cum.mat <- 1 - upper.tri( diag(ct[,1]) )
-    # Multiply columns of the matrix with interval lengths
-    cum.mat <- t( intl * t( cum.mat ) )
+  cum.mat <- 1 - upper.tri( diag(ct[,1]) )
+  # Multiply columns of the matrix with interval lengths
+  cum.mat <- t( intl * t( cum.mat ) )
 # This is then multiplied to the coefficients
     ct <- cum.mat %*% ct
-    if( sample ) ct
+    if( sample ) return( ct )
     else
-    {
-    vc <- cum.mat %*% vc %*% t( cum.mat )
-    se <- sqrt( diag( vc ) )
-    cum <- cbind( ct, se ) %*% ci.mat( alpha=alpha )
-    cbind( cum, Std.err.=se )
-    }
+      {
+      vc <- cum.mat %*% vc %*% t( cum.mat )
+      se <- sqrt( diag( vc ) )
+      if( !ci.Exp )
+        {
+        cum <- cbind( ct, se ) %*% ci.mat( alpha=alpha )
+        return( cbind( cum, "StdErr"=se ) )
+        }       
+      else
+        {  
+        cum <- exp( cbind( log(ct), se/ct ) %*% ci.mat( alpha=alpha ) )
+        return( cbind( cum, "Erf"=exp( qnorm(1-alpha/2)*se/as.vector(ct) ) ) )
+        } 
+      }
 }

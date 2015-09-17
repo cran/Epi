@@ -115,7 +115,6 @@ else {
         Rc <- MC[abs(P - A - c0) == min(abs(P - A - c0)), , drop = FALSE][1, ]
     }
     if (model == "ns") {
-        require(splines)
         knl <- is.list(npar)
         MA <- if (knl) Ns(A, knots = npar[["A"]] )
               else     Ns(A, knots = quantile( rep(A,D),
@@ -139,7 +138,6 @@ else {
     }
     if (model %in% c("bs", "ls")) {
         deg <- switch(model, ls = 1, bs = 3)
-        require(splines)
         knl <- is.list(npar)
         if (knl) nk <- sapply(npar, length)
         MA <- if (knl) bs(A, knots = npar[["A"]][-c(1,nk[1])],

@@ -1,8 +1,6 @@
 crr.Lexis <-
 function( obj, mod, quiet=FALSE, ... )
 {
-if( !require( cmprsk ) )
-  stop( "You cannot do this before you have installed the 'cmprsk' package.\n" )
 # Model formula to be transmitted
 md <- mod
 # Outcome variable
@@ -16,12 +14,12 @@ mod[2] <- NULL
 # Remember no intercept term
 cv <- model.matrix( mod, data=obj )[,-1]
 # Then do it
-M <- cmprsk::crr( ftime = obj$lex.dur,
-                fstatus = obj$lex.Xst,
-               failcode = fc,
-                cencode = cn,
-                   cov1 = cv,
-                    ... )
+M <- crr( ftime = obj$lex.dur,
+         fstatus = obj$lex.Xst,
+         failcode = fc,
+         cencode = cn,
+         cov1 = cv,
+         ... )
 # A table of the no of transitions
 N <- with( obj, table( Relevel( lex.Xst, c(fc,cc,cn) ) ) )
 names( N ) <- paste( rep( c("Event:"," comp:"," cens:"),

@@ -1,7 +1,7 @@
 Package: Epi
-Version: 1.1.67
-Date: 2014-07-25
-Title: A package for statistical analysis in epidemiology.
+Version: 1.1.71
+Date: 2015-09-14
+Title: A Package for Statistical Analysis in Epidemiology
 Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
                     email = "bxc@steno.dk"),
              person("Martyn", "Plummer", role = "aut",
@@ -9,23 +9,24 @@ Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
              person("Esa", "Laara", role = "ctb"),
              person("Michael", "Hills", role = "ctb"))
 Depends: R (>= 3.0.0), utils
-Suggests: splines, nlme, survival, mstate, etm, MASS, cmprsk
+Imports: cmprsk, etm, splines, MASS, survival
+Suggests: mstate, nlme, lme4
 Description: Functions for demographic and epidemiological analysis in
   the Lexis diagram, i.e. register and cohort follow-up data, in
   particular representation and manipulation of multistate data - the
-  Lexis suite of functions. 
-  Includes interfaces to mstate, etm and cmprsk packages.
+  Lexis suite of functions, which includes interfaces to mstate, etm
+  and cmprsk packages. 
   Also contains functions for Age-Period-Cohort modeling and a
   function for interval censored data and some useful functions for
   tabulation and plotting, as well some epidemiological datasets.
 License: GPL-2
 URL: http://BendixCarstensen.com/Epi/
-Packaged: 2014-07-23 09:10:25 UTC; bxc
+NeedsCompilation: yes
+Packaged: 2015-09-16 18:33:40 UTC; bendix
 Author: Bendix Carstensen [aut, cre],
   Martyn Plummer [aut],
   Esa Laara [ctb],
   Michael Hills [ctb]
 Maintainer: Bendix Carstensen <bxc@steno.dk>
-NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-07-23 12:12:27
+Date/Publication: 2015-09-17 07:50:48
