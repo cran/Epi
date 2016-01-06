@@ -7,10 +7,10 @@
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
   timescales:\\ \texttt{simLexis} in the \texttt{Epi} package}
 \newcommand{\Tit}{Multistate models with multiple timescales}
-\newcommand{\Version}{Version 2.2}
+\newcommand{\Version}{Version 2.3}
 \newcommand{\Dates}{\today}
 \newcommand{\Where}{SDC}
-\newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi}}
+\newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi/simLexis.pdf}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center, Gentofte, Denmark\\
@@ -23,41 +23,55 @@ Bendix Carstensen
 %----------------------------------------------------------------------
 % Packages
 %\usepackage[inline]{showlabels}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[latin1]{inputenc}
 \usepackage[english]{babel}
 \usepackage[font=it,labelfont=normalfont]{caption}
 \usepackage[colorlinks,urlcolor=blue,linkcolor=red]{hyperref}
 \usepackage[ae,hyper]{Rd}
 \usepackage[dvipsnames]{xcolor}
-\usepackage{makeidx,Sweave,floatflt,amsmath,amsfonts,amsbsy,enumitem,verbatim,dcolumn,needspace}
-\usepackage{booktabs,longtable,rotating,graphicx,verbatim,fancyhdr,datetime,afterpage}
+\usepackage[super]{nth}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage{makeidx,Sweave,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
+\usepackage{ifthen,calc,eso-pic,everyshi}
+\usepackage{booktabs,longtable,rotating,graphicx}
+\usepackage{pdfpages,verbatim,fancyhdr,datetime,%
+afterpage}
+\usepackage[abspath]{currfile}
 % \usepackage{times}
 \renewcommand{\textfraction}{0.0}
 \renewcommand{\topfraction}{1.0}
 \renewcommand{\bottomfraction}{1.0}
 \renewcommand{\floatpagefraction}{0.9}
+\DeclareMathOperator{\Pp}{P}
+\providecommand{\pmat}[1]{\Pp\left\{#1\right\}}
+\providecommand{\ptxt}[1]{\Pp\left\{\text{#1}\right\}}
+\providecommand{\dif}{{\,\mathrm d}}
 % \usepackage{mslapa}
+\newenvironment{exercise}[0]{\refstepcounter{exno}
+   \begin{quote}
+   {\bf Exercise \theexno.}}
+   {\end{quote}}
 \definecolor{blaa}{RGB}{99,99,255}
 \DeclareGraphicsExtensions{.pdf,.jpg}
+% Make the Sweave output nicer
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\footnotesize,fontshape=sl,formatcom=\color{Blue}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\footnotesize,formatcom=\color{Maroon},xleftmargin=0em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\footnotesize}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}%
+{\renewcommand{\baselinestretch}{0.85} \vspace{\topsep}}%
+{\renewcommand{\baselinestretch}{1.00} \vspace{\topsep}}
+% \renewenvironment{knitrout}
+% {\renewcommand{\baselinestretch}{0.85}}
+% {\renewcommand{\baselinestretch}{1.00}} % redefined in topreport.tex
 
 %----------------------------------------------------------------------
 % The usual usefuls
-% \input{c:/util/tex/useful.tex}
-\providecommand{\pmat}[1]{\text{\rm P}\left\{#1\right\}}
-\providecommand{\dif}{{\,\mathrm d}}
-% Simple insertion of figures
-\newcommand{\rwpre}{sL}
-\newcommand{\insfig}[3]{
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=#2\textwidth]{\rwpre-#1}
-  \caption{#3}
-  \label{fig:#1}
-\end{figure}}
+% \input{/home/bendix/util/tex/useful.tex}
 
 %----------------------------------------------------------------------
-% Layout of pages
+% Set up layout of pages
 \oddsidemargin 1mm
 \evensidemargin 1mm
 \topmargin -5mm
@@ -73,7 +87,19 @@ Bendix Carstensen
 \renewcommand{\floatpagefraction}{0.9}
 \renewcommand{\headrulewidth}{0.1pt}
 \setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{2}
+
+%----------------------------------------------------------------------
+% How to insert a figure in a .rnw file
+\newcommand{\rwpre}{sL}
+\newcommand{\insfig}[3]{
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=#2\textwidth]{\rwpre-#1}
+  \caption{#3}
+  \label{fig:#1}
+%  \afterpage{\clearpage}
+\end{figure}}
 
 %----------------------------------------------------------------------
 % Here is the document starting with the titlepage
@@ -85,10 +111,10 @@ Bendix Carstensen
 \pagenumbering{roman}
 \pagestyle{plain}
 \thispagestyle{empty}
-\vspace*{0.05\textheight}
+% \vspace*{0.05\textheight}
 \flushright
 % The blank below here is necessary in order not to muck up the
-% linespacing in the title if it has more than 2 lines
+% linespacing in title if it has more than 2 lines
 {\Huge \bfseries \Title
 
 }\ \\[-1.5ex]
@@ -100,6 +126,8 @@ Bendix Carstensen
 \Version \\[1em]
 \normalsize
 Compiled \today,\ \currenttime\\
+% from: \texttt{\currfileabspath}\\[1em]
+% \input{wordcount}
 \normalsize
 \vfill
 \Faculty
@@ -128,6 +156,7 @@ Compiled \today,\ \currenttime\\
 \fancyhead[ER]{\sl \Tit}
 \fancyhead[OR]{\rm \rightmark \quad \bf \thepage}
 \fancyfoot{}
+
 
 %----------------------------------------------------------------------
 % Here comes the substance
@@ -398,12 +427,12 @@ the sum of the deviances from the separate models:
 <<prop-haz>>=
 with( Si, table(lex.Cst) )
 All.Dead <- glm( (lex.Xst %in% c("Dead(Ins)","Dead")) ~
-                                          Ns( Age  , knots=ad.kn ) +
-                                          Ns( DMdur, knots=dd.kn ) +
-                                          lex.Cst +
-                                          I(Per-2000) + sex,
-               family=poisson, offset=log(lex.dur),
-               data = Si )
+                 Ns( Age  , knots=ad.kn ) +
+                 Ns( DMdur, knots=dd.kn ) +
+                 lex.Cst +
+                 I(Per-2000) + sex,
+                 family=poisson, offset=log(lex.dur),
+                 data = Si )
 round( ci.exp( All.Dead ), 3 )
 @
 From the parameter values we would in a simple setting just claim that
@@ -525,12 +554,14 @@ for( aa in 4:7*10 ) for( ii in 1:4 )
             col=rep(c("red","limegreen"),each=3) )
 @ %
 \insfig{mort-int}{0.9}{Estimated mortality rates for male diabetes
-  patients with no insulin (lower sets of curves) and insulin (upper curves),
-  with DM onset in age 40, 50, 60 and 70. The red curves are from
-  the models with separate age effects for persons with and without
-  insulin, and a separate effect of insulin duration. The green curves
-  are from the model with common age-effects and only a time-dependent
-  insulin effect (the classical time-dependent variable approach).}
+  patients with no insulin (lower sets of curves) and insulin (upper
+  curves), with DM onset in age 40, 50, 60 and 70. The red curves are
+  from the models with separate age effects for persons with and
+  without insulin, and a separate effect of insulin duration. The
+  green curves are from the model with common age-effects and only a
+  time-dependent effect of insulin, assuming no effect of insulin
+  duration (the classical time-dependent variable approach). Hence the
+  upper green curve is common for any time of insulin inception.}
 
 From figure \ref{fig:mort-int} we see that there is a substantial
 insulin-duration effect which is not accommodated by the simple model
@@ -554,8 +585,10 @@ models with multiple timescales; all timescales must be represented in
 the predicted rates, only reporting the effect of one timescale,
 conditional on a fixed value of other timescales is misleading since
 all timescales by definition advance at the same pace. For example,
-the age-effect for a fixed value of insulin duration is a misnomer
-since it does not correspond to any real person's follow-up.
+the age-effect for a fixed value of insulin duration really is a
+misnomer since it does not correspond to any real person's follow-up,
+but to the mortality of persons in different ages but with the same
+duration of incuin use.
 
 \section{Input to the \texttt{simLexis} function}
 
@@ -613,23 +646,31 @@ ini
 
 \section{Simulation of the follow-up}
 
-Now we simulate 5000 of each of these persons using the estimated
+Now we simulate 1000 of each of these persons using the estimated
 model. The \texttt{t.range} argument gives the times range where the
 integrated intensities (cumulative rates) are evaluated and where
 linear interpolation is used when simulating transition times. Note
 that this must be given in the same units as \texttt{lex.dur} in the
 \texttt{Lexis} object used for fitting the models for the transitions.
 <<simL>>=
-Nsim <- 500
+set.seed( 52381764 )
+Nsim <- 1000
 system.time( simL <- simLexis( Tr,
                               ini,
                           t.range = 12,
                                 N = Nsim ) )
 @ %
+%% Temp 
+%% <<>>=
+%% source("../../../tmpstore/rbind.Lexis.R")
+%% source("../R/simLexis.R")
+%% lls()
+%% @ 
+%% Temp 
 The result is a \texttt{Lexis} object --- a data frame representing
-the simulated follow-up of 10,000 persons (5000 identical men and 5000
-identical women) according to the rates we estimated from the original
-dataset.
+the simulated follow-up of \Sexpr{2*Nsim} persons (\Sexpr{Nsim}
+identical men and \Sexpr{Nsim} identical women) according to the rates
+we estimated from the original dataset.
 <<sum-simL>>=
 summary( simL, by="sex" )
 @ %

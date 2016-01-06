@@ -1,12 +1,13 @@
 \name{N2Y}
 \alias{N2Y}
 \title{
-Create risk time (Person-Years) in Lexis triangles from population data.
+Create risk time ("Person-Years") in Lexis triangles from population count data.
 }
 \description{
 Data on population size at equidistant dates and age-classes are
 used to estimate person-time at risk in Lexis-triangles, i.e. classes
-classified by age, period AND cohort.
+classified by age, period AND cohort (date of birth). Only works for
+data where age-classes have the same width as the period-intervals.
 }
 \usage{
 N2Y( A, P, N,
@@ -29,7 +30,8 @@ N2Y( A, P, N,
 }
 \value{A data frame with variables \code{A}, \code{P} and \code{Y},
   representing the mean age and period in the Lexis triangles and the
-  person-time in them.
+  person-time in them, respectively. The person-time is in units of the
+  distance between population count dates.
 
   If \code{res.dfr=FALSE} a three-way table classified by the left end
   point of the age-classes and the periods and a factor \code{wh} taking
@@ -40,8 +42,9 @@ N2Y( A, P, N,
   B. Carstensen: Age-Period-Cohort models for the
   Lexis diagram. Statistics in Medicine, 26: 3018-3045, 2007.
 }
-\author{  Bendix Carstensen,
-  \url{BendixCarstensen.com} }
+\author{
+  Bendix Carstensen, \url{BendixCarstensen.com}
+       }
 \seealso{
 \code{\link{splitLexis}}, \code{\link{apc.fit}}
 }
@@ -57,5 +60,20 @@ Nt <- N2Y( data=Nx, return.dfr=TRUE )
 xtabs( Y ~ round(A,2) + round(P,2), data=Nt )
 # Lexis triangles as a 3-dim array
 ftable( N2Y( data=Nx, return.dfr=FALSE ) )
+
+# Calculation of PY for persons born 1970 in 1972
+( N.1.1972 <- subset( Nx, A==1 & P==1972)$N )
+( N.2.1973 <- subset( Nx, A==2 & P==1973)$N )
+N.1.1972/3 + N.2.1973/6
+N.1.1972/6 + N.2.1973/3
+# These number can be found in the following plot:
+
+# Blue numbers are population size at 1 January
+# Red numbers are the computed person-years in Lexis triangles:
+Lexis.diagram(age=c(0,4), date=c(1970,1975), int=1, coh.grid=TRUE )
+with( Nx, text(P,A+0.5,paste(N),srt=90,col="blue") )
+with( Nt, text(P,A,formatC(Y,format="f",digits=1),col="red") )
+text( 1970.5, 2, "Population count 1 January", srt=90, col="blue")
+text( 1974.5, 2, "Person-\nyears", col="red")
 }
 \keyword{Data}

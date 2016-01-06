@@ -6,7 +6,7 @@ function( obj,
    time.scale = timeScales(obj)[1], ... )
 {
 tr.mat <- tmat(obj)
-# Essentially a msdata object is a stacked Lexis object with other variable names
+# Essentially a msdata object is a stacked Lexis object with different variable names
 tmp <- stack.Lexis( factorize.Lexis(obj) )
 lv  <- c( match(timeScales(obj),names(tmp)),
            grep("lex\\."       ,names(tmp)) )

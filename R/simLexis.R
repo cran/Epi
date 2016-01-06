@@ -6,7 +6,8 @@ lint <-
 function( ci, tt, u )
 {
 # Makes a linear interpolation, but does not crash if all ci values are
-# identical, but requires that both ci and tt are non-decreasing
+# identical, but requires that both ci and tt are non-decreasing.
+# ci plays the role of cumulative intensity, tt of time
 if( any( diff(ci)<0 ) | any( diff(tt)<0 ) ) stop("Non-icreasing arguments")
 c.u <- min( c( ci[ci>u], max(ci) ) )
 c.l <- max( c( ci[ci<u], min(ci) ) )
@@ -22,13 +23,13 @@ sim1 <-
 function( rt, time.pts )
 {
 # Simulates a single transition time and state based on the data frame
-# rt with columns lex.id and timescales. The rows in rt are the id,
-# followed by the set of estimated transition rates to the different
-# states reachable from the current one.
+# rt with columns lex.id and timescales. It is assumed that the coumns
+# in in rt are the id, followed by the set of estimated transition
+# rates to the different states reachable from the current one.
 ci <- apply( rbind(0,rt[,-1,drop=FALSE]), 2, cumsum )[1:nrow(rt),,drop=FALSE]
 tt <- uu <- -log( runif(ncol(ci)) )
 for( i in 1:ncol(ci) ) tt[i] <- lint( ci[,i], time.pts, uu[i] )
-# Note this resulting data frame has 1 row
+# Note this resulting data frame has 1 row and is NOT a Lexis object
 data.frame( lex.id  = rt[1,1],
             lex.dur = min(tt,na.rm=TRUE),
             lex.Xst = factor( if( min(tt) < max(time.pts) )
@@ -83,10 +84,11 @@ for( i in 1:length(Tr[[cst]]) )
    if( is.function( Tr[[cst]][[i]] ) )
    rt <- cbind( rt, Tr[[cst]][[i]](prfrm) )
    else
-   stop( "Invalid object supplied as transition, must be either\n",
-         "glm(poisson) or coxph object fitted to a Lexis object or\n",
-         "a function that takes a Lexis object as argument and returns\n",
-         "average rates for each record in the same units as lex.dur.")
+   stop( "Invalid object supplied as transition, elements of the list must be either:\n",
+         "- a glm(poisson) object fitted to a Lexis object\n",
+         "- a coxph object fitted to a Lexis object\n",
+         "- a function that takes a Lexis object as argument and returns\n",
+         "  average rates for each record in the same units as lex.dur.")
    }
 names( rt )[-1] <- names( Tr[[cst]] )
 
@@ -94,11 +96,11 @@ names( rt )[-1] <- names( Tr[[cst]] )
 xx <- match( c("lex.dur","lex.Xst"), names(nd) )
 if( any(!is.na(xx)) ) nd <- nd[,-xx[!is.na(xx)]]
 merge( nd,
-       do.call( "rbind",
-                 lapply( split( rt,
-                                rt$lex.id ),
-                         sim1,
-                         time.pts ) ),
+       do.call( rbind,
+                lapply( split( rt,
+                               rt$lex.id ),
+                        sim1,
+                        time.pts ) ),
        by="lex.id" )
 }
 
@@ -195,7 +197,7 @@ tr.st <- names( Tr )
 # Set up a NULL object to hold the follow-up records
 sf <- NULL
 
-# Take only those who start in a transient state
+# Take as initiators only those who start in a transient state
 nxt <- init[init$lex.Cst %in% tr.st,]
 
 # If some are not in a transient state then say so
@@ -216,12 +218,12 @@ if( nrow(nxt) < nrow(init) )
 # that till all are in absorbing states or censored
 while( nrow(nxt) > 0 )
 {
-nx <- do.call( "rbind",
+nx <- do.call( rbind.data.frame,
                lapply( split( nxt,
                               nxt$lex.Cst ),
                        simX,
                        Tr, time.pts, tS ) )
-sf <- rbind( sf, nx )
+sf <- rbind.data.frame( sf, nx )
 nxt <- get.next( nx, tr.st, tS, tF )
 }
 
@@ -237,7 +239,8 @@ nord <- match( c( "lex.id", tS,
 noth <- setdiff( 1:ncol(sf), nord )
 sf <- sf[order(sf$lex.id,sf[,tS[1]]),c(nord,noth)]
 rownames(sf) <- NULL
-# Finally, supply attributes
+# Finally, supply attributes - note we do not supply the "breaks"
+# attribute as this is irrelevant for simulated objects
 attr( sf, "time.scales" ) <- tS
 attr( sf, "time.since"  ) <- tF
 chop.lex( sf, tS, max(time.pts) )

@@ -23,7 +23,7 @@ else # just use the factors as they are
 Cst <- x$lex.Cst
 Xst <- x$lex.Xst
   }
-# - but amend them to have the same sety of levels
+# - but amend them to have the same set of levels
 all.levels = union(levels(Cst), levels(Xst))
 Cst <- factor(Cst, levels = all.levels)
 Xst <- factor(Xst, levels = all.levels)

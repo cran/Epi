@@ -48,6 +48,8 @@ lines.apc,
           lines.Lexis,
          PY.ann.Lexis,
          subset.Lexis,
+          cbind.Lexis,
+          rbind.Lexis,
         summary.Lexis,
   print.summary.Lexis,
            splitLexis,
@@ -114,7 +116,9 @@ lines.apc,
   clogistic)
 # Import generic methods
 importFrom( utils, stack )
+# importFrom( base, cbind, rbind )
 importFrom( splines, ns, bs )
+importFrom( plyr, rbind.fill )
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 importFrom( MASS, mvrnorm )
@@ -133,8 +137,8 @@ importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
            "poisson", "predict", "qnorm", "qt", "quantile", "runif",
            "termplot", "update", "vcov", "weighted.mean", "xtabs")
 importFrom("utils", "flush.console", "str")
+## importFrom( mstate, msdata )
 
-## importFrom( mstate, mstate )
 # register S3 methods
 S3method(    print, Icens)
 S3method(    print, floated)
@@ -149,6 +153,9 @@ S3method(   PY.ann, Lexis)
 S3method(    merge, Lexis)
 S3method(   subset, Lexis)
 S3method(   subset, stacked.Lexis)
+# S3method(      "[", Lexis)
+S3method(    cbind, Lexis)
+S3method(    rbind, Lexis)
 S3method(  summary, Lexis)
 S3method(    print, summary.Lexis)
 S3method(transform, Lexis)

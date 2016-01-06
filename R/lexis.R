@@ -531,6 +531,15 @@ subset.Lexis <- function(x, ...)
   return(y)
 }
 
+`[.Lexis` <-
+function( x, ... )
+{
+    structure( NextMethod(),
+              breaks = attr(x, "breaks"),
+              time.scales = attr(x, "time.scales"),
+              time.since = attr(x, "time.since") )
+}
+
 merge.data.frame <- function(x, y, ...)
 {
   if (is.Lexis(x))
@@ -567,6 +576,74 @@ merge.Lexis <- function(x, y, id, by, ...)
   return(z)
 }
 
+cbind.Lexis <-
+function( ... )
+{
+allargs <- list( ... )
+# Check that at least one argument is Lexis
+is.lex <- sapply( allargs, inherits, "Lexis" )
+if( all(!is.lex) ) stop( "At least one argument nust be a Lexis object\n",
+                         "and none of the given are.\n")
+if( sum(is.lex)>1 ) stop( "It is meaningless to 'cbind' several Lexis objects:",
+                          " arguments ", paste( which(is.lex), collapse=","),
+                          " are Lexis objects.\n" )
+is.lex <- which(is.lex) 
+res <- do.call( base::cbind.data.frame, allargs )
+attr( res, "class"       ) <- attr( allargs[[is.lex]], "class"       )
+attr( res, "breaks"      ) <- attr( allargs[[is.lex]], "breaks"      )
+attr( res, "time.scales" ) <- attr( allargs[[is.lex]], "time.scales" )
+attr( res, "time.since"  ) <- attr( allargs[[is.lex]], "time.since"  )
+res
+}
+
+rbind.Lexis <-
+function( ... )
+{
+# A list of all Lexis objects    
+allargs <- list( ... )
+# Check if they are all Lexis
+# (or possibly NULL - often rbind-ing with NULL is very useful)
+is.lex <- sapply( allargs, inherits, "Lexis" )
+is.nul <- sapply( allargs, is.null )
+if( !all(is.lex[!is.nul]) )
+    stop( "All arguments must be Lexis objects,\n",
+          "arguments number ", which(!is.lex & !is.nul), " are not." )
+# Put them all together
+allargs <- allargs[!is.nul]
+res <- plyr::rbind.fill( allargs )
+# Get the union of time.scale names and the corresponding time.since
+tscl <- do.call( c, lapply( allargs, function(x) attr(x,"time.scales") ) )
+tsin <- do.call( c, lapply( allargs, function(x) attr(x,"time.since" ) ) )
+# but only one copy of each
+scls <- match( unique(tscl), tscl )
+tscl <- tscl[scls]
+tsin <- tsin[scls]    
+# Fish out the breaks on timescale in turn from all input objects and
+# - if all the non-NULL are identical use this
+# - if not, set the corresponding break to NULL
+newbrks <- list()
+# all the breaks attributes in a list    
+brks <- lapply( allargs, function(x) attr(x,"breaks") )
+# run through the timescales found 
+for( scl in tscl )
+   {
+   # breaks for this timescale in any of the objects   
+   brk <- lapply( brks, function(x) x[[scl]] )
+   # but only the non-null ones
+   brk <- brk[!sapply( brk, is.null )]
+   # if more than one occurrence, all non-NULL breaks should be identical
+   if( ( length(brk)>1 & 
+         all( sapply( brk[-1], function(x) identical(brk[[1]],x) ) ) )
+       | length(brk) == 1 ) newbrks[scl] <- brk[1]
+   else newbrks[scl] <- list(NULL)    
+   }
+# define attributes of the reulting object:
+attr( res, "class"       ) <- c( "Lexis", "data.frame" )
+attr( res, "breaks"      ) <- newbrks
+attr( res, "time.scales" ) <- tscl
+attr( res, "time.since"  ) <- tsin
+res  
+}
 
 ## Extractor functions
 
