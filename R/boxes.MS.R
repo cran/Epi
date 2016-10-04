@@ -154,8 +154,8 @@ if( inherits(obj,"Lexis") )
   if( show.BE )
     {
     # Derive the persons at start and at end of study in each state
-    Beg <- table( status( obj, at="entry", by.id=TRUE ) )
-    End <- table( status( obj, at="exit" , by.id=TRUE ) )
+    Beg <- as.vector( table( status( obj, at="entry", by.id=TRUE ) ) )
+    End <- as.vector( table( status( obj, at="exit" , by.id=TRUE ) ) )
     BE.line <- paste( ifelse( noz & Beg==0,
                               rep("  ",nchar(BE.sep[1])+2),
                               paste(BE.sep[1],

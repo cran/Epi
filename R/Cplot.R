@@ -25,19 +25,29 @@ function( rates,
           ...
           )
 {
-# First convert the age-period table to an age-cohort table
+# Convert the age-period table to an age-cohort table
 rt <- as.table( rates )
 dimnames( rt ) <- list( age = age, per = per )
 rtf <- data.frame( rt )
 rtf$age <- as.numeric( as.character( rtf$age ) )
 rtf$per <- as.numeric( as.character( rtf$per ) )
+
+# Check that age and period classe have equal lengths:
+wa <- diff( ag <- sort( unique(rtf$age) ) )
+wp <- diff( pg <- sort( unique(rtf$per) ) )
+if( unique(wa) != unique(wp) )
+  stop("Age and period intervals must have same width:\n",
+       "Ages:", ag, "\n", "Periods:", pg, "\n",
+       "No plot with cohort produced.\n" )
+
+# Table by age and cohort
 ac <- tapply( rtf$Freq, list( rtf$age, rtf$per-rtf$age ), mean )
 coh <- as.numeric( colnames( ac ) )
 if( is.null( c.lim ) )
   c.lim <- range( coh, na.rm=TRUE ) + c(0,diff( range( coh ) )/30) * ann
 
 # Plot the frame
-if( ann ) c.lim <- c.lim  - c(diff( range( coh ) ) * xannx,0)
+if( ann ) c.lim <- c.lim - c(diff( range( coh ) ) * xannx,0)
 matplot( coh, t(ac), type="n",
          xlim=c.lim, ylim=ylim, xlab=c.lab, ylab=ylab,
          log=log.ax, las=las, yaxt=if( !is.null( at ) ) "n" else "s" )

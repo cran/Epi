@@ -24,6 +24,7 @@
   An unordered factor, where levels of \code{x} have been reordered
   and/or collapsed.
 }
+\author{Bendix Carstensen, \url{BendixCarstensen.com}.}
 \seealso{\code{\link{Relevel.Lexis}}}
 \examples{
 ff <- factor( sample( letters[1:5], 100, replace=TRUE ) )

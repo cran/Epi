@@ -8,17 +8,17 @@ function( data,
          ref.p,
            dist = c("poisson","binomial"),
           model = c("ns","bs","ls","factor"),
-        dr.extr = c("weighted","Holford"),
+        dr.extr = "weighted",
            parm = c("ACP","APC","AdCP","AdPC","Ad-P-C","Ad-C-P","AC-P","AP-C"),
            npar = c( A=5, P=5, C=5 ),
           scale = 1,
           alpha = 0.05,
       print.AOV = TRUE )
 {
-dist <- match.arg(dist)
+ dist <- match.arg(dist)
 model <- match.arg(model)
-drtyp <- match.arg(dr.extr)
-parm <- toupper(match.arg(parm))
+drtyp <- deparse(substitute(dr.extr))
+ parm <- toupper(match.arg(parm))
 if(!missing(data))
   {
   if (length(match(c("A", "P", "D", "Y"), names(data))) != 4)
@@ -115,16 +115,23 @@ else {
         Rc <- MC[abs(P - A - c0) == min(abs(P - A - c0)), , drop = FALSE][1, ]
     }
     if (model == "ns") {
-        knl <- is.list(npar)
-        MA <- if (knl) Ns(A, knots = npar[["A"]] )
-              else     Ns(A, knots = quantile( rep(A,D),
-                                     probs=(0:npar["A"]+0.1)/(npar["A"]+0.2) ) )
-        MP <- if (knl) Ns(P, knots = npar[["P"]] )
-              else     Ns(P, knots = quantile( rep(P,D),
-                                     probs=(0:npar["P"]+0.1)/(npar["P"]+0.2) ) )
-        MC <- if (knl) Ns(P - A, knots = npar[["C"]] )
-              else       Ns(P-A, knots = quantile( rep(P-A,D),
-                                     probs=(0:npar["C"]+0.1)/(npar["C"]+0.2) ) )
+        # is npar a list
+        knl <- is.list( npar )
+        # if scalar expand
+        if( !knl & length(npar)==1 ) npar <- rep( npar, 3 )
+        # if no names, provide them
+        if( is.null(names(npar)) ) names(npar) <- c("A","P","C")
+        # if names too long or wrong case, rectify
+        names( npar ) <- toupper( substr(names(npar),1,1) )
+        MA <- if (knl) Ns(  A, knots = npar[["A"]] )
+              else     Ns(  A, knots = quantile( rep(A,D),
+                                     probs=(1:npar["A"]-0.5)/npar["A"] ) )
+        MP <- if (knl) Ns(P  , knots = npar[["P"]] )
+              else     Ns(P  , knots = quantile( rep(P,D),
+                                     probs=(1:npar["P"]-0.5)/npar["P"] ) )
+        MC <- if (knl) Ns(P-A, knots = npar[["C"]] )
+              else     Ns(P-A, knots = quantile( rep(P-A,D),
+                                     probs=(1:npar["C"]-0.5)/npar["C"] ) )
         Rp <- ns(p0, knots = attr(MP,"knots"),
             Boundary.knots = attr(MP,"Boundary.knots"))
         Rc <- ns(c0, knots = attr(MC,"knots"),
@@ -147,7 +154,7 @@ else {
                     Boundary.knots = npar[["P"]][ c(1,nk[2])], degree = deg)
               else     bs(P, df = npar[["P"]], degree = deg)
         MC <- if (knl) bs(P - A, knots = npar[["C"]][-c(1, nk[3])],
-                        Boundary.knots = npar[["C"]][c(1, nk[3])], degree = deg)
+                        Boundary.knots = npar[["C"]][ c(1, nk[3])], degree = deg)
               else     bs(P - A, df = npar[["C"]], degree = deg)
         Rp <- bs(p0, knots = attr(MP,"knots"),
             Boundary.knots = attr(MP,"Boundary.knots"),
@@ -186,14 +193,23 @@ P.pos <- match(P.pt, P)
 C.pt <- unique(P - A)
 C.pos <- match(C.pt, P - A)
 MA <- cbind(1, MA)
-if (!mode(drtyp) %in% c("character", "numeric"))
+if (!mode(dr.extr) %in% c("character", "numeric"))
     stop("\"dr.extr\" must be of mode \"character\" or \"numeric\".\n")
-if (is.character(drtyp))
-    wt <- if (toupper(substr(drtyp, 1, 1)) == "W")
-        D
-    else rep(1, length(D))
-if (is.numeric(drtyp))
-    wt <- drtyp
+if (is.character(dr.extr))
+   { 
+   wt <- rep(1, length(D) )
+   drtyp <- "1-weights"
+   if( toupper(substr(dr.extr, 1, 1)) %in% c("W","T","D") )
+     { wt <- D
+       drtyp <- "D-weights" }
+   if( toupper(substr(dr.extr, 1, 1)) %in% c("L","R") )
+     { wt <- (Y^2)/D
+       drtyp <- "Y2/D-weights" }
+   if( toupper(substr(dr.extr, 1, 1)) %in% c("Y") )
+     { wt <- Y
+       drtyp <- "Y-weights" }
+   }            
+if ( is.numeric(dr.extr) ) wt <- dr.extr
 Rp <- matrix(Rp, nrow = 1)
 Rc <- matrix(Rc, nrow = 1)
 xP <- detrend(rbind(Rp, MP), c(p0, P), weight = c(0, wt))
@@ -206,7 +222,7 @@ if (length(grep("-", parm)) == 0) {
         m.APC <- update(m.0, . ~ . - 1 + MA + I(P - p0) + MPr + MCr)
     drift <- rbind( ci.exp(m.APC, subset = "I\\(", alpha = alpha),
                     ci.exp(m.Ad , subset = "I\\(", alpha = alpha) )
-    rownames(drift) <- c("APC", "A-d")
+    rownames(drift) <- c(paste("APC (",drtyp,")",sep=""), "A-d")
     if (parm == "ADCP")
         m.APC <- update(m.0, . ~ . - 1 + MA + I(P - A - c0) + MPr + MCr)
     if (parm == "APC") {
@@ -301,11 +317,11 @@ if (print.AOV) {
 if( !ref.p & parm %in% c("APC","ADPC") )
     cat( "No reference period given:\n",
          "Reference period for age-effects is chosen as\n",
-         "the median date of event: ", p0 )
+         "the median date of event: ", p0, ".\n" )
 if( !ref.c & parm %in% c("ACP","ADCP") )
     cat( "No reference period given:\n",
          "Reference period for age-effects is chosen as\n",
-         "the median date of birth for persons  with event: ", c0 )
+         "the median date of birth for persons  with event: ", c0, ".\n" )
 class(res) <- "apc"
 invisible(res)
 }

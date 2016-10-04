@@ -519,10 +519,10 @@ function( x, time.scale=options()[["Lexis.time.scale"]], digits=1, ... )
 
 ### Generic functions
 
-### Methods for data.frame drop Lexis attributes, so we need a Lexis
-### method that adds them again
+### Methods for data.frame drop Lexis attributes, so we need Lexis
+### methods that retain them
 
-subset.Lexis <- function(x, ...)
+subset.Lexis <- function(x, ... )
 {
   y <-  subset.data.frame(x, ...)
   attr(y,"breaks") <- attr(x, "breaks")
@@ -532,13 +532,24 @@ subset.Lexis <- function(x, ...)
 }
 
 `[.Lexis` <-
-function( x, ... )
+function(x, ...)
 {
-    structure( NextMethod(),
-              breaks = attr(x, "breaks"),
-              time.scales = attr(x, "time.scales"),
-              time.since = attr(x, "time.since") )
+  y <- NextMethod(x)
+  if (is.data.frame(y)) {
+    for (a in c("class", "time.scales", "time.since", "breaks")) {
+        data.table::setattr(y ,a, attr(x, a))}
+  }
+  y
 }
+
+# `[.Lexis` <-
+# function( x, ... )
+# {
+#     structure( NextMethod(),
+#                breaks = attr(x, "breaks"),
+#           time.scales = attr(x, "time.scales"),
+#           time.since  = attr(x, "time.since") )
+# }
 
 merge.data.frame <- function(x, y, ...)
 {
@@ -607,7 +618,7 @@ is.lex <- sapply( allargs, inherits, "Lexis" )
 is.nul <- sapply( allargs, is.null )
 if( !all(is.lex[!is.nul]) )
     stop( "All arguments must be Lexis objects,\n",
-          "arguments number ", which(!is.lex & !is.nul), " are not." )
+          "arguments number ", which(!is.lex & !is.null), " are not." )
 # Put them all together
 allargs <- allargs[!is.nul]
 res <- plyr::rbind.fill( allargs )

@@ -86,6 +86,6 @@ plot( etm.D, col=rainbow(5), lwd=2, lty=1, xlab="DM duration" )
 }
 \seealso{
   \code{\link{stack.Lexis}},
-  \code{\link[mstate:msprep]{msdata}},
+  \code{\link[mstate:msprep]{msprep}},
   \code{\link[etm:etm]{etm}} }
 \keyword{survival}

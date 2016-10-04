@@ -21,25 +21,26 @@ gen.exp(purchase, id = "id", dop = "dop", amt = "amt", dpt = "dpt",
 }
 \arguments{
   \item{purchase}{Data frame with columns \code{id}-person id,
-    \code{dop}-date of purchase, \code{amt}-amount purchased, and
-    optionally \code{dpt}-defined daily dose, that is how much is assumed
-  to be ingested per unit time. The time unit used here is assumed to be
-the same as that used in \code{dop}, so despite the name it is not
-necessarily measured per day.}
-  \item{id}{Name of the id variable in the data frame.}
-  \item{dop}{Name of the date of purchase variable in the data frame.}
-  \item{amt}{Name of the amount purchased variable in the data frame.}
-  \item{dpt}{Name of the dose-per-time variable in the data frame.}
+    \code{dop} - \code{d}ate \code{o}f \code{p}urchase, \code{amt} -
+    \code{am}oun\code{t} purchased, and optionally \code{dpt} -
+    (\code{d}ose \code{p}er \code{t}ime) ("defined daily dose", DDD,
+    that is), how much is assume  to be ingested per unit time. The
+    units used for \code{dpt} is assumed to be units of \code{amt} per
+    units of \code{dop}.} 
+  \item{id}{Character. Name of the id variable in the data frame.}
+  \item{dop}{Character. Name of the date of purchase variable in the data frame.}
+  \item{amt}{Character. Name of the amount purchased variable in the data frame.}
+  \item{dpt}{Character. Name of the dose-per-time variable in the data frame.}
   \item{fu}{Data frame with follow-up period for each person, the person
     id variable must have the same name as in the \code{purchase} data frame.}
-  \item{doe}{Name of the date of entry variable.}
-  \item{dox}{Name of the date of exit variable.}
-  \item{use.dpt}{Logical, should we use information on dose per time.}
-  \item{breaks}{Numerical vector of time points where the time since exposure and the
-  cumulative dose are computed.}
+  \item{doe}{Character. Name of the date of entry variable.}
+  \item{dox}{Character. Name of the date of exit variable.}
+  \item{use.dpt}{Logical: should we use information on dose per time.}
+  \item{breaks}{Numerical vector of dates at which the time since
+    first exposure, cumulative dose etc. are computed.}
   \item{lags}{Numerical vector of lag-times used in computing lagged cumulative
     doses.}
-  \item{push.max}{How much can purchases maximally be pushed forward in
+  \item{push.max}{Numerical. How much can purchases maximally be pushed forward in
     time. See details.}
   \item{pred.win}{The length of the window used for constructing the
     average dose per time used to compute the duration of the last purchase}
@@ -52,29 +53,40 @@ necessarily measured per day.}
 
   If \code{use.dpt} is \code{TRUE} then the dose per time information is
   used to compute the exposure interval associated with each purchase.
-Exposure intervals are stacked, that is each interval is put
-after any previous. This means that the start of exposure to a given
-purchase can be pushed into the future. The parameter \code{push.max}
-indicates the maximally tolerated push. If this is reached by a person,
-the assumption is that some of the purchased drug is not counted in the
-exposure calculations.
+  Exposure intervals are stacked, that is each interval is put after any
+  previous. This means that the start of exposure to a given purchase
+  can be pushed into the future. The parameter \code{push.max} indicates
+  the maximally tolerated push. If this is reached by a person, the
+  assumption is that some of the purchased drug is not counted in the
+  exposure calculations.
 
-The \code{dpt} can either be a constant, basically translating the
-purchased amount into exposure time the same way for all persons, or it
-can be a vector with different treatment intensities for each purchase.
-In any case the cumulative dose is computed taking this into account.
+  The \code{dpt} can either be a constant, basically translating the
+  purchased amount into exposure time the same way for all persons, or
+  it can be a vector with different treatment intensities for each
+  purchase.  In any case the cumulative dose is computed taking this
+  into account.
 
   If \code{use.dpt} is \code{FALSE} then the exposure from one purchase
   is assumed to stretch over the time to the next purchase, so we are
   effectively assuming different rates of dose per time between any two
   adjacent purchases. Moreover, with this approach, periods of
-  non-exposure does not exist.
+  non-exposure does not exist. Formally this approach conditions on the
+  future, because the rate of consumption (the accumulation of
+  cumulative exposure) is computed based on knowledge of when next
+  purchase is made.
 
-The intention of this function is to generate covariates for a
-particular drug for the entire follow-up of each person. The reason that
-the follow-up prior to drug purchase and post-exposure is included is
-that the covariates must be defined for these periods too, in order to
-be useful for analysis of disease outcomes.
+  The intention of this function is to generate covariates for a
+  particular drug for the entire follow-up of each person. The reason
+  that the follow-up prior to drug purchase and post-exposure is
+  included is that the covariates must be defined for these periods too,
+  in order to be useful for analysis of disease outcomes.
+
+  This function is described in terme of calendar time as underlying
+  time scale, because this will normally be the time scale for drug
+  purchases and for entry and exit for persons. In principle the
+  variables termed as dates might equally well refer to say the age
+  scale, but this would then have to be true \emph{both} for the
+  purchase data and the follow-up data.  
 }
 
 \value{A data frame with one record per follow-up interval between
@@ -94,7 +106,11 @@ be useful for analysis of disease outcomes.
   \code{dof}.}
 }
 }
-\author{Bendix Carstensen, \email{bxc@steno.dk}}
+
+\author{Bendix Carstensen, \email{bxc@steno.dk}.  The development of
+this function was supported partly through a grant from the EFSD
+(European Foundation for the Study of Diabetes), ""}
+
 \seealso{\code{\link{Lexis}}, \code{\link{splitLexis}}}
 \examples{
 # Construct a simple data frame of purchases for 3 persons

@@ -9,7 +9,8 @@
   (\code{lex.Cst} and \code{lex.Xst}), as well the risk time in each state.
   }
 \usage{
-  \method{summary}{Lexis}( object, simplify=TRUE, scale=1, by=NULL, Rates=FALSE, ... )
+  \method{summary}{Lexis}( object, simplify=TRUE, scale=1, by=NULL,
+                           Rates=FALSE, timeScales=FALSE, ... )
   \method{print}{summary.Lexis}( x, ..., digits=2 )
   }
 \arguments{
@@ -25,6 +26,8 @@
     values of this will be used to stratify the summary.}
 \item{Rates}{Should a component with transition rates be returned (and
   printed) too?}
+\item{timeScales}{Should the names of the timescales and the indication
+  of since which entry also be given?}
   \item{x}{A \code{summary.Lexis} object.}
   \item{digits}{How many digits should be used for printing?}
   \item{ ... }{Other parameters - ignored}

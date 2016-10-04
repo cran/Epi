@@ -8,16 +8,12 @@ cl.typ <- c("Date","POSIXct","POSIXlt","date","dates","chron")
   if( inherits( x, "data.frame" ) & is.null(wh) & missing(format) )
     {
     # Indicator of where a date-type variable is
-    wh <- sapply( x, inherits, cl.typ )
-    # The positions
-    wh <- (1:length(wh))[wh]
+    wh <- which( sapply( x, inherits, cl.typ ) )
     }
   if( inherits( x, "data.frame" ) & is.null(wh) & !missing(format)  )
     {
     # Indicator of where the character variables are
-    wh <- sapply( x, is.character )
-    # The positions
-    wh <- (1:length(wh))[wh]
+    wh <- which( sapply( x, is.character ) )
     }
   if( inherits( x, "data.frame" ) & is.vector(wh) )
     {

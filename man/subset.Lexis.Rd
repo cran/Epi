@@ -21,7 +21,7 @@
   }
 \details{
   The subset method for \code{Lexis} objects works exactly as the method
-  for data frames. So does the "[" method. The special methods are neeed in
+  for data frames. So does the "[" method. The special methods are needed in
   order to propagate the Lexis-specific attributes.
 
   The method for \code{stacked.Lexis} objects also shrinks the set of

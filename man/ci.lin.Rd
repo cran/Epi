@@ -140,7 +140,6 @@ ci.pred( obj, newdata,
   Bendix Carstensen,
   \url{BendixCarstensen.com} &
   Michael Hills
-  \url{http://www.mhills.pwp.blueyonder.co.uk/}
   }
 \seealso{See also \code{\link{ci.cum}} for a function computing
   cumulative sums of (functions of) parameter estimates.}

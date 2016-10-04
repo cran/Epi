@@ -2,8 +2,8 @@
 \alias{Ns}
 \title{
   Natural splines - (cubic splines linear beyond outermost knots) with
-  convenient specification of knots and possibility of centering and
-  detrending.
+  convenient specification of knots and possibility of centering,
+  detrending and clamping.
 }
 \description{
   This function is partly for convenient specification of natural splines
@@ -11,13 +11,15 @@
   and the largest of the supplied knots as boundary knots. It also has
   the option of centering the effects provided at a chosen reference
   point as well as projecting the columns on the orthogonal space to
-  that spanned by the intercept and the linear effect of the variable.
+  that spanned by the intercept and the linear effect of the variable,
+  and finally fixing slopes beyond boundary knots (clamping).
 }
 \usage{
 Ns( x, ref = NULL, df = NULL,
                 knots = NULL,
             intercept = FALSE,
        Boundary.knots = NULL,
+                fixsl = c(FALSE,FALSE),
               detrend = FALSE )
 }
 \arguments{
@@ -31,7 +33,11 @@ Ns( x, ref = NULL, df = NULL,
   \item{intercept}{Should the intercept be included in the resulting
     basis? Ignored if any of \code{ref} or \code{detrend} is given.}
   \item{Boundary.knots}{The boundary knots beyond which the spline is
-    linear.}
+    linear. Defaults to the minimum and maximum of \code{knots}.}
+  \item{fixsl}{Specification of whether slopes beyond outer knots should
+    be fixed to 0. \code{FALSE} correponds to no restriction; a curve with 0
+    slope beyond the upper knot is obtained using
+    \code{c(FALSE,TRUE)}. Ignored if \code{!(detrend==FALSE)}.}
   \item{detrend}{If \code{TRUE}, the columns of the spline basis will be
     projected to the orthogonal of \code{cbind(1,x)}. Optionally
     \code{detrend} can be given as a vector of non-negative numbers used
@@ -49,16 +55,18 @@ Ns( x, ref = NULL, df = NULL,
   \code{diag(weight)} (an assumption which is checked).
 }
 \author{
-  Bendix Carstensen
+  Bendix Carstensen \email{bxc@steno.dk},
+  Lars Jorge D\'iaz, Steno Diabetes Center.
 }
 \note{
   The need for this function is primarily from analysis of rates in
   epidemiology and demography, where the dataset are time-split records
   of follow-up, and the range of data therefore rarely is of any
-  interest (let alone meaningful). In Poisson modeling of rates
-  based on time-split records one should aim at having the same number
-  of \emph{events} between knots, rather than the same number of
-  observations.
+  interest (let alone meaningful).
+
+  In Poisson modeling of rates based on time-split records one should
+  aim at having the same number of \emph{events} between knots, rather
+  than the same number of observations. 
 }
 \examples{
 require(splines)
@@ -91,18 +99,49 @@ n.kn <- 6
 ( a.kn <- with( subset(dms,lex.Xst=="Dead"),
                 quantile( Age+lex.dur, probs=(1:n.kn-0.5)/n.kn ) ) )
 n.kn <- 4
-( p.kn <- with( subset(dms,lex.Xst=="Dead"),
+( p.kn <- with( subset( dms, lex.Xst=="Dead" ),
                 quantile( Per+lex.dur, probs=(1:n.kn-0.5)/n.kn ) ) )
 m1 <- glm( lex.Xst=="Dead" ~ Ns( Age, kn=a.kn ) +
                              Ns( Per, kn=p.kn, ref=2000 ),
-           offset = log( lex.dur ), family=poisson, data=dms )
+           offset = log( lex.dur ),
+           family = poisson,
+             data = dms )
 
 # Plot estimated age-mortality curve for the year 2005 and knots chosen:
-nd <- data.frame(Age=40:90,Per=2005,lex.dur=1000)
+nd <- data.frame( Age=seq(40,100,0.1), Per=2005, lex.dur=1000 )
 par( mfrow=c(1,2) )
 matplot( nd$Age, ci.pred( m1, newdata=nd ),
          type="l", lwd=c(3,1,1), lty=1, col="black", log="y",
-         ylab="Mortality rates per 1000 PY", xlab="Age (years)", las=1 )
+         ylab="Mortality rates per 1000 PY", xlab="Age (years)", las=1, ylim=c(1,1000) )
+rug( a.kn, lwd=2 )
+
+# Clamped Age effect to the right of rightmost knot.
+m1.c <- glm( lex.Xst=="Dead" ~ Ns( Age, kn=a.kn, fixsl=c(FALSE,TRUE) ) +
+                               Ns( Per, kn=p.kn, ref=2000 ),
+             offset = log( lex.dur ),
+             family = poisson,
+               data = dms )
+
+# Plot estimated age-mortality curve for the year 2005 and knots chosen.
+matplot( nd$Age, ci.pred( m1.c, newdata=nd ),
+         type="l", lwd=c(3,1,1), lty=1, col="black", log="y",
+         ylab="Mortality rates per 1000 PY", xlab="Age (years)", las=1, ylim=c(1,1000) )
+rug( a.kn, lwd=2 )
+
+par( mfrow=c(1,1) )
+
+# Including a linear Age effect of 0.05 to the right of rightmost knot.
+m1.l <- glm( lex.Xst=="Dead" ~ Ns( Age, kn=a.kn, fixsl=c(FALSE,TRUE) ) +
+                               Ns( Per, kn=p.kn, ref=2000 ),
+             offset = log( lex.dur ) + pmax( Age, max( a.kn ) ) * 0.05,
+             family = poisson,
+               data = dms )
+
+# Plot estimated age-mortality curve for the year 2005 and knots chosen.
+nd <- data.frame(Age=40:100,Per=2005,lex.dur=1000)
+matplot( nd$Age, ci.pred( m1.l, newdata=nd ),
+         type="l", lwd=c(3,1,1), lty=1, col="black", log="y",
+         ylab="Mortality rates per 1000 PY", xlab="Age (years)", las=1, ylim=c(1,1000) )
 rug( a.kn, lwd=2 )
 }
 \keyword{regression}

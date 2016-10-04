@@ -27,6 +27,7 @@ lines.apc,
   contr.diff,
   detrend,
   dur,
+  erl, surv1, surv2, erl1, yll,
   effx,
   effx.match,
   float,
@@ -38,9 +39,16 @@ lines.apc,
   fit.add,
   fit.mult,
   ftrend,
+ show.apc.LCa,
+      apc.LCa,
+          LCa.fit,
+    print.LCa,
+  summary.LCa,
+  predict.LCa,
+     plot.LCa,
   Lexis.diagram,
   Lexis.lines,
-  Life.lines,
+   Life.lines,
                 Lexis,
           merge.Lexis,
            plot.Lexis,
@@ -48,6 +56,7 @@ lines.apc,
           lines.Lexis,
          PY.ann.Lexis,
          subset.Lexis,
+             "[.Lexis",
           cbind.Lexis,
           rbind.Lexis,
         summary.Lexis,
@@ -85,6 +94,7 @@ lines.apc,
   boxarr,
   boxes,
   factorize,
+  rm.tr,
   PY.ann,
   N2Y,
   tmat,
@@ -121,8 +131,11 @@ importFrom( splines, ns, bs )
 importFrom( plyr, rbind.fill )
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
+# importFrom( mstate, msdata )
 importFrom( MASS, mvrnorm )
-importFrom( survival, clogit)
+importFrom( survival, clogit )
+importFrom( numDeriv, hessian )
+importFrom( Matrix, nearPD )
 importFrom("grDevices", "gray", "rainbow")
 importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "lines", "locator", "matlines", "matplot", "matpoints",
@@ -137,7 +150,6 @@ importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
            "poisson", "predict", "qnorm", "qt", "quantile", "runif",
            "termplot", "update", "vcov", "weighted.mean", "xtabs")
 importFrom("utils", "flush.console", "str")
-## importFrom( mstate, msdata )
 
 # register S3 methods
 S3method(    print, Icens)
@@ -153,7 +165,7 @@ S3method(   PY.ann, Lexis)
 S3method(    merge, Lexis)
 S3method(   subset, Lexis)
 S3method(   subset, stacked.Lexis)
-# S3method(      "[", Lexis)
+S3method(      "[", Lexis)
 S3method(    cbind, Lexis)
 S3method(    rbind, Lexis)
 S3method(  summary, Lexis)
@@ -172,6 +184,10 @@ S3method(    boxes, matrix)
 S3method(    boxes, MS)
 S3method(   msdata, Lexis)
 S3method(      etm, Lexis)
+S3method(    print, LCa)
+S3method(  summary, LCa)
+S3method(  predict, LCa)
+S3method(     plot, LCa)
 S3method(    merge, data.frame)
 S3method(    print, stat.table)
 S3method(    print, clogistic)

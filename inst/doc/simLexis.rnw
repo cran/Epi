@@ -31,7 +31,6 @@ Bendix Carstensen
 \usepackage[ae,hyper]{Rd}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[super]{nth}
-\usepackage[retainorgcmds]{IEEEtrantools}
 \usepackage{makeidx,Sweave,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
 \usepackage{ifthen,calc,eso-pic,everyshi}
 \usepackage{booktabs,longtable,rotating,graphicx}

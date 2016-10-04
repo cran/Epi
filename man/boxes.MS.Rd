@@ -121,7 +121,8 @@
   \item{digits.Y}{How many digits after the decimal point should be used for the
                   person-years.}
   \item{show.BE}{Logical. Should number of persons beginning
-    resp. ending follow up in each state be shown?}
+    resp. ending follow up in each state be shown? If given as charcater
+    "nz" or "noz" the numbers will be shown, but zeros omitted.}
   \item{BE.sep}{Character vector of length 4, used for annotation of the
     number of persons beginning and ending in each state: 1st elemet
     precedes no. beginning, 2nd trails it, 3rd precedes the no. ending

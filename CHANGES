@@ -1,3 +1,57 @@
+Changes in 2.6
+
+o Added function erl computing Expected Residual Lifetime in an
+  illness-death model added, together with companions surv1, surv2,
+  erl1 and yll (Years of Life Lost). 
+
+Changes in 2.5
+
+o Argument "timeScales" added to summary.Lexis, printing names of
+  timescales and which (if any) are defined as time since enty into a
+  state. 
+
+o rm.tr added; removes transitions from a Lexis object
+
+o boxes.MS no longer isssues a warning when show.BE is set to TRUE.
+
+o LCa.fit rewritten and expanded to encompass both age-period and
+  age-cohort multiplicative interactions.
+
+o APC.LCa added, fits all possible Lee-Carter type models and
+  APC-models. boxes.APC.LCa plots the relationship between models
+  including the residual deviances, and optionally places boxes to
+  provide overview of best fitting models.	   
+
+Changes in 2.4
+
+o Ns updated with the possibility of clamping effects to have 0 slope
+  beyond the outer knots, see argument "fixsl".
+
+Changes in 2.3
+
+o Cplot (usually called from rateplot) now checks if age- and
+  period-groupings are of the same length, and tells you if they are
+  not, instead of just plotting (almost) nothing.
+
+o Grooming of LCa functions, and in particular the documentation.
+
+o Update of apc.fit so that also Y^2/D (the observed information about
+  the rate) and Y (person-time) is allowed as weight when defining the
+  inner product inducing orthogonality between linear and non-linear
+  effects.
+
+Changes in 2.2
+
+o LCa.fit added: Fits Lee-Carter models with smooth age and time
+  effects to rate-data. print, summary, plot and predict methods also
+  supplied. 
+
+Changes in 2.1
+
+o The show.BE="nz" feature in boxes.Lexis is now documented
+
+o "[.Lexis" is now exported and works... 
+
 Changes in 2.0
 
 o cbind, rbind and "[" methods for Lexis objects have been added

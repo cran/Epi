@@ -13,14 +13,14 @@ citEntry(entry = "Manual",
 			     as.person("Michael Hills")),
          year = year,
          note = note,
-         url = "http://CRAN.R-project.org/package=Epi",
+         url = "https://CRAN.R-project.org/package=Epi",
 
          textVersion =
          paste("Bendix Carstensen, Martyn Plummer, Esa Laara, Michael Hills",
    	       sprintf("(%s).", year),
                "Epi: A Package for Statistical Analysis in Epidemiology.",
 	       paste(note, ".", sep = ""),
-               "URL http://CRAN.R-project.org/package=Epi")
+               "URL https://CRAN.R-project.org/package=Epi")
 )
 
 citEntry(entry = "Article",
