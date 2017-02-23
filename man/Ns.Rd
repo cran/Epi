@@ -55,7 +55,7 @@ Ns( x, ref = NULL, df = NULL,
   \code{diag(weight)} (an assumption which is checked).
 }
 \author{
-  Bendix Carstensen \email{bxc@steno.dk},
+  Bendix Carstensen \email{b@bxc.dk},
   Lars Jorge D\'iaz, Steno Diabetes Center.
 }
 \note{

@@ -56,7 +56,7 @@
   \item{immune}{
   Logical. Should the years of life lost to the disease be computed
   using assumptions that non-diseased individuals are immune to the
-  disease (\code{lam}=0) and that their mortality is \code{muW}.
+  disease (\code{lam}=0) and that their mortality is yet still \code{muW}.
   }
   \item{note}{
   Logical. Should a warning of silly assumptions be printed?
@@ -67,7 +67,7 @@
 }
 \details{
   The mortality rates given are supposed to refer to the ages
-  \code{age.in+i*int/2}, \code{i=1,2,3,...}.
+  \code{age.in+(i-1/2)*int}, \code{i=1,2,3,...}.
   
   The units in which \code{int} is given must correspond to the units in
   which the rates \code{mu}, \code{muW}, \code{muD} and \code{lam} are
@@ -84,17 +84,17 @@
   starting at \code{age.in}, and the other that the conditioning ages
   given in the argument \code{A} will refer to the ages defined by this.
   
-  The \code{immune} argument is \code{TRUE} whenever the disease
-  incidence rates are supplied. If set to \code{FALSE}, the years of
-  life lost is computed under the assumption that individuals without
-  the disease at a given age are immune to the disease in the sense that
-  the disease incidence rate is 0, so transitions to the diseased state
-  (with presumably higher mortality rates) are assumed not to occur. This
-  is a slightly peculiar assumption (but presumably the most used in the
-  epidemiological literature) and the resulting object is therefore
-  given an attribute, \code{NOTE}, point this out. The default of the
-  \code{surv2} function is to take the possibility of disease into
-  account in order to potentially rectify this.}
+  The \code{immune} argument is \code{FALSE} whenever the disease
+  incidence rates are supplied. If set to \code{TRUE}, the years of life
+  lost is computed under the assumption that individuals without the
+  disease at a given age are immune to the disease in the sense that the
+  disease incidence rate is 0, so transitions to the diseased state
+  (with presumably higher mortality rates) are assumed not to
+  occur. This is a slightly peculiar assumption (but presumably the most
+  used in the epidemiological literature) and the resulting object is
+  therefore given an attribute, \code{NOTE}, that point this out. The
+  default of the \code{surv2} function is to take the possibility of
+  disease into account in order to potentially rectify this.}
 
 \value{\code{surv1} and \code{surv2} return a matrix whose first column
   is the ages at the ends of the 
@@ -125,7 +125,7 @@
   difference between the columns is added as a
   third column, labeled "YLL".
   }
-\author{Bendix Carstensen, \email{bxc@steno.dk}
+\author{Bendix Carstensen, \email{b@bxc.dk}
   }
 \seealso{
 \code{\link{ci.cum}}

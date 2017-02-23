@@ -13,7 +13,9 @@
 ** Copied from the survival package by Terry Therneau, version 2.35-7
 */
 
-void chinv2(double **matrix , int n)
+#include <R_ext/Visibility.h>
+
+void attribute_hidden chinv2(double **matrix , int n)
      {
      register double temp;
      register int i,j,k;

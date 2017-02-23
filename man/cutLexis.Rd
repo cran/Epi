@@ -116,7 +116,7 @@ countLexis( data, cut, timescale = 1 )
   needed for as many times as the person with most events. But also it
   is immaterial in what order the cutpoints are entered.
 }
-\author{Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
+\author{Bendix Carstensen, Steno Diabetes Center, \email{b@bxc.dk},
         Martyn Plummer, IARC, \email{plummer@iarc.fr}
 }
 \seealso{

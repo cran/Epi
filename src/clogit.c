@@ -7,9 +7,9 @@
    These are specially adapted to work with information matrices that
    are not of full rank.
  */
-int cholesky2(double **matrix, int m, double toler);
-void chsolve2(double **matrix, int m, double *y);
-void chinv2(double **matrix, int m);
+extern int cholesky2(double **matrix, int m, double toler);
+extern void chsolve2(double **matrix, int m, double *y);
+extern void chinv2(double **matrix, int m);
 
 /* 
    Efficient calculation of the conditional log likelihood, along with

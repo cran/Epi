@@ -28,13 +28,13 @@ gen.exp(purchase, id = "id", dop = "dop", amt = "amt", dpt = "dpt",
     units used for \code{dpt} is assumed to be units of \code{amt} per
     units of \code{dop}.} 
   \item{id}{Character. Name of the id variable in the data frame.}
-  \item{dop}{Character. Name of the date of purchase variable in the data frame.}
-  \item{amt}{Character. Name of the amount purchased variable in the data frame.}
-  \item{dpt}{Character. Name of the dose-per-time variable in the data frame.}
-  \item{fu}{Data frame with follow-up period for each person, the person
+  \item{dop}{Character. Name of the \code{d}ate \code{o}f \code{p}urchase variable in the data frame.}
+  \item{amt}{Character. Name of the \code{am}oun\code{t} purchased variable in the data frame.}
+  \item{dpt}{Character. Name of the \code{d}ose-\code{p}er-\code{t}ime variable in the data frame.}
+  \item{fu}{Data frame with \code{f}ollow-\code{u}p period for each person, the person
     id variable must have the same name as in the \code{purchase} data frame.}
-  \item{doe}{Character. Name of the date of entry variable.}
-  \item{dox}{Character. Name of the date of exit variable.}
+  \item{doe}{Character. Name of the \code{d}ate \code{o}f \code{e}ntry variable.}
+  \item{dox}{Character. Name of the \code{d}ate \code{o}f e\code{x}it variable.}
   \item{use.dpt}{Logical: should we use information on dose per time.}
   \item{breaks}{Numerical vector of dates at which the time since
     first exposure, cumulative dose etc. are computed.}
@@ -97,17 +97,17 @@ gen.exp(purchase, id = "id", dop = "dop", amt = "amt", dpt = "dpt",
   from possibly the first interval for each person, this will assume values in the set of
   the values in \code{breaks}.}
     \item{\code{Y}}{the length of interval.}
-    \item{\code{tfi}}{time from first initiation of drug.}
-    \item{\code{tfc}}{time from latest cessation of drug.}
-    \item{\code{cdur}}{cumulative time on the drug.}
-    \item{\code{cdos}}{cumulative dose.}
+    \item{\code{tfi}}{\code{t}ime \code{f}rom first \code{i}nitiation of drug.}
+    \item{\code{tfc}}{\code{t}ime \code{f}rom latest \code{c}essation of drug.}
+    \item{\code{cdur}}{\code{c}umulative \code{dur}ation of the drug.}
+    \item{\code{cdos}}{\code{c}umulative \code{dos}e.}
     \item{\code{ldos}}{suffixed with one value per element in
   \code{lags}, the latter giving the cumulative doses \code{lags} before
   \code{dof}.}
 }
 }
 
-\author{Bendix Carstensen, \email{bxc@steno.dk}.  The development of
+\author{Bendix Carstensen, \email{b@bxc.dk}.  The development of
 this function was supported partly through a grant from the EFSD
 (European Foundation for the Study of Diabetes), ""}
 

@@ -62,7 +62,7 @@
   }
 \author{
   Martyn Plummer, \email{plummer@iarc.fr},
-  Bendix Carstensen, \email{bxc@steno.dk} }
+  Bendix Carstensen, \email{b@bxc.dk} }
 \seealso{
   \code{\link{fit.add}}
   \code{\link{fit.mult}}

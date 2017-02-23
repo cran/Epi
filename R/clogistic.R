@@ -72,9 +72,8 @@ fitClogit <- function(X, y, offset, strata, init, iter.max, eps, toler.chol)
         stop("There are no informative observations")
     }
     
-    ans <- .Call("clogit", Xsplit, ysplit, osplit, as.double(init),
-                 as.integer(iter.max), as.double(eps), as.double(toler.chol),
-                 PACKAGE="Epi")
+    ans <- .Call(C_clogit, Xsplit, ysplit, osplit, as.double(init),
+                 as.integer(iter.max), as.double(eps), as.double(toler.chol))
     ans$informative <- info
     return(ans)
 }

@@ -1,3 +1,31 @@
+Changes in 2.10
+
+o Bug in lls() caused a crash when objects had funny names (such as
+  '[.Lexis'). Fixed.
+
+Changes in 2.9
+
+o Grooming of code and documentation for mcutLexis.
+
+Changes in 2.8
+
+o A function, mcutLexis, to cut at several different event times,
+  preserving intermediat event histories has been added. 
+
+o Errors in the erl.Rd corrected: Description of the argument "immune"
+  was wrong, as were the description of the timepoints where rates
+  were supposed given.  
+
+o Inaccuracies in the vignette for simLexis patched.
+
+o lls() now also lists the size of objects
+
+o For illustrative purposes the DMepi dataset has been included
+
+Changes in 2.7
+
+o '[.Lexis' redefined to comply with data.table as used from popEpi
+
 Changes in 2.6
 
 o Added function erl computing Expected Residual Lifetime in an
@@ -7,8 +35,8 @@ o Added function erl computing Expected Residual Lifetime in an
 Changes in 2.5
 
 o Argument "timeScales" added to summary.Lexis, printing names of
-  timescales and which (if any) are defined as time since enty into a
-  state. 
+  timescales and which of them (if any) are defined as time since enty
+  into a state.
 
 o rm.tr added; removes transitions from a Lexis object
 

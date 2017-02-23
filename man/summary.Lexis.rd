@@ -45,7 +45,9 @@
   If the argument \code{Rates} is FALSE (the default), then only the
   first component of the list is returned.
 }
-\author{Bendix Carstensen, \email{bxc@steno.dk}}
+\author{
+   Bendix Carstensen, \url{http://BendixCarstensen.com}
+   }
 \examples{
 data( nickel )
 # Lung cancer deaths and other deaths are coded 1 and 2

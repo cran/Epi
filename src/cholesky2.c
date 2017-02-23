@@ -22,7 +22,9 @@
 * Copied from the survival package by Terry Therneau, version 2.35-7
 */
 
-int cholesky2(double **matrix, int n, double toler)
+#include <R_ext/Visibility.h>
+
+int attribute_hidden cholesky2(double **matrix, int n, double toler)
     {
     double temp;
     int  i,j,k;

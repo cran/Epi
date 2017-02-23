@@ -11,20 +11,25 @@ if( length(lll) > 0 )
 {
 obj.mode <-
 obj.clas <-
+obj.dimx <-
 obj.size <- character(0)
 # Then find mode, class, name and dimension of them and return it
 for(i in 1:length(lll))
 {
-obj.mode[i] <-        eval( parse(text = paste( "mode(", lll[i], ")")))
-obj.clas[i] <- paste( eval( parse(text = paste("class(", lll[i], ")"))), collapse=" " )
-obj.size[i] <- paste( eval( parse(text = paste( "dimx(", lll[i], ")"))), collapse=" " )
+obj.mode[i] <-        eval( parse(text = paste(       "mode(`", lll[i], "`)",sep="")))
+obj.clas[i] <- paste( eval( parse(text = paste(      "class(`", lll[i], "`)",sep=""))), collapse=" " )
+obj.dimx[i] <- paste( eval( parse(text = paste(       "dimx(`", lll[i], "`)",sep=""))), collapse=" " )
+obj.size[i] <- formatC( eval( parse(text = paste("unclass(object.size(`", lll[i], "`))",sep="")))/2^10,
+                        format="f", digits=1, big.mark=",", width=14, flag=" " )
 }
 dfr <-
-data.frame( name=lll,
-            mode=obj.mode,
-           class=obj.clas,
-            size=obj.size,
+data.frame( name = lll,
+            mode = obj.mode,
+           class = obj.clas,
+             dim = obj.dimx,
+      sizeKbytes = obj.size,
 stringsAsFactors=FALSE )
+names( dfr )[5] <- "      size(Kb)"
 print( invisible( dfr ), right=FALSE )
 }
 }

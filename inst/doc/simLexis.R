@@ -121,7 +121,7 @@ str( pr.rates )
 
 
 ###################################################
-### code chunk number 11: simLexis.rnw:509-510
+### code chunk number 11: simLexis.rnw:510-511
 ###################################################
 ci.pred
 
@@ -389,13 +389,13 @@ box( lwd=3 )
 
 
 ###################################################
-### code chunk number 27: simLexis.rnw:1027-1028
+### code chunk number 27: simLexis.rnw:1028-1029
 ###################################################
 options( keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 28: simLexis.rnw:1044-1047
+### code chunk number 28: simLexis.rnw:1045-1048
 ###################################################
 cbind(
 attr( ini, "time.scale" ),
@@ -403,55 +403,55 @@ attr( ini, "time.since" ) )
 
 
 ###################################################
-### code chunk number 29: simLexis.rnw:1072-1073
+### code chunk number 29: simLexis.rnw:1073-1074
 ###################################################
 simLexis
 
 
 ###################################################
-### code chunk number 30: simLexis.rnw:1090-1091
+### code chunk number 30: simLexis.rnw:1091-1092
 ###################################################
 Epi:::simX
 
 
 ###################################################
-### code chunk number 31: simLexis.rnw:1103-1104
+### code chunk number 31: simLexis.rnw:1104-1105
 ###################################################
 Epi:::sim1
 
 
 ###################################################
-### code chunk number 32: simLexis.rnw:1116-1117
+### code chunk number 32: simLexis.rnw:1117-1118
 ###################################################
 Epi:::lint
 
 
 ###################################################
-### code chunk number 33: simLexis.rnw:1127-1128
+### code chunk number 33: simLexis.rnw:1128-1129
 ###################################################
 Epi:::get.next
 
 
 ###################################################
-### code chunk number 34: simLexis.rnw:1137-1138
+### code chunk number 34: simLexis.rnw:1138-1139
 ###################################################
 Epi:::chop.lex
 
 
 ###################################################
-### code chunk number 35: simLexis.rnw:1155-1156
+### code chunk number 35: simLexis.rnw:1156-1157
 ###################################################
 nState
 
 
 ###################################################
-### code chunk number 36: simLexis.rnw:1165-1166
+### code chunk number 36: simLexis.rnw:1166-1167
 ###################################################
 pState
 
 
 ###################################################
-### code chunk number 37: simLexis.rnw:1170-1172
+### code chunk number 37: simLexis.rnw:1171-1173
 ###################################################
 plot.pState
 lines.pState

@@ -15,17 +15,17 @@ mod[2] <- NULL
 cv <- model.matrix( mod, data=obj )[,-1]
 # Then do it
 M <- crr( ftime = obj$lex.dur,
-         fstatus = obj$lex.Xst,
-         failcode = fc,
-         cencode = cn,
-         cov1 = cv,
-         ... )
-# A table of the no of transitions
+        fstatus = obj$lex.Xst,
+       failcode = fc,
+        cencode = cn,
+           cov1 = cv,
+            ... )
+# A table of the no. of transitions
 N <- with( obj, table( Relevel( lex.Xst, c(fc,cc,cn) ) ) )
 names( N ) <- paste( rep( c("Event:"," comp:"," cens:"),
                           c(length(fc),length(cc),length(cn)) ),
                       names(N) )
-# add model an table to the resulting object
+# add model and table to the resulting object
 M <- c( M, list( model.Lexis = md,
                  transitions = cbind(N) ) )
 # remember the class attribute (lost by doing "c")
@@ -36,5 +36,5 @@ cat(   "crr analysis of event", paste('"',fc,'"',sep=''),
      "\n               versus", paste('"',cc,'"',sep=''),
      "\n                 with", paste('"',cn,'"',sep=''),
              "as censoring.\n" )
-     M
-     }
+M
+}

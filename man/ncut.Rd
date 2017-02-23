@@ -26,7 +26,7 @@ The function uses the base function \code{findInterval}.
 A numerical vector of the same length as \code{x}.
 }
 \author{
-  Bendix Carstensen, Steno Diabetes Center, \email{bxc@steno.dk},
+  Bendix Carstensen, Steno Diabetes Center, \email{b@bxc.dk},
   \url{http://BendixCarstensen.com}, with essential input
   from Martyn Plummer, IARC.
 }

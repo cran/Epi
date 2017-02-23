@@ -1,3 +1,4 @@
+useDynLib(Epi, .registration=TRUE)
 export(
   as.Date.cal.yr,
   apc.frame,
@@ -67,6 +68,7 @@ lines.apc,
         Relevel.Lexis,
       factorize.Lexis,
              cutLexis,
+            mcutLexis,
            countLexis,
           stack.Lexis,
            tmat.Lexis,

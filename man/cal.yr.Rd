@@ -47,7 +47,7 @@
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
-  University of Copenhagen, \email{bxc@steno.dk},
+  University of Copenhagen, \email{b@bxc.dk},
   \url{http://BendixCarstensen.com}
 }
 \seealso{

@@ -1024,9 +1024,10 @@ follows:
 
 This section explains the actually existing code for
 \texttt{simLexis}, as it is in the current version of \texttt{Epi}.
-<<echo=FALSE,results=hide>>=
-options( keep.source=TRUE )
-@ %
+%%<<echo=FALSE,results=hide>>=
+%%options( keep.source=TRUE )
+%%source( "../R/simLexis.R" )
+%%@ %
 The function \texttt{simLexis} takes a \texttt{Lexis} object as
 input. This defines the initial state(s) and times of the start for a
 number of persons. Since the purpose is to simulate a history through

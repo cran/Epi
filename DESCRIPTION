@@ -1,9 +1,9 @@
 Package: Epi
-Version: 2.7
-Date: 2016-10-04
+Version: 2.10
+Date: 2017-02-23
 Title: A Package for Statistical Analysis in Epidemiology
 Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
-                    email = "bxc@steno.dk"),
+                    email = "b@bxc.dk"),
              person("Martyn", "Plummer", role = "aut",
                     email = "plummerm@iarc.fr"),
              person("Esa", "Laara", role = "ctb"),
@@ -19,16 +19,16 @@ Description: Functions for demographic and epidemiological analysis in
   'mstate', 'etm' and 'cmprsk' packages. 
   Also contains functions for Age-Period-Cohort and Lee-Carter
   modeling and a function for interval censored data and some useful
-  functions for tabulation and plotting, as well some epidemiological
-  datasets. 
+  functions for tabulation and plotting, as well as a number of
+  epidemiological datasets. 
 License: GPL-2
 URL: http://BendixCarstensen.com/Epi/
 NeedsCompilation: yes
-Packaged: 2016-10-03 19:59:16 UTC; bendix
+Packaged: 2017-02-23 20:54:44 UTC; bendix
 Author: Bendix Carstensen [aut, cre],
   Martyn Plummer [aut],
   Esa Laara [ctb],
   Michael Hills [ctb]
-Maintainer: Bendix Carstensen <bxc@steno.dk>
+Maintainer: Bendix Carstensen <b@bxc.dk>
 Repository: CRAN
-Date/Publication: 2016-10-04 14:35:49
+Date/Publication: 2017-02-23 23:34:30

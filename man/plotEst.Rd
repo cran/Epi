@@ -87,7 +87,7 @@ pointsEst( ests, y = dim(ests)[1]:1, pch = 16, cex = 1, lwd = 2,
 }
 \author{
   Bendix Carstensen,
-  \email{bxc@steno.dk},
+  \email{b@bxc.dk},
   \url{http://BendixCarstensen.com}}
 \seealso{
   ci.lin
