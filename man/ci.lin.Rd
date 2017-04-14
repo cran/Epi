@@ -3,6 +3,7 @@
 \alias{ci.mat}
 \alias{ci.exp}
 \alias{ci.pred}
+\alias{ci.ratio}
 \alias{Wald}
 \title{
   Compute linear functions of parameters with standard errors and
@@ -30,8 +31,13 @@ Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df = Inf )
 ci.pred( obj, newdata,
          Exp = NULL,
+       alpha = 0.05 )
+ci.ratio( r1, r2,
+         se1 = NULL,
+         se2 = NULL,
+      log.tr = !is.null(se1) & !is.null(se2),
        alpha = 0.05,
-          df = Inf )
+        pval = FALSE )
 }
 \arguments{
   \item{obj}{A model object (of class
@@ -96,11 +102,19 @@ ci.pred( obj, newdata,
     parameter vector.}
   \item{\ldots}{Parameters passed on to \code{ci.lin}.}
   \item{newdata}{Data frame of covariates where prediction is made.}
+  \item{r1,r2}{Estimates of rates in two independent groups, with
+    confidence intervals.}
+  \item{se1,se2}{Standard errors og log-rates in the two groups. If
+    given, it is assumed that \code{r1} and \code{r2} represent
+    log-rates.}
+  \item{log.tr}{Logical, if true, it is assumed that \code{r1} and
+    \code{r2} represent log-rates with confidnece intervals.}
   }
 \value{
   \code{ci.lin} returns a matrix with number of rows and row names as
   \code{ctr.mat}. The columns are Estimate, Std.Err, z, P, 2.5\% and
-  97.5\%.  If \code{vcov=TRUE} a list with components \code{est}, the
+  97.5\% (or according to the value of \code{alpha}).  If
+  \code{vcov=TRUE} a list with components \code{est}, the 
   desired functional of the parameters and \code{vcov}, the variance
   covariance matrix of this, is returned but not printed.  If
   \code{Exp==TRUE} the confidence intervals for the parameters are
@@ -114,11 +128,11 @@ ci.pred( obj, newdata,
 
   \code{Wald} computes a Wald test for a subset of (possibly linear
   combinations of) parameters being equal to the vector of null
-  values. The selection of the subset of parameters is the same as for
-  \code{ci.lin}. Using the \code{ctr.mat} argument makes it possible to
-  do a Wald test for equality of parameters. \code{Wald} returns a named
-  numerical vector of length 3, with names \code{Chisq}, \code{d.f.} and
-  \code{P}.
+  values as given by \code{H0}. The selection of the subset of
+  parameters is the same as for \code{ci.lin}. Using the \code{ctr.mat}
+  argument makes it possible to do a Wald test for equality of
+  parameters. \code{Wald} returns a named numerical vector of length 3,
+  with names \code{Chisq}, \code{d.f.} and \code{P}.
 
   \code{ci.mat} returns a 2 by 3 matrix with rows \code{c(1,0,0)} and
   \code{c(0,-1,1)*1.96}, devised to post-multiply to a p by 2 matrix with
@@ -135,6 +149,12 @@ ci.pred( obj, newdata,
   scale, and by default transformed by the inverse link, since the most
   common use for this is for multiplicative Poisson or binomial models
   with either log or logit link.
+
+  \code{ci.ratio} returns the rate-ratio of two independent set of
+  rates given with confidence intervals or s.e.s. If \code{se1} and
+  \code{se2} are given and \code{log.tr=FALSE} it is assumed that
+  \code{r1} and \code{r2} are rates and \code{se1} and \code{se2} are
+  standard errors of the log-rates.
   }
 \author{
   Bendix Carstensen,
@@ -169,6 +189,10 @@ Wald( mm, subset="f", ctr.mat=CM )
 # or alternatively
 ( CM <- rbind( c(1,-1,0,0), c(0,1,-1,0)) )
 Wald( mm, subset="f", ctr.mat=CM )
+
+# Confidnece intervas for ratio of rates
+ci.ratio( cbind(10,8,12.5), cbind(5,4,6.25) )
+ci.ratio( cbind(8,12.5), cbind(4,6.25) )
 }
 \keyword{models}
 \keyword{regression}

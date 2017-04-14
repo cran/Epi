@@ -1,4 +1,4 @@
-### R code from vignette source 'simLexis.rnw'
+### R code from vignette source 'simLexis'
 ### Encoding: UTF-8
 
 ###################################################
@@ -51,11 +51,11 @@ print( subset( Si, lex.id==97 )[,1:10], digits=6 )
 ### code chunk number 6: knots
 ###################################################
 nk <- 5
-( ai.kn <- with( subset(Si,lex.Xst=="Ins"),
+( ai.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
 ( ad.kn <- with( subset(Si,lex.Xst=="Dead"),
                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
-( di.kn <- with( subset(Si,lex.Xst=="Ins"),
+( di.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
 ( dd.kn <- with( subset(Si,lex.Xst=="Dead"),
                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
@@ -121,7 +121,7 @@ str( pr.rates )
 
 
 ###################################################
-### code chunk number 11: simLexis.rnw:510-511
+### code chunk number 11: simLexis.rnw:515-516
 ###################################################
 ci.pred
 
@@ -389,13 +389,13 @@ box( lwd=3 )
 
 
 ###################################################
-### code chunk number 27: simLexis.rnw:1028-1029
+### code chunk number 27: simLexis.rnw:1033-1034
 ###################################################
-options( keep.source=TRUE )
+source( "../R/simLexis.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 28: simLexis.rnw:1045-1048
+### code chunk number 28: simLexis.rnw:1050-1053
 ###################################################
 cbind(
 attr( ini, "time.scale" ),
@@ -403,55 +403,55 @@ attr( ini, "time.since" ) )
 
 
 ###################################################
-### code chunk number 29: simLexis.rnw:1073-1074
+### code chunk number 29: simLexis.rnw:1078-1079
 ###################################################
 simLexis
 
 
 ###################################################
-### code chunk number 30: simLexis.rnw:1091-1092
+### code chunk number 30: simLexis.rnw:1096-1097
 ###################################################
-Epi:::simX
+simX
 
 
 ###################################################
-### code chunk number 31: simLexis.rnw:1104-1105
+### code chunk number 31: simLexis.rnw:1109-1110
 ###################################################
-Epi:::sim1
+sim1
 
 
 ###################################################
-### code chunk number 32: simLexis.rnw:1117-1118
+### code chunk number 32: simLexis.rnw:1122-1123
 ###################################################
-Epi:::lint
+lint
 
 
 ###################################################
-### code chunk number 33: simLexis.rnw:1128-1129
+### code chunk number 33: simLexis.rnw:1133-1134
 ###################################################
-Epi:::get.next
+get.next
 
 
 ###################################################
-### code chunk number 34: simLexis.rnw:1138-1139
+### code chunk number 34: simLexis.rnw:1143-1144
 ###################################################
-Epi:::chop.lex
+chop.lex
 
 
 ###################################################
-### code chunk number 35: simLexis.rnw:1156-1157
+### code chunk number 35: simLexis.rnw:1161-1162
 ###################################################
 nState
 
 
 ###################################################
-### code chunk number 36: simLexis.rnw:1166-1167
+### code chunk number 36: simLexis.rnw:1171-1172
 ###################################################
 pState
 
 
 ###################################################
-### code chunk number 37: simLexis.rnw:1171-1173
+### code chunk number 37: simLexis.rnw:1176-1178
 ###################################################
 plot.pState
 lines.pState

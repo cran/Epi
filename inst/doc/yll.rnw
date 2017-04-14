@@ -7,7 +7,7 @@
 \newcommand{\Title}{Years of Life Lost (YLL)
   to disease\\Diabetes in DK as example}
 \newcommand{\Tit}{YLL}
-\newcommand{\Version}{Version 1.1}
+\newcommand{\Version}{Version 1.2}
 \newcommand{\Dates}{February 2017}
 \newcommand{\Where}{SDC}
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
@@ -375,52 +375,6 @@ The calculation of these conditional survival functions is implemented
 but not allowing for duration-dependence. Thus it is only implemented
 assuming $\mu_D(a,d)=\mu_D(a)$.
 
-\section{Practical implementation}
-
-We have devised functions that wraps these formulae up for practical
-use.
-
-\subsection{Function definitions}
-
-<<echo=FALSE,results=hide>>=
-options( keep.source=TRUE )
-# source( "../R/erl.R" )
-@ 
-When using the functions it is assumed that the functions $\mu_W$,
-$\mu_D$ and $\lambda$ are given as vectors corresponding to
-equidistantly (usually tightly) spaced ages from 0 to $K$ where K is
-the age where everyone can safely be assumed dead.
-
-\texttt{surv1} is a simple function that computes the survival
-function from a vector of mortality rates, and optionally the
-conditional survival given being alive at prespecified ages:
-<<>>=
-surv1
-@ %
-\texttt{erl1} basically just expands the result of \texttt{surv1} with
-a column of expected residual life times:
-<<>>=
-erl1
-@ %
-We also define a function, \texttt{surv2}, that computes the survival
-function for a non-diseased person that may become diseased with rate
-\texttt{lam} and after that die at a rate of \texttt{muD}
-(corresponding to the formulae above). This is the sane way of
-handling years of life lost to a particular illness:
-<<>>=
-surv2
-@ %
-Finally we devised a function using these to compute the expected
-residual lifetime at select ages:
-<<>>=
-erl
-@ %
-\ldots and a wrapper for this if we only want the years of life lost
-returned:
-<<>>=
-yll
-@ %
-
 \chapter{Analyses for DM in Denmark}
 
 The rates we use as basis for the following calculations are derived
@@ -438,7 +392,6 @@ and without DM.
 We read in the dataset of DM and population mortality and incidence, \texttt{DMepi}:
 <<>>=
 data( DMepi )
-lls()
 @ % 
 The dataset \texttt{DMepi} contains diabetes events, deaths and
 person-years for persons without diabetes and deaths and person-years
@@ -621,6 +574,51 @@ plyll("Sus")
 From figure \ref{fig:sus} we see that for men aged 50 the years lost to
 diabetes has decreased from a bit over 8 to a bit less than 6 years,
 and for women from 8.5 to 5 years; so a greater improvement for women.
+
+\chapter{Practical implementation}
+
+We have devised functions that wraps these formulae up for practical
+use.
+
+\section{Function definitions}
+
+<<echo=FALSE,results=hide,eval=TRUE>>=
+source( "../R/erl.R", keep.source=TRUE )
+@ 
+When using the functions it is assumed that the functions $\mu_W$,
+$\mu_D$ and $\lambda$ are given as vectors corresponding to
+equidistantly (usually tightly) spaced ages from 0 to $K$ where K is
+the age where everyone can safely be assumed dead.
+
+\texttt{surv1} is a simple function that computes the survival
+function from a vector of mortality rates, and optionally the
+conditional survival given being alive at prespecified ages:
+<<>>=
+surv1
+@ %
+\texttt{erl1} basically just expands the result of \texttt{surv1} with
+a column of expected residual life times:
+<<>>=
+erl1
+@ %
+We also define a function, \texttt{surv2}, that computes the survival
+function for a non-diseased person that may become diseased with rate
+\texttt{lam} and after that die at a rate of \texttt{muD}
+(corresponding to the formulae above). This is the sane way of
+handling years of life lost to a particular illness:
+<<>>=
+surv2
+@ %
+Finally we devised a function using these to compute the expected
+residual lifetime at select ages:
+<<>>=
+erl
+@ %
+\ldots and a wrapper for this if we only want the years of life lost
+returned:
+<<>>=
+yll
+@ %
 
 \bibliographystyle{plain}
 

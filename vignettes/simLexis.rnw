@@ -366,21 +366,27 @@ knots so that the number of events is the same between each pair of
 knots, but only half of this beyond each of the boundary knots,
 whereas for the timescales \texttt{DMdur} and \texttt{tIns} where we
 have observation from a well-defined 0, we put knots at 0 and place the
-remaining knots so that the number of events is the same between them
-and beyond the last:
+remaining knots so that the number of events is the same between each
+pair of knots as well as outside the boundary knots.
 <<knots>>=
 nk <- 5
-( ai.kn <- with( subset(Si,lex.Xst=="Ins"),
+( ai.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
 ( ad.kn <- with( subset(Si,lex.Xst=="Dead"),
                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
-( di.kn <- with( subset(Si,lex.Xst=="Ins"),
+( di.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
 ( dd.kn <- with( subset(Si,lex.Xst=="Dead"),
                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
 ( ti.kn <- with( subset(Si,lex.Xst=="Dead(Ins)"),
                  c(0,quantile( t.Ins+lex.dur, probs=(1:(nk-1))/nk ) )) )
 @ %
+Note that when we tease out the event records for transition to
+\emph{transient} states (in this case ``Ins'', that is
+verb|lex.Xst=="Ins"|), we should add \verb|lex.Cst!=lex.Xst|, to
+include only transition records and avoiding including records of
+sojourn time in the transient state.
+ 
 We then fit Poisson models to transition rates, using the wrapper
 \texttt{Ns} from the \texttt{Epi} package to simplify the
 specification of the rates:
@@ -1024,10 +1030,9 @@ follows:
 
 This section explains the actually existing code for
 \texttt{simLexis}, as it is in the current version of \texttt{Epi}.
-%%<<echo=FALSE,results=hide>>=
-%%options( keep.source=TRUE )
-%%source( "../R/simLexis.R" )
-%%@ %
+<<echo=FALSE,results=hide>>=
+source( "../R/simLexis.R", keep.source=TRUE )
+@ %
 The function \texttt{simLexis} takes a \texttt{Lexis} object as
 input. This defines the initial state(s) and times of the start for a
 number of persons. Since the purpose is to simulate a history through
@@ -1089,7 +1094,7 @@ and objects of class \texttt{function} is made.
 The dataset on which this prediction is done has
 \texttt{length(time.pts)} rows per person.
 <<>>=
-Epi:::simX
+simX
 @ %
 As we see, \texttt{simX} calls \texttt{sim1} which simulates the
 transition for one person.
@@ -1102,7 +1107,7 @@ The predicted cumulative intensities are fed, person by person, to
 appended to the \texttt{nd} data frame. This way we have simulated
 \emph{one} transition (time and state) for each person:
 <<>>=
-Epi:::sim1
+sim1
 @ %
 The \texttt{sim1} function uses \texttt{lint} to do linear interpolation.
 
@@ -1115,7 +1120,7 @@ a custom made linear interpolator that does the interpolation
 exploiting the fact the the \texttt{ci} is non-decreasing and
 \texttt{tt} is strictly monotonously increasing:
 <<>>=
-Epi:::lint
+lint
 @
 
 \subsection{\texttt{get.next}}
@@ -1126,7 +1131,7 @@ defined as time since entry to one of these states be initialized to 0
 before a call to \texttt{simX} is made for these persons. This
 accomplished by the function \texttt{get.next}:
 <<>>=
-Epi:::get.next
+get.next
 @
 
 \subsection{\texttt{chop.lex}}
@@ -1136,7 +1141,7 @@ after \emph{each} new entry to a transient state. In order to groom
 the output data we use \texttt{chop.lex} to censor all persons at the
 same designated time after \emph{initial} entry.
 <<>>=
-Epi:::chop.lex
+chop.lex
 @
 
 \section{Probabilities from simulated \texttt{Lexis} objects}

@@ -1,3 +1,13 @@
+Changes in 2.11
+
+o New function ci.ratio to compute RR with CIs from independent
+  estimates of rates
+
+o Small errors in calculation of knots in the simLexis macro corrected
+
+o A severe bug in mcutLexis which caused omission of certain cuts has
+  been fixed.
+
 Changes in 2.10
 
 o Bug in lls() caused a crash when objects had funny names (such as

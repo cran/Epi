@@ -1,6 +1,6 @@
-4256fde4cc3e1b262d95e8ce6b875801 *CHANGES
-3ec628d7fceaea37f77ad36c7fa86576 *DESCRIPTION
-7f65863940101b3c7abb5cde9c45c988 *NAMESPACE
+7e4926cd24cc6985d7e69cfb73757308 *CHANGES
+aba5cbf1bdf0e1dbd12414b27d6ee2ad *DESCRIPTION
+b306ee00fc7fcfab1b850704cc6eeb7e *NAMESPACE
 fac3c7f01ab0bd6930cf3cbea20e6bcc *R/Aplot.R
 a031997be7388601dd1df6a28fc55328 *R/Cplot.R
 6a1c4f4cbbf509d1f3c40b9f0adb6399 *R/Icens.R
@@ -25,7 +25,7 @@ f4e2a039dda786e4cad0b2961e3dd599 *R/boxes.MS.R
 44e5f888817c94b8a190eae4aa964a2c *R/cal.yr.R
 6988e76eb64f004a8c5029c23f8603af *R/ccwc.R
 d5171eb23f0b431a7cc89b69d03308a6 *R/ci.cum.R
-1e69aa59a2367037c3a054bfa1a2759e *R/ci.lin.R
+ab5fd1bbdc59ef536f103bf533a5f143 *R/ci.lin.R
 6f80c7b2b2120068cd16c043fbc29db3 *R/ci.mat.R
 886f87cbd08266fa281e2ed7b3b3c253 *R/ci.pd.R
 7637da11fdfb3612df5d73a64ee044e4 *R/clear.R
@@ -51,7 +51,7 @@ da7b5d41fe7876ef6bab01839b613939 *R/ftrend.R
 f0f84fc26294b1cb3016a9e23974c545 *R/gen.exp.R
 52ccaf61645561d9c050e5d5665fbdcd *R/lexis.R
 f8eba91de17a8207c6303ffb7b34f0a7 *R/lls.R
-e8860fa22ea3d19a99f1059c11d7b92a *R/mcutLexis.R
+d593af0ab833c8655469a24891e9116f *R/mcutLexis.R
 79d6e0b02a2c4e98fbbfcd936b21d377 *R/mh.R
 9e48e47769874a34f63a2e2d4e6ffffc *R/ncut.r
 2a44a66ac4fe7eccab191f94957265e2 *R/pctab.R
@@ -69,7 +69,7 @@ fb143d532001643d3f74fbd2e114e976 *R/stattable.R
 889282ea37a5a9d9bf7155d790cd9036 *R/summary.Icens.r
 8ceccd0ffa9694670f38c34b65d5be10 *R/summary.Lexis.r
 88983ba8314a37910993d469a982d800 *R/twoby2.R
-9a0c3d6a9e900294a1bfe439dc88db4e *build/vignette.rds
+3285decaed545d9b4c9fc5bd36cf32c7 *build/vignette.rds
 b9d3112271b9545896c98ec6406f5f02 *data/B.dk.rda
 666e336a1aefb9c4298abb83a81a3300 *data/DMconv.rda
 ea83ed46a5581ea8489646abd3d1c0ae *data/DMepi.rda
@@ -96,16 +96,16 @@ deb94384c7380312f9b33f75cf6d8559 *data/nickel.rda
 404cc2c826ccdfb5b5edbe9834561e02 *data/testisDK.rda
 1953ddd7d750051c5682fa08b11cb777 *data/thoro.rda
 9bd39178a387f935acc54519109c9f4a *inst/CITATION
-acae1b4099b6e046c314f51aaa0327ce *inst/doc/Follow-up.R
-d9c94a943d90f4e94e08c8386779143c *inst/doc/Follow-up.pdf
+37eac2ba857eb89f02b92e561976d3bb *inst/doc/Follow-up.R
+3760090498db164e88c84e67886680aa *inst/doc/Follow-up.pdf
 a6978ca7d45a578a4fb047fb92eeed73 *inst/doc/Follow-up.rnw
 364611344a5e791ae93f506e961b5fcc *inst/doc/index.html
-d9264ec0daa372a8921ae4ce12257eba *inst/doc/simLexis.R
-fdc803b704e05b91c461f159b87fe5d5 *inst/doc/simLexis.pdf
-0e75c4f99139b36ab0d52f28ee80e3fe *inst/doc/simLexis.rnw
-c4d7ecd695b62cb8d7e5b93f6a7b7f51 *inst/doc/yll.R
-34206c5c06f4b75644692d8f755d5b79 *inst/doc/yll.pdf
-48a435842b231efec15e1291151752ff *inst/doc/yll.rnw
+9973c753c26391d702a64ca2f2486630 *inst/doc/simLexis.R
+0c97f01be259b7a702385ac3772ea61e *inst/doc/simLexis.pdf
+37f8cd2365c025fbb1d348052c67f712 *inst/doc/simLexis.rnw
+e4492b992d998aa710005d1f3152e6af *inst/doc/yll.R
+960d6c72c42974198a28ab887ef969db *inst/doc/yll.pdf
+038cd6b793969ad87f9cffad41c44ca0 *inst/doc/yll.rnw
 317bb6ebeaec5e7376b609d7e382c166 *man/B.dk.Rd
 3abc5c20e62c874d70dcb2688ad2cce5 *man/DMconv.Rd
 e9a988b029749169403ab0bf749d53da *man/DMepi.Rd
@@ -138,7 +138,7 @@ d74a4f6e66ce91c73cd2817bb690446a *man/births.Rd
 a2bedd44df3606b6585fd1da897de7ec *man/cal.yr.Rd
 effba2c17ade00f0afd10184a073d34c *man/ccwc.Rd
 c47967c97d376b54706caacce489a9a2 *man/ci.cum.Rd
-fd00c162c3b545d86546615dfc24750f *man/ci.lin.Rd
+5cc1e37172721c7b0209faf161a377f5 *man/ci.lin.Rd
 e7477402aa4746d653a0c72b2239d185 *man/ci.pd.Rd
 128c0b1d00a69e41d131a6f74a1bae23 *man/clogistic.Rd
 cf5e5a6e18e07b7bb8d70dc0417e6166 *man/contr.cum.Rd
@@ -164,7 +164,7 @@ d9f1d31e109d6058a2160ca0aa49bf81 *man/hivDK.Rd
 ec0e27968d4ee35f390161e49abd903c *man/lines.apc.Rd
 78125ba49d54905fb727765dc8997796 *man/lls.Rd
 661ec298ffcd0f39cf55c5d033e04fd1 *man/lungDK.Rd
-3710557de34af8376e547960c1223c18 *man/mcutLexis.Rd
+cb1f50d16fe21259603273d2004d14b3 *man/mcutLexis.Rd
 3c462c4ce7ca1ce4b8c6fef50b3c7623 *man/merge.Lexis.Rd
 4c26c9edf5d64b0af3e63ad791b2a280 *man/merge.data.frame.Rd
 34c530c36a3a1a7447ff8eea58f42084 *man/mh.Rd
@@ -204,5 +204,5 @@ bcc0556f8f0a158637592731928cf835 *src/chinv2.c
 d77bd820f6ce7dc7883c9e2813a44c89 *src/init.c
 a6978ca7d45a578a4fb047fb92eeed73 *vignettes/Follow-up.rnw
 364611344a5e791ae93f506e961b5fcc *vignettes/index.html
-1bfe20d9a311588d1df4142eb19f7a3d *vignettes/simLexis.rnw
-48a435842b231efec15e1291151752ff *vignettes/yll.rnw
+37f8cd2365c025fbb1d348052c67f712 *vignettes/simLexis.rnw
+038cd6b793969ad87f9cffad41c44ca0 *vignettes/yll.rnw

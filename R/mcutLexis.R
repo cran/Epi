@@ -15,6 +15,7 @@ if( is.numeric(wh) ) wh <- names(L0)[wh]
 
 ### don't be silly
 if( length(wh)==1 )
+# return( docut( L0, osv ) ) # old cutLexis should be absorbed here
   stop( "mcutLexis not needed for one type of event - use cutLexis\n" )
 
 ### states    
@@ -68,11 +69,12 @@ Lcut <- NULL
 
 # Utility function returning sequences of ocurrences as paste of numbers
 NAorder <- 
-function( x ) 
+function (x) 
     {
-    oo <- order( x, na.last=T )
-    oo[is.na(x)] <-NA
-    paste( oo[!is.na(oo)], collapse="-" )
+    oo <- order(x, na.last = T)
+    on <- (1:length(oo))[oo]
+    on[is.na(x[oo])] <- NA
+    paste(on[!is.na(on)], collapse = "-")
     }
     
 # where do the different sequences of events actually occur in data

@@ -211,21 +211,64 @@ else
 ci.lin( ..., Exp=FALSE )[,if(pval) c(1,5,6,4) else c(1,5,6),drop=FALSE]
 }
 
-# Wrapper for predict.glm
+# Wrapper for predict.glm to give estimates and confidnece intervals
 ci.pred <-
 function( obj, newdata,
          Exp = NULL,
-       alpha = 0.05,
-          df = Inf )
+       alpha = 0.05 )
 {
 if( !inherits( obj, "glm" ) ) stop("Not usable for non-glm objects")
-# get prediction and se on the link scale
+# get the prediction and se on the link scale
 zz <- predict( obj, newdata=newdata, se.fit=TRUE, type="link" )
 # compute ci on link scale
-zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha, df=df )
+zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha )
 # transform as requested
 if( missing(Exp) ) {   return( obj$family$linkinv(zz) )
 } else {  if(  Exp ) { return(                exp(zz) ) 
    } else if( !Exp )   return(                    zz  )
        }  
+}
+
+ci.ratio <-
+function( r1, r2,
+         se1 = NULL, # standard error of rt1
+         se2 = NULL, # standard error of rt2
+      log.tr = !is.null(se1) & !is.null(se2), # is this log-rates?
+       alpha = 0.05,
+        pval = FALSE )
+{
+# Function to calculate RR with CIs from independent rates with CIs;
+# r1 and r2 are assumed to be vectors or 2 or 3-column matrices with
+# rate, lower and upper confidence limits repectively.
+
+if( is.matrix(r1) & !is.null(se1) ) warning("r1 is matrix, se1 is ignored")
+if( is.matrix(r2) & !is.null(se2) ) warning("r2 is matrix, se2 is ignored")
+
+# if supplied as 1-column matrix chnage to vector
+if( is.matrix(r1) ) if( ncol(r1)==1 ) r1 <- as.vector( r1 )
+if( is.matrix(r2) ) if( ncol(r2)==1 ) r2 <- as.vector( r2 )
+
+# move to log scale
+if( !log.tr ) {
+  r1 <- log( r1 ) 
+  r2 <- log( r2 ) 
+  }
+
+# how wide are the condidence intervals    
+if( is.matrix(r1) ) if( ncol(r1)>1 ) rg1 <- t( apply(r1,1,range) )
+if( is.matrix(r2) ) if( ncol(r2)>1 ) rg2 <- t( apply(r2,1,range) )
+
+# get the estimates on the log-scale
+R1 <- if( is.matrix(r1) ) apply( rg1, 1, mean ) else r1 
+R2 <- if( is.matrix(r2) ) apply( rg2, 1, mean ) else r2 
+if( is.null(se1) ) se1 <- apply( rg1, 1, diff ) / (2*qnorm(1-alpha/2))
+if( is.null(se2) ) se2 <- apply( rg2, 1, diff ) / (2*qnorm(1-alpha/2))
+
+# compute the RR and the c.i. and optionally the p-value
+ lrr <- R1 - R2
+slrr <- sqrt( se1^2 + se2^2 )
+  rr <- cbind(lrr,slrr) %*% ci.mat(alpha=alpha)
+if( !log.tr ) rr <- exp( rr )
+if( pval ) return( cbind( rr, 1-pchisq( (lrr/slrr)^2, 1 ) ) )
+      else return(        rr                                )    
 }
