@@ -144,7 +144,7 @@ Lc <- cutLexis( Lx, cut = Lx$doins-Lx$dob,
        precursor.states = "DM" )
 summary( Lc )
 # Split in small age intervals
-Sc <- splitLexis( Lc, breaks=seq(0,120,1) )
+Sc <- splitLexis( Lc, breaks=seq(0,120,2) )
 summary( Sc )
 
 # Overview of object

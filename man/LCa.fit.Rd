@@ -248,7 +248,7 @@ head( tc )
 tc$Y <- tc$Y / 10^5
 
 # Fit the Lee-Carter model with age-period interaction (default)
-LCa.tc <- LCa.fit( tc, model="ACa", a.ref=30, p.ref=1980, quiet=FALSE, eps=10e-5, maxit=100 )
+LCa.tc <- LCa.fit( tc, model="ACa", a.ref=30, p.ref=1980, quiet=FALSE, eps=10e-4, maxit=50 )
 
 LCa.tc
 summary( LCa.tc )

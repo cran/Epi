@@ -213,7 +213,6 @@ state is unaffected by assumptions about $\lambda$.
 
 <<states,fig=TRUE,height=5,width=5,echo=FALSE>>=
 library( Epi )
-print( sessionInfo(), locale=FALSE )
 TM <- matrix(NA,4,4)
 rownames(TM) <-
 colnames(TM) <- c("Well","DM","Dead","Dead(DM)") 

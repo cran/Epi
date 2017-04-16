@@ -1,7 +1,9 @@
-Changes in 2.11
+Changes in 2.12
 
 o New function ci.ratio to compute RR with CIs from independent
   estimates of rates
+
+Changes in 2.11
 
 o Small errors in calculation of knots in the simLexis macro corrected
 

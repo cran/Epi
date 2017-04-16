@@ -1,5 +1,5 @@
-7e4926cd24cc6985d7e69cfb73757308 *CHANGES
-aba5cbf1bdf0e1dbd12414b27d6ee2ad *DESCRIPTION
+e29896a00e6902058af1e3bd86ce73b1 *CHANGES
+f16e00cf78c68cb7e805dacac2b2bd17 *DESCRIPTION
 b306ee00fc7fcfab1b850704cc6eeb7e *NAMESPACE
 fac3c7f01ab0bd6930cf3cbea20e6bcc *R/Aplot.R
 a031997be7388601dd1df6a28fc55328 *R/Cplot.R
@@ -105,13 +105,13 @@ a6978ca7d45a578a4fb047fb92eeed73 *inst/doc/Follow-up.rnw
 37f8cd2365c025fbb1d348052c67f712 *inst/doc/simLexis.rnw
 e4492b992d998aa710005d1f3152e6af *inst/doc/yll.R
 960d6c72c42974198a28ab887ef969db *inst/doc/yll.pdf
-038cd6b793969ad87f9cffad41c44ca0 *inst/doc/yll.rnw
+5b597c102643a5597a70ec91abc1899c *inst/doc/yll.rnw
 317bb6ebeaec5e7376b609d7e382c166 *man/B.dk.Rd
 3abc5c20e62c874d70dcb2688ad2cce5 *man/DMconv.Rd
 e9a988b029749169403ab0bf749d53da *man/DMepi.Rd
 362200b221355a7bcbcd1c7c8df5243f *man/DMlate.Rd
 c87e6a0d0a5c461ecf4df07c2c96f1c1 *man/Icens.Rd
-39d7b1fc6a514f8a6fd7d5013893a4c5 *man/LCa.fit.Rd
+d4748330ffa069ab208cd59f766c37d6 *man/LCa.fit.Rd
 1ab9326a322e35e9855be902cc2a5da8 *man/Lexis.Rd
 c97dabafce248e4d47c5b18b6f04efe0 *man/Lexis.diagram.Rd
 2e71ca58213788c8a358708e776e2112 *man/Lexis.lines.Rd
@@ -148,7 +148,7 @@ a1ab8c14b721360ba0cb17da598bfa84 *man/detrend.Rd
 386d0a4aa3515cf754ef458e1f32089c *man/diet.Rd
 64dd6599bb830e98f4717b1a34ee12ab *man/effx.Rd
 3c3cc3b1ecabece6b7709c1b147bab4e *man/effx.match.Rd
-2acb3e188240a6fbba6a7129e3fca0ba *man/erl.Rd
+a4922d13042b2d343868518a072e64d3 *man/erl.Rd
 0dc62e726cdff6694774fab66595ee81 *man/ewrates.Rd
 eb0c50c4a2572fd514c475358165fa57 *man/expand.data.rd
 344adb137962cfa8fc7c2cf2858de3a3 *man/fit.add.Rd
@@ -205,4 +205,4 @@ d77bd820f6ce7dc7883c9e2813a44c89 *src/init.c
 a6978ca7d45a578a4fb047fb92eeed73 *vignettes/Follow-up.rnw
 364611344a5e791ae93f506e961b5fcc *vignettes/index.html
 37f8cd2365c025fbb1d348052c67f712 *vignettes/simLexis.rnw
-038cd6b793969ad87f9cffad41c44ca0 *vignettes/yll.rnw
+5b597c102643a5597a70ec91abc1899c *vignettes/yll.rnw
