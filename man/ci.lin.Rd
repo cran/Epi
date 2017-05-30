@@ -91,8 +91,8 @@ ci.ratio( r1, r2,
     function; if FALSE, the prediction on the link scale is returned.}
   \item{sample}{Logical or numerical. If \code{TRUE} or numerical a
     sample of size \code{as.numeric(sample)} is drawn from the
-    multivariate normal with mean equal to the (\code{subet} defined)
-    coefficients and variance equal to the estimated variance-covriance
+    multivariate normal with mean equal to the (\code{subset} defined)
+    coefficients and variance equal to the estimated variance-covariance
     of these. These are then transformed by \code{ctr.mat} and
     returned.}
   \item{pval}{Logical. Should a column of P-values be included with the estimates
@@ -104,11 +104,11 @@ ci.ratio( r1, r2,
   \item{newdata}{Data frame of covariates where prediction is made.}
   \item{r1,r2}{Estimates of rates in two independent groups, with
     confidence intervals.}
-  \item{se1,se2}{Standard errors og log-rates in the two groups. If
+  \item{se1,se2}{Standard errors of log-rates in the two groups. If
     given, it is assumed that \code{r1} and \code{r2} represent
     log-rates.}
   \item{log.tr}{Logical, if true, it is assumed that \code{r1} and
-    \code{r2} represent log-rates with confidnece intervals.}
+    \code{r2} represent log-rates with confidence intervals.}
   }
 \value{
   \code{ci.lin} returns a matrix with number of rows and row names as

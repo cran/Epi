@@ -129,7 +129,7 @@ Ns <- function( x, ref = NULL,
     }
   if( detrend & any(!is.na(fixsl)) ) {
     warning( "detrend= specified, hence fixsl argument is ignored")
-    fixsl=c(NA,NA)
+    fixsl=c(FALSE,FALSE)
     }
   ## Here is the specification of the spline basis
   ## df= specified

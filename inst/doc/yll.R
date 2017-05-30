@@ -12,8 +12,8 @@ options( width=90,
 ###################################################
 ### code chunk number 2: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 library( Epi )
-print( sessionInfo(), locale=FALSE )
 TM <- matrix(NA,4,4)
 rownames(TM) <-
 colnames(TM) <- c("Well","DM","Dead","Dead(DM)") 
@@ -24,6 +24,7 @@ zz <- boxes( TM, boxpos=list(x=c(20,80,20,80),y=c(80,80,20,20)), wm=1.5, hm=4 )
 ###################################################
 ### code chunk number 3: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c( expression(lambda),   
                    expression(mu[W]),    
                    expression(mu[D][M]) )
@@ -31,20 +32,20 @@ boxes( zz )
 
 
 ###################################################
-### code chunk number 4: yll.rnw:393-394
+### code chunk number 4: yll.rnw:392-393
 ###################################################
 data( DMepi )
 
 
 ###################################################
-### code chunk number 5: yll.rnw:399-401
+### code chunk number 5: yll.rnw:398-400
 ###################################################
 str( DMepi )
 head( DMepi )
 
 
 ###################################################
-### code chunk number 6: yll.rnw:421-425
+### code chunk number 6: yll.rnw:420-424
 ###################################################
 DMepi <- transform( subset( DMepi, A>30 ),
                     D.T = D.nD + D.DM, 
@@ -53,7 +54,7 @@ head(DMepi)
 
 
 ###################################################
-### code chunk number 7: yll.rnw:431-457
+### code chunk number 7: yll.rnw:430-456
 ###################################################
 # Knots used in all models
 ( a.kn <- seq(40,95,,6) )
@@ -84,7 +85,7 @@ lW.f <- update( lW.m, data = subset( DMepi, sex=="F" ) )
 
 
 ###################################################
-### code chunk number 8: yll.rnw:464-501
+### code chunk number 8: yll.rnw:463-500
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
@@ -128,6 +129,7 @@ round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
 ###################################################
 ### code chunk number 9: imm
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh){
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, bty="n", las=1 )
 
@@ -155,47 +157,49 @@ plyll("Imm")
 ###################################################
 ### code chunk number 10: tot
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Tot")
 
 
 ###################################################
 ### code chunk number 11: sus
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Sus")
 
 
 ###################################################
-### code chunk number 12: yll.rnw:585-586
+### code chunk number 12: yll.rnw:584-585
 ###################################################
 source( "../R/erl.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 13: yll.rnw:596-597
+### code chunk number 13: yll.rnw:595-596
 ###################################################
 surv1
 
 
 ###################################################
-### code chunk number 14: yll.rnw:601-602
+### code chunk number 14: yll.rnw:600-601
 ###################################################
 erl1
 
 
 ###################################################
-### code chunk number 15: yll.rnw:609-610
+### code chunk number 15: yll.rnw:608-609
 ###################################################
 surv2
 
 
 ###################################################
-### code chunk number 16: yll.rnw:614-615
+### code chunk number 16: yll.rnw:613-614
 ###################################################
 erl
 
 
 ###################################################
-### code chunk number 17: yll.rnw:619-620
+### code chunk number 17: yll.rnw:618-619
 ###################################################
 yll
 

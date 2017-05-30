@@ -1,4 +1,4 @@
-### R code from vignette source 'simLexis'
+### R code from vignette source 'simLexis.rnw'
 ### Encoding: UTF-8
 
 ###################################################

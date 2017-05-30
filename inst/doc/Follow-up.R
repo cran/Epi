@@ -1,5 +1,4 @@
 ### R code from vignette source 'Follow-up.rnw'
-### Encoding: UTF-8
 
 ###################################################
 ### code chunk number 1: Follow-up.rnw:65-67

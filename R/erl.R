@@ -25,6 +25,12 @@ sum( ( x[-length(x)] + x[-1] ) / 2, na.rm=TRUE )
 # Check sensibility
 if( !immune & is.null(lam) ) stop( "'lam' is required when immune=FALSE\n" )
 
+# Replace NAs with 0s
+if( !is.null(lam) ) {
+if( any(is.na(lam)) ){ lam[is.na(lam)] <- 0 ; warning("NAs in agument 'lam' set to 0") } }
+if( any(is.na(muD)) ){ muD[is.na(muD)] <- 0 ; warning("NAs in agument 'muD' set to 0") }
+if( any(is.na(muW)) ){ muW[is.na(muW)] <- 0 ; warning("NAs in agument 'muW' set to 0") }
+    
 # Survival functions    
              sD <- surv1( int=int,      muD,      age.in = age.in, A = A )
 if( immune ) sW <- surv1( int=int, muW,           age.in = age.in, A = A )    
@@ -75,6 +81,9 @@ function( int, mu, age.in=0, A=NULL )
 # int and mu should be in compatible units that is T and T^-1 for
 # some unit T (months, years, ...) 
 
+# impute 0s for NAs
+if( any(is.na(mu)) ){ mu[is.na(mu)] <- 0 ; warning("NAs in agument 'mu' set to 0") }
+    
 # age-class boundaries    
 age <- 0:length(mu)*int + age.in
 
@@ -131,6 +140,12 @@ if( length(muW) != length(muD) |
         ", length(muD)=", length(muD),
         ", length(lam)=", length(lam) )
 
+# Replace NAs with 0s
+if( !is.null(lam) ) {
+if( any(is.na(lam)) ){ lam[is.na(lam)] <- 0 ; warning("NAs in agument 'lam' set to 0") } }
+if( any(is.na(muD)) ){ muD[is.na(muD)] <- 0 ; warning("NAs in agument 'muD' set to 0") }
+if( any(is.na(muW)) ){ muW[is.na(muW)] <- 0 ; warning("NAs in agument 'muW' set to 0") }
+
 # First the workhorse that computes the survival function for a
 # person in Well assuming that the mortality rate from this state is
 # muW, disease incidence is in lam, and mortality in the diseased
@@ -139,8 +154,8 @@ if( length(muW) != length(muD) |
 wsurv2 <-
 function( int, muW, muD, lam, age.in=0, A=0 )
 {
-# age-class boundaries - note one longer that rate vectors refers to
-# boundaries of intervals not midpoints  
+# age-class boundaries - note one longer than rate vectors as it
+# refers to boundaries of intervals not midpoints  
 age <- 0:length(muW)*int + age.in
     
 # cumulative rates at the boundaries, given survival to A
@@ -181,7 +196,7 @@ if( !is.null(A) )
    for( j in 1:length(A) )
       { 
       surv <- cbind( surv, 
-                    wsurv2( int, muW, muD, lam, age.in=age.in, A=A[j] )[,2] )
+                     wsurv2( int, muW, muD, lam, age.in=age.in, A=A[j] )[,2] )
       }
    }
 Al <- A

@@ -38,17 +38,20 @@ ci.cum( obj,
   \item{sample}{Should a sample of the original parameters be used to
     compute a cumulative rate?}
 }
-\details{
-  The purpose of this function is to compute cumulative rate based on a
-  model for the rates. If the model is a multiplicative model for the
-  rates, the purpose of \code{ctr.mat} is to return a vector of rates or
-  log-rates when applied to the coefficients of the model. If log-rates
-  are returned from the model, the they should be exponentiated before
+\details{  
+  The purpose of this function is to the compute cumulative rate
+  (integrated intensity) at a set of points based on a model for the
+  rates. 
+  \code{ctr.mat} is a matrix which, when premultiplied to the parameters
+  of the model reurn the (log)rates at a set of increasing time points. If log-rates are
+  returned from the model, the they should be exponentiated before
   cumulated, and the variances computed accordingly. Since the primary
   use is for log-linear Poisson models the \code{Exp} parameter defaults
   to TRUE.
 
-  The \code{ci.Exp} argumen ensures that the confidence intervals for
+  The \code{ci.Exp} argument ensures that the confidence intervals for
+  the cumulaive rates are alwys positive, so that exp(-cum.rate) is
+  always in [0,1].
 }
 \value{
    A matrix with 4 columns: Estimate, lower and upper c.i. and standard
@@ -91,10 +94,14 @@ MM <- ns( tB, knots=c(50,100,200,400,700), intercept=TRUE )
 mp <- glm( D ~ MM - 1 + offset(log(Y)),
            family=poisson, eps=10^-8, maxit=25 )
 
+# mp is now a model for the rates along the time scale tB
+
 # Contrast matrix to extract effects, i.e. matrix to multiply with the
 # coefficients to produce the log-rates: unique rows of MM, in time order.
 T.pt <- sort( unique( tB ) )
 T.wh <- match( T.pt, tB )
+
+# ctr.mat=MM[T.wh,] selects the rates as evaluated at times T.pt:
 Lambda <- ci.cum( mp, ctr.mat=MM[T.wh,], intl=diff(c(0,T.pt)) )
 
 # Put the estimated survival function on top of the KM-estimator
