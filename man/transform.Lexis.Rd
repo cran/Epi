@@ -5,6 +5,8 @@
 \alias{factorize}
 \alias{factorize.Lexis}
 \alias{levels.Lexis}
+\alias{order.Lexis}
+\alias{sort.Lexis}
 \title{Transform a Lexis (or stacked.Lexis) objects}
 \description{
   Modify a Lexis object.
@@ -15,6 +17,8 @@
 \method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
 \method{levels}{Lexis}( x )
 \method{factorize}{Lexis}( x, states, print = TRUE, \dots )
+%\method{order}{Lexis}( x, \dots )
+%\method{sort}{Lexis}( x, \dots )
 \method{transform}{stacked.Lexis}( `_data`, \dots)
 }
 \arguments{
@@ -43,7 +47,13 @@
   not passed to the function, the returned object have levels of
   \code{lex.Cst}, \code{lex.Xst} (and for \code{stacked.Lexis} objects
   \code{lex.Tr}) shaved down to the actually occurring values.
-  }
+
+  \code{order} returns the order of the rows in a Lexis object to sort
+  it by (\code{lex.id},\code{timeScales[x]}).
+
+  \code{sort} returns the Lexis object sorted by
+  (\code{lex.id},\code{timeScales[x]}). 
+}
 \value{
   A transformed \code{Lexis} object.
 

@@ -770,3 +770,6 @@ transform.Lexis <- function(`_data`, ... )
     attributes(y) <- save.at
     y
 }
+
+# order.Lexis <- function( x ) order( x$lex.id, lex[,timeScales(x)[1]] )
+# sort.Lexis <- function( x, ... ) x[order.Lexis(x,...),]

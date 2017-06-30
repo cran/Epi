@@ -31,7 +31,7 @@ LCa.fit( data, A, P, D, Y,
                    c = 6,  # no. knots for cohort-effect
                   pi = 6,  # no. knots for age in the period interaction
                   ci = 6), # no. knots for age in the cohort interaction
-            VC = TRUE,     # numerical calculation of the Hessia?
+            VC = TRUE,     # numerical calculation of the Hessian?
          alpha = 0.05,     # 1 minus confidence level
            eps = 1e-6,     # convergence criterion
          maxit = 100,      # max. no iterations
@@ -139,8 +139,7 @@ LCa.fit( data, A, P, D, Y,
   multiplicative age by cohort or even both. Thus the most extensive
   model is:
 
-  \deqn{\log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}%
-  {log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}
+  \deqn{log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}{log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}
 
   The naming convention for the models is a capital \code{P} and/or
   \code{C} if the effect is in the model followed by a lower case

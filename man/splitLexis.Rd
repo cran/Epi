@@ -85,5 +85,9 @@ tapply( status(x2,"exit")==1, list( timeBand(x2,"age","left"),
 tapply( dur(x2),  list( timeBand(x2,"age","left"),
                         timeBand(x2,"per","left") ), sum )
 }
-\seealso{\code{\link{timeBand}}, \code{\link{cutLexis}}, \code{\link{summary.Lexis}}}
+\seealso{
+  \code{\link{timeBand}},
+  \code{\link{cutLexis}},
+  \code{\link{mcutLexis}},
+  \code{\link{summary.Lexis}}}
 \keyword{manip}

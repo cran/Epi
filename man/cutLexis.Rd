@@ -120,6 +120,7 @@ countLexis( data, cut, timescale = 1 )
         Martyn Plummer, IARC, \email{plummer@iarc.fr}
 }
 \seealso{
+  \code{\link{mcutLexis}},
   \code{\link{splitLexis}},
   \code{\link{Lexis}},
   \code{\link{summary.Lexis}},
