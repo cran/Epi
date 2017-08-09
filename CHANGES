@@ -1,3 +1,23 @@
+Changes in 2.19
+
+o Typos in documentation fixed, LCa.fit
+
+o Bug in knot calculation in LCa.fit fixed. Meaningless models emerged
+  if explicit knots were supplied for cohort effects. Prior to 2.19
+  only supplying *number* of knots for effects would give meaningful
+  models if a cohort effect were included (with or without
+  age-interaction).
+
+WISH: gen.exp has now got a wrapper, genExp.Lexis, explicitly using the
+  Lexis structure.
+
+Changes in 2.18
+
+o addCov.Lexis was fundamentally flawed, re-written, argument names and
+  order changed too.
+ 
+o Documentation links between addCov.Lexis and gen.exp are introduced.
+
 Changes in 2.16
  
 o Function addCov.Lexis added. Allows addition of covariates (clinical

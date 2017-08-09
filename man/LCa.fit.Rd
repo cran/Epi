@@ -24,10 +24,10 @@ LCa.fit( data, A, P, D, Y,
          a.ref,            # age reference for the interactions
         pi.ref = a.ref,    # age reference for the period interaction
         ci.ref = a.ref,    # age reference for the cohort interaction
-         p.ref,            # period reference for the intercation
+         p.ref,            # period reference for the interaction
          c.ref,            # cohort reference for the interactions
           npar = c(a = 6,  # no. knots for main age-effect
-                   p = 6,  # no. knots for peroid-effect
+                   p = 6,  # no. knots for period-effect
                    c = 6,  # no. knots for cohort-effect
                   pi = 6,  # no. knots for age in the period interaction
                   ci = 6), # no. knots for age in the cohort interaction
@@ -81,9 +81,9 @@ LCa.fit( data, A, P, D, Y,
   Reference period for the time-interaction term \code{kp(t)} where \code{kc(c.ref)=0}.
   }
   \item{model}{
-  Character, either \code{APa} which is the classical Lee-Carter model
-  for log-rates, other possibilities are \code{ACa}, \code{APCa},
-  \code{APaC} or \code{APaCa}, see details.
+  Character, either \code{"APa"} which is the classical Lee-Carter model
+  for log-rates, other possibilities are \code{"ACa"}, \code{"APCa"},
+  \code{"APaC"} or \code{"APaCa"}, see details.
   }
   \item{npar}{
   A (possibly named) vector or list, with either the number of knots or
@@ -113,7 +113,7 @@ LCa.fit( data, A, P, D, Y,
   Maximal number of iterations.
   }
   \item{quiet}{
-  Shall I shup up or talk extensively to you about iteration progression etc.?
+  Shall I shut up or talk extensively to you about iteration progression etc.?
   }
   \item{object}{An \code{LCa} object, see under "Value".}
   \item{show.est}{Logical. Should the estimates be printed?}
@@ -139,7 +139,8 @@ LCa.fit( data, A, P, D, Y,
   multiplicative age by cohort or even both. Thus the most extensive
   model is:
 
-  \deqn{log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}{log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}
+  \deqn{\log(\lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}{%
+        log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}
 
   The naming convention for the models is a capital \code{P} and/or
   \code{C} if the effect is in the model followed by a lower case
@@ -155,7 +156,7 @@ LCa.fit( data, A, P, D, Y,
   
   The coefficients and the variance-covariance matrix of these are used
   in \code{predict.LCa} for a parametric bootstrap (that is, a simulation from
-  a multivariate normal with mean equal to the parameterestiamtes and
+  a multivariate normal with mean equal to the parameter estimates and
   variance as the estimated variance-covariance) to get confidence
   intervals for the predictions if \code{sim} is \code{TRUE} --- which
   it is by default if they are part of the object.
@@ -200,7 +201,7 @@ LCa.fit( data, A, P, D, Y,
 \item{vcov}{Variance-covariance matrix of coefficients from both
   models, in the same order as in the \code{coef}. Only present if
   \code{LCa.fit} were called with \code{VC=TRUE}.} 
-\item{knots}{List of vectors of knots used in for the age, perido and
+\item{knots}{List of vectors of knots used in for the age, period and
   cohort effects.}
 \item{refs}{List of reference points used for the age, period and
   cohort terms in the interactions.}
@@ -221,15 +222,22 @@ LCa.fit( data, A, P, D, Y,
   \code{newdata}. If \code{LCa.fit} were called with \code{VC=TRUE}
   there will be 3 columns, namely prediction (1st column) and c.i.s
   based on a simulation of parameters from a multivariate normal with
-  mean \code{coef} abd cariance \code{vcov} using the median and
+  mean \code{coef} and variance \code{vcov} using the median and
   \code{alpha}/2 quantiles from the \code{sim} simulations.  If
   \code{LCa.fit} were called with \code{VC=FALSE} there
   will be 6 columns, namely estimates and c.i.s from age-time model (\code{mod.at}), and
   from the age-interaction model (\code{mod.b}), both using conditional variances.
   }
 \author{
-Bendix Carstensen, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \url{http://BendixCarstensen.com}
+
+  This function was conceived during a course on APC models at the Max
+  Planck Institute of Demographic Research (MPIDR,
+  \url{https://www.demogr.mpg.de/en/}) in Rostock in May 2016
+  (\url{http://bendixcarstensen.com/APC/MPIDR-2016/}), and finished
+  during a research stay there, kindly sponsored by the MPIDR. 
 }
+
 \seealso{
  \code{\link{apc.fit}},
  \code{\link{apc.LCa}},
@@ -237,8 +245,7 @@ Bendix Carstensen, \url{http://BendixCarstensen.com}
  \code{\link[demography]{lca}} }
 \examples{
 library( Epi )
-# Load the male lung cancer data by Lexis triangles and
-# rename age and period as required by LCa.fit
+# Load the testis cancer data by Lexis triangles
 data( testisDK )
 tc <- subset( testisDK, A>14 & A<60 )
 head( tc )

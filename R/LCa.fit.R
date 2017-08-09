@@ -23,10 +23,10 @@ function( data, A, P, D, Y,
 if( !(model %in% c("APa","ACa","APaC","APCa","APaCa")) )
   stop( '"model" must be one of "APa","ACa","APaC","APCa","APaCa", but is', model,'\n' )
 
-# Which main effects and interactiosn are in the model
+# Which main effects and interactions are in the model
  intP <- as.logical(length(grep("Pa",model)))
-mainP <- as.logical(length(grep("P" ,model))) # Also includes the age-period interaction
  intC <- as.logical(length(grep("Ca",model)))
+mainP <- as.logical(length(grep("P" ,model))) # Also includes the age-period interaction
 mainC <- as.logical(length(grep("C" ,model))) # Also includes the age-cohort product
 
 # if a dataframe is supplied, fish out data and put in the function's environment
@@ -43,11 +43,10 @@ if( !missing(data) )
   D <- data$D
   Y <- data$Y
   } else { # if single vectors supplied, check they are all there
-  nm <- logical(4)
-  nm[1] <- missing(A)
-  nm[2] <- missing(P)
-  nm[3] <- missing(D)
-  nm[4] <- missing(Y)
+  nm <- c(missing(A),
+          missing(P),
+          missing(D),
+          missing(Y))
   if (any(nm))
       stop("Variable", if (sum(nm) > 1)
           "s", paste(c(" A", " P", " D", " Y")[nm], collapse = ","),
@@ -68,26 +67,26 @@ if( is.list(npar) ) {
   # Check if names is a named list
   if( is.null(names(npar)) ) stop( "If npar= is a list, it must be a *named* list.\n" )
     a.kn <- if( length(npar$a )>1 ) npar$a  else quantile( rep(  A,D), probs=eqqnt(npar$a ) )
-   pi.kn <- if( length(npar$pi)>1 ) npar$pi else quantile( rep(  A,D), probs=eqqnt(npar$pi) )
     p.kn <- if( length(npar$p )>1 ) npar$p  else quantile( rep(P  ,D), probs=eqqnt(npar$p ) ) 
+    c.kn <- if( length(npar$c )>1 ) npar$c  else quantile( rep(P-A,D), probs=eqqnt(npar$c ) )
+   pi.kn <- if( length(npar$pi)>1 ) npar$pi else quantile( rep(  A,D), probs=eqqnt(npar$pi) )
    ci.kn <- if( length(npar$ci)>1 ) npar$ci else quantile( rep(  A,D), probs=eqqnt(npar$ci) )
-    c.kn <- if( length(npar$b )>1 ) npar$c  else quantile( rep(P-A,D), probs=eqqnt(npar$c ) )
     }
   else { # if npar is too short fill it up
   npar <- rep( npar, 5 )[1:5]
   # if not named, name it and notify
   if( is.null(names(npar)) ) names(npar) <- c("a","p","c","pi","ci")
     a.kn <- quantile( rep(  A,D), probs=eqqnt(npar["a"] ) )
-   pi.kn <- quantile( rep(  A,D), probs=eqqnt(npar["pi"]) )
     p.kn <- quantile( rep(P  ,D), probs=eqqnt(npar["p"] ) )
-   ci.kn <- quantile( rep(  A,D), probs=eqqnt(npar["ci"]) )
     c.kn <- quantile( rep(P-A,D), probs=eqqnt(npar["c"] ) )
+   pi.kn <- quantile( rep(  A,D), probs=eqqnt(npar["pi"]) )
+   ci.kn <- quantile( rep(  A,D), probs=eqqnt(npar["ci"]) )
   }
     
 # Reference points
 if( missing( p.ref) )  p.ref <- median( rep(P  ,D) )
-if( missing(pi.ref) ) pi.ref <- median( rep(  A,D) )    
 if( missing( c.ref) )  c.ref <- median( rep(P-A,D) )
+if( missing(pi.ref) ) pi.ref <- median( rep(  A,D) )    
 if( missing(ci.ref) ) ci.ref <- median( rep(  A,D) )    
 
 ############################################################################
@@ -482,8 +481,8 @@ if( mt$intC ) {
 
 # First fitted values from mod.at
 # Note that the model object mod.at always has the same number of
-# parameters, for some of the model eitehr period or cohort parameters
-# are 0, so not used.  
+# parameters, for some of the models either period or cohort parameters
+# are 0, hence not used.  
 pr0 <- ci.exp( object$mod.at, alpha=alpha, ctr.mat=cbind(Ma,Mp*pi,Mc*ci) )
 
 # Then fitted values from mod.b
@@ -495,10 +494,10 @@ pr0 <- cbind( pr0, exp( lp.b %*% ci.mat(alpha=alpha) ) )
 # label the estimates
 colnames( pr0 )[c(1,4)] <- c("at|b Est.","b|at Est.")
 
-# This gives confidence intervals based on the conditional models,
-# so if we want proper intervals we should simulate instead, using the
-# posterior distribuion of all parameters, albeit under the slightly
-# fishy assumption that the joint posterior is normal...  
+# The doings above gives confidence intervals based on the conditional
+# models, so if we want proper intervals we should simulate instead,
+# using the posterior distribuion of all parameters, albeit under the
+# slightly fishy assumption that the joint posterior is normal...
 if( sim ) # also renders TRUE if sim is numerical (and not 0)
   {
 if( is.logical(sim) & sim ) sim <- 1000

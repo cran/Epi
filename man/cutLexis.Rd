@@ -17,10 +17,10 @@
 cutLexis( data, cut, timescale = 1,
                      new.state = nlevels(data$lex.Cst)+1,
                      new.scale = FALSE,
-                     split.states = FALSE,
-                     progressive = FALSE,
-                     precursor.states = NULL,
-                     count = FALSE)
+                  split.states = FALSE,
+                   progressive = FALSE,
+              precursor.states = NULL,
+                         count = FALSE )
 countLexis( data, cut, timescale = 1 )
 }
 \arguments{
