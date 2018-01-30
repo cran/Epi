@@ -1,4 +1,4 @@
-\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE,prefix.string=sL}
+\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 %\VignetteIndexEntry{Simulation of multistate models with multiple timescales: simLexis}
 \documentclass[a4paper,twoside,12pt]{report}
 
@@ -7,7 +7,7 @@
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
   timescales:\\ \texttt{simLexis} in the \texttt{Epi} package}
 \newcommand{\Tit}{Multistate models with multiple timescales}
-\newcommand{\Version}{Version 2.3}
+\newcommand{\Version}{Version 2.4}
 \newcommand{\Dates}{\today}
 \newcommand{\Where}{SDC}
 \newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi/simLexis.pdf}}
@@ -16,7 +16,7 @@ Bendix Carstensen
   & Steno Diabetes Center, Gentofte, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
-  & \texttt{bxc@steno.dk}\\
+  & \texttt{b@bxc.dk}\\
   & \url{http://BendixCarstensen.com} \\[1em]
                       \end{tabular}}
 
@@ -90,7 +90,7 @@ afterpage}
 
 %----------------------------------------------------------------------
 % How to insert a figure in a .rnw file
-\newcommand{\rwpre}{sL}
+\newcommand{\rwpre}{simLexis}
 \newcommand{\insfig}[3]{
 \begin{figure}[h]
   \centering
@@ -348,7 +348,7 @@ print( subset( Si, lex.id==97 )[,1:10], digits=6 )
 Note that when we split the follow-up each person's follow up now
 consists of many records, each with the \emph{current} values of the
 timescales at the start of the interval represented by the record. In
-the modelling we must necessarily assume that the rates are constant
+the modeling we must necessarily assume that the rates are constant
 within each 6-month interval, but the \emph{size} of these rates we
 model as smooth functions of the time scales (that is the values at
 the beginning of each interval).
@@ -593,7 +593,7 @@ all timescales by definition advance at the same pace. For example,
 the age-effect for a fixed value of insulin duration really is a
 misnomer since it does not correspond to any real person's follow-up,
 but to the mortality of persons in different ages but with the same
-duration of incuin use.
+duration of insulin use.
 
 \section{Input to the \texttt{simLexis} function}
 
@@ -651,12 +651,15 @@ ini
 
 \section{Simulation of the follow-up}
 
-Now we simulate 1000 of each of these persons using the estimated
-model. The \texttt{t.range} argument gives the times range where the
-integrated intensities (cumulative rates) are evaluated and where
-linear interpolation is used when simulating transition times. Note
-that this must be given in the same units as \texttt{lex.dur} in the
-\texttt{Lexis} object used for fitting the models for the transitions.
+Now we simulate life-courses of a 1000 of each of these persons using
+the estimated model. The \texttt{t.range} argument gives the times
+range where the integrated intensities (cumulative rates) are
+evaluated and where linear interpolation is used when simulating
+transition times. Note that this must be given in the same units as
+\texttt{lex.dur} in the \texttt{Lexis} object used for fitting the
+models for the transitions. It is not a parameter that can be easily
+determined from the \texttt{TR} object, hence it must be supplied by
+the user.
 <<simL>>=
 set.seed( 52381764 )
 Nsim <- 1000
@@ -665,13 +668,6 @@ system.time( simL <- simLexis( Tr,
                           t.range = 12,
                                 N = Nsim ) )
 @ %
-%% Temp 
-%% <<>>=
-%% source("../../../tmpstore/rbind.Lexis.R")
-%% source("../R/simLexis.R")
-%% lls()
-%% @ 
-%% Temp 
 The result is a \texttt{Lexis} object --- a data frame representing
 the simulated follow-up of \Sexpr{2*Nsim} persons (\Sexpr{Nsim}
 identical men and \Sexpr{Nsim} identical women) according to the rates
@@ -768,7 +764,7 @@ Based on this table (\texttt{nSt} is a table) we can now compute the
 fractions in each state, or, rather more relevant, the cumulative fraction
 across the states in some specified order, so that a plot of the
 stacked probabilities can be made, using either the default rather
-colorful layout, or a more minimalistic version (both in figure \ref{fig:pstate0}):
+colorful layout, or a more minimalist version (both in figure \ref{fig:pstate0}):
 <<pstate0,fig=TRUE,width=9>>=
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
@@ -782,7 +778,7 @@ box( col="white", lwd=3 )
 box()
 @ %
 \insfig{pstate0}{1.0}{Default layout of the \textrm{\tt plot.pState}
-  graph (left), and a version with the state probabilites as lines and
+  graph (left), and a version with the state probabilities as lines and
   annotation of states.}
 
 A more useful set-up of the graph would include a more through
@@ -861,7 +857,7 @@ axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
 axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 @ %
 Note the several statements with \texttt{axis(side=4,...}; they are
-nesessary to get the fine tick-marks in the right hand side of the
+necessary to get the fine tick-marks in the right hand side of the
 plots that you will need in order to read off the probabilities at
 2006 (or 71 years).
 
@@ -917,7 +913,7 @@ box( lwd=3 )
 
 From figure \ref{fig:comp-0} it is clear that the two proportional
 hazards models (blue and red curves) produce pretty much the same
-estimates of the state occupancy probabilites over time, but also that
+estimates of the state occupancy probabilities over time, but also that
 they relative to the model with separately estimated transition
 intensities overestimates the probability of being alive without
 insulin and underestimates the probabilities of being dead without
@@ -927,7 +923,7 @@ model. Thus the proportional hazards models overestimate the relative
 mortality of the insulin treated diabetes patients relative to the
 non-insulin treated.
 
-Interestingly, we also see a bump in th estimated probabilities from
+Interestingly, we also see a bump in the estimated probabilities from
 the Cox-model based model, but this is entirely an artifact that comes
 from the estimation method for the baseline hazard of the Cox-model
 that lets the (cumulative) hazard have large jumps at event times
@@ -1030,8 +1026,27 @@ follows:
 
 This section explains the actually existing code for
 \texttt{simLexis}, as it is in the current version of \texttt{Epi}.
-<<echo=FALSE,results=hide>>=
+
+% The following code sources the originally formatted code in
+% simLexis.R in order to make it printable with all the formatting and
+% comments in it. However the sourcing does not work when compiling
+% the vignettes in R CMD build. So when checking the code we comment
+% this out by putting eval=FALSE, and moreover, because it is only
+% simLexis that is exported, we also need to bring the functions simX,
+% sim1, lint, get.next and chop.lex into the workspace. So depending
+% on whether we actually construct the pdf for the inst/doc folder or
+% test (upload) the package, one of the following to chunks are run
+% with eval=FALSE and the other with eval=TRUE
+
+<<CHANGE1,echo=FALSE,results=hide,eval=FALSE>>=
 source( "../R/simLexis.R", keep.source=TRUE )
+@ %
+<<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
+simX <- Epi:::simX
+sim1 <- Epi:::sim1
+lint <- Epi:::lint
+get.next <- Epi:::get.next
+chop.lex <- Epi:::chop.lex
 @ %
 The function \texttt{simLexis} takes a \texttt{Lexis} object as
 input. This defines the initial state(s) and times of the start for a

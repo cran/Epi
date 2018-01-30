@@ -94,16 +94,17 @@ if( missing(ci.ref) ) ci.ref <- median( rep(  A,D) )
 commence <- Sys.time()
     
 # Matrices to extract the age-interaction terms at reference points
-Mp <- Ns( rep(pi.ref,length(A)), knots=pi.kn, intercept=TRUE )
-Mc <- Ns( rep(ci.ref,length(A)), knots=ci.kn, intercept=TRUE )
+Ap <- Ns( rep(pi.ref,length(A)), knots=pi.kn, intercept=TRUE )
+Ac <- Ns( rep(ci.ref,length(A)), knots=ci.kn, intercept=TRUE )
 
 # Current age-effects (in the iteration these will be term predictions)
-ba <- cbind( rep(1,length(A)), 1 )
+ba <- matrix( 1, length(A), 2 ) # cbind( rep(1,length(A)), 1 )
+      
 # set to 0 if term is not in model at all
 if( !mainP ) ba[,1] <- 0
 if( !mainC ) ba[,2] <- 0
-
-# Main effects model with (at least one) age-interactions
+# Main effects model with (at least one) age-interaction
+# --- at this stage it is either 0 or 1
 mat <- glm( D ~ -1 + Ns(   A, knots=a.kn, intercept=TRUE ) + 
                      Ns( P  , knots=p.kn, ref=p.ref):ba[,1] + 
                      Ns( P-A, knots=c.kn, ref=c.ref):ba[,2],
@@ -112,7 +113,7 @@ mat <- glm( D ~ -1 + Ns(   A, knots=a.kn, intercept=TRUE ) +
 oldmb <- oldmat <- mat$deviance
     
 # Terms prediction --- three terms here.
-# No need to divide by the ba, it is eiter 1 or 0
+# No need to divide by the ba at this point, it is eiter 1 or 0
 pat <- predict( mat, type="terms" )
 
 # iteration counter and continuation indicator
@@ -127,25 +128,29 @@ while( one.more )
   {  
 nit <- nit+1
 
-# Terms with main effects should be either in interaction or offset,
-# so one of these should always be 0
+# The estimated terms from the modeling of the APC-effects to be used
+# as offsets
+        Aoff <- pat[,1]
 Pint <- Poff <- pat[,2]
 Cint <- Coff <- pat[,3]
+# P or C terms with main effects should be either in interaction or
+# offset, so one of these should always be 0
 if( intP ) Poff <- Poff*0 else Pint <- Pint*0
 if( intC ) Coff <- Coff*0 else Cint <- Cint*0
-# Iteration of the age-interaction    
+# Iteration of the age-components of the interaction
 mb <- glm( D ~ -1 + Ns( A, knots=pi.kn, intercept=TRUE ):Pint +
                     Ns( A, knots=ci.kn, intercept=TRUE ):Cint,
-           offset = pat[,1] + Poff + Coff + log(Y),
+           offset = Aoff + Poff + Coff + log(Y),
            family = poisson )
 
 # Get the age-interaction terms only, and if one is not needed set to 0
-ba <- predict( mb, type="terms" ) / cbind(Pint,Cint) /
-      cbind( ci.lin( mb, subset="pi.kn", ctr.mat=Mp)[,1],
-             ci.lin( mb, subset="ci.kn", ctr.mat=Mc)[,1] )
+ba <- predict( mb, type="terms" ) /
+                 cbind(Pint,Cint) /
+      cbind( ci.lin( mb, subset="pi.kn", ctr.mat=Ap)[,1],  # These are the values at the reference
+             ci.lin( mb, subset="ci.kn", ctr.mat=Ac)[,1] ) # point for A; we want the RRs as effects 
 ba[is.na(ba)] <- 0
 
-# If no interaction only main should be fitted; if no main effect, set to 0 
+# If no interaction only main should be fitted; if no main effect, set to 0 using mainP/C
 if( !intP ) ba[,1] <- rep(1,length(A)) * mainP
 if( !intC ) ba[,2] <- rep(1,length(A)) * mainC
 # apc model with assumed known interactions with age    
@@ -155,16 +160,15 @@ mat <- glm( D ~ -1 + Ns(   A, knots=a.kn, intercept=TRUE ) +
             offset = log(Y),
             family = poisson )
 
-# extract age and period terms      
+# extract age and period terms - rmoving the interactions
 pat <- predict( mat, type="terms" ) / cbind( 1, ba )
 pat[is.na(pat)] <- 0
 
-# convergence? Check bot that the two models give the same deviance
+# convergence? Check both that the two models give the same deviance
 # and that the chnage in each is small
 newmat <- mat$deviance
 newmb  <-  mb$deviance
-conv <- ( reldif <- max( (abs(newmat-newmb)/
-                             (newmat+newmb)*2),
+conv <- ( reldif <- max( (abs(newmat-newmb)/(newmat+newmb)/2),
                          (oldmat-newmat)/newmat,
                          (oldmb -newmb )/newmb ) ) < eps
 one.more <- ( !conv & ( nit < maxit ) )
@@ -516,10 +520,10 @@ parms <- MASS::mvrnorm( n = sim,
                        mu = object$coef,
                     Sigma = object$vcov )
 na  <- ncol( Ma  )
+np  <- ncol( Mp  )
+nc  <- ncol( Mc  )
 npi <- ncol( Mpi )
- np <- ncol( Mp  )
 nci <- ncol( Mci )
- nc <- ncol( Mc  )
 # Compute the linear predictor in each of the simulated samples
 # period and cohort effects if not in the model
 kp <- kc <- rep( 0, nrow(newdata) )
@@ -542,5 +546,3 @@ return( pr.sim )
 }
 else return( pr0 )    
 }
-
-

@@ -34,6 +34,7 @@ str(dmi)
 ###################################################
 ### code chunk number 4: boxes
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes( dmi, boxpos = list(x=c(20,20,80,80),
                         y=c(80,20,80,20)),
             scale.R = 1000, show.BE = TRUE )
@@ -155,6 +156,7 @@ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
 ###################################################
 ### code chunk number 13: mort-int
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
 plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
       log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
@@ -266,6 +268,7 @@ nSt[1:10,]
 ###################################################
 ### code chunk number 23: pstate0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
@@ -281,6 +284,7 @@ box()
 ###################################################
 ### code chunk number 24: pstatex
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 clr <- c("limegreen","orange")
 # expand with a lighter version of the two chosen colors
 clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
@@ -315,6 +319,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 25: pstatey
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
 # Men
 pM <- pState( nState( subset(simL,sex=="M"),
@@ -353,6 +358,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 26: comp-0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 PrM  <- pState( nState( subset(simP,sex=="M"),
                         at=seq(0,11,0.2),
                         from=60,
@@ -389,13 +395,23 @@ box( lwd=3 )
 
 
 ###################################################
-### code chunk number 27: simLexis.rnw:1033-1034
+### code chunk number 27: CHANGE1 (eval = FALSE)
 ###################################################
-source( "../R/simLexis.R", keep.source=TRUE )
+## source( "../R/simLexis.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 28: simLexis.rnw:1050-1053
+### code chunk number 28: CHANGE2
+###################################################
+simX <- Epi:::simX
+sim1 <- Epi:::sim1
+lint <- Epi:::lint
+get.next <- Epi:::get.next
+chop.lex <- Epi:::chop.lex
+
+
+###################################################
+### code chunk number 29: simLexis.rnw:1065-1068
 ###################################################
 cbind(
 attr( ini, "time.scale" ),
@@ -403,55 +419,55 @@ attr( ini, "time.since" ) )
 
 
 ###################################################
-### code chunk number 29: simLexis.rnw:1078-1079
+### code chunk number 30: simLexis.rnw:1093-1094
 ###################################################
 simLexis
 
 
 ###################################################
-### code chunk number 30: simLexis.rnw:1096-1097
+### code chunk number 31: simLexis.rnw:1111-1112
 ###################################################
 simX
 
 
 ###################################################
-### code chunk number 31: simLexis.rnw:1109-1110
+### code chunk number 32: simLexis.rnw:1124-1125
 ###################################################
 sim1
 
 
 ###################################################
-### code chunk number 32: simLexis.rnw:1122-1123
+### code chunk number 33: simLexis.rnw:1137-1138
 ###################################################
 lint
 
 
 ###################################################
-### code chunk number 33: simLexis.rnw:1133-1134
+### code chunk number 34: simLexis.rnw:1148-1149
 ###################################################
 get.next
 
 
 ###################################################
-### code chunk number 34: simLexis.rnw:1143-1144
+### code chunk number 35: simLexis.rnw:1158-1159
 ###################################################
 chop.lex
 
 
 ###################################################
-### code chunk number 35: simLexis.rnw:1161-1162
+### code chunk number 36: simLexis.rnw:1176-1177
 ###################################################
 nState
 
 
 ###################################################
-### code chunk number 36: simLexis.rnw:1171-1172
+### code chunk number 37: simLexis.rnw:1186-1187
 ###################################################
 pState
 
 
 ###################################################
-### code chunk number 37: simLexis.rnw:1176-1178
+### code chunk number 38: simLexis.rnw:1191-1193
 ###################################################
 plot.pState
 lines.pState

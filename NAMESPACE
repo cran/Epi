@@ -96,7 +96,6 @@ lines.apc,
   timeBand,
   timeScales,
   breaks,
-  merge.data.frame,
   tbox,
   dbox,
   fillarr,
@@ -199,7 +198,6 @@ S3method(    print, LCa)
 S3method(  summary, LCa)
 S3method(  predict, LCa)
 S3method(     plot, LCa)
-S3method(    merge, data.frame)
 S3method(    print, stat.table)
 S3method(    print, clogistic)
 S3method(     coef, clogistic)

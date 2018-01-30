@@ -53,7 +53,7 @@ if( !(exnam %in% names(clin)) )
                            ave( clin$lex.id,
                                 clin$lex.id,
                                 FUN = function(x) cumsum(x/x) ),
-                           sep="." )
+                           sep="" )
 
 # Add copy of the time of examination to be carried forward
 clin[,tfc] <- clin[,ts]
@@ -73,14 +73,15 @@ for( st in levels(cfr$new.state) )
 mc <- cutLexis( mc,
                cut = cfr[cfr$new.state==st,],
          timescale = ts,
-  precursor.states = NULL )
+  precursor.states = NULL,
+         new.scale = addScales )
     
-# Merge in the old states
+# Merge in states from the original object mx, but take attributes from mc
 mx <- Lx[,mvar]
 mx$org.Cst <- Lx$lex.Cst
 mx$org.Xst <- Lx$lex.Xst
-mx <- merge( mx, mc, by = mvar, all.y = TRUE, sort = TRUE )    
-
+mx <- merge( mc, mx, by = mvar, all.x = TRUE, sort = TRUE )    
+    
 # Complete the state variables    
 ( wh <- which(is.na(mx$org.Cst)) )
 mx$org.Cst[wh] <- na.locf( mx$org.Cst, nx.rm=FALSE )[wh]
@@ -97,17 +98,32 @@ mx <- mx[,-wh.rm]
 mx <- merge( mx, clin, by=mvar, all.x=TRUE, sort=TRUE )
 
 # And carry them forward within each lex.id
+    
 # locf within each person (should be easier in data.table)
 locf.df <- function( df ) as.data.frame( lapply( df, na.locf, na.rm=FALSE ) )
+
 # ave does not like character variables so we convert to factors
 wh <- which( sapply( mx[,cvar], is.character ) )
 for( j in wh ) mx[,cvar[j]] <- factor( mx[,cvar[j]] )
 # then we can carry forward
 mx[,cvar] <- ave( mx[,cvar], mx$lex.id, FUN=locf.df )
 
-# Finally update the time from clinical measurement
+# Finally update the time from last clinical measurement
 mx[,tfc] <- mx[,ts] - mx[,tfc]
+
+# Add as a time-scale
+if( addScales )
+  {  
+new.scales <- setdiff( timeScales(mx), timeScales(Lx) )
+op <- options(warn = (-1)) # suppress warnings
+mx[,tfc] <- apply( mx[,new.scales,drop=FALSE], 1, min, na.rm=TRUE )    
+options(op) # reset the previous value
+attr( mx, "time.scales") <- c( attr( mx, "time.scales"), tfc ) 
+attr( mx, "time.since" ) <- c( attr( mx, "time.since"), "" )
+brt <- list( x=NULL ) ; names( brt ) <- tfc
+attr( mx, "breaks") <- c( attr( mx, "breaks"), brt ) 
+  }
     
-# Done!
-mx
+# Done! - well order first
+mx[order(mx[,"lex.id"],mx[,timeScales(mx)[1]]),]
 }

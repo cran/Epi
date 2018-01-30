@@ -40,9 +40,9 @@ ci.ratio( r1, r2,
         pval = FALSE )
 }
 \arguments{
-  \item{obj}{A model object (of class
+  \item{obj}{A model object (in general of class \code{glm}, but for
+    \code{ci.lin} and \code{ci.exp} it may also be of class
     \code{lm},
-    \code{glm},
     \code{coxph},
     \code{survreg},
     \code{clogistic},
@@ -65,9 +65,9 @@ ci.ratio( r1, r2,
     parameter names (using \code{grep}) to find the subset. Repeat
     parameters may result from using a character vector. This is
     considered a facility.}
-  \item{subint}{\code{sub}set selection like for \code{subset}, except that
-    elements of a character vector given as argument will be used to
-    select a number of subsets of parameters and only the \code{int}ersection
+  \item{subint}{Character. \code{sub}set selection, but where each
+    element of the character vector is used to
+    select a subset of parameters and only the \code{int}ersection
     of these is returned.}
   \item{diffs}{If TRUE, all differences between parameters
     in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
@@ -84,11 +84,14 @@ ci.ratio( r1, r2,
   \item{alpha}{Significance level for the confidence intervals.}
   \item{df}{Integer. Number of degrees of freedom in the t-distribution used
     to compute the quantiles used to construct the confidence intervals.}
-  \item{Exp}{If \code{TRUE} columns 5:6 are replaced with exp( columns
-    1,5,6 ). For \code{ci.pred} it indicates whether the predictions
-    should be exponentiated - the default is to make a prediction on the
-    scale of the linear predictor and transform it by the inverse link
-    function; if FALSE, the prediction on the link scale is returned.}
+  \item{Exp}{For \code{ci.lin}, if \code{TRUE} columns 5:6 are replaced
+    with exp( columns 1,5,6 ). For \code{ci.exp} of \code{FALSE}, the
+    untransformed parameters are returned. For \code{ci.pred} it
+    indicates whether the predictions should be exponentiated - the
+    default (\code{Exp=NULL}) is to make a prediction with a Wald CI on
+    the scale of the linear predictor and back-transform it by the
+    inverse link function; if \code{FALSE}, the prediction on the link
+    scale is returned.}  
   \item{sample}{Logical or numerical. If \code{TRUE} or numerical a
     sample of size \code{as.numeric(sample)} is drawn from the
     multivariate normal with mean equal to the (\code{subset} defined)
@@ -190,7 +193,7 @@ Wald( mm, subset="f", ctr.mat=CM )
 ( CM <- rbind( c(1,-1,0,0), c(0,1,-1,0)) )
 Wald( mm, subset="f", ctr.mat=CM )
 
-# Confidnece intervas for ratio of rates
+# Confidence intervals for ratio of rates
 ci.ratio( cbind(10,8,12.5), cbind(5,4,6.25) )
 ci.ratio( cbind(8,12.5), cbind(4,6.25) )
 }

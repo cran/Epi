@@ -25,7 +25,7 @@
     A Lexis object with follow-up of a cohort.  
     }
   \item{clin}{
-    A data frame with the covariates to add (typically clinical
+    A data frame with covariates to add (typically clinical
     measurements). Must contain a variable \code{lex.id} identifying the
     persons represented in \code{Lx}, as well as a variable with the
     same name as one of the \code{\link{timeScales}} in \code{Lx},
@@ -42,27 +42,25 @@
     name indicating the time at which the covariate measurements were
     taken.
     }
-  \item{exnam}{      
+    \item{exnam}{
     Character. Name of the variable in \code{clin} with the examination
     names (such as \code{wave1}, \code{wave2} etc.). Values may not be
     repeated within person. Will be carried over to the resulting
-    \code{Lexis} object. If there is no variable of this name in
-    \code{clin} it will be constructed; if argument omitted, a variable
-    called \code{exnam} with values \code{ex.1}, \code{ex.2} etc. will
-    be constructed.  
+    \code{Lexis} object. If there is no such variable in \code{clin} it
+    will be constructed; if the argument is omitted, a variable called
+    \code{exnam} with values \code{ex1}, \code{ex2} etc. will be
+    constructed.
     }
   \item{tfc}{      
     Character (\code{t}ime \code{f}rom \code{c}ovariate). Name of the
     variable in the result which will contain the time since the most
-    recent covariate date. This is not a time scale as it is reset to
-    0 at each new covariate time. Also note that by this very token,
-    this variable will be meaningless if you \code{splitLexis}
-    \emph{after} using \code{addCov.Lexis}. 
+    recent covariate date. If the argument is omitted a variable called
+    \code{tfc} will be constructed. If \code{addScales} is \code{TRUE}
+    this is included among the time scales.
     }
   \item{addScales}{
-    Logical. Should timescales representing time since each covariate
-    time be added? They will be named \code{paste("tf",exnam)}. Not
-    implemented, argument currently ignored.
+    Logical. Should timescales representing time since each examination time
+    time be added? They will be named \code{paste("tf",exnam)}.
     }
 }
 \value{
@@ -111,21 +109,35 @@ Lx <- Lcoh[,1:7]
 clin <- data.frame( lex.id = c(1,1,3,2),
                        per = c(1977.3,1971.7,1996.2,1990.6),
                         bp = c(120,140,160,157),
-                      chol = c(5,7,8,9) )
+                      chol = c(5,7,8,9),
+                      xnam = c("X2","X1","X1","X2") )
 Lx
 clin 
 
-# Works with time split BEFORE adding clinical data:
+# Different behavours using exnam and addScales
+addCov.Lexis( Lx, clin )
+addCov.Lexis( Lx, clin, exnam="xnam" )
+addCov.Lexis( Lx, clin, addScales=TRUE )
+addCov.Lexis( Lx, clin, addScales=TRUE, exnam="xnam" )
+
+# Works with time split BEFORE
 Lb <- addCov.Lexis( splitLexis( Lx,
                                 time.scale="age",
                                 breaks=seq(0,80,5) ),
                     clin,
                     exnam="clX" )
 Lb
-# With time split AFTER adding clinincal data, variable tfc is largely meaningless:
+# ...or AFTER, but only if addScales is given
 La <- splitLexis( addCov.Lexis( Lx,
-                                clin,
-                                exnam="clX" ),
+                              clin,
+                             exnam = "xnam" ),
+                  breaks=seq(0,80,5),
+                  time.scale="age" )
+La
+La <- splitLexis( addCov.Lexis( Lx,
+                              clin,
+                             exnam = "xnam",
+                         addScales = TRUE ),
                   breaks=seq(0,80,5),
                   time.scale="age" )
 La

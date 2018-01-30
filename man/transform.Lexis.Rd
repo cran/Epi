@@ -12,7 +12,6 @@
   Modify a Lexis object.
 }
 \usage{
-%transform(`_data`, \dots)
 \method{transform}{Lexis}( `_data`, \dots)
 \method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
 \method{levels}{Lexis}( x )
@@ -34,25 +33,32 @@
 }
 \details{
   The transform method for \code{Lexis} objects works exactly as the
-  method for data frames. \code{factorize} transforms the variables
+  method for data frames, but keeps the \code{Lexis} attributes.
+
+  \code{factorize} transforms the variables
   \code{lex.Cst} and \code{lex.Xst} to factors with identical set of
   levels, optionally with names given in \code{states}, and optionally
-  collapsing states. \code{Relevel} is merely an alias for
+  collapsing states.
+
+  \code{Relevel} is merely an alias for
   \code{factorize}, since the function does the same as
   \code{\link{Relevel}}, but for both the factors \code{lex.Cst} and
   \code{lex.Xst}. A default sideeffect is to produce a table of old
-  states versus new states if \code{states} is a list.
+  states versus new states if \code{states} is a list. Unlike
+  \code{Relevel} for factors, \code{Relevel.Lexis} does not accept a
+  matrix as a second argument - the number of levels of \code{lex.Cst}
+  is rarely (if ever) large.
 
   If \code{states} is \code{NULL}, as when for example the argument is
   not passed to the function, the returned object have levels of
   \code{lex.Cst}, \code{lex.Xst} (and for \code{stacked.Lexis} objects
   \code{lex.Tr}) shaved down to the actually occurring values.
 
-  \code{order} returns the order of the rows in a Lexis object to sort
-  it by (\code{lex.id},\code{timeScales[x]}).
+%  \code{order} returns the order of the rows in a Lexis object to sort
+%  it by (\code{lex.id},\code{timeScales[x]}).
 
-  \code{sort} returns the Lexis object sorted by
-  (\code{lex.id},\code{timeScales[x]}). 
+%  \code{sort} returns the Lexis object sorted by
+%  (\code{lex.id},\code{timeScales[x]}). 
 }
 \value{
   A transformed \code{Lexis} object.

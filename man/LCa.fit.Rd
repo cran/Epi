@@ -94,7 +94,8 @@ LCa.fit( data, A, P, D, Y,
   number of events (\code{D}) between each, and half as many below the
   first and above the last knot. If \code{npar} is a list of scalars the
   behavior is the same. If \code{npar} is a list of vectors, these are
-  taken as the knots for the natural splines.
+  taken as the knots for the natural splines. See details for naming
+  convention. 
   }
   \item{VC}{
   Logical. Should the variance-covariance matrix of the parameters be
@@ -137,10 +138,21 @@ LCa.fit( data, A, P, D, Y,
 
   The multiplicative age by period term could equally well have been a
   multiplicative age by cohort or even both. Thus the most extensive
-  model is:
+  model has 5 continuous functions:
 
-  \deqn{\log(\lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}{%
-        log(lambda(a,p)) = f(a) + b_p(a)k_p(a) + b_c(a)k_c(a)}
+  \deqn{\log(\lambda(a,p)) = f(a) + b_p(a)k_p(p) + b_c(a)k_c(p-a)}{%
+         log( lambda(a,p)) = f(a) + b_p(a)k_p(p) + b_c(a)k_c(p-a)}
+
+  Each of these is fitted by a natural spline, with knots placed at the
+  quantiles of the events along the age (a), calendar time (p) respective
+  cohort (p-a) scales. Alternatively the knots can be specified explicitly
+  in the argument \code{npar} as a named list, where
+  \code{a} refers to \eqn{f(a)}{f(a)},
+  \code{p} refers to \eqn{k_p(p)}{k_p(p)},
+  \code{c} refers to \eqn{k_c(p-a)}{k_c(p-a)},
+  \code{pi} (\code{p}eriod code{i}nteraction) refers to \eqn{b_p(a)}{b_p(a)}
+  and
+  \code{ci} (\code{c}ohort \code{i}nteraction) refers to \eqn{b_c(p-a)}{b_c(p-a)}.
 
   The naming convention for the models is a capital \code{P} and/or
   \code{C} if the effect is in the model followed by a lower case
@@ -148,18 +160,19 @@ LCa.fit( data, A, P, D, Y,
   models that can be fitted: \code{APa}, \code{ACa}, \code{APaC}  \code{APCa}
   and \code{APaCa}.
 	  
-  The standard errors of the parameters from the two model fits are however
-  wrong; they are conditional on some of terms having a fixed value. And
-  the symbolic calculation of the Hessian is a nightmare, so this is done
-  numerically using the \code{hessian} function from the \code{numDeriv}
-  package if \code{VC=TRUE}.
+  The standard errors of the parameters from the two separate model fits
+  in the iterations are however wrong; they are conditional on a subset
+  of the parameters having a fixed value. However, analytic calculation
+  of the Hessian is a bit of a nightmare, so this is done numerically
+  using the \code{hessian} function from the \code{numDeriv} package if
+  \code{VC=TRUE}.
   
   The coefficients and the variance-covariance matrix of these are used
-  in \code{predict.LCa} for a parametric bootstrap (that is, a simulation from
-  a multivariate normal with mean equal to the parameter estimates and
-  variance as the estimated variance-covariance) to get confidence
-  intervals for the predictions if \code{sim} is \code{TRUE} --- which
-  it is by default if they are part of the object.
+  in \code{predict.LCa} for a parametric bootstrap (that is, a
+  simulation from a multivariate normal with mean equal to the parameter
+  estimates and variance as the estimated variance-covariance) to get
+  confidence intervals for the predictions if \code{sim} is \code{TRUE}
+  --- which it is by default if they are part of the object.
 
   The \code{plot} for \code{LCa} objects merely produces between 3 and 5
   panels showing each of the terms in the model. These are mainly for
@@ -187,17 +200,16 @@ LCa.fit( data, A, P, D, Y,
   model. Rownames are the actually occurring ages in the
   dataset. Estimates are multipliers of the log-RRs in \code{kt},
   centered at 1 at \code{ci.ref}.}
-\item{kc}{3-column matrix of period-effects, with c.i.s from the age-time
+\item{kc}{3-column matrix of cohort-effects, with c.i.s from the age-time
   model. Rownames are the actually occurring times in the
-  dataset. Estimates are rate-ratios centered at 1 at \code{p.ref}.}
+  dataset. Estimates are rate-ratios centered at 1 at \code{c.ref}.}
 \item{mod.at}{\code{glm} object with the final age-time model. Gives
   the same fit as the \code{mod.b} model.}
 \item{mod.b}{\code{glm} object with the final age model. Gives
   the same fit as the \code{mod.at} model.}
 \item{coef}{All coefficients from both models, in the order \code{ax},
   \code{kp}, \code{kc}, \code{pi}, \code{ci}. Only present if
-  \code{LCa.fit} were called with 
-  \code{VC=TRUE} (the default).} 
+  \code{LCa.fit} were called with \code{VC=TRUE} (the default).} 
 \item{vcov}{Variance-covariance matrix of coefficients from both
   models, in the same order as in the \code{coef}. Only present if
   \code{LCa.fit} were called with \code{VC=TRUE}.} 
@@ -214,9 +226,9 @@ LCa.fit( data, A, P, D, Y,
   (\code{kt}). For the \code{APaCa} model 5 panels are plotted.
   
   \code{summary.LCa} returns (invisibly) a matrix with the parameters
-  from the models and a column of the conditional se.s and of the se.s
-  derived from the numerically computed Hessian (if \code{LCa.fit} were
-  called with \code{VC=TRUE}.)
+  from the models and a column of the conditional se.s and additionally
+  of the se.s derived from the numerically computed Hessian (if
+  \code{LCa.fit} were called with \code{VC=TRUE}.)
 
   \code{predict.LCa} returns a matrix with one row per row in
   \code{newdata}. If \code{LCa.fit} were called with \code{VC=TRUE}
@@ -224,20 +236,21 @@ LCa.fit( data, A, P, D, Y,
   based on a simulation of parameters from a multivariate normal with
   mean \code{coef} and variance \code{vcov} using the median and
   \code{alpha}/2 quantiles from the \code{sim} simulations.  If
-  \code{LCa.fit} were called with \code{VC=FALSE} there
-  will be 6 columns, namely estimates and c.i.s from age-time model (\code{mod.at}), and
-  from the age-interaction model (\code{mod.b}), both using conditional variances.
+  \code{LCa.fit} were called with \code{VC=FALSE} there will be 6
+  columns, namely estimates and c.i.s from age-time model
+  (\code{mod.at}), and from the age-interaction model (\code{mod.b}),
+  both using conditional variances, and therefore likely with too narrow
+  confidence limits.
   }
 \author{
   Bendix Carstensen, \url{http://BendixCarstensen.com}
 
-  This function was conceived during a course on APC models at the Max
-  Planck Institute of Demographic Research (MPIDR,
+  This function was conceived while teaching a course on APC models at
+  the Max Planck Institute of Demographic Research (MPIDR,
   \url{https://www.demogr.mpg.de/en/}) in Rostock in May 2016
   (\url{http://bendixcarstensen.com/APC/MPIDR-2016/}), and finished
-  during a research stay there, kindly sponsored by the MPIDR. 
-}
-
+  during a week long research stay there, kindly sponsored by the MPIDR.
+  }
 \seealso{
  \code{\link{apc.fit}},
  \code{\link{apc.LCa}},
@@ -266,18 +279,18 @@ names( LCa.tc )
 par( mfrow=c(1,3) )
 plot( LCa.tc )
 
-# Prediction data frame for ages 15 to 60 for three time points: 
+# Prediction data frame for ages 15 to 60 for two time points: 
 nd <- data.frame( A=15:60 )
-
-p50 <- predict.LCa( LCa.tc, newdata=cbind(nd,P=1950), sim=10000 )
-p70 <- predict.LCa( LCa.tc, newdata=cbind(nd,P=1970), sim=10000 )
-p90 <- predict.LCa( LCa.tc, newdata=cbind(nd,P=1990), sim=10000 )
+# LCa predictions
+p70 <- predict.LCa( LCa.tc, newdata=cbind(nd,P=1970), sim=1000 )
+p90 <- predict.LCa( LCa.tc, newdata=cbind(nd,P=1990), sim=1000 )
 
 # Inspect the curves from the parametric bootstrap (simulation):
 par( mfrow=c(1,1) )
-matplot( nd$A, cbind(p50,p70,p90), type="l", lwd=c(6,3,3), lty=1,
-         col=rep( c("red","green","blue"), each=3 ), log="y",
-         ylab="Testis cancer incidence per 100,000 PY, 1970, 80, 90", xlab="Age" )
+head( cbind(p70,p90) )
+matplot( nd$A, cbind(p70,p90), type="l", lwd=c(6,3,3), lty=c(1,3,3),
+         col=rep( 2:3, each=3 ), log="y",
+         ylab="Testis cancer incidence per 100,000 PY in 1970 resp. 1990", xlab="Age" )
 }
 \keyword{models}
 \keyword{regression}

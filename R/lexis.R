@@ -542,25 +542,6 @@ function(x, ...)
   y
 }
 
-# `[.Lexis` <-
-# function( x, ... )
-# {
-#     structure( NextMethod(),
-#                breaks = attr(x, "breaks"),
-#           time.scales = attr(x, "time.scales"),
-#           time.since  = attr(x, "time.since") )
-# }
-
-merge.data.frame <- function(x, y, ...)
-{
-  if (is.Lexis(x))
-    merge.Lexis(x, y, ...)
-  else if (is.Lexis(y))
-    merge.Lexis(y, x, ...)
-  else
-    base::merge.data.frame(x, y, ...)
-}
-
 merge.Lexis <- function(x, y, id, by, ...)
 {
   if (!missing(id)) {

@@ -98,11 +98,11 @@ function ( test = NULL,
     resp <- eval( parse(text = deparse(form[[2]])), envir=lr$model )
     Model.inf <- paste("Model: ",paste(paste(form)[c(2,1,3)], collapse=" "))
     }
-# Form the empirical distribution function for test for each of
+# From the empirical distribution function for test for each of
 # the two categories of resp.
 
 # First a table of the test (continuous variable) vs. the response and
-# adding a row of 0s so that we have all points fro the ROC curve
+# adding a row of 0s so that we have all points for the ROC curve
   m  <- as.matrix( base::table( switch( PS+1, test, lr$fit ), resp ) )
   m  <- addmargins( rbind( 0, m ), 2 )
 # What values of test/eta do the rows refer to

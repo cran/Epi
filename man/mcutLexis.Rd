@@ -5,7 +5,7 @@ Cut follow-up at multiple event dates and keep track of order of events
 }
 \description{
 A generalization of \code{\link{cutLexis}} to the case where different
-events may occur in any order.
+events may occur in any order (but at most once for each).
 }
 \usage{
 mcutLexis( L0, timescale = 1, wh,
@@ -26,8 +26,16 @@ mcutLexis( L0, timescale = 1, wh,
   \item{precursor.states}{Which states are precursor states. See
     \code{\link{cutLexis}} for definition of precursor states.}
   \item{seq.states}{Should the sequence of events be kept track of? That
-    is, should A-B be considered different from B-A. If \code{FALSE}, the
-    state with combined preceding events A and B will be called A+B.}
+    is, should A-B be considered different from B-A. If \code{FALSE},
+    the state with combined preceding events A and B will be called
+    A+B (alphabetically sorted).
+    
+    May also be supplied as character: \code{s} - sequence, keep
+    track of sequence of states occupied (same as \code{TRUE}), \code{u}
+    - unordered, keep track only of states visited (same as
+    \code{FALSE}) or \code{l}, \code{c} - last or current state, only
+    record the latest state visited. If given as character, only the
+    first letter converted to lower case is used.}
   \item{new.scales}{Should we construct new time scales indicating the
     time since each of the event occurrences.}
   \item{ties.resolve}{Should tied event times be resolved by adding
@@ -46,7 +54,10 @@ mcutLexis( L0, timescale = 1, wh,
 Bendix Carstensen, \url{http://BendixCarstensen.com}
 }
 \seealso{
-\code{\link{cutLexis}}, \code{\link{Lexis}}, \code{\link{splitLexis}}
+  \code{\link{cutLexis}},
+  \code{\link{addCov.Lexis}},
+  \code{\link{Lexis}},
+  \code{\link{splitLexis}}
 }
 \examples{
 # A dataframe of times

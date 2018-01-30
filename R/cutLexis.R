@@ -168,7 +168,7 @@ cutLexis <- function(data,
 
     ## If we want to add a new timescale, construct the name
     if( is.logical(new.scale) ) {
-      if( new.scale ) scale.name <- paste( new.state[1], "dur", sep="." )
+      if( new.scale ) scale.name <- paste( "tf", new.state[1], sep="" )
       }
     else {
       scale.name <- new.scale

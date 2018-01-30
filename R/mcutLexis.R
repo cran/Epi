@@ -112,16 +112,25 @@ Lcut <- rbind( Lcut, Ltmp )
 
 } # end of for loop through sequences (sq)
 
-# Do we want the sequences or just the unordered set of previous events
-if( !seq.states ) 
+# Do we want the sequences, the unordered set of previous events or
+# just the current one:
+old.seq <- seq.states
+if( is.logical(seq.states) ) seq.states <- ifelse( seq.states, "s", "u" )
+if( is.character(seq.states) ) seq.states <- tolower( substr(seq.states,1,1) )
+if( !(seq.states %in% c("s","o","u","l","c")) )
+    stop( "What do you mean by seq.states=", old.seq,
+          "? - it should abbreviate to one of s, o, u, l or c \n")
+# Unordered or last (current) states    
+if( seq.states %in% c("u","l","c") ) 
   {
-   lvl <- levels( Lcut )
-  ulvl <- sapply( lapply( strsplit(lvl,"-"),
-                          sort ),           
-                  paste,                    
-                  collapse="+" )
+  # Each list element is a vector of states visited
+  slvl <- strsplit( levels( Lcut ), "-" )
+  # merge those that have the same elements or take the last
+  rlvl <- if( seq.states=="u" ) { sapply( lapply( slvl, sort ), paste, collapse="+" )
+                           } else sapply( slvl, function(x) x[length(x)] )
+  # Relevel the states    
   levels( Lcut$lex.Cst ) <-
-  levels( Lcut$lex.Xst ) <- ulvl
+  levels( Lcut$lex.Xst ) <- rlvl
   }
 
 # Did we ask for timescales as time since events?

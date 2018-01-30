@@ -1,0 +1,823 @@
+\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
+%\VignetteIndexEntry{Follow-up data with R and Epi}
+\documentclass[a4paper,dvipsnames,twoside,12pt]{report}
+
+% ----------------------------------------------------------------------
+% General information for the title page and the page headings
+\newcommand{\Title}{Follow-up data with \R\ and \texttt{Epi}}
+\newcommand{\Tit}{Follow-up}
+\newcommand{\Version}{\ }
+\newcommand{\Dates}{December 2017}
+\newcommand{\Where}{SDCC}
+\newcommand{\Homepage}{\url{http://bendixcarstensen.com/} }
+\newcommand{\Faculty}{\begin{tabular}{rl}
+Bendix Carstensen
+  & Steno Diabetes Center, Gentofte, Denmark\\
+  & {\small \& Department of Biostatistics,
+               University of Copenhagen} \\
+  & \texttt{b@bxc.dk} \\
+  & \url{http://BendixCarstensen.com} \\[1em]
+                      \end{tabular}}
+
+% from \input{/home/bendix/util/tex/topreport}
+%----------------------------------------------------------------------
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[font=it,labelfont=normalfont]{caption}
+\usepackage[colorlinks,urlcolor=blue,linkcolor=red,citecolor=Maroon]{hyperref}
+\usepackage[ae,hyper]{Rd}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[super]{nth}
+% \usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[noae]{Sweave}
+\usepackage{makeidx,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
+\usepackage{ifthen,calc,eso-pic,everyshi}
+\usepackage{booktabs,longtable,rotating,graphicx,subfig}
+\usepackage{pdfpages,verbatim,fancyhdr,datetime,afterpage}
+\usepackage[abspath]{currfile}
+% \usepackage{times}
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\floatpagefraction}{0.9}
+% \usepackage{mslapa}
+\definecolor{blaa}{RGB}{99,99,255}
+\DeclareGraphicsExtensions{.png,.pdf,.jpg}
+% Make the Sweave output nicer (slightly mor compact)
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\small,fontshape=sl,formatcom=\color{BlueViolet}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\small,formatcom=\color{Sepia},xleftmargin=0em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\small}
+\fvset{listparameters={\setlength{\topsep}{-0.1ex}}}
+\renewenvironment{Schunk}%
+{\renewcommand{\baselinestretch}{0.87} \vspace{\topsep}}%
+{\renewcommand{\baselinestretch}{1.00} \vspace{\topsep}}
+\providecommand{\ptxt}[1]{\Pp\left\{\text{#1}\right\}}
+\providecommand{\dif}{{\,\mathrm d}}
+\DeclareMathOperator{\YLL}{YLL}
+\DeclareMathOperator{\Pp}{P}
+
+%----------------------------------------------------------------------
+% Set up layout of pages
+\oddsidemargin 1mm
+\evensidemargin 1mm
+\topmargin -10mm
+\headheight 8mm
+\headsep 5mm
+\textheight 240mm
+\textwidth 165mm
+%\footheight 5mm
+\footskip 15mm
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\headrulewidth}{0.1pt}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{3}
+
+%----------------------------------------------------------------------
+% How to insert a figure in a .rnw file
+\newcommand{\rwpre}{./graph/gr}
+\newcommand{\insfig}[3]{
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=#2\textwidth]{\rwpre-#1}
+  \caption{#3\hfill\mbox{\footnotesize \textrm{\tt \rwpre-#1}}}
+  \label{fig:#1}
+\end{figure}}
+
+%----------------------------------------------------------------------
+% Here is the document starting with the titlepage
+\begin{document}
+
+%----------------------------------------------------------------------
+% The title page
+\setcounter{page}{1}
+\pagenumbering{roman}
+\pagestyle{plain}
+\thispagestyle{empty}
+% \vspace*{0.05\textheight}
+\flushright
+% The blank below here is necessary in order not to muck up the
+% linespacing in title if it has more than 2 lines
+{\Huge \bfseries \Title
+
+}\ \\[-1.5ex]
+\noindent\textcolor{blaa}{\rule[-1ex]{\textwidth}{5pt}}\\[2.5ex]
+\large
+\Where \\
+\Dates \\
+\Homepage \\
+\Version \\[1em]
+\normalsize
+Compiled \today,\ \currenttime\\
+from: \texttt{\currfileabspath}\\[1em]
+% \input{wordcount}
+\normalsize
+\vfill
+\Faculty
+% End of titlepage
+% \newpage
+
+%----------------------------------------------------------------------
+% Table of contents
+% \listoftables
+% \listoffigures
+\tableofcontents
+\clearpage
+% \begingroup
+% \let\clearpage\relax
+% \listoftables
+% \listoffigures
+% \endgroup
+
+%----------------------------------------------------------------------
+% General text layout
+\raggedright
+\parindent 1em
+\parskip 0ex
+\cleardoublepage
+
+%----------------------------------------------------------------------
+% General page style
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{\textsl{#1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ \textsl{#1}}{}}
+\fancyhead[EL]{\bf \thepage \quad \rm \rightmark}
+\fancyhead[ER]{\rm \Tit}
+\fancyhead[OL]{\rm \leftmark}
+\fancyhead[OR]{\rm \rightmark \quad \bf \thepage}
+\fancyfoot{}
+                    
+<<echo=FALSE>>=
+options( width=90,
+#        prompt=" ", continue=" ", # Makes it easier for students to
+                                   # copy from the final pdf document
+# Makes margins smaller, turns labels and removes the unnecessary box 
+         SweaveHooks=list( fig=function()
+         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
+@ %
+\renewcommand{\rwpre}{./flup}
+
+\chapter{Follow-up data in the \texttt{Epi} package}
+
+In the \texttt{Epi}-package, follow-up data is represented by adding
+some extra variables to a data frame. Such a data frame is called a
+\texttt{Lexis} object. The tools for handling follow-up data then use
+the structure of this for special plots, tabulations etc.
+
+Follow-up data basically consists of a time of entry, a time of exit
+and an indication of the status at exit (normally either ``alive'' or
+``dead''). Implicitly is also assumed a status \emph{during} the
+follow-up (usually ``alive'').
+
+\begin{figure}[htbp]
+  \centering
+\setlength{\unitlength}{1pt}
+\begin{picture}(210,70)(0,75)
+%\scriptsize
+\thicklines
+ \put(  0,80){\makebox(0,0)[r]{Age-scale}}
+ \put( 50,80){\line(1,0){150}}
+ \put( 50,80){\line(0,1){5}}
+ \put(100,80){\line(0,1){5}}
+ \put(150,80){\line(0,1){5}}
+ \put(200,80){\line(0,1){5}}
+ \put( 50,77){\makebox(0,0)[t]{35}}
+ \put(100,77){\makebox(0,0)[t]{40}}
+ \put(150,77){\makebox(0,0)[t]{45}}
+ \put(200,77){\makebox(0,0)[t]{50}}
+
+ \put(  0,115){\makebox(0,0)[r]{Follow-up}}
+
+ \put( 80,105){\makebox(0,0)[r]{\small Two}}
+ \put( 90,105){\line(1,0){87}}
+ \put( 90,100){\line(0,1){10}}
+ \put(100,100){\line(0,1){10}}
+ \put(150,100){\line(0,1){10}}
+ \put(180,105){\circle{6}}
+ \put( 95,110){\makebox(0,0)[b]{1}}
+ \put(125,110){\makebox(0,0)[b]{5}}
+ \put(165,110){\makebox(0,0)[b]{3}}
+
+ \put( 50,130){\makebox(0,0)[r]{\small One}}
+ \put( 60,130){\line(1,0){70}}
+ \put( 60,125){\line(0,1){10}}
+ \put(100,125){\line(0,1){10}}
+ \put(130,130){\circle*{6}}
+ \put( 80,135){\makebox(0,0)[b]{4}}
+ \put(115,135){\makebox(0,0)[b]{3}}
+\end{picture}
+  \caption{\it Follow-up of two persons}
+  \label{fig:fu2}
+\end{figure}
+
+\section{Timescales}
+
+A timescale is a variable that varies deterministicly \emph{within}
+each person during follow-up, \textit{e.g.}:
+\begin{itemize}
+  \item Age
+  \item Calendar time
+  \item Time since treatment
+  \item Time since relapse
+\end{itemize}
+All timescales advance at the same pace, so the time followed is the
+same on all timescales. Therefore, it suffices to use only the entry
+point on each of the time scale, for example:
+\begin{itemize}
+  \item Age at entry.
+  \item Date of entry.
+  \item Time since treatment (\emph{at} treatment this is 0).
+  \item Time since relapse (\emph{at} relapse this is 0)..
+\end{itemize}
+For illustration we need to load the \texttt{Epi} package:
+<<>>=
+library(Epi)
+print( sessionInfo(), l=F )
+@ %
+In the \texttt{Epi} package, follow-up in a cohort is represented in a
+\texttt{Lexis} object.  A \texttt{Lexis} object is a data frame with a
+bit of extra structure representing the follow-up. For the
+\texttt{nickel} data we would construct a \texttt{Lexis} object by:
+<<>>=
+data( nickel )
+nicL <- Lexis( entry = list( per=agein+dob,
+                             age=agein,
+                             tfh=agein-age1st ),
+                exit = list( age=ageout ),
+         exit.status = ( icd %in% c(162,163) )*1,
+                data = nickel )
+@ %
+The \texttt{entry} argument is a \emph{named} list with the entry
+points on each of the timescales we want to use. It defines the names
+of the timescales and the entry points of the follow-up of each
+person. The \texttt{exit} argument gives the exit time on \emph{one}
+of the timescales, so the name of the element in this list must match
+one of the names of the \texttt{entry} list. This is sufficient,
+because the follow-up time on all time scales is the same, in this
+case \texttt{ageout - agein}. Now take a look at the result:
+<<>>=
+str( nickel )
+str( nicL )
+head( nicL )
+@
+The \texttt{Lexis} object \texttt{nicL} has a variable for each
+timescale which is the entry point on this timescale. The follow-up
+time is in the variable \texttt{lex.dur} (\textbf{dur}ation).
+
+There is a \texttt{summary} function for \texttt{Lexis} objects that
+list the number of transitions and records as well as the total
+amount of follow-up time:
+<<>>=
+summary( nicL )
+@
+We defined the exit status to be death from lung cancer (ICD7
+162,163), i.e. this variable is 1 if follow-up ended with a death from
+this cause. If follow-up ended alive or by death from another cause,
+the exit status is coded 0, i.e. as a censoring.
+
+Note that the exit status is in the variable \texttt{lex.Xst}
+(e\texttt{X}it \texttt{st}atus. The variable \texttt{lex.Cst} is the
+state where the follow-up takes place (\texttt{C}urrent
+\texttt{st}atus), in this case 0 (alive).
+
+It is possible to get a visualization of the follow-up along the
+timescales chosen by using the \texttt{plot} method for \texttt{Lexis}
+objects. \texttt{nicL} is an object of \emph{class} \texttt{Lexis}, so
+using the function \texttt{plot()} on it means that \R\ will look for
+the function \texttt{plot.Lexis} and use this function.
+<<nicL1,fig=TRUE>>=
+plot( nicL )
+@ %
+The function allows quite a bit of control over the output, and a
+\texttt{points.Lexis} function allows plotting of the endpoints of
+follow-up:
+<<nicL2,fig=TRUE>>=
+par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
+plot( nicL, 1:2, lwd=1, col=c("blue","red")[(nicL$exp>0)+1],
+      grid=TRUE, lty.grid=1, col.grid=gray(0.7),
+      xlim=1900+c(0,90), xaxs="i",
+      ylim=  10+c(0,90), yaxs="i", las=1 )
+points( nicL, 1:2, pch=c(NA,3)[nicL$lex.Xst+1],
+        col="lightgray", lwd=3, cex=1.5 )
+points( nicL, 1:2, pch=c(NA,3)[nicL$lex.Xst+1],
+        col=c("blue","red")[(nicL$exp>0)+1], lwd=1, cex=1.5 )
+@ %
+The results of these two plotting commands are in figure \ref{fig:Lexis-diagram}.
+\begin{figure}[tb]
+\centering
+\label{fig:Lexis-diagram}
+\includegraphics[width=0.39\textwidth]{flup-nicL1}
+\includegraphics[width=0.59\textwidth]{flup-nicL2}
+\caption{\it Lexis diagram of the \textrm{\tt nickel} dataset; left
+  panel the default version, right panel with bells and whistles. The
+  red lines are for persons with exposure$>0$, so it is pretty evident
+  that the oldest ones are the exposed part of the cohort.}
+\end{figure}
+
+\chapter{Subdividing follow-up for analysis}
+
+\section{Splitting the follow-up time along a timescale}
+
+The follow-up time in a cohort can be subdivided by for example
+current age. This is achieved by the \texttt{splitLexis} (note that it
+is \emph{not} called \texttt{split.Lexis}). This requires that the
+timescale and the breakpoints on this timescale are supplied. Try:
+<<>>=
+nicS1 <- splitLexis( nicL, "age", breaks=seq(0,100,10) )
+summary( nicL )
+summary( nicS1 )
+@ %
+So we see that the number of events and the amount of follow-up is the
+same in the two data sets; only the number of records differ --- the
+extra records all have \texttt{lex.Cst}=0 and \texttt{lex.Xst}=0.
+
+To see how records are split for each individual, it is useful to list
+the results for a few individuals:
+<<>>=
+round( subset( nicS1, id %in% 8:10 ), 2 )
+@ %
+The resulting object, \texttt{nicS1}, is again a \texttt{Lexis}
+object, and so follow-up may be split further along another
+timescale. Subsequently we list the results for individuals 8, 9 and
+10 again:
+<<>>=
+nicS2 <- splitLexis( nicS1, "tfh", breaks=c(0,1,5,10,20,30,100) )
+round( subset( nicS2, id %in% 8:10 ), 2 )
+@ %
+A more efficient (and more intuitive) way of making this double split
+is to use the \texttt{splitMulti} function from the \texttt{popEpi}
+package:
+<<>>=
+library( popEpi )
+nicM <- splitMulti( nicL, age = seq(0,100,10), 
+                          tfh = c(0,1,5,10,20,30,100) )
+summary( nicS2 )
+summary( nicM )
+@ %
+So we see that the two ways of splitting data yields the same amount of
+follow-up, but the results are not identical:
+<<>>=
+identical( nicS2, nicM )
+class( nicS2 )
+class( nicM )
+@ %
+As we see, this is because the \texttt{nicM} object also is a
+\texttt{data.table} object; the \texttt{splitMulti} uses the
+\texttt{data.table} machinery which makes the splitting substantially
+faster --- this is of particular interest if you operate on large data
+sets ($>1,000,000$ records). 
+
+Thus the recommended way of splitting follow-up time is by
+\texttt{splitMulti}. But you should be aware that the result is a
+\texttt{data.table} object, which in some circumstances behaves
+slightly different from \texttt{data.frame}s. See the manual for
+\texttt{data.table}.
+
+\subsection{Time scales as covariates}
+
+If we want to model the effect of these timescale variables on
+occurrence rates, we will for each interval use either the value of
+the left endpoint in each interval or the middle. There is a function
+\texttt{timeBand} which returns either of these:
+<<>>=
+timeBand( nicM, "age", "middle" )[1:20]
+# For nice printing and column labelling use the data.frame() function:
+data.frame( nicS2[,c("lex.id","per","age","tfh","lex.dur")],
+            mid.age=timeBand( nicS2, "age", "middle" ),
+              mid.t=timeBand( nicS2, "tfh", "middle" ),
+             left.t=timeBand( nicS2, "tfh", "left"   ),
+            right.t=timeBand( nicS2, "tfh", "right"  ),
+             fact.t=timeBand( nicS2, "tfh", "factor" ) )[1:20,]
+@ %
+Note that these are characteristics of the intervals defined by
+\texttt{breaks=}, \emph{not} the midpoints nor left or right endpoints
+of the actual follow-up intervals (which would be \texttt{tfh} and
+\texttt{tfh+lex.dur}, respectively). 
+
+These functions are intended for modeling timescale variables as
+factors (categorical variables) in which case the coding must be
+independent of the censoring and mortality pattern --- it should only
+depend on the chosen grouping of the timescale. Modeling timescales as
+\emph{quantitative} should not be based on these codings but directly
+on the values of the time-scale variables.
+
+\subsection{Differences between time scales}
+
+The midpoint (as well as the left and right interval endpoint) should
+be used with caution if the variable \texttt{age1st} is modeled too;
+the age at hire is logically equal to the difference between current
+age (\texttt{age}) and time since hire (\texttt{thf}):
+<<>>=
+summary( (nicS2$age-nicS2$tfh) - nicS2$age1st ) 
+@ %
+This calculation refer to the \emph{start} of each interval --- the
+time scale variables in the \texttt{Lexis} object. But when using the
+middle of the intervals, this relationship is not preserved:
+<<>>=
+summary( timeBand( nicS2, "age", "middle" ) -
+         timeBand( nicS2, "tfh", "middle" ) - nicS2$age1st )
+@ %
+If all three variable are to be included in a model, you must make
+sure that the \emph{substantial} relationship between the variables be
+maintained. One way is to recompute age at first hire from the two
+midpoint variables, but more straightforward would be to use the left
+endpoint of the intervals, that is the time scale variables in the
+\texttt{Lexis} object.  The latter approach however requires that the
+follow-up is split in fairly small chunks.
+
+\section{Cutting follow up time at a specific date}
+
+If we have a recording of the date of a specific event as for example
+recovery or relapse, we may classify follow-up time as being before or
+after this intermediate event, but it requires that follow-up records
+that straddle the event be cut into two record. This is achieved with
+the function \texttt{cutLexis}, which takes three arguments: the time
+point, the timescale, and the value of the (new) state following the
+date.
+
+Now we define the age for the nickel workers where the cumulative
+exposure exceeds 50 exposure years:
+<<>>=
+subset( nicL, id %in% 8:10 )
+agehi <- nicL$age1st + 50 / nicL$exposure
+nicC <- cutLexis( data = nicL, 
+                   cut = agehi, 
+             timescale = "age",
+             new.state = 2, 
+      precursor.states = 0 )
+subset( nicC, id %in% 8:10 )
+@ %
+(The \texttt{precursor.states=} argument is explained below).  Note
+that individual 6 has had his follow-up split at 25 years since hire
+where 50 exposure-years were attained. This could also have been
+achieved in the split dataset \texttt{nicS2} instead of \texttt{nicL},
+try:
+<<>>=
+subset( nicS2, id %in% 8:10 )
+agehi <- nicS2$age1st + 50 / nicS2$exposure
+nicS2C <- cutLexis( data = nicS2, 
+                     cut = agehi, 
+               timescale = "age",
+               new.state = 2, 
+        precursor.states = 0 )
+subset( nicS2C, id %in% 8:10 )
+@ %
+The same results would have emerged if we had used the \texttt{nicM}
+dataset (the \texttt{data.table} object). Mathematicians would say
+that \texttt{splitLexis} and \texttt{cutLexis} are commutative.
+
+Note that follow-up subsequent to the event is classified as being in
+state 2, but that the final transition to state 1 (death from lung
+cancer) is preserved. This is the point of the
+\texttt{precursor.states=} argument. It names the states (in this case
+0, ``Alive'') that will be over-written by \texttt{new.state} (in this
+case state 2, ``High exposure''), while state 1 (``Dead'') should not
+be updated even if it is after the time where the persons moves to
+state 2. In other words, only state 0 is a precursor to state 2, state
+1 is always subsequent to state 2. Even if you at a high exposure
+level, death is pretty final.
+
+If the intermediate event is to be used as a time-dependent variable
+in a Cox-model, then \texttt{lex.Cst} should be used as the
+time-dependent variable, and \texttt{lex.Xst==1} as the event.
+
+\chapter{Modeling rates}
+
+\section{Background}
+
+The purpose of subdividing follow-up data is to be able to model the
+effects of the time scale variables as parametric functions. 
+
+In a model that assumes a constant occurrence rate in each of the
+intervals the likelihood contribution from each interval is the same
+as the likelihood contribution from a Poisson variate $D$, say, with
+mean $\lambda\ell$ where $\lambda$ is the rate and $\ell$ is the
+interval length, and where the value of the variate $D$ is 1 or 0
+according to whether an event has occurred or not. Moreover, the
+likelihood contributions from all follow-up intervals from a single
+person are \emph{conditionally} independent (conditional on having
+survived till the start of the interval in question). This implies
+that the total contribution to the likelihood from a single person is
+a product of terms, and hence the same as the likelihood of a number
+of independent Poisson terms, one from each interval.
+
+Parametric modeling of the rates is obtained by using the \emph{value}
+of the timescale for each interval as quantitative explanatory
+variables, using for example splines. Thus the model will be one where
+the rate is assumed constant in each interval, but where a parametric
+form of the \emph{size} of the rate in each interval is imposed by the
+model, using the timescale as a covariate.
+
+\section{Practicalities}
+
+In the nickel worker study we might want to look at the effects of age
+and time since hire. If we want to use splines we must allocate knots
+for anchoring the splines at each of the time scales, either by some
+\textit{ad hoc} method or by using some sort of penalized splines. The
+letter will not be treated here.
+
+Here we shall use the former approach and allocate 5 knots on each of
+the two time-scales. We allocate knots so that we have the event evenly
+distributed between the knots:
+<<>>=
+( a.kn <- with( subset( nicM, lex.Xst==1 ), quantile( age+lex.dur, (1:5-0.5)/5 ) ) )
+( t.kn <- with( subset( nicM, lex.Xst==1 ), quantile( tfh+lex.dur, (1:5-0.5)/5 ) ) )
+@ %
+In the \texttt{Epi} package there is a convenience wrapper for the
+\texttt{n}atural \texttt{s}pline generator \texttt{ns}, \texttt{Ns},
+that takes the smallest and the largest of a set of supplied knots to
+be the boundary knots.
+
+\section{Models for rates}
+
+\subsection{One time scale}
+
+A model that only models lung cancer mortality
+rates as a function of age would then be:
+<<>>=
+ma <- glm( (lex.Xst==1) ~ Ns(age,knots=a.kn),
+           family = poisson,
+           offset = log(lex.dur),
+             data = nicM )
+summary( ma )
+@ %
+The offset, \texttt{log(lex.dur)} comes from the fact that the
+likelihood for the follow-up data is the same as that for independent
+Poisson variates with mean $\lambda\ell$, and that the default link
+function for the Poisson family is the log, so that we are using a
+linear model for the log-mean, that is $\log(\lambda) + \log(\ell)$.
+But when we want a model for the log-rate ($\log(\lambda)$), the term
+$\log(\ell)$ must be included as a covariate with regression
+coefficient fixed to 1; a so-called offset.
+
+The parameters from the model do not have any direct interpretation
+\textit{per se}, but we can compute the estimated lung cancer incidence
+rates for a range of ages using \texttt{ci.pred} with a suitably
+defined prediction data frame. Note that we must specify all
+covariates in the model, also the variable in the offset,
+\texttt{lex.dur}. We set the latter to 1000, because we want the lung
+cancer mortality rates per 1000 PY. By default \texttt{ci.pred} yields a
+prediction on the response-scale, that is the rate-scale:
+<<pr-a,fig=TRUE>>=
+nd <- data.frame( age=40:85, lex.dur=1000 )
+pr.a <- ci.pred( ma, newdata = nd )
+matplot( nd$age, pr.a,
+         type="l", lty=1, col=1, lwd=c(3,1,1),
+         log="y", xlab="Age (years)",
+         ylab="Lunng cancer mortality per 1000 PY")
+@ %
+\insfig{pr-a}{0.8}{Lung cancer mortality among Nickel smelter workers
+  by age. We see that the rates increase till about 55 years, and from
+then on is approximately flat.}
+
+\subsection{More time scales}
+
+There may however also be an effect of time since hire too, so we can
+add this term to the model:
+<<>>=
+mat <- update( ma, . ~ . + Ns(tfh,knots=t.kn) )
+summary( mat )
+@ %
+This model has two time scales, age and time since hire, so it makes
+little sense to report the effect of age for a \emph{fixed} value of
+time since hire --- the time since hire increases by age.
+Instead we can show the mortality rates for persons hired at different
+ages, and report the \emph{joint} effect of increasing age and time
+since hire.
+
+In order to get a feeling for the values that can be use we look at \texttt{age1st}
+<<>>=
+summary( nickel$age1st )
+@ 
+Thus we shall show mortality rates in ages 20--90 for persons hired in
+ages 15, 25, 35 and 45:
+<<>>=
+nd <- data.frame( expand.grid( age=c(20:90,NA), age1st=seq(15,45,10) ) ) 
+nd <- transform( nd, tfh = ifelse( age > age1st, age-age1st, NA ),
+                 lex.dur = 1000 )
+# makes no sense to have age < age1st
+nd <- transform( nd, age = ifelse( age > age1st, age, NA ) )
+head( nd )
+@ %
+With this in place we can plot the estimated rates as before, only
+now we will get 4 separate lines. The purpose of inserting an
+\texttt{NA} on the age-scale in the \texttt{expand.grid} is that the
+different instances of \texttt{age1st} be separated by \texttt{NA}s, and
+hence will not be connected when we plot the curves. The downside of
+this trick is that lines cannot be plotted with different colors or
+symbols.
+<<pr-at,fig=TRUE>>=
+pr.at <- ci.pred( mat, newdata = nd )
+matplot( nd$age, pr.at,
+         type="l", lty=1, col=1, lwd=c(3,1,1),
+         log="y", xlab="Age (years)",
+         ylab="Lunng cancer mortality per 1000 PY")
+@ %
+\insfig{pr-at}{0.8}{Lung cancer mortality among Nickel smelter workers
+  by age and age at hire 15, 25,35 and 45. Each line (except the
+  first) starts at the age of hire; we see that the later in life you
+  are hired, the smaller the initial risk, but the higher the eventual
+  risk of lung cancer death.}
+
+We can check whether the effect of time since hire is actually
+improving the model:
+<<>>=
+anova( ma, mat, test="Chisq" )
+@ %
+We see a pretty strong indication that this is the case.
+
+\subsection{Difference between time scales}
+
+However it might be the case that it really is the age at first hire
+that is the main determinant (recall that
+$\mathtt{age}-\mathtt{thf}=\mathtt{age1st}$), so we could fit a model
+with this variable instead --- a model with only 1 timescale, namely
+\texttt{age}.
+<<>>=
+( f.kn <- with( subset( nicM, lex.Xst==1 ), quantile( age1st, (1:5-0.5)/5 ) ) )
+maf <- update( ma, . ~ . + Ns(age1st,knots=f.kn) )
+summary( maf )
+anova( maf, ma, mat, test="Chisq" )
+@ %
+We see that there is much less indication that the age at first hire has
+an effect.
+
+For the sake of completeness we can draw the predicted values from the
+\texttt{maf} model on top of the ones from the \textrm{mat} model:
+<<pr-at-af,fig=TRUE>>=
+pr.af <- ci.pred( maf, newdata = nd )
+matplot( nd$age, pr.at,
+         type="l", lty=1, col=1, lwd=c(3,1,1),
+         log="y", xlab="Age (years)",
+         ylab="Lunng cancer mortality per 1000 PY")
+matlines( nd$age, pr.af,
+         type="l", lty=1, col=2, lwd=c(3,0,0) )
+@ %
+\insfig{pr-at-af}{0.8}{Lung cancer mortality among Nickel smelter
+  workers by age and age at hire 15, 25,35 and 45. Each line (except
+  the first) starts at the age of hire; we see that the later in life
+  you are hired, the smaller the initial risk, but the higher the
+  eventual risk of lung cancer death. The red lines are from the model
+  \textrm{\tt maf} where the lines are constrained to be parallel, and
+  which gives a worse fit to data.}
+
+\subsection{The complete picture --- exercise}
+
+We could fit the remaining models where one or more of the three
+variables are included, and compare all of them:
+<<>>=
+maft <- update( mat, . ~ . + Ns(age1st,knots=f.kn) )
+summary( maft )
+mft <- update( maft, . ~ . - Ns(age,knots=a.kn) )
+mf  <- update( maf , . ~ . - Ns(age,knots=a.kn) )
+mt  <- update( mat , . ~ . - Ns(age,knots=a.kn) )
+allp <- anova( maft, mat, ma, maf, mf, mft, mt, mat,
+               maf, maft, mft,
+               test="Chisq" )
+mall <- as.matrix( allp )
+cbind( mod = c("maft","mat","ma","maf","mf","mft","mt","mat","maf","maft","mft"),
+       round( allp[,1:5], 3 ) )
+@ %
+\begin{enumerate}
+\item Explain why there are \texttt{NA}s among the parameters in the
+  model \texttt{maf}.
+\item Draw a graph (a ``DAG'') with the models as nodes and the tests
+  as vertices, put the p-values on the vertices and use the result to
+  argue that the model with age an time since hire is actually the
+  most sensible description in this case.
+\end{enumerate}
+
+\chapter{Competing risks --- multiple types of events}
+
+If we want to consider death from lung cancer and death from other
+causes as separate events we can code these as for example 1 and 2.
+<<>>=
+data( nickel )
+nicL <- Lexis( entry = list( per = agein+dob,
+                             age = agein,
+                             tfh = agein-age1st ),
+                exit = list( age = ageout ),
+         exit.status = ( icd > 0 ) + ( icd %in% c(162,163) ),
+                data = nickel )
+summary( nicL )
+subset( nicL, id %in% 8:10 )
+@ %
+In order to have a more readable output we can label the states, we
+can enter the names of these in the \texttt{states} parameter, try for
+example:
+<<>>=
+nicL <- Lexis( entry = list( per = agein+dob,
+                             age = agein,
+                             tfh = agein-age1st ),
+                exit = list( age = ageout ),
+         exit.status = ( icd > 0 ) + ( icd %in% c(162,163) ),
+                data = nickel,
+              states = c("Alive","D.oth","D.lung") )
+summary( nicL )
+str( nicL )
+@ %
+Note that the \texttt{Lexis} function automatically assumes that all
+persons enter in the first level (given in the \texttt{states=}
+argument), corresponding to the numerical values given in
+\texttt{exit.status}.
+
+When we cut at a date as in this case, the date where cumulative
+exposure exceeds 50 exposure-years, we get the follow-up \emph{after}
+the date classified as being in the new state if the exit
+(\texttt{lex.Xst}) was to a state we defined as one of the
+\texttt{precursor.states}:
+<<>>=
+nicL$agehi <- nicL$age1st + 50 / nicL$exposure
+nicC <- cutLexis( data = nicL,
+                   cut = nicL$agehi,
+             timescale = "age",
+             new.state = "HiExp",
+      precursor.states = "Alive" )
+subset( nicC, id %in% 8:10 )
+summary( nicC, scale=1000 )
+@ %
+Note that the persons-years is the same, but that the number of
+events has changed. This is because events are now defined as any
+transition, including the transitions to \texttt{HiExp}.
+
+Also note that (so far) it is necessary to specify the variable with
+the cut points in full, using only \texttt{cut=agehi} would give an error.
+
+\section{Subdividing states}
+
+It may be of interest to subdivide the states following the
+intermediate event according to whether the event has occurred or
+not. That is done by the argument \texttt{split.states=TRUE}.
+
+Moreover, it will also often be of interest to introduce a new
+timescale indicating the time since intermediate event. This can be
+done by the argument \texttt{new.scale=TRUE}, alternatively
+\texttt{new.scale="tfe"}, as illustrated here:
+<<>>=
+nicC <- cutLexis( data = nicL,
+                   cut = nicL$agehi,
+             timescale = "age",
+             new.state = "HiExp",
+             new.scale = "tfe",
+          split.states = TRUE,
+      precursor.states = "Alive" )
+subset( nicC, id %in% 8:10 )
+summary( nicC, scale=1000, timeScales=TRUE )
+@ % $
+Note that the \texttt{timeScales=TRUE} to \texttt{summary} lists the
+timescales available in the object, and also indicates which of them
+that are defined as time since entry to a particular state. This
+facility is not used here, but it is needed when simulating follow-up
+data --- see the vignette on \textrm{simLexis}.
+
+With 6 different states it is quite difficult to get an overview of
+the transitions between states from the \texttt{summary()}. Therefore
+there is function that gives a graphical display of the states showing
+the transitions between the states:
+<<nic-box,fig=TRUE,width=8>>=
+boxes( nicC, boxpos = list(x=c(10,10,80,80,80,80),
+                           y=c(75,25,87,63,13,37)),
+            scale.Y = 1000,
+            show.BE = TRUE )
+@ %
+\insfig{nic-box}{0.9}{Transitions between states; the number in the
+  middle of each box is the person-years (in 1000s --- since
+  \textrm{\tt scale.Y=1000}), the numbers at the bottom of the boxes
+  are the number that start, respectively end their follow-up in each
+  state.  The numbers on the arrows are the number of transitions and
+  crude transition rates (the latter in events per 1000 PY).\newline
+  The function \textrm{\tt boxes.Lexis} has a zillion arguments to
+  fine-tune the appearance of the display in terms of colors etc.}
+
+%% \section{Multiple events of the same type (recurrent events)}
+%% Sometimes more events of the same type are recorded for each person and
+%% one would then like to count these and put follow-up time in states accordingly.
+%% Essentially, each set of cutpoints represents progressions from one
+%% state to the next. Therefore the states should be numbered, and the
+%% numbering of states subsequently occupied be increased accordingly.
+
+%% This is a behaviour different from the one outlined above, and it is
+%% achieved by the argument \texttt{count=TRUE} to
+%% \texttt{cutLexis}. When \texttt{count} is set to \texttt{TRUE}, the
+%% value of the arguments \texttt{new.state} and
+%% \texttt{precursor.states} are ignored.  Actually, when using the
+%% argument \texttt{count=TRUE}, the function \texttt{countLexis} is
+%% called, so an alternative is to use this directly.
+
+%% \renewcommand{\bibname}{References}
+%% \bibliographystyle{plain}
+%% \bibliography{%
+%% /home/bendix/art/bibtex/BxC,%
+%% /home/bendix/art/bibtex/Stat,%
+%% /home/bendix/art/bibtex/DMCa,%
+%% /home/bendix/art/bibtex/Diabetes%
+%% }
+%% \addcontentsline{toc}{section}{\bibname}
+
+\end{document}

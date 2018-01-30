@@ -1,5 +1,5 @@
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
-%\VignetteIndexEntry{Years of life lost: simLexis}
+%\VignetteIndexEntry{Years of life lost (YLL)}
 \documentclass[a4paper,twoside,12pt]{report}
 
 % ----------------------------------------------------------------------
@@ -7,8 +7,8 @@
 \newcommand{\Title}{Years of Life Lost (YLL)
   to disease\\Diabetes in DK as example}
 \newcommand{\Tit}{YLL}
-\newcommand{\Version}{Version 1.2}
-\newcommand{\Dates}{February 2017}
+\newcommand{\Version}{February 1.2}
+\newcommand{\Dates}{November 2017}
 \newcommand{\Where}{SDC}
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
@@ -581,8 +581,20 @@ use.
 
 \section{Function definitions}
 
-<<echo=FALSE,results=hide,eval=TRUE>>=
+% The following code sources the originally formatted code in erl.R in
+% order to make it printable with all the formatting and comments in
+% it. However the sourcing does not work when compiling the vignettes
+% in R CMD build. So when checking the code we comment this out by
+% putting eval=FALSE:
+<<CHANGE1,echo=FALSE,results=hide,eval=FALSE>>=
 source( "../R/erl.R", keep.source=TRUE )
+@ 
+<<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
+surv1 <- Epi::surv1
+surv2 <- Epi::surv2
+erl1 <- Epi::erl1
+erl <- Epi::erl
+yll <- Epi::yll
 @ 
 When using the functions it is assumed that the functions $\mu_W$,
 $\mu_D$ and $\lambda$ are given as vectors corresponding to

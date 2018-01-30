@@ -20,12 +20,12 @@ if( length( intl ) != nrow( ctr.mat ) ) stop( "intl must match ctr.mat" )
 # the coefficients vector in case of (extrinsic) aliasing.
 if( any( is.na( cf ) ) )
   {
-vM <- matrix( 0, length( cf ), length( cf ) )
-dimnames( vM ) <- list( names( cf ), names( cf ) )
-vM[!is.na(cf),!is.na(cf)] <- vcv
-cf[is.na(cf)] <- 0
-vcv <- vM
-   }
+  vM <- matrix( 0, length( cf ), length( cf ) )
+  dimnames( vM ) <- list( names( cf ), names( cf ) )
+  vM[!is.na(cf),!is.na(cf)] <- vcv
+  cf[is.na(cf)] <- 0
+  vcv <- vM
+  }
 
 if( is.character( subset ) ) {
   sb <- numeric(0)
