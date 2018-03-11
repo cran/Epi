@@ -32,12 +32,6 @@ data=NULL)
 
   if(!missing(control)) {
     control.arg <- substitute(control)
-    if (length(control.arg) > 1) {
-      control.names <- sapply(control.arg, deparse)[-1]
-    }
-    else {
-      control.names <- deparse(control.arg)
-    }
   }
 
   ## Match the type argument
@@ -118,12 +112,22 @@ data=NULL)
 
   ## Fix up the control argument as a named list
   if (!missing(control)) {
-    if (is.list(control)) {
-      names(control) <- control.names
+      if (is.list(control)) {
+          control.names <- sapply(control.arg, deparse)
+          if (control.names[1] == "list" &&
+              length(control.names) == length(control) + 1)
+          {
+              control.names  <- control.names[-1]
+          }
+          else {
+              control.names <-
+                  paste0(deparse(control.arg), "[", 1:length(control), "]")
+          }
+          names(control) <- control.names
     }
     else {
-      control <- list(control)
-      names(control) <- control.names
+        control <- list(control)
+        names(control) <- deparse(control.arg)
     }
   }
 

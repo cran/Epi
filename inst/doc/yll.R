@@ -1,8 +1,8 @@
-### R code from vignette source 'yll.rnw'
+### R code from vignette source 'yll'
 ### Encoding: UTF-8
 
 ###################################################
-### code chunk number 1: yll.rnw:146-149
+### code chunk number 1: yll.rnw:21-24
 ###################################################
 options( width=90,
          SweaveHooks=list( fig=function()
@@ -12,7 +12,6 @@ options( width=90,
 ###################################################
 ### code chunk number 2: states
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 library( Epi )
 TM <- matrix(NA,4,4)
 rownames(TM) <-
@@ -24,7 +23,6 @@ zz <- boxes( TM, boxpos=list(x=c(20,80,20,80),y=c(80,80,20,20)), wm=1.5, hm=4 )
 ###################################################
 ### code chunk number 3: states
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c( expression(lambda),   
                    expression(mu[W]),    
                    expression(mu[D][M]) )
@@ -32,20 +30,20 @@ boxes( zz )
 
 
 ###################################################
-### code chunk number 4: yll.rnw:392-393
+### code chunk number 4: yll.rnw:265-266
 ###################################################
 data( DMepi )
 
 
 ###################################################
-### code chunk number 5: yll.rnw:398-400
+### code chunk number 5: yll.rnw:271-273
 ###################################################
 str( DMepi )
 head( DMepi )
 
 
 ###################################################
-### code chunk number 6: yll.rnw:420-424
+### code chunk number 6: yll.rnw:293-297
 ###################################################
 DMepi <- transform( subset( DMepi, A>30 ),
                     D.T = D.nD + D.DM, 
@@ -54,7 +52,7 @@ head(DMepi)
 
 
 ###################################################
-### code chunk number 7: yll.rnw:430-456
+### code chunk number 7: yll.rnw:303-329
 ###################################################
 # Knots used in all models
 ( a.kn <- seq(40,95,,6) )
@@ -85,7 +83,7 @@ lW.f <- update( lW.m, data = subset( DMepi, sex=="F" ) )
 
 
 ###################################################
-### code chunk number 8: yll.rnw:463-500
+### code chunk number 8: yll.rnw:336-373
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
@@ -129,7 +127,6 @@ round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
 ###################################################
 ### code chunk number 9: imm
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh){
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, bty="n", las=1 )
 
@@ -157,14 +154,12 @@ plyll("Imm")
 ###################################################
 ### code chunk number 10: tot
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 plyll("Tot")
 
 
 ###################################################
 ### code chunk number 11: sus
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 plyll("Sus")
 
 
@@ -185,31 +180,31 @@ yll <- Epi::yll
 
 
 ###################################################
-### code chunk number 14: yll.rnw:607-608
+### code chunk number 14: yll.rnw:484-485
 ###################################################
 surv1
 
 
 ###################################################
-### code chunk number 15: yll.rnw:612-613
+### code chunk number 15: yll.rnw:489-490
 ###################################################
 erl1
 
 
 ###################################################
-### code chunk number 16: yll.rnw:620-621
+### code chunk number 16: yll.rnw:497-498
 ###################################################
 surv2
 
 
 ###################################################
-### code chunk number 17: yll.rnw:625-626
+### code chunk number 17: yll.rnw:502-503
 ###################################################
 erl
 
 
 ###################################################
-### code chunk number 18: yll.rnw:630-631
+### code chunk number 18: yll.rnw:507-508
 ###################################################
 yll
 

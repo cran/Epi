@@ -4,7 +4,7 @@
 \alias{msdata.Lexis}
 \alias{etm}
 \alias{etm.Lexis}
-\title{Create a data structures suitable for use with packages mstate, etm.
+\title{Create a data structures suitable for use with packages \code{mstate} or \code{etm}.
   }
 \description{
 The \code{mstate} package requires input in the form of a stacked
@@ -21,17 +21,18 @@ msdata(obj, ...)
 \method{msdata}{Lexis}(obj,
                 time.scale = timeScales(obj)[1],
                        ... )
-\method{etm}{Lexis}( obj,
-              time.scale = timeScales(obj)[1],
-               cens.name = "cens",
-                       s = 0,
-                       t = "last",
-              covariance = TRUE,
-                delta.na = TRUE,
-                     ... )
+\method{etm}{Lexis}( data,
+               time.scale = timeScales(data)[1],
+                cens.name = "cens",
+                        s = 0,
+                        t = "last",
+               covariance = TRUE,
+                 delta.na = TRUE,
+                      ... )
 }
 \arguments{
   \item{obj}{A \code{\link{Lexis}} object.}
+  \item{data}{A \code{\link{Lexis}} object.}
   \item{time.scale}{Name or number of timescale in the \code{Lexis}
     object.}
   \item{cens.name}{Name of the code for censoring used by \code{etm}. It
@@ -81,6 +82,7 @@ if( require(etm) )
 {
 dmi <- subset(dmi,lex.id<1000)
 etm.D <- etm.Lexis( dmi, time.scale=3 )
+str( etm.D )
 plot( etm.D, col=rainbow(5), lwd=2, lty=1, xlab="DM duration" )
 }
 }

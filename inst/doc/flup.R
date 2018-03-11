@@ -1,26 +1,23 @@
-### R code from vignette source 'flup.rnw'
+### R code from vignette source 'flup'
 ### Encoding: UTF-8
 
 ###################################################
-### code chunk number 1: flup.rnw:156-162
+### code chunk number 1: flup.rnw:5-8
 ###################################################
 options( width=90,
-#        prompt=" ", continue=" ", # Makes it easier for students to
-                                   # copy from the final pdf document
-# Makes margins smaller, turns labels and removes the unnecessary box 
          SweaveHooks=list( fig=function()
          par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
 
 
 ###################################################
-### code chunk number 2: flup.rnw:239-241
+### code chunk number 2: flup.rnw:101-103
 ###################################################
 library(Epi)
 print( sessionInfo(), l=F )
 
 
 ###################################################
-### code chunk number 3: flup.rnw:247-254
+### code chunk number 3: flup.rnw:109-116
 ###################################################
 data( nickel )
 nicL <- Lexis( entry = list( per=agein+dob,
@@ -32,7 +29,7 @@ nicL <- Lexis( entry = list( per=agein+dob,
 
 
 ###################################################
-### code chunk number 4: flup.rnw:264-267
+### code chunk number 4: flup.rnw:126-129
 ###################################################
 str( nickel )
 str( nicL )
@@ -40,7 +37,7 @@ head( nicL )
 
 
 ###################################################
-### code chunk number 5: flup.rnw:276-277
+### code chunk number 5: flup.rnw:138-139
 ###################################################
 summary( nicL )
 
@@ -48,14 +45,12 @@ summary( nicL )
 ###################################################
 ### code chunk number 6: nicL1
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 plot( nicL )
 
 
 ###################################################
 ### code chunk number 7: nicL2
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
 plot( nicL, 1:2, lwd=1, col=c("blue","red")[(nicL$exp>0)+1],
       grid=TRUE, lty.grid=1, col.grid=gray(0.7),
@@ -68,7 +63,7 @@ points( nicL, 1:2, pch=c(NA,3)[nicL$lex.Xst+1],
 
 
 ###################################################
-### code chunk number 8: flup.rnw:331-334
+### code chunk number 8: flup.rnw:193-196
 ###################################################
 nicS1 <- splitLexis( nicL, "age", breaks=seq(0,100,10) )
 summary( nicL )
@@ -76,20 +71,20 @@ summary( nicS1 )
 
 
 ###################################################
-### code chunk number 9: flup.rnw:342-343
+### code chunk number 9: flup.rnw:204-205
 ###################################################
 round( subset( nicS1, id %in% 8:10 ), 2 )
 
 
 ###################################################
-### code chunk number 10: flup.rnw:349-351
+### code chunk number 10: flup.rnw:211-213
 ###################################################
 nicS2 <- splitLexis( nicS1, "tfh", breaks=c(0,1,5,10,20,30,100) )
 round( subset( nicS2, id %in% 8:10 ), 2 )
 
 
 ###################################################
-### code chunk number 11: flup.rnw:356-361
+### code chunk number 11: flup.rnw:218-223
 ###################################################
 library( popEpi )
 nicM <- splitMulti( nicL, age = seq(0,100,10), 
@@ -99,7 +94,7 @@ summary( nicM )
 
 
 ###################################################
-### code chunk number 12: flup.rnw:365-368
+### code chunk number 12: flup.rnw:227-230
 ###################################################
 identical( nicS2, nicM )
 class( nicS2 )
@@ -107,7 +102,7 @@ class( nicM )
 
 
 ###################################################
-### code chunk number 13: flup.rnw:388-396
+### code chunk number 13: flup.rnw:250-258
 ###################################################
 timeBand( nicM, "age", "middle" )[1:20]
 # For nice printing and column labelling use the data.frame() function:
@@ -120,20 +115,20 @@ data.frame( nicS2[,c("lex.id","per","age","tfh","lex.dur")],
 
 
 ###################################################
-### code chunk number 14: flup.rnw:416-417
+### code chunk number 14: flup.rnw:278-279
 ###################################################
 summary( (nicS2$age-nicS2$tfh) - nicS2$age1st ) 
 
 
 ###################################################
-### code chunk number 15: flup.rnw:422-424
+### code chunk number 15: flup.rnw:284-286
 ###################################################
 summary( timeBand( nicS2, "age", "middle" ) -
          timeBand( nicS2, "tfh", "middle" ) - nicS2$age1st )
 
 
 ###################################################
-### code chunk number 16: flup.rnw:446-454
+### code chunk number 16: flup.rnw:308-316
 ###################################################
 subset( nicL, id %in% 8:10 )
 agehi <- nicL$age1st + 50 / nicL$exposure
@@ -146,7 +141,7 @@ subset( nicC, id %in% 8:10 )
 
 
 ###################################################
-### code chunk number 17: flup.rnw:461-469
+### code chunk number 17: flup.rnw:323-331
 ###################################################
 subset( nicS2, id %in% 8:10 )
 agehi <- nicS2$age1st + 50 / nicS2$exposure
@@ -159,14 +154,14 @@ subset( nicS2C, id %in% 8:10 )
 
 
 ###################################################
-### code chunk number 18: flup.rnw:528-530
+### code chunk number 18: flup.rnw:390-392
 ###################################################
 ( a.kn <- with( subset( nicM, lex.Xst==1 ), quantile( age+lex.dur, (1:5-0.5)/5 ) ) )
 ( t.kn <- with( subset( nicM, lex.Xst==1 ), quantile( tfh+lex.dur, (1:5-0.5)/5 ) ) )
 
 
 ###################################################
-### code chunk number 19: flup.rnw:543-548
+### code chunk number 19: flup.rnw:405-410
 ###################################################
 ma <- glm( (lex.Xst==1) ~ Ns(age,knots=a.kn),
            family = poisson,
@@ -178,7 +173,6 @@ summary( ma )
 ###################################################
 ### code chunk number 20: pr-a
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame( age=40:85, lex.dur=1000 )
 pr.a <- ci.pred( ma, newdata = nd )
 matplot( nd$age, pr.a,
@@ -188,20 +182,20 @@ matplot( nd$age, pr.a,
 
 
 ###################################################
-### code chunk number 21: flup.rnw:583-585
+### code chunk number 21: flup.rnw:445-447
 ###################################################
 mat <- update( ma, . ~ . + Ns(tfh,knots=t.kn) )
 summary( mat )
 
 
 ###################################################
-### code chunk number 22: flup.rnw:595-596
+### code chunk number 22: flup.rnw:457-458
 ###################################################
 summary( nickel$age1st )
 
 
 ###################################################
-### code chunk number 23: flup.rnw:600-606
+### code chunk number 23: flup.rnw:462-468
 ###################################################
 nd <- data.frame( expand.grid( age=c(20:90,NA), age1st=seq(15,45,10) ) ) 
 nd <- transform( nd, tfh = ifelse( age > age1st, age-age1st, NA ),
@@ -214,7 +208,6 @@ head( nd )
 ###################################################
 ### code chunk number 24: pr-at
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 pr.at <- ci.pred( mat, newdata = nd )
 matplot( nd$age, pr.at,
          type="l", lty=1, col=1, lwd=c(3,1,1),
@@ -223,13 +216,13 @@ matplot( nd$age, pr.at,
 
 
 ###################################################
-### code chunk number 25: flup.rnw:630-631
+### code chunk number 25: flup.rnw:492-493
 ###################################################
 anova( ma, mat, test="Chisq" )
 
 
 ###################################################
-### code chunk number 26: flup.rnw:642-646
+### code chunk number 26: flup.rnw:504-508
 ###################################################
 ( f.kn <- with( subset( nicM, lex.Xst==1 ), quantile( age1st, (1:5-0.5)/5 ) ) )
 maf <- update( ma, . ~ . + Ns(age1st,knots=f.kn) )
@@ -240,7 +233,6 @@ anova( maf, ma, mat, test="Chisq" )
 ###################################################
 ### code chunk number 27: pr-at-af
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 pr.af <- ci.pred( maf, newdata = nd )
 matplot( nd$age, pr.at,
          type="l", lty=1, col=1, lwd=c(3,1,1),
@@ -251,7 +243,7 @@ matlines( nd$age, pr.af,
 
 
 ###################################################
-### code chunk number 28: flup.rnw:674-685
+### code chunk number 28: flup.rnw:536-547
 ###################################################
 maft <- update( mat, . ~ . + Ns(age1st,knots=f.kn) )
 summary( maft )
@@ -267,7 +259,7 @@ cbind( mod = c("maft","mat","ma","maf","mf","mft","mt","mat","maf","maft","mft")
 
 
 ###################################################
-### code chunk number 29: flup.rnw:700-709
+### code chunk number 29: flup.rnw:562-571
 ###################################################
 data( nickel )
 nicL <- Lexis( entry = list( per = agein+dob,
@@ -281,7 +273,7 @@ subset( nicL, id %in% 8:10 )
 
 
 ###################################################
-### code chunk number 30: flup.rnw:714-723
+### code chunk number 30: flup.rnw:576-585
 ###################################################
 nicL <- Lexis( entry = list( per = agein+dob,
                              age = agein,
@@ -295,7 +287,7 @@ str( nicL )
 
 
 ###################################################
-### code chunk number 31: flup.rnw:735-743
+### code chunk number 31: flup.rnw:597-605
 ###################################################
 nicL$agehi <- nicL$age1st + 50 / nicL$exposure
 nicC <- cutLexis( data = nicL,
@@ -308,7 +300,7 @@ summary( nicC, scale=1000 )
 
 
 ###################################################
-### code chunk number 32: flup.rnw:762-771
+### code chunk number 32: flup.rnw:624-633
 ###################################################
 nicC <- cutLexis( data = nicL,
                    cut = nicL$agehi,
@@ -324,7 +316,6 @@ summary( nicC, scale=1000, timeScales=TRUE )
 ###################################################
 ### code chunk number 33: nic-box
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 boxes( nicC, boxpos = list(x=c(10,10,80,80,80,80),
                            y=c(75,25,87,63,13,37)),
             scale.Y = 1000,

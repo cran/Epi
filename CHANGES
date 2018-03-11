@@ -1,3 +1,30 @@
+Changes in 2.26
+
+o ci.lin did not
+
+Changes in 2.25
+
+o N2Y now also completes the Lexis triangles in the last age-category
+  by fitting the sum to the average of the two prevalent numbers. 
+
+o ci.lin(vcov=TRUE) now returns a list whose first element is named
+  'coef' (previously 'est') and which is a vector (previously a 1-column
+  matrix). Old performance was illogical.
+ 
+  ci.lin also now accepts a list of two prediction dataframes as the
+  ctr.mat argument. On the basis of these it computes the row-wise
+  difference (RR for ci.exp).
+
+o bootLexis for bootstrapping persons from a Lexis object added. 
+  nid.Lexis (and nid.default) counting the number of persons in a 
+  Lexis object added as utility.
+
+o Dataset BrCa used for illustration of the Crowther and Lambert paper
+  added together with a vignette using the data to illustrate a subset
+  of the analyses as in the paper, plus some extra.
+
+o Relevel had a minor bug producing warnings where none were needed.
+
 Changes in 2.24
 
 o Bug in Relevel functionality when using a 2-column structure for
@@ -12,8 +39,8 @@ Changes in 2.22
 
 o vcov() use in ci.lin() updated to work with the new definition of vcov.
 
-o Relevel now also accepts a two-column structure --- basically a list
-  of what each factor level should be mapped to.
+o Relevel now also accepts a two-column structure as input ---
+  basically a list of what each factor level should be mapped to.
 
 o A few changes and groomings of the vignettes
 

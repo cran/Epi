@@ -1,0 +1,121 @@
+
+%----------------------------------------------------------------------
+%\usepackage[inline]{showlabels}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[font=it,labelfont=normalfont]{caption}
+\usepackage[colorlinks,urlcolor=blue,linkcolor=red,citecolor=Maroon]{hyperref}
+% \usepackage[ae,hyper]{Rd}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[super]{nth}
+% \usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage{makeidx,Sweave,floatflt,amsmath,amsfonts,amsbsy,enumitem,verbatim,dcolumn,needspace}
+\usepackage{booktabs,longtable,rotating,graphicx,verbatim,fancyhdr,datetime,afterpage,setspace}
+\usepackage{ifthen,calc,eso-pic,everyshi,pdfpages}
+\usepackage[abspath]{currfile}
+% \usepackage{mslapa}
+\definecolor{blaa}{RGB}{99,99,255}
+\DeclareGraphicsExtensions{.png,.pdf,.jpg}
+% Make the Sweave output nicer
+\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\footnotesize,fontshape=sl,formatcom=\color{Blue}}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\footnotesize,formatcom=\color{Maroon},xleftmargin=0em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\footnotesize}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}%
+{\renewcommand{\baselinestretch}{0.85} \vspace{\topsep}}%
+{\renewcommand{\baselinestretch}{1.00} \vspace{\topsep}}
+
+%----------------------------------------------------------------------
+% The usual usefuls
+\input{useful.tex}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+%----------------------------------------------------------------------
+% How to insert a figure
+\newcommand{\rwpre}{./graph/gr}
+\newcommand{\insfig}[3]{
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=#2\textwidth]{\rwpre-#1}
+  \caption{#3}
+  \label{fig:#1}
+%  \afterpage{\clearpage}
+\end{figure}}
+
+%----------------------------------------------------------------------
+% Set up layout of pages
+\oddsidemargin 1mm
+\evensidemargin 1mm
+\topmargin -5mm
+\headheight 8mm
+\headsep 8mm
+\textheight 230mm
+\textwidth 165mm
+%\footheight 5mm
+\footskip 15mm
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\headrulewidth}{0.1pt}
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+%----------------------------------------------------------------------
+% Here is the document starting with the titlepage
+\begin{document}
+
+%----------------------------------------------------------------------
+% The title page
+\setcounter{page}{1}
+\pagenumbering{roman}
+\pagestyle{plain}
+\thispagestyle{empty}
+%\vspace*{0.1\textheight}
+\flushright
+{\Huge \bfseries \Title
+
+}\ \\[-1.5ex]
+\noindent\textcolor{blaa}{\rule[-1ex]{\textwidth}{5pt}}\\[2.5ex]
+\large
+\Where \\
+\Homepage \\
+\Dates \\
+\Version \\[1em]
+\normalsize
+Compiled \today,\ \currenttime\\
+from: \texttt{\currfileabspath}\\[1em]
+\normalsize
+\vfill
+\Faculty
+% End of titlepage
+\newpage
+\raggedright
+\parindent 1em
+\parskip 0ex
+% \section*{Preface}
+% Here is space for the preface
+% \input{preface}
+
+%----------------------------------------------------------------------
+% Table of contents
+\tableofcontents
+\newpage
+% \listoftables
+% \listoffigures
+% \cleardoublepage
+
+%----------------------------------------------------------------------
+% General page style
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{%\thesection\ 
+\textsl{#1}}{}}
+\fancyhead[EL]{\bf \thepage}
+\fancyhead[ER]{\sl \Tit}
+\fancyhead[OR]{\bf \thepage}
+\fancyhead[OL]{\rm \rightmark}
+\fancyfoot{}

@@ -25,19 +25,19 @@ if( A.int!=P.int ) stop( "Unequal age and period interval lengths:\n",
 Ntab <- xtabs( N ~ A + P )
 # Devise a table for the risk times
 Ydim <- c(dimnames(Ntab),list(wh=c("lo","up")))
-# note one less age and period category
-Ytab <- array( NA, dim=sapply(Ydim,length),
-                   dimnames = Ydim )[-dim(Ntab)[1],-dim(Ntab)[2],]
-# How manu age and period classes
+# Note: one less period category
+Ytab <- NArray( Ydim )[,-dim(Ntab)[2],]    
+# How many age and period classes
 na <- nrow(Ytab)
 np <- ncol(Ytab)
 for(a in 1:na) for(p in 1:np)
    {
-              Ytab[a,p,"up"] <- Ntab[a  ,p]/3 + Ntab[a+1,p+1]/6
-   if( a > 1) Ytab[a,p,"lo"] <- Ntab[a-1,p]/6 + Ntab[a  ,p+1]/3
-         else Ytab[a,p,"lo"] <- Ntab[a  ,p]/2 + Ntab[a  ,p+1]/2 - Ytab[a,p,"up"]
+if( a < na ) Ytab[a,p,"up"] <- Ntab[a  ,p]/3 + Ntab[a+1,p+1]/6
+if( a >  1 ) Ytab[a,p,"lo"] <- Ntab[a-1,p]/6 + Ntab[a  ,p+1]/3
+if( a == 1 ) Ytab[a,p,"lo"] <- Ntab[a  ,p]/2 + Ntab[a  ,p+1]/2 - Ytab[a,p,"up"]
+if( a ==na ) Ytab[a,p,"up"] <- Ntab[a  ,p]/2 + Ntab[a  ,p+1]/2 - Ytab[a,p,"lo"]
    }
-# Remember to check the follow-up time
+# Remember to multiply to get the follow-up time
 Ytab <- Ytab * A.int
 # Convert to a data frame if required (the default)
 if( return.dfr )

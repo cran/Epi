@@ -1,9 +1,8 @@
+
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 %\VignetteIndexEntry{Simulation of multistate models with multiple timescales: simLexis}
 \documentclass[a4paper,twoside,12pt]{report}
 
-%----------------------------------------------------------------------
-% General information
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
   timescales:\\ \texttt{simLexis} in the \texttt{Epi} package}
 \newcommand{\Tit}{Multistate models with multiple timescales}
@@ -20,145 +19,13 @@ Bendix Carstensen
   & \url{http://BendixCarstensen.com} \\[1em]
                       \end{tabular}}
 
-%----------------------------------------------------------------------
-% Packages
-%\usepackage[inline]{showlabels}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[english]{babel}
-\usepackage[font=it,labelfont=normalfont]{caption}
-\usepackage[colorlinks,urlcolor=blue,linkcolor=red]{hyperref}
-\usepackage[ae,hyper]{Rd}
-\usepackage[dvipsnames]{xcolor}
-\usepackage[super]{nth}
-\usepackage{makeidx,Sweave,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
-\usepackage{ifthen,calc,eso-pic,everyshi}
-\usepackage{booktabs,longtable,rotating,graphicx}
-\usepackage{pdfpages,verbatim,fancyhdr,datetime,%
-afterpage}
-\usepackage[abspath]{currfile}
-% \usepackage{times}
-\renewcommand{\textfraction}{0.0}
-\renewcommand{\topfraction}{1.0}
-\renewcommand{\bottomfraction}{1.0}
-\renewcommand{\floatpagefraction}{0.9}
-\DeclareMathOperator{\Pp}{P}
-\providecommand{\pmat}[1]{\Pp\left\{#1\right\}}
-\providecommand{\ptxt}[1]{\Pp\left\{\text{#1}\right\}}
-\providecommand{\dif}{{\,\mathrm d}}
-% \usepackage{mslapa}
-\newenvironment{exercise}[0]{\refstepcounter{exno}
-   \begin{quote}
-   {\bf Exercise \theexno.}}
-   {\end{quote}}
-\definecolor{blaa}{RGB}{99,99,255}
-\DeclareGraphicsExtensions{.pdf,.jpg}
-% Make the Sweave output nicer
-\DefineVerbatimEnvironment{Sinput}{Verbatim}{fontsize=\footnotesize,fontshape=sl,formatcom=\color{Blue}}
-\DefineVerbatimEnvironment{Soutput}{Verbatim}{fontsize=\footnotesize,formatcom=\color{Maroon},xleftmargin=0em}
-\DefineVerbatimEnvironment{Scode}{Verbatim}{fontsize=\footnotesize}
-\fvset{listparameters={\setlength{\topsep}{0pt}}}
-\renewenvironment{Schunk}%
-{\renewcommand{\baselinestretch}{0.85} \vspace{\topsep}}%
-{\renewcommand{\baselinestretch}{1.00} \vspace{\topsep}}
-% \renewenvironment{knitrout}
-% {\renewcommand{\baselinestretch}{0.85}}
-% {\renewcommand{\baselinestretch}{1.00}} % redefined in topreport.tex
-
-%----------------------------------------------------------------------
-% The usual usefuls
-% \input{/home/bendix/util/tex/useful.tex}
-
-%----------------------------------------------------------------------
-% Set up layout of pages
-\oddsidemargin 1mm
-\evensidemargin 1mm
-\topmargin -5mm
-\headheight 8mm
-\headsep 5mm
-\textheight 240mm
-\textwidth 165mm
-%\footheight 5mm
-\footskip 15mm
-\renewcommand{\topfraction}{0.9}
-\renewcommand{\bottomfraction}{0.9}
-\renewcommand{\textfraction}{0.1}
-\renewcommand{\floatpagefraction}{0.9}
-\renewcommand{\headrulewidth}{0.1pt}
-\setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{2}
-
-%----------------------------------------------------------------------
-% How to insert a figure in a .rnw file
-\newcommand{\rwpre}{simLexis}
-\newcommand{\insfig}[3]{
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=#2\textwidth]{\rwpre-#1}
-  \caption{#3}
-  \label{fig:#1}
-%  \afterpage{\clearpage}
-\end{figure}}
-
-%----------------------------------------------------------------------
-% Here is the document starting with the titlepage
-\begin{document}
-
-%----------------------------------------------------------------------
-% The title page
-\setcounter{page}{1}
-\pagenumbering{roman}
-\pagestyle{plain}
-\thispagestyle{empty}
-% \vspace*{0.05\textheight}
-\flushright
-% The blank below here is necessary in order not to muck up the
-% linespacing in title if it has more than 2 lines
-{\Huge \bfseries \Title
-
-}\ \\[-1.5ex]
-\noindent\textcolor{blaa}{\rule[-1ex]{\textwidth}{5pt}}\\[2.5ex]
-\large
-\Where \\
-\Dates \\
-\Homepage \\
-\Version \\[1em]
-\normalsize
-Compiled \today,\ \currenttime\\
-% from: \texttt{\currfileabspath}\\[1em]
-% \input{wordcount}
-\normalsize
-\vfill
-\Faculty
-% End of titlepage
-% \newpage
-
-%----------------------------------------------------------------------
-% Table of contents
-\tableofcontents
-
-%----------------------------------------------------------------------
-% General text layout
-\raggedright
-\parindent 1em
-\parskip 0ex
-\cleardoublepage
-
-%----------------------------------------------------------------------
-% General page style
-\pagenumbering{arabic}
-\setcounter{page}{1}
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\textsl{#1}}{}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection\ \textsl{#1}}{}}
-\fancyhead[EL]{\bf \thepage \quad \rm \leftmark}
-\fancyhead[ER]{\sl \Tit}
-\fancyhead[OR]{\rm \rightmark \quad \bf \thepage}
-\fancyfoot{}
-
-
-%----------------------------------------------------------------------
-% Here comes the substance
+\input{topreport}
+\renewcommand{\rwpre}{./simLexis}
+<<echo=FALSE>>=
+options( width=90,
+         SweaveHooks=list( fig=function()
+         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
+@ %
 
 \chapter{Using \texttt{simLexis}}
 
@@ -662,7 +529,7 @@ determined from the \texttt{TR} object, hence it must be supplied by
 the user.
 <<simL>>=
 set.seed( 52381764 )
-Nsim <- 1000
+Nsim <- 5000
 system.time( simL <- simLexis( Tr,
                               ini,
                           t.range = 12,
@@ -793,8 +660,8 @@ plot( pM, col=clx )
 lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
 mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
 mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[1] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[2] )
+mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
 axis( side=4 )
 axis( side=4, at=1:19/20, labels=FALSE )
 axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
@@ -833,8 +700,8 @@ plot( pM, col=clx, xlab="Age" )
 lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
 mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
 mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[1] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[2] )
+mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
 axis( side=4 )
 axis( side=4, at=1:19/20, labels=FALSE )
 axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
@@ -1038,9 +905,11 @@ This section explains the actually existing code for
 % test (upload) the package, one of the following to chunks are run
 % with eval=FALSE and the other with eval=TRUE
 
+% When compiling the published vignette
 <<CHANGE1,echo=FALSE,results=hide,eval=FALSE>>=
 source( "../R/simLexis.R", keep.source=TRUE )
 @ %
+% When checking the package
 <<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
 simX <- Epi:::simX
 sim1 <- Epi:::sim1
@@ -1194,20 +1063,20 @@ lines.pState
 @ %
 
 \bibliographystyle{plain}
-  \begin{thebibliography}{1}
+\begin{thebibliography}{1}
 
 \bibitem{Carstensen.2011a}
-B.~Carstensen and M.~Plummer.
+B~Carstensen and M~Plummer.
 \newblock Using {L}exis objects for multi-state models in {R}.
 \newblock {\em Journal of Statistical Software}, 38(6):1--18, 1 2011.
 
 \bibitem{Iacobelli.2013}
-S.~Iacobelli and B.~Carstensen.
-\newblock {{M}ultiple time scales in multi-state models}.
+S~Iacobelli and B~Carstensen.
+\newblock {Multiple time scales in multi-state models}.
 \newblock {\em Stat Med}, 32(30):5315--5327, Dec 2013.
 
 \bibitem{Plummer.2011}
-M.~Plummer and B.~Carstensen.
+M~Plummer and B~Carstensen.
 \newblock Lexis: An {R} class for epidemiological studies with long-term
   follow-up.
 \newblock {\em Journal of Statistical Software}, 38(5):1--12, 1 2011.

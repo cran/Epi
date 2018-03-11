@@ -25,35 +25,29 @@ data.frame( id = tmp$lex.id,
 }
 
 # The etm method
-etm <- function (obj, ...) UseMethod("etm")
-
-etm.data.frame <-
-function (obj, ...)
-{
-etm::etm( data=obj, ... )
-}
-
+etm <- function (data, ...) UseMethod("etm")
+ 
 etm.Lexis <-
-function( obj,
-   time.scale = timeScales(obj)[1],
-    cens.name = "cens",
-            s = 0,
-            t = "last",
-   covariance = TRUE,
-     delta.na = TRUE,
-          ...
-         )
+function( data,
+    time.scale = timeScales(data)[1],
+     cens.name = "cens",
+             s = 0,
+             t = "last",
+    covariance = TRUE,
+      delta.na = TRUE,
+           ...
+          )
 {
-dfr <- data.frame( id = obj$lex.id,
-                 from = as.character(obj$lex.Cst),
-                   to = as.character(obj$lex.Xst),
-                entry = obj[,time.scale],
-                 exit = obj[,time.scale] + obj$lex.dur,
+dfr <- data.frame( id = data$lex.id,
+                 from = as.character(data$lex.Cst),
+                   to = as.character(data$lex.Xst),
+                entry = data[,time.scale],
+                 exit = data[,time.scale] + data$lex.dur,
      stringsAsFactors = FALSE )
 dfr$to <- with( dfr, ifelse( from==to, cens.name, to ) )
 etm::etm( data = dfr,
-   state.names = levels( obj$lex.Cst ),
-           tra = tmat(obj,mode="logical"),
+   state.names = levels( data$lex.Cst ),
+           tra = tmat(data,mode="logical"),
      cens.name = cens.name,
              s = s,
              t = t,

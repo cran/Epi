@@ -15,17 +15,17 @@ tRelevel <-
 function( ff, # factor to be grouped
           gg, # 2-column matrix or table with levels resp. grouping
      xlevels = TRUE,  # include also grouped levels not present in ff
-     nogroup = TRUE ) # levels of ff not grouped are tranferred or set to NA
+     nogroup = TRUE ) # levels of ff not grouped are tranferred (if FALSE set to NA)
 {
-if( any( wh <- apply( table( gg[,1], gg[,2] )>0, 1, sum )>1 ) )
-    stop( "Factor level", if(length(wh>1)) "s", ": ",
+if( any( wh <- ( apply( table( gg[,1], gg[,2] )>0, 1, sum )>1 ) ) )
+    stop( "\nFactor level", if(sum(wh)>1) "s", ": \n",
           paste(names(wh)[wh],collapse=" / "),
           "\nis grouped to more than one group.\n" )
 if( any( is.na( match( unique(as.character(ff)),
                        unique(as.character(gg[,1])) ) ) ) )
-    cat( "Note: Some values of x are not in ref[,1].\n" )
-if( any( wh <- apply( table( gg[,1], gg[,2] ), 1, sum )>1 ) )
-    warning( "Factor level", if(length(wh>1)) "s", ": ",
+    cat( "Note: Some values of factor not among levels grouped.\n" )
+if( any( wh <- ( apply( table( gg[,1], gg[,2] ), 1, sum )>1 ) ) )
+    warning( "Factor level", if(sum(wh)>1) "s", ": ",
              paste(names(wh)[wh],collapse=" / "),
              "\nappear more than once in the table of groupings." )
 # indices and names of the original factor levels

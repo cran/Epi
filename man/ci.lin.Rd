@@ -26,7 +26,7 @@ ci.lin( obj,
          df = Inf,
         Exp = FALSE,
      sample = FALSE )
-ci.exp( ..., Exp = TRUE, pval=FALSE )
+ci.exp( ..., Exp = TRUE, pval = FALSE )
 Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df = Inf )
 ci.pred( obj, newdata,
@@ -59,7 +59,9 @@ ci.ratio( r1, r2,
  or \code{rq}).
   }
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
-    vector, i.e. the desired linear function of the parameters.}
+    vector, i.e. the desired linear function of the parameters. Can also
+    be a list of two data frames (see below), in which case all other
+    arguments than \code{Exp} are ignored - see details.}
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
@@ -91,15 +93,15 @@ ci.ratio( r1, r2,
     default (\code{Exp=NULL}) is to make a prediction with a Wald CI on
     the scale of the linear predictor and back-transform it by the
     inverse link function; if \code{FALSE}, the prediction on the link
-    scale is returned.}  
+    scale is returned.}
   \item{sample}{Logical or numerical. If \code{TRUE} or numerical a
     sample of size \code{as.numeric(sample)} is drawn from the
     multivariate normal with mean equal to the (\code{subset} defined)
     coefficients and variance equal to the estimated variance-covariance
     of these. These are then transformed by \code{ctr.mat} and
     returned.}
-  \item{pval}{Logical. Should a column of P-values be included with the estimates
-    and confidence intervals output by \code{ci.exp}.}
+  \item{pval}{Logical. Should a column of P-values be included with the
+    estimates and confidence intervals output by \code{ci.exp}.}
   \item{H0}{Numeric. The null values for the selected/transformed parameters to
     be tested by a Wald test. Must have the same length as the selected
     parameter vector.}
@@ -114,20 +116,31 @@ ci.ratio( r1, r2,
     \code{r2} represent log-rates with confidence intervals.}
   }
 \value{
+    
   \code{ci.lin} returns a matrix with number of rows and row names as
   \code{ctr.mat}. The columns are Estimate, Std.Err, z, P, 2.5\% and
   97.5\% (or according to the value of \code{alpha}).  If
-  \code{vcov=TRUE} a list with components \code{est}, the 
-  desired functional of the parameters and \code{vcov}, the variance
-  covariance matrix of this, is returned but not printed.  If
-  \code{Exp==TRUE} the confidence intervals for the parameters are
-  replaced with three columns: exp(estimate,c.i.).
+  \code{vcov=TRUE} a list of length 2 with components \code{coef} (a
+  vector), the desired functional of the parameters and \code{vcov} (a
+  square matrix), the variance covariance matrix of this, is returned
+  but not printed.  If \code{Exp==TRUE} the confidence intervals for the
+  parameters are replaced with three columns: exp(estimate,c.i.).
 
   \code{ci.exp} returns only the exponentiated parameter estimates with
   confidence intervals. It is merely a wrapper for \code{ci.lin},
   fishing out the last 3 columns from \code{ci.lin(...,Exp=TRUE)}. If
   you just want the estimates and confidence limits, but not
   exponentiated, use \code{ci.exp(...,Exp=FALSE)}.
+  
+  If \code{ctr.mat} is a list of two data frames, the difference of the
+  predictions (on the linear predictor scale) from using the first
+  versus the last as newdata arguments to predict is computed. Columns
+  that are identical in the two data frames can be omitted (see
+  example). If the second data frame has only one row, this is
+  replicated to match the number of rows in the first. This facility is
+  primarily aimed at teasing out RRs that are non-linear functions of a
+  quantitative variable without setting up contrast matrices using the
+  same code as in the model.
 
   \code{Wald} computes a Wald test for a subset of (possibly linear
   combinations of) parameters being equal to the vector of null
@@ -183,6 +196,17 @@ print( ci.lin( mm, subset="g", diff=TRUE, fnam="gee!:", vcov=TRUE ) )
 
 # Use character defined subset to get ALL contrasts:
 ci.lin( mm, subset="f", diff=TRUE )
+
+# Suppose the x-effect differs across levels of g:
+mi <- update( mm, . ~ . + g:x )
+ci.lin( mi )
+# RR a vs. b by x:
+nda <- data.frame( x=-3:3, g="a", f="b" )
+ndb <- data.frame( x=-3:3, g="b", f="b" )
+# 
+ci.lin( mi, list(nda,ndb) )
+# Same result if f column is omitted because "f" columns are identical
+ci.lin( mi, list(nda[,-3],ndb[,-3]) )
 
 # A Wald test of whether the g-parameters are 0
 Wald( mm, subset="g" )

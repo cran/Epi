@@ -127,7 +127,7 @@ Ns <- function( x, ref = NULL,
     warning( "detrend= specified, hence intercept=TRUE is ignored")
     intercept <- FALSE
     }
-  if( detrend & any(!is.na(fixsl)) ) {
+  if( detrend & any(fixsl) ) {
     warning( "detrend= specified, hence fixsl argument is ignored")
     fixsl=c(FALSE,FALSE)
     }

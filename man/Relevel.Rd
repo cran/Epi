@@ -26,7 +26,7 @@
     factor levels, otherwise new level names are constructed from the
     old.
 
-    If \code{ref} is a matrix or table, the two first column is assumed
+    If \code{ref} is a matrix or table, the first column is assumed
     to have unique levels of \code{x} and the second to have groupings
     of this, respectively.
 
@@ -81,5 +81,7 @@ Relevel( ff, gg )
 Relevel( ff, gg, xlevels=FALSE )
 # If you do not want unknown animals classified, this returns NAs:
 Relevel( ff, gg, nogroup=FALSE )
+# Will give error because re-classification is ambiguous
+try( Relevel( ff, rbind(gg,c("Eagle","Mammal"),c("Snake","Mammal")) ) )
 }
 \keyword{manip}

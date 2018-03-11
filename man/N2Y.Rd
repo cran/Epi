@@ -24,10 +24,6 @@ N2Y( A, P, N,
   \item{return.dfr}{Logical. Should the results be returned as a data frame
     (default \code{TRUE}) or as a table.}
 }
-\details{The calculation of the risk time from the population figures is
-  done as described in: B. Carstensen: Age-Period-Cohort models for the
-  Lexis diagram. Statistics in Medicine, 26: 3018-3045, 2007.
-}
 \value{A data frame with variables \code{A}, \code{P} and \code{Y},
   representing the mean age and period in the Lexis triangles and the
   person-time in them, respectively. The person-time is in units of the
@@ -37,6 +33,23 @@ N2Y( A, P, N,
   point of the age-classes and the periods and a factor \code{wh} taking
   the values \code{up} and \code{lo} corresponding to upper (early
   cohort) and lower (late cohort) Lexis triangles.
+}
+\details{The calculation of the risk time from the population figures is
+  done as described in: B. Carstensen: Age-Period-Cohort models for the
+  Lexis diagram. Statistics in Medicine, 26: 3018-3045, 2007.
+
+  The number of periods in the result is one less than the number
+  of dates (\code{nP=length(table(P))}) in the input, so the number of
+  distinct values is \code{2*(nP-1)}, because the \code{P} in the output
+  is coded differently for upper and lower Lexis triangles.
+
+  The number of age-classes is the same as in the input.  In the paper
+  "Age-Period-Cohort models for the Lexis diagram" I suggest that the
+  risk time in the lower triangles in the first age-class and in the
+  upper triangles in the last age-class are computed so that the total
+  risk time in the age-class corresponds to the average of the two
+  population figures for the age-class at either end of the period. This
+  is the method used.
 }
 \references{
   B. Carstensen: Age-Period-Cohort models for the
@@ -70,7 +83,7 @@ N.1.1972/6 + N.2.1973/3
 
 # Blue numbers are population size at 1 January
 # Red numbers are the computed person-years in Lexis triangles:
-Lexis.diagram(age=c(0,4), date=c(1970,1975), int=1, coh.grid=TRUE )
+Lexis.diagram(age=c(0,5), date=c(1970,1975), int=1, coh.grid=TRUE )
 with( Nx, text(P,A+0.5,paste(N),srt=90,col="blue") )
 with( Nt, text(P,A,formatC(Y,format="f",digits=1),col="red") )
 text( 1970.5, 2, "Population count 1 January", srt=90, col="blue")

@@ -71,6 +71,8 @@ lines.apc,
            splitLexis,
       transform.Lexis,
          levels.Lexis,
+            nid.Lexis,
+            bootLexis,
         Relevel.Lexis,
       factorize.Lexis,
              cutLexis,
@@ -109,7 +111,6 @@ lines.apc,
   nState,
   pState,
   msdata,
-  etm,
   mh,
   ncut,
   nice,
@@ -126,7 +127,9 @@ lines.apc,
   Aplot,
   Pplot,
   Cplot,
+  nid,
   Relevel,
+  Relevel.factor,
   ROC,
   twoby2,
   Wald,
@@ -153,7 +156,7 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "strwidth", "text")
 importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
            "ave", "binomial", "coef", "complete.cases", "contr.sum",
-           "fisher.test", "fitted", "gaussian", "glm",
+           "fisher.test", "fitted", "formula", "gaussian", "glm",
            "is.empty.model", "median", "model.extract", "model.matrix",
            "model.offset", "model.response", "nlm", "pchisq", "pnorm",
            "poisson", "predict", "qnorm", "qt", "quantile", "runif",
@@ -182,6 +185,8 @@ S3method(    print, summary.Lexis)
 S3method(transform, Lexis)
 S3method(transform, stacked.Lexis)
 S3method(   levels, Lexis)
+S3method(      nid, Lexis)
+S3method(      nid, default)
 S3method(  Relevel, Lexis)
 S3method(  Relevel, factor)
 S3method(  Relevel, default)

@@ -40,9 +40,14 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
   if( only.exit )
     {
     if( is.logical( exit.status ) )
+        {
         entry.status <- FALSE
+        cat("NOTE: entry.status has been set to FALSE for all.\n" )
+        }
     if( is.character( exit.status ) )
+        {
         exit.status <- factor( exit.status )
+        }
     if( is.factor( exit.status ) )
         {
         entry.status <- factor( rep( levels(exit.status)[1],
@@ -54,7 +59,10 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
             "for all.\n" )
         }
     if( is.numeric( exit.status ) )
+        {
         entry.status <- rep( 0, length( exit.status ) )
+        cat("NOTE: entry.status has been set to 0 for all.\n" )
+        }
     }
 
   ## Convert character states to factors
@@ -183,7 +191,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
 #    stop("Duration must be non-negative")
 #  }
 
-  ## Make sure id value - if supplied - is valid. Otherwise supply default id
+  ## Make sure id values - if supplied - are valid. Otherwise supply default id
 
   if (missing(id)) {
     id <- 1:nrow(entry)
@@ -197,10 +205,10 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
   ## variables Use the prefix "lex." for the names of reserved
   ## variables.
   if( is.data.frame( duration ) ) duration <- duration[,1]
-  lex <- data.frame(entry, "lex.dur" = duration,
-                           "lex.Cst" = entry.status,
-                           "lex.Xst" = exit.status,
-                           "lex.id"  = id )
+  lex <- data.frame( entry, "lex.dur" = duration,
+                            "lex.Cst" = entry.status,
+                            "lex.Xst" = exit.status,
+                            "lex.id"  = id )
 
   #### Addition by BxC --- support for states as factors
   # Convert states to factors if states are given
@@ -216,19 +224,20 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
   if (!missing(data) && merge) {
     duplicate.names <- intersect(names(lex), names(data))
     if (length(duplicate.names) > 0) {
-      stop("Cannot merge data with duplicate names")
+      stop( "Cannot merge data with duplicate names:",
+            paste(duplicate.names,collapse=" ") )
     }
     lex <- cbind(lex, data)
   }
 
-  ## Drop rows with short or negantive duration for consistency with splitLexis
+  ## Drop rows with short or negative duration for consistency with splitLexis
   short.dur <- lex$lex.dur <= tol
   if ( any(short.dur) ) {
       warning("Dropping ", sum(short.dur),
               " rows with duration of follow up < tol\n",
       if( keep.dropped ) "  The dropped rows are in the attribute 'dropped'\n",
       if( keep.dropped ) "  To see them type attr(Obj,'dropped'),\n",
-      if( keep.dropped ) "  to get rid of them type attr(Obj,'dropped') <- NULL\n",
+      if( keep.dropped ) "  to get rid of them type: attr(Obj,'dropped') <- NULL\n",
       if( keep.dropped ) "  - where 'Obj' is the name of your Lexis object" )
       lex <- subset(lex, !short.dur)
       if( keep.dropped ) attr(lex,"dropped") <- subset(data, short.dur)

@@ -1,0 +1,16 @@
+cp flup.R ../inst/doc
+cp flup.pdf ../inst/doc
+
+cp simLexis.R ../inst/doc/simLexis.R
+cp sL.pdf     ../inst/doc/simLexis.pdf
+
+cp yll.R  ../inst/doc/yll.R
+cp yl.pdf ../inst/doc/yll.pdf
+
+cp etm.R ../inst/doc
+cp etm.pdf ../inst/doc
+
+cp BrCaMS.R ../inst/doc
+cp BrCaMS.pdf ../inst/doc
+
+klean

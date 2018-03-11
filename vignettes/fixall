@@ -1,0 +1,25 @@
+# Before this is run, you need to run rw on simLexis and yll 
+# with eval=TRUE in the lines with CHANGE1 in order to get a version
+# with properly formatted code. The .pdfs are moved to sL.pdf and
+# yl.pdf. Subsesquently we swap TRUE and FALS in the CHANGE1/2 lines
+# and are then ready for the following:
+
+rw flup
+rt flup
+bl flup
+cp flup.R ../inst/doc
+cp flup.pdf ../inst/doc
+
+rt simLexis
+rw simLexis
+bl simLexis
+cp simLexis.R ../inst/doc/simLexis.R
+cp sL.pdf     ../inst/doc/simLexis.pdf
+
+rt yll
+rw yll
+bl yll
+cp yll.R  ../inst/doc/yll.R
+cp yl.pdf ../inst/doc/yll.pdf
+
+klean
