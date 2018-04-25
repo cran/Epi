@@ -19,6 +19,7 @@ ci.lin( obj,
     ctr.mat = NULL,
      subset = NULL,
      subint = NULL,
+      xvars = NULL,
       diffs = FALSE,
        fnam = !diffs,
        vcov = FALSE,
@@ -60,8 +61,11 @@ ci.ratio( r1, r2,
   }
   \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
     vector, i.e. the desired linear function of the parameters. Can also
-    be a list of two data frames (see below), in which case all other
-    arguments than \code{Exp} are ignored - see details.}
+    be a list of two data frames, in which case all other
+    arguments than \code{Exp} are ignored - see \code{xvars} and details.}
+  \item{xvars}{Character vector. If variables in the model are omitted
+    from data frames supplied in \code{ctr.mat}, they should be listed
+    here. Omitted factors should not be mentioned here.}
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
@@ -123,7 +127,7 @@ ci.ratio( r1, r2,
   \code{vcov=TRUE} a list of length 2 with components \code{coef} (a
   vector), the desired functional of the parameters and \code{vcov} (a
   square matrix), the variance covariance matrix of this, is returned
-  but not printed.  If \code{Exp==TRUE} the confidence intervals for the
+  but not printed. If \code{Exp==TRUE} the confidence intervals for the
   parameters are replaced with three columns: exp(estimate,c.i.).
 
   \code{ci.exp} returns only the exponentiated parameter estimates with
@@ -136,11 +140,21 @@ ci.ratio( r1, r2,
   predictions (on the linear predictor scale) from using the first
   versus the last as newdata arguments to predict is computed. Columns
   that are identical in the two data frames can be omitted (see
-  example). If the second data frame has only one row, this is
-  replicated to match the number of rows in the first. This facility is
-  primarily aimed at teasing out RRs that are non-linear functions of a
+  example), but names of numerical variables omitted must be supplied in
+  a character vector \code{xvars}. Factors omitted should not be
+  named. If the second data frame has only one row, this is replicated
+  to match the number of rows in the first. The facility is primarily
+  aimed at teasing out RRs that are non-linear functions of a
   quantitative variable without setting up contrast matrices using the
   same code as in the model.
+
+  You can leave out variables (columns) from the two data frames that
+  would be constant and identical, basically variables not relevant for
+  the calculation of the contrast. In many cases \code{ci.lin} (really
+  \code{Epi:::ci.dfr}) can figure out the names of the omitted columns,
+  but occasionally you will have to supply the names of the omitted
+  variables in the \code{xvars} argument. Factors omitted need not be
+  listed in \code{xvars}, though no harm is done doing so.
 
   \code{Wald} computes a Wald test for a subset of (possibly linear
   combinations of) parameters being equal to the vector of null
@@ -178,7 +192,10 @@ ci.ratio( r1, r2,
   Michael Hills
   }
 \seealso{See also \code{\link{ci.cum}} for a function computing
-  cumulative sums of (functions of) parameter estimates.}
+  cumulative sums of (functions of) parameter estimates. The example
+  code for  \code{\link{matshade}} has an application of predicting a
+  rate-ratio using a list of two prediction frame in the \code{ctr.mat}
+  argument.}
 \examples{
 # Bogus data:
 f <- factor( sample( letters[1:5], 200, replace=TRUE ) )
@@ -207,6 +224,15 @@ ndb <- data.frame( x=-3:3, g="b", f="b" )
 ci.lin( mi, list(nda,ndb) )
 # Same result if f column is omitted because "f" columns are identical
 ci.lin( mi, list(nda[,-3],ndb[,-3]) )
+# However, Crashes if knots in spline is supplied, and non-factor omitted
+xk <- -1:1
+xi <- c(-0.5,0.5)
+ww <- rnorm(200)
+mi <- update( mm, . ~ . -x +ww + Ns(x,knots=xk) + g:Ns(x,knots=xi) )
+# Will crash 
+try( cbind( nda$x, ci.lin( mi, list(nda,ndb) ) ) )
+# Must specify num vars (not factors) omitted from nda, ndb
+cbind( nda$x, ci.lin( mi, list(nda,ndb), xvars="ww" ) )
 
 # A Wald test of whether the g-parameters are 0
 Wald( mm, subset="g" )
@@ -218,6 +244,7 @@ Wald( mm, subset="f", ctr.mat=CM )
 Wald( mm, subset="f", ctr.mat=CM )
 
 # Confidence intervals for ratio of rates
+# Rates and ci supplied, but only the range (lower and upper ci) is used
 ci.ratio( cbind(10,8,12.5), cbind(5,4,6.25) )
 ci.ratio( cbind(8,12.5), cbind(4,6.25) )
 }

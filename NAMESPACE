@@ -21,6 +21,7 @@ lines.apc,
   ci.pred,
   ci.ratio,
   ci.mat,
+  matshade,
   lls,
   clear,
   contr.orth,
@@ -148,7 +149,7 @@ importFrom( survival, clogit )
 importFrom( numDeriv, hessian )
 importFrom( Matrix, nearPD )
 importFrom( zoo, na.locf )
-importFrom("grDevices", "gray", "rainbow")
+importFrom("grDevices", "gray", "rainbow", "adjustcolor")
 importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "lines", "locator", "matlines", "matplot", "matpoints",
            "mtext", "par", "plot", "plot.new", "plot.window", "points",

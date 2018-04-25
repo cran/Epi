@@ -187,26 +187,28 @@ LCa.fit( data, A, P, D, Y,
   \code{APCa} or \code{APaCa}, indicating the variable(s) interacting
   with age.} 
 \item{ax}{3-column matrix of age-effects, c.i. from the age-time
-  model. Rownames are the unique occurring ages in the
+  model. Row names are the unique occurring ages in the
   dataset. Estimates are rates.}  
 \item{pi}{3-column matrix of age-period interaction effects, c.i. from the age
-  model. Rownames are the actually occurring ages in the
-  dataset. Estimates are multipliers of the log-RRs in \code{kt},
-  centered at 1 at \code{ci.ref}.}
+  model. Row names are the actually occurring ages in the
+  dataset. Estimates are multipliers of the log-RRs in \code{kp},
+  centered at 1 at \code{pi.ref}.}
 \item{kp}{3-column matrix of period-effects, with c.i.s from the
-  age-time model. Rownames are the actually occurring times in the 
+  age-time model. Row names are the actually occurring times in the 
   dataset. Estimates are rate-ratios centered at 1 at \code{p.ref}.}
 \item{ci}{3-column matrix of age-cohort interaction effects, c.i. from the age
-  model. Rownames are the actually occurring ages in the
-  dataset. Estimates are multipliers of the log-RRs in \code{kt},
+  model. Row names are the actually occurring ages in the
+  dataset. Estimates are multipliers of the log-RRs in \code{kc},
   centered at 1 at \code{ci.ref}.}
 \item{kc}{3-column matrix of cohort-effects, with c.i.s from the age-time
-  model. Rownames are the actually occurring times in the
+  model. Row names are the actually occurring times in the
   dataset. Estimates are rate-ratios centered at 1 at \code{c.ref}.}
-\item{mod.at}{\code{glm} object with the final age-time model. Gives
-  the same fit as the \code{mod.b} model.}
-\item{mod.b}{\code{glm} object with the final age model. Gives
-  the same fit as the \code{mod.at} model.}
+\item{mod.at}{\code{glm} object with the final age-time model --- estimates
+  the terms \code{ax}, \code{kp}, \code{kc}. Gives
+  the same fit as the \code{mod.b} model after convergence.}
+\item{mod.b}{\code{glm} object with the final age model --- estimates
+  the terms \code{pi}, \code{ci}. Gives
+  the same fit as the \code{mod.at} model after convergence.}
 \item{coef}{All coefficients from both models, in the order \code{ax},
   \code{kp}, \code{kc}, \code{pi}, \code{ci}. Only present if
   \code{LCa.fit} were called with \code{VC=TRUE} (the default).} 

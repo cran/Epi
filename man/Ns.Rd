@@ -40,7 +40,8 @@ Ns( x, ref = NULL, df = NULL,
     \code{c(FALSE,TRUE)}. Ignored if \code{!(detrend==FALSE)}.}
   \item{detrend}{If \code{TRUE}, the columns of the spline basis will be
     projected to the orthogonal of \code{cbind(1,x)}. Optionally
-    \code{detrend} can be given as a vector of non-negative numbers used
+    \code{detrend} can be given as a vector of non-negative numbers og
+    length \code{length(x)}, used
     to define an inner product as \code{diag(detrend)} for projection on
     the orthogonal to \code{cbind(1,x)}. The default is projection
     w.r.t. the inner product defined by the identity matrix.}
@@ -48,15 +49,17 @@ Ns( x, ref = NULL, df = NULL,
 \value{
   A matrix of dimension c(length(x),df) where either \code{df} was
   supplied or if \code{knots} were supplied, \code{df = length(knots) -
-  intercept}. \code{Ns} returns a spline basis which is centered at
+    1 + intercept}. \code{Ns} returns a spline basis which is centered at
   \code{ref}. \code{Ns} with the argument \code{detrend=TRUE} returns a
   spline basis which is orthogonal to \code{cbind(1,x)} with respect to
   the inner product defined by the positive definite matrix
-  \code{diag(weight)} (an assumption which is checked).
+  \code{diag(detrend)} (an assumption which is checked). Note the latter
+  is data dependent and therefore making predictions
+  with a \code{newdata} argument will be senseless.
 }
 \author{
   Bendix Carstensen \email{b@bxc.dk},
-  Lars Jorge D\'iaz, Steno Diabetes Center.
+  Lars Jorge D\'iaz, Steno Diabetes Center Copenhagen.
 }
 \note{
   The need for this function is primarily from analysis of rates in

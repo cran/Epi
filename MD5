@@ -1,6 +1,6 @@
-be1a576dba1184b876068920862cf167 *CHANGES
-76f7a6649ca3f73e57be7130af757037 *DESCRIPTION
-ea17373734bad2e609d4cbe7bdbdbf04 *NAMESPACE
+9b206c09da2054d719f3ffec63cc0e50 *CHANGES
+13fae86f84a8493fb06d0b1cfccfae62 *DESCRIPTION
+a956256840da39a4537633a6e3455b99 *NAMESPACE
 fac3c7f01ab0bd6930cf3cbea20e6bcc *R/Aplot.R
 a031997be7388601dd1df6a28fc55328 *R/Cplot.R
 6a1c4f4cbbf509d1f3c40b9f0adb6399 *R/Icens.R
@@ -10,7 +10,7 @@ c6b992622881e60fb82ee4b8c3357c9d *R/Lexis.lines.R
 05c38381cc48ab25b681e8615ac31ea8 *R/Life.lines.R
 330f1cf58e92430145b958a0f9d41571 *R/N2Y.r
 8743609003b32036a7a1d02fb4b8e17b *R/NArray.R
-3dd8474112ee6c68aad56cf4091538bd *R/Ns.r
+74aace0e5df5492a0dbf3b94bd25406e *R/Ns.r
 e9f582b5dc17d07bf2df96de74441963 *R/Pplot.R
 144bd0af57017a5d92c4a7bde47da4e7 *R/ROC.R
 dc5942024c78483c2f1f7a75862e9fcb *R/Relevel.R
@@ -28,7 +28,7 @@ cedbf3ce40caae2f64ebef78091f783a *R/bsLexis.R
 44e5f888817c94b8a190eae4aa964a2c *R/cal.yr.R
 6988e76eb64f004a8c5029c23f8603af *R/ccwc.R
 47f2dfd260230b96f7e5daafb61e9db5 *R/ci.cum.R
-d3f901b36bb62c1f6641ec33be6e80ce *R/ci.lin.R
+ce1b0f54a8493aed0b7a85e886b1f0bf *R/ci.lin.R
 6f80c7b2b2120068cd16c043fbc29db3 *R/ci.mat.R
 886f87cbd08266fa281e2ed7b3b3c253 *R/ci.pd.R
 7637da11fdfb3612df5d73a64ee044e4 *R/clear.R
@@ -54,6 +54,7 @@ da7b5d41fe7876ef6bab01839b613939 *R/ftrend.R
 f0f84fc26294b1cb3016a9e23974c545 *R/gen.exp.R
 c1e34d4ca4bbbcfeda98cece6f49a1c4 *R/lexis.R
 f8eba91de17a8207c6303ffb7b34f0a7 *R/lls.R
+d926ef2265712b161facc0b10acb2191 *R/matshade.R
 06ebf2179362f9376b6dd3e7520a3bc9 *R/mcutLexis.R
 79d6e0b02a2c4e98fbbfcd936b21d377 *R/mh.R
 9e48e47769874a34f63a2e2d4e6ffffc *R/ncut.r
@@ -115,7 +116,7 @@ ffe380e7252698c820a448b587714b49 *man/BrCa.Rd
 ae0088f5434c66484668b6d085145889 *man/DMepi.Rd
 362200b221355a7bcbcd1c7c8df5243f *man/DMlate.Rd
 c87e6a0d0a5c461ecf4df07c2c96f1c1 *man/Icens.Rd
-f1bec330bc9deb7abdd4e3b712b31ec1 *man/LCa.fit.Rd
+c94a1f15f90406b35c24ff9e3e6b9147 *man/LCa.fit.Rd
 e90e2ce2e2bc9daf1283492261c8ebbd *man/Lexis.Rd
 c97dabafce248e4d47c5b18b6f04efe0 *man/Lexis.diagram.Rd
 2e71ca58213788c8a358708e776e2112 *man/Lexis.lines.Rd
@@ -124,14 +125,14 @@ daf66f950320e836b8ce1d2bd37cdc41 *man/M.dk.Rd
 6ae7494a426801b9944c37190c09b3ee *man/N.dk.Rd
 5718b371e9062cd7af8efd2ef0f245a5 *man/N2Y.Rd
 424aecfdd664b3123ad4815880aa3761 *man/NArray.Rd
-03f9885a6c523d7a221cf0a2272628fc *man/Ns.Rd
+cddc9fd049b34de27a61fd1bb119d998 *man/Ns.Rd
 335b75739b8a25293690da804cd5e522 *man/ROC.Rd
 95b580abbfcafdc404d28cd194e8c214 *man/Relevel.Rd
 bb2162d557dfb7685edac64ac3213b6c *man/S.typh.Rd
 9351888a37017068f2c9ac8b843c846d *man/Termplot.Rd
 b4879df831de32e9e298b7b3d90389a9 *man/Y.dk.Rd
 89a0abc6ca87f561fc48e0f24f268622 *man/addCov.Lexis.Rd
-62c36534ab2b6043f68306dd33407891 *man/apc.LCa.Rd
+5d347f8d93ad0ca09b8992fa7aa2d241 *man/apc.LCa.Rd
 d5976837ba976d5969aaaedb98b215eb *man/apc.fit.Rd
 8e42054ad19c34f2bf77210cfafc560e *man/apc.frame.Rd
 92b663829915395cdabf3e5d37cdd2b4 *man/bdendo.Rd
@@ -144,7 +145,7 @@ d74a4f6e66ce91c73cd2817bb690446a *man/births.Rd
 a2bedd44df3606b6585fd1da897de7ec *man/cal.yr.Rd
 effba2c17ade00f0afd10184a073d34c *man/ccwc.Rd
 90337e7772c67e4e140e21165c30f079 *man/ci.cum.Rd
-14953bce85bc8125faea52a14f3c6ffd *man/ci.lin.Rd
+1112c45891416162bcf4f08107f5d1d7 *man/ci.lin.Rd
 e7477402aa4746d653a0c72b2239d185 *man/ci.pd.Rd
 128c0b1d00a69e41d131a6f74a1bae23 *man/clogistic.Rd
 cf5e5a6e18e07b7bb8d70dc0417e6166 *man/contr.cum.Rd
@@ -154,7 +155,7 @@ a1ab8c14b721360ba0cb17da598bfa84 *man/detrend.Rd
 386d0a4aa3515cf754ef458e1f32089c *man/diet.Rd
 64dd6599bb830e98f4717b1a34ee12ab *man/effx.Rd
 3c3cc3b1ecabece6b7709c1b147bab4e *man/effx.match.Rd
-a4922d13042b2d343868518a072e64d3 *man/erl.Rd
+f281dede5c1a091f9dca30199fb41bec *man/erl.Rd
 0dc62e726cdff6694774fab66595ee81 *man/ewrates.Rd
 eb0c50c4a2572fd514c475358165fa57 *man/expand.data.rd
 344adb137962cfa8fc7c2cf2858de3a3 *man/fit.add.Rd
@@ -171,6 +172,7 @@ d9f1d31e109d6058a2160ca0aa49bf81 *man/hivDK.Rd
 ec0e27968d4ee35f390161e49abd903c *man/lines.apc.Rd
 78125ba49d54905fb727765dc8997796 *man/lls.Rd
 661ec298ffcd0f39cf55c5d033e04fd1 *man/lungDK.Rd
+96c8570b2b91932eec0fca87bf4c321c *man/matshade.Rd
 a378ebdcb3944f3844508f04775f59b9 *man/mcutLexis.Rd
 3c462c4ce7ca1ce4b8c6fef50b3c7623 *man/merge.Lexis.Rd
 34c530c36a3a1a7447ff8eea58f42084 *man/mh.Rd

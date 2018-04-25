@@ -7,7 +7,7 @@
 \description{
 \code{apc.LCa} fits an Age-Period-Cohort model and sub-models (using
 \code{\link{apc.fit}}) as well as Lee-Carter models (using
-\code{\link{LCa.fit}}). \code{boxes.apc.LCa} plots the models in little
+\code{\link{LCa.fit}}). \code{show.apc.LCa} plots the models in little
 boxes with their residual deviance with arrows showing their
 relationships.
 }
@@ -26,7 +26,8 @@ show.apc.LCa( x,
   \item{keep.models}{Logical. Should the \code{apc} object and the 5
     \code{LCa} objects be returned too?
   }
-  \item{...}{Further parameters passed on to \code{\link{LCa.fit}} or \code{\link{boxes.matrix}}.
+  \item{...}{Further parameters passed on to \code{\link{LCa.fit}} or
+    \code{\link{boxes.matrix}}. 
   }
   \item{x}{The result from a call to \code{apc.LCa}.}
   \item{dev.scale}{Should the vertical position of the boxes with the
@@ -80,10 +81,10 @@ show.apc.LCa( al, dev=TRUE )
 show.apc.LCa( al, top="AP" )
 
 # Fit a reasonable model to Danish mortality data and plot results
-mACa <- LCa.fit( mdk, model="ACa", npar=c(15,15,20,6,6), c.ref=1930,
+mAPa <- LCa.fit( mdk, model="APa", npar=c(15,15,20,6,6), c.ref=1930,
                  a.ref=70, quiet=FALSE, maxit=250 )
 par( mfrow=c(1,3) )
-plot( mACa )}
+plot( mAPa ) }
 }
 \keyword{regression}
 \keyword{models}

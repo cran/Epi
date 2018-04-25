@@ -11,6 +11,8 @@ ns.ld <- function(x, df = NULL, knots = NULL, intercept = FALSE,
 
 
   if(!missing(Boundary.knots)) {
+      if( length(Boundary.knots)!=2 )
+          stop( "Argument 'Boundary.knots' must, when provided, have length 2" )
     Boundary.knots <- sort(Boundary.knots)
     outside <- (ol <- x < Boundary.knots[1L]) | (or <- x > Boundary.knots[2L])
   }
@@ -62,7 +64,7 @@ ns.ld <- function(x, df = NULL, knots = NULL, intercept = FALSE,
 if( !is.logical(fixsl) ) warning( "fixsl elements must be of mode logical" )
 # Only the 4th parameter affected, should be either 1 or 2 in the two positions
 const <- splines::spline.des( Aknots, Boundary.knots, 4, c(2-fixsl[1],2-fixsl[2]) )$design
-  
+
   if(!intercept) {
     const <- const[, -1 , drop = FALSE]
     basis <- basis[, -1 , drop = FALSE]
@@ -100,59 +102,64 @@ Ns <- function( x, ref = NULL,
                  fixsl = c(FALSE,FALSE),
                detrend = FALSE )
 {
-  ## Check sensibility of arguments
-  if( !is.null(ref) ) {
-    if( !is.vector(ref) )
-      stop( "Argument 'ref' must be a scalar, but it is a ", class(ref), "." )
-    if( is.vector(ref) & length(ref)>1 )
-      stop( "Argument 'ref' must be a scalar, but has length ", length(ref), "." )
-    if( intercept ) {
-      warning( "ref= specified, hence intercept=TRUE is ignored")
-      intercept <- FALSE
-      }
+    ## Check sensibility of arguments
+    if( !is.null(ref) ) {
+        if( !is.vector(ref) )
+            stop( "Argument 'ref' must be a scalar, but it is a ", class(ref), "." )
+        if( is.vector(ref) & length(ref)>1 )
+            stop( "Argument 'ref' must be a scalar, but has length ", length(ref), "." )
+        if( intercept ) {
+            warning( "ref= specified, hence intercept=TRUE is ignored")
+            intercept <- FALSE
+        }
     }
-  ## Detrending required?
-  if( any(detrend>0) ) { # covers both logical and vector
-    if( any(detrend<0) )
-      stop( "Some elements of weight are <0, e.g. no",
-            (ww <- which(detrend<0))[1:min(5,length(ww))], "." )
-    if( !(length(detrend) %in% c(1,length(x))) ) {
-      warning( "Weights in inner product diagonal matrix set to 1")
-      weight <- rep(1,length(x))
-      }
-    else weight <- if( is.numeric(detrend) ) detrend else rep(1,length(x))
-    detrend <- TRUE
+    ## Detrending required?
+    if( any(detrend>0) ) { # covers both logical and vector
+        if( any(detrend<0) )
+            stop( "Some elements of weight are <0, e.g. no",
+                 (ww <- which(detrend<0))[1:min(5,length(ww))], "." )
+        if( !(length(detrend) %in% c(1,length(x))) ) {
+            warning( "Weights in inner product diagonal matrix set to 1")
+            weight <- rep(1,length(x))
+        }
+        else weight <- if( is.numeric(detrend) ) detrend else rep(1,length(x))
+        detrend <- TRUE
     }
-  if( detrend & intercept ) {
-    warning( "detrend= specified, hence intercept=TRUE is ignored")
-    intercept <- FALSE
+    if( detrend & intercept ) {
+        warning( "detrend= specified, hence intercept=TRUE is ignored")
+        intercept <- FALSE
     }
-  if( detrend & any(fixsl) ) {
-    warning( "detrend= specified, hence fixsl argument is ignored")
-    fixsl=c(FALSE,FALSE)
+    if( detrend & any(fixsl) ) {
+        warning( "detrend= specified, hence fixsl argument is ignored")
+        fixsl=c(FALSE,FALSE)
     }
-  ## Here is the specification of the spline basis
-  ## df= specified
-  if( !is.null(df) )
-    MM <- ns.ld( x, df = df, intercept = (intercept & is.null(ref)), fixsl = fixsl )
-  else
+    ## Here is the specification of the spline basis
+
     ## knots= specified
-  {
-    if( is.null( Boundary.knots ) )
-    {
-      if( !is.null( knots ) )
-      {
-        knots <- sort( unique( knots ) )
-        ok <- c(1,length(knots))
-        Boundary.knots <- knots[ok]
-        knots <- knots[-ok]
-      }
-    }
-    MM <- ns.ld( x, knots = knots,
-           Boundary.knots = Boundary.knots,
-                intercept = (intercept & is.null(ref)),
-                    fixsl = fixsl )
-  }
+    if( !is.null( knots ) )
+        {
+        if( is.null( Boundary.knots ) )
+            {
+            if( !is.null( knots ) )
+                {
+                knots <- sort( unique( knots ) )
+                ok <- c(1,length(knots))
+                Boundary.knots <- knots[ok]
+                knots <- knots[-ok]
+                }
+            }
+        MM <- ns.ld( x, knots = knots,
+               Boundary.knots = Boundary.knots,
+                    intercept = (intercept & is.null(ref)),
+                        fixsl = fixsl )
+        if( !is.null(df) ) cat("NOTE: Both knots= and df= specified, df ignored")
+        }
+    ## df= specified
+    if( is.null( knots ) & !is.null( df ) )
+        MM <- ns.ld( x, df = df,
+                 intercept = (intercept & is.null(ref)),
+                     fixsl = fixsl )
+
   ## Reference point specified ?
   if( !is.null(ref) )
   {
@@ -161,7 +168,6 @@ Ns <- function( x, ref = NULL,
              Boundary.knots = attr(MM,"Boundary.knots"),
                       fixsl = fixsl )
   }
-    
   ## Detrending required ?
   if( detrend )
   {

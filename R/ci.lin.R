@@ -1,5 +1,5 @@
 # The coef() methods in nlme and lme4 do something different,
-# other objects do not even hav coef of vcov methods defined,
+# other objects do not even have coef or vcov methods defined,
 # so we make a workaround by specifying our own generic methods:
 COEF          <- function( x, ... ) UseMethod("COEF")
 COEF.default  <- function( x, ... ) coef( x, ... )
@@ -29,10 +29,8 @@ VCOV.rq       <- function( object, ... ) summary(object, cov=TRUE)$cov
 # Computing the contrasts between two prediction data frames
 # --- a utility called from ci.lin 
 ci.dfr <-
-function( obj, ndx, ndr, Exp )
+function( obj, ndx, ndr, xvars=NULL, Exp )
     {
-if( !is.data.frame(ndx) ) stop("2nd argument in list must be a data frame")
-if( !is.data.frame(ndr) ) stop("3rd argument in list must be a data frame")
 if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
 if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
     ( any(names(ndx) != names(ndr)) ) )
@@ -41,31 +39,29 @@ if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
          "and column names are:\n",
          "exp: ", names(ndx), "\n",
          "ref: ", names(ndr), "\n")
-# Now fix those variable that are needed in order to get model.matrix working
-# Supplied variable names
+# Now supply and fix those variables that are needed in order to get model.matrix working:
+# Supplied variable names:
  cols <- names( ndx )
-# Factors in model; which are supplied; derive names of omitted
+# Factors in model; which are supplied; derive names of omitted factors (ofacs)
  facs <- names(obj$xlevels)
-ofacs <- match( facs, cols )
-ofacs <- facs[is.na(ofacs)]
-# Variables in model; which are supplied; derive names of omitted
- vars <- setdiff( all.vars(obj$formula)[-1], facs )
-ovars <- match( vars, cols )
-ovars <- vars[is.na(ovars)]
-# Construct the extra columns
+ofacs <- setdiff( facs, cols )
+# omitted *variables* must be supplied
+ovars <- setdiff( xvars, facs )
+# Construct the extra columns with bogus data (their contribution will be null)
 xcols <- ndx[,NULL]
-if( length(ofacs) > 0 ) for( fn in ofacs ) xcols <- cbind( xcols, obj$xlevels[[fn]][1] )
-if( length(ovars) > 0 ) for( vn in ovars ) xcols <- cbind( xcols, 1 )
+if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
+if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
 if( dim(xcols)[2]>0 )
   {
-  names( xcols ) <- c(ofacs,ovars)
   ndx <- cbind( ndx, xcols )
   ndr <- cbind( ndr, xcols )
   }
-# Factors must have more than one level, which they typically will not
-# have in the specification of the prediction frames, so we find the
-# factors in the model and expand levels to the complete set of levels
-dcl <- attr(obj$terms,"dataClasses")
+# Factors must have more than one level, which they may not have in
+# the specification of the prediction frames and certainly does not
+# have in the specification of the dummy factors, so we find the
+# factors in the prediction frames and expand levels to the complete
+# set of levels which should secure the working of model.matrix()
+dcl <- attr( obj$terms, "dataClasses" )
 whf <- ( dcl == "factor" )
 if( any(whf) )
   for( fn in names(dcl)[which(whf)] )
@@ -73,9 +69,15 @@ if( any(whf) )
      ndx[,fn] <- factor( ndx[,fn], levels=obj$xlevels[[fn]] )
      ndr[,fn] <- factor( ndr[,fn], levels=obj$xlevels[[fn]] )
      }
-# Then we can set up the contrast matrix and call ci.lin
-CM <- model.matrix( formula(obj)[-2], data=ndx ) -
-      model.matrix( formula(obj)[-2], data=ndr )
+# Then we can set up the contrast matrix and call ci.lin depending on
+# whether we have a gam object or a (g)lm object
+CM <-
+if( inherits(obj,"gam") )    
+    model.matrix( obj, newdata=ndx ) -
+    model.matrix( obj, newdata=ndr )
+else    
+    model.matrix( formula(obj)[-2], data=ndx ) -
+    model.matrix( formula(obj)[-2], data=ndr )
 ci.lin( obj, ctr.mat=CM, Exp=Exp )
     }
 
@@ -84,6 +86,7 @@ function( obj,
       ctr.mat = NULL,
        subset = NULL,
        subint = NULL,
+        xvars = NULL,
         diffs = FALSE,
          fnam = !diffs,
          vcov = FALSE,
@@ -92,13 +95,13 @@ function( obj,
           Exp = FALSE,
        sample = FALSE )
 {
-# If ctr.mat is a list of two dataframes call ci.dfr
+# If ctr.mat is a list of two dataframes then call ci.dfr
 if( is.list(ctr.mat) )
   {
   if( !is.data.frame(ctr.mat[[1]]) |
       !is.data.frame(ctr.mat[[2]]) )
       stop("If ctr.mat is a list it must be a list of two data frames")
-  return( ci.dfr( obj, ctr.mat[[1]], ctr.mat[[2]], Exp=Exp ) )
+  return( ci.dfr( obj, ctr.mat[[1]], ctr.mat[[2]], xvars=xvars, Exp=Exp ) )
   }
   
 # First extract all the coefficients and the variance-covariance matrix

@@ -1,6 +1,23 @@
+Changes in 2.28
+
+o Added function matshade() that plots shaded confidence bands.
+
+o Epi:::ci.dfr (called from ci.lin) redesigned so that it actually
+  works in most cases. 
+
+Changes in 2.27
+
+o Documentation of LCa.fit improved - really disturbing typos rectified. 
+
+o Ns groomed to have knots= have precedence over df=, 
+
+o Code of ci.dfr groomed, gam objects are now also accommodated when
+  using the list(dfrx,dfrr) version of the ctr.mat argument. Bug
+  causing a crash with splines fixed, however not elegantly.
+
 Changes in 2.26
 
-o ci.lin did not
+o ci.lin did not honour a reference data frame of 1 row as promised. Fixed.
 
 Changes in 2.25
 

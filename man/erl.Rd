@@ -92,9 +92,14 @@
   (with presumably higher mortality rates) are assumed not to
   occur. This is a slightly peculiar assumption (but presumably the most
   used in the epidemiological literature) and the resulting object is
-  therefore given an attribute, \code{NOTE}, that point this out. The
-  default of the \code{surv2} function is to take the possibility of
-  disease into account in order to potentially rectify this.}
+  therefore given an attribute, \code{NOTE}, that point this out.
+
+  If however \code{muW} is the total mortality in the population
+  (including the diseased) the result is a good approximation to the
+  correct YLL.
+  
+  The default of the \code{surv2} function is to take the possibility of
+  disease into account.}
 
 \value{\code{surv1} and \code{surv2} return a matrix whose first column
   is the ages at the ends of the 
