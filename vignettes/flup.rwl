@@ -1,0 +1,48 @@
+R version 3.4.4 (2018-03-15) 
+ ---------------------------------------------
+  Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
+ Started:  Thursday 03. May 2018, 16:34:54 
+ ---------------------------------------------
+Writing to file flup.tex
+Processing code chunks with options ...
+ 1 : keep.source term verbatim (flup.rnw:5)
+ 2 : echo keep.source term verbatim (flup.rnw:101)
+ 3 : echo keep.source term verbatim (flup.rnw:109)
+ 4 : echo keep.source term verbatim (flup.rnw:126)
+ 5 : echo keep.source term verbatim (flup.rnw:138)
+ 6 : echo keep.source term verbatim pdf  (label = nicL1, flup.rnw:156)
+ 7 : echo keep.source term verbatim pdf  (label = nicL2, flup.rnw:162)
+ 8 : echo keep.source term verbatim (flup.rnw:193)
+ 9 : echo keep.source term verbatim (flup.rnw:204)
+10 : echo keep.source term verbatim (flup.rnw:211)
+11 : echo keep.source term verbatim (flup.rnw:218)
+12 : echo keep.source term verbatim (flup.rnw:227)
+13 : echo keep.source term verbatim (flup.rnw:250)
+14 : echo keep.source term verbatim (flup.rnw:278)
+15 : echo keep.source term verbatim (flup.rnw:284)
+16 : echo keep.source term verbatim (flup.rnw:308)
+17 : echo keep.source term verbatim (flup.rnw:323)
+18 : echo keep.source term verbatim (flup.rnw:390)
+19 : echo keep.source term verbatim (flup.rnw:405)
+20 : echo keep.source term verbatim pdf  (label = pr-a, flup.rnw:429)
+21 : echo keep.source term verbatim (flup.rnw:445)
+22 : echo keep.source term verbatim (flup.rnw:457)
+23 : echo keep.source term verbatim (flup.rnw:462)
+24 : echo keep.source term verbatim pdf  (label = pr-at, flup.rnw:477)
+25 : echo keep.source term verbatim (flup.rnw:492)
+26 : echo keep.source term verbatim (flup.rnw:504)
+27 : echo keep.source term verbatim pdf  (label = pr-at-af, flup.rnw:515)
+28 : echo keep.source term verbatim (flup.rnw:536)
+29 : echo keep.source term verbatim (flup.rnw:562)
+30 : echo keep.source term verbatim (flup.rnw:576)
+31 : echo keep.source term verbatim (flup.rnw:597)
+32 : echo keep.source term verbatim (flup.rnw:624)
+33 : echo keep.source term verbatim pdf  (label = nic-box, flup.rnw:645)
+
+You can now run (pdf)latex on ‘flup.tex’
+
+ ---------------------------------------------
+  Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
+   Ended: Thursday 03. May 2018, 16:34:57
+ Elapsed: 00:00:03
+ ---------------------------------------------

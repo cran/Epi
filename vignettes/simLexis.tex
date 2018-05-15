@@ -155,7 +155,7 @@ We start by loading the \texttt{Epi} package:
 > print( sessionInfo(), l=F )
 \end{Sinput}
 \begin{Soutput}
-R version 3.4.3 (2017-11-30)
+R version 3.4.4 (2018-03-15)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 14.04.5 LTS
 
@@ -167,12 +167,12 @@ attached base packages:
 [1] utils     datasets  graphics  grDevices stats     methods   base     
 
 other attached packages:
-[1] Epi_2.25
+[1] Epi_2.29
 
 loaded via a namespace (and not attached):
- [1] cmprsk_2.2-7      zoo_1.8-0         MASS_7.3-49       compiler_3.4.3   
- [5] Matrix_1.2-11     plyr_1.8.4        parallel_3.4.3    survival_2.41-3  
- [9] etm_1.0.1         Rcpp_0.12.12      splines_3.4.3     grid_3.4.3       
+ [1] cmprsk_2.2-7      zoo_1.8-0         MASS_7.3-49       compiler_3.4.4   
+ [5] Matrix_1.2-14     plyr_1.8.4        parallel_3.4.4    survival_2.42-3  
+ [9] etm_1.0.1         Rcpp_0.12.12      splines_3.4.4     grid_3.4.4       
 [13] data.table_1.10.4 numDeriv_2016.8-1 lattice_0.20-35  
 \end{Soutput}
 \end{Schunk}
@@ -807,7 +807,7 @@ the user.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 21.585   1.761  22.526 
+ 19.076   2.634  20.723 
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{Lexis} object --- a data frame representing
@@ -864,7 +864,7 @@ transition object:
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 20.028   0.687  19.996 
+ 18.898   3.572  21.412 
 \end{Soutput}
 \begin{Sinput}
 > summary( simP, by="sex" )
@@ -965,7 +965,7 @@ for different transitions
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 23.436   1.056  23.647 
+ 20.321   3.608  22.891 
 \end{Soutput}
 \begin{Sinput}
 > summary( simC, by="sex" )
@@ -1005,7 +1005,7 @@ equal to the starting time for the simulated individuals.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  0.841   0.000   0.841 
+  0.747   0.000   0.746 
 \end{Soutput}
 \begin{Sinput}
 > nSt[1:10,]
@@ -1437,7 +1437,7 @@ function (Tr, init, N = 1, lex.id, t.range = 20, n.int = 101,
     attr(sf, "time.since") <- tF
     chop.lex(sf, tS, max(time.pts))
 }
-<bytecode: 0x1825e998>
+<bytecode: 0x35b51b08>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1497,7 +1497,7 @@ function (nd, Tr, time.pts, tS)
     merge(nd, do.call(rbind, lapply(split(rt, rt$lex.id), sim1, 
         time.pts)), by = "lex.id")
 }
-<bytecode: 0x18be5458>
+<bytecode: 0x1e5f44a8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1527,7 +1527,7 @@ function (rt, time.pts)
             colnames(ci)[tt == min(tt)]
         else NA))
 }
-<bytecode: 0x8745598>
+<bytecode: 0x8fc7c40>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1557,7 +1557,7 @@ function (ci, tt, u)
     ifelse(c.u == c.l, t.l, t.l + (u - c.l)/(c.u - c.l) * (t.u - 
         t.l))
 }
-<bytecode: 0x193c6770>
+<bytecode: 0x19df7750>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1588,7 +1588,7 @@ function (sf, tr.st, tS, tF)
     nxt$lex.Cst <- nxt$lex.Xst
     return(nxt)
 }
-<bytecode: 0xf320170>
+<bytecode: 0x8b7c718>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1615,7 +1615,7 @@ function (obj, tS, cens)
     ww$lex.dur <- pmin(x.dur, ww$lex.dur)
     ww
 }
-<bytecode: 0x1ad56228>
+<bytecode: 0x15fadac8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1656,7 +1656,7 @@ function (obj, at, from, time.scale = 1)
     tab.ab$State <- tab.ab$lex.Xst
     with(rbind(tab.ab, tab.tr), table(when, State))
 }
-<bytecode: 0xbe08cf8>
+<bytecode: 0x9877de0>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1715,7 +1715,7 @@ function (x, col = rainbow(ncol(x)), border = "transparent",
             border = border[i - 1], ...)
     }
 }
-<bytecode: 0x2d40f350>
+<bytecode: 0x2f9bda58>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}

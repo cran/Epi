@@ -1,8 +1,10 @@
-# Before this is run, you need to run rw on simLexis and yll 
-# with eval=TRUE in the lines with CHANGE1 in order to get a version
-# with properly formatted code. The .pdfs are moved to sL.pdf and
-# yl.pdf. Subsesquently we swap TRUE and FALS in the CHANGE1/2 lines
-# and are then ready for the following:
+# Before this is run, do this:
+# 1) run rw on simLexis and yll with eval=TRUE in the lines with
+#    CHANGE1 in order to get a version with properly formatted
+#    code. 
+# 2) Move the .pdfs to sL.pdf and yl.pdf, respectively. 
+# 3) Swap TRUE and FALSE in the CHANGE1/2 lines in the rnw files.
+# Then we are ready for the following:
 
 rw flup
 rt flup

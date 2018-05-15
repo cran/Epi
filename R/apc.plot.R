@@ -170,3 +170,11 @@ function( x, y, ... )
 fp <- options()[["apc.frame.par"]]
 matlines( x - fp[1], y * fp[2], ... )
 }
+
+cp.matshade <-
+pc.matshade <-
+function( x, y, ... )
+{
+fp <- options()[["apc.frame.par"]]
+matshade( x - fp[1], y * fp[2], ... )
+}

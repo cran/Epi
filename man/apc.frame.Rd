@@ -109,6 +109,8 @@ par(c("usr","xlog","ylog"))
 points( 50, 10, pch=16, cex=2, col="blue" )
 # How to plot in the cohort-period-part: a point at (1960,0.3)
 points( 1960-res[1], 0.3*res[2], pch=16, cex=2, col="red" )
+# or referring to the period-cohort part of the plot 
+pc.points( 1960, 0.3, pch=16, cex=1, col="green" )
 }
 \seealso{
   \code{\link{apc.lines},\link{apc.fit}}

@@ -11,6 +11,12 @@ lines.apc,
    pc.lines,
    pc.matpoints,
    pc.matlines,
+   pc.matshade,
+   cp.points,
+   cp.lines,
+   cp.matpoints,
+   cp.matlines,
+   cp.matshade,
           cal.yr,
   as.Date.cal.yr,
   ccwc,
@@ -149,7 +155,7 @@ importFrom( survival, clogit )
 importFrom( numDeriv, hessian )
 importFrom( Matrix, nearPD )
 importFrom( zoo, na.locf )
-importFrom("grDevices", "gray", "rainbow", "adjustcolor")
+importFrom("grDevices", "gray", "rainbow", "adjustcolor", "dev.cur")
 importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "lines", "locator", "matlines", "matplot", "matpoints",
            "mtext", "par", "plot", "plot.new", "plot.window", "points",

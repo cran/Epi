@@ -1,3 +1,22 @@
+Changes in 2.30
+
+o A function decurve added; it removes not only a linear trend but
+  also a quadratic term from a designmatrix. 
+
+o Small changes in pc.lines, and addition of pc.matshade to make
+  shaded confidence limits in APC plots
+
+Changes in 2.29
+
+o ci.lin with a list of two prediction frames as argument to ctr.mat
+  now also honors the vcov and sample arguments. 
+  Also expanded to accept a single data frame to mimick ci.pred and
+  extending this to honor arguments vcov and sample. This facility
+  ignores the offset, though.
+
+o matshade gains an argument plot that starts a new plot. Defauts to
+  is.null(dev.list()), so if no plot frame is open one will be made.
+
 Changes in 2.28
 
 o Added function matshade() that plots shaded confidence bands.

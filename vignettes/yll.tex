@@ -462,7 +462,7 @@ We now collect the estimated years of life lost classified by method
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 19.791   7.672  18.205 
+ 18.571   8.688  16.366 
 \end{Soutput}
 \begin{Sinput}
 > round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
@@ -671,7 +671,7 @@ function (int, mu, age.in = 0, A = NULL)
     rownames(surv) <- NULL
     return(surv)
 }
-<bytecode: 0x719ccd8>
+<bytecode: 0x5c555d0>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -749,7 +749,7 @@ function (int, muW, muD, lam, age.in = 0, A = NULL)
     colnames(surv)[-1] <- paste("A", c(age.in, Al), sep = "")
     return(surv)
 }
-<bytecode: 0x63f9020>
+<bytecode: 0x4eeb8e0>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -801,7 +801,7 @@ function (int, muW, muD, lam = NULL, age.in = 0, A = NULL, immune = is.null(lam)
     }
     return(erl)
 }
-<bytecode: 0x7ce1148>
+<bytecode: 0x6f68dd8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}

@@ -22,12 +22,12 @@ if(  inherits(clin,"Lexis") ) stop( "clin cannot be a Lexis object.\n" )
 # Is the timescale argument a timescale in Lx and is it a variable in clin?    
 ts <- if( is.numeric(timescale) ) timeScales( Lx )[timescale] else timescale
 if( !( ts %in% timeScales(Lx) ) )
-    stop( "timescale argument (", ts, ") must be one of timescales in in the Lexis object ",
+    stop( "timescale argument (", ts, ") must be among the timescales in the Lexis object ",
           deparse(substitute(Lx)),":", timeScales(Lx), ".\n" )
 
 clin.nam <- deparse(substitute(clin))
 if( !( ts %in% names(clin) & "lex.id" %in% names(clin) ) )
-    stop( "'lex.id' and timescale '", ts, "' must be a variables in the clin object ",
+    stop( "'lex.id' and timescale '", ts, "' must be variables in the clin object ",
           clin.nam, "\n" )
 
 # variables to merge by

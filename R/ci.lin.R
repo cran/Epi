@@ -26,11 +26,30 @@ COEF.polr     <- function( object, ... ) summary(object)$coefficients
 VCOV.gnlm     <- function( object, ... ) object$cov
 VCOV.rq       <- function( object, ... ) summary(object, cov=TRUE)$cov
 
-# Computing the contrasts between two prediction data frames
-# --- a utility called from ci.lin 
-ci.dfr <-
-function( obj, ndx, ndr, xvars=NULL, Exp )
+df2ctr <-
+function( obj, nd )
     {
+# Factors in the prediction frame must have more than one level, which
+# they typically do not have in the specification, so we find the
+# factors in the prediction frame and expand levels to the complete
+# set of levels which should secure the working of model.matrix()
+dcl <- attr( obj$terms, "dataClasses" )
+whf <- ( dcl == "factor" )
+if( any(whf) ) for( fn in names(dcl)[which(whf)] )
+                nd[,fn] <- factor( nd[,fn], levels=obj$xlevels[[fn]] )
+# The contrast matrix - differ a bit between glm and gam
+if( inherits(obj,"gam") ) model.matrix(         obj     , newdata=nd )
+                     else model.matrix( formula(obj)[-2],    data=nd )
+    }
+
+ci.dfr <-
+function( obj, ndx, ndr,
+         xvars = NULL,
+          vcov = FALSE,
+         alpha = 0.05,
+           Exp = FALSE,
+        sample = FALSE )
+{
 if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
 if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
     ( any(names(ndx) != names(ndr)) ) )
@@ -43,7 +62,7 @@ if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
 # Supplied variable names:
  cols <- names( ndx )
 # Factors in model; which are supplied; derive names of omitted factors (ofacs)
- facs <- names(obj$xlevels)
+ facs <- names( obj$xlevels )
 ofacs <- setdiff( facs, cols )
 # omitted *variables* must be supplied
 ovars <- setdiff( xvars, facs )
@@ -56,30 +75,13 @@ if( dim(xcols)[2]>0 )
   ndx <- cbind( ndx, xcols )
   ndr <- cbind( ndr, xcols )
   }
-# Factors must have more than one level, which they may not have in
-# the specification of the prediction frames and certainly does not
-# have in the specification of the dummy factors, so we find the
-# factors in the prediction frames and expand levels to the complete
-# set of levels which should secure the working of model.matrix()
-dcl <- attr( obj$terms, "dataClasses" )
-whf <- ( dcl == "factor" )
-if( any(whf) )
-  for( fn in names(dcl)[which(whf)] )
-     {
-     ndx[,fn] <- factor( ndx[,fn], levels=obj$xlevels[[fn]] )
-     ndr[,fn] <- factor( ndr[,fn], levels=obj$xlevels[[fn]] )
-     }
-# Then we can set up the contrast matrix and call ci.lin depending on
-# whether we have a gam object or a (g)lm object
-CM <-
-if( inherits(obj,"gam") )    
-    model.matrix( obj, newdata=ndx ) -
-    model.matrix( obj, newdata=ndr )
-else    
-    model.matrix( formula(obj)[-2], data=ndx ) -
-    model.matrix( formula(obj)[-2], data=ndr )
-ci.lin( obj, ctr.mat=CM, Exp=Exp )
-    }
+ci.lin( obj,
+    ctr.mat = df2ctr( obj, ndx ) - df2ctr( obj, ndr ),
+       vcov = vcov,
+      alpha = alpha,
+        Exp = Exp,
+     sample = sample )
+}
 
 ci.lin <-
 function( obj,
@@ -95,15 +97,23 @@ function( obj,
           Exp = FALSE,
        sample = FALSE )
 {
+# If ctr.mat is a data frame, call df2ctr 
+if( inherits( ctr.mat, "data.frame" ) ) ctr.mat <- df2ctr( obj, ctr.mat )
+
 # If ctr.mat is a list of two dataframes then call ci.dfr
-if( is.list(ctr.mat) )
+if( inherits( ctr.mat, "list" ) )
   {
-  if( !is.data.frame(ctr.mat[[1]]) |
-      !is.data.frame(ctr.mat[[2]]) )
-      stop("If ctr.mat is a list it must be a list of two data frames")
-  return( ci.dfr( obj, ctr.mat[[1]], ctr.mat[[2]], xvars=xvars, Exp=Exp ) )
+  if( !inherits( ctr.mat[[1]], "data.frame" ) |
+      !inherits( ctr.mat[[2]], "data.frame" ) )
+      stop( "If ctr.mat is a list it must be a list of two data frames" )
+  return( ci.dfr( obj, ctr.mat[[1]], ctr.mat[[2]],
+                xvars = xvars,
+                 vcov = vcov,
+                alpha = alpha,
+                  Exp = Exp,
+               sample = sample ) )
   }
-  
+
 # First extract all the coefficients and the variance-covariance matrix
 cf  <- COEF( obj )
 vcv <- VCOV( obj )
@@ -280,7 +290,7 @@ else
 ci.lin( ..., Exp=FALSE )[,if(pval) c(1,5,6,4) else c(1,5,6),drop=FALSE]
 }
 
-# Wrapper for predict.glm to give estimates and confidnece intervals
+# Wrapper for predict.glm to give estimates and confidence intervals
 ci.pred <-
 function( obj, newdata,
          Exp = NULL,

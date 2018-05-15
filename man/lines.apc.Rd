@@ -82,13 +82,17 @@
     for plotting the three sets of curves.}
 }
 \details{
+  There is no difference between the functions \code{apc.lines} and
+    \code{lines.apc}, except the the latter is the \code{lines} method
+    for \code{apc} objects.
+  
   The drawing of three effects in an APC-frame is a rather trivial task,
   and the main purpose of the utility is to provide a function that
   easily adds the functionality of adding a drift so that several sets
   of lines can be easily produced in the same frame.
 }
 \value{
-  \code{APC.lines} returns (invisibly) a list of three matrices of the
+  \code{apc.lines} returns (invisibly) a list of three matrices of the
   effects plotted.
 }
 \author{

@@ -59,13 +59,20 @@ ci.ratio( r1, r2,
     \code{polr},
  or \code{rq}).
   }
-  \item{ctr.mat}{Contrast matrix to be multiplied to the parameter
-    vector, i.e. the desired linear function of the parameters. Can also
-    be a list of two data frames, in which case all other
-    arguments than \code{Exp} are ignored - see \code{xvars} and details.}
+  \item{ctr.mat}{Matrix, data frame or list (of two data frames).
+
+    If it is a matrix, it should be a contrast matrix to be multiplied
+    to the parameter vector, i.e. the desired linear function of the
+    parameters.
+
+    If it is a data.frame it should have columns corresponding to a
+    prediction frame, see details.
+    
+    If it is a list, it must contain two data frames that are (possibly
+    partial) prediction frames for \code{obj}, see \code{xvars} and details.}
   \item{xvars}{Character vector. If variables in the model are omitted
-    from data frames supplied in \code{ctr.mat}, they should be listed
-    here. Omitted factors should not be mentioned here.}
+    from data frames supplied in a list to \code{ctr.mat}, they should
+    be listed here. Omitted factors need not be mentioned here.}
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
@@ -136,17 +143,29 @@ ci.ratio( r1, r2,
   you just want the estimates and confidence limits, but not
   exponentiated, use \code{ci.exp(...,Exp=FALSE)}.
   
+  If \code{ctr.mat} is a data frame, the model matrix corresponding to
+  this is constructed and supplied, so the default behaviour will be to
+  produce the same as \code{ci.pred}, apparently superfluous. The purpose
+  of this is to allow the use of the arguments \code{vcov} that produces
+  the variance-covariance matrix of the predictions, and \code{sample}
+  that produces a sample of predictions using sampling from the
+  multivariate normal with mean equal to parameters and variance equal
+  to the hessian.
+
   If \code{ctr.mat} is a list of two data frames, the difference of the
-  predictions (on the linear predictor scale) from using the first
-  versus the last as newdata arguments to predict is computed. Columns
-  that are identical in the two data frames can be omitted (see
-  example), but names of numerical variables omitted must be supplied in
-  a character vector \code{xvars}. Factors omitted should not be
-  named. If the second data frame has only one row, this is replicated
-  to match the number of rows in the first. The facility is primarily
-  aimed at teasing out RRs that are non-linear functions of a
-  quantitative variable without setting up contrast matrices using the
-  same code as in the model.
+  predictions from using the first versus the last as newdata arguments
+  to predict is computed. Columns that are identical in the two data
+  frames can be omitted (see example), but names of numerical variables
+  omitted must be supplied in a character vector \code{xvars}. Factors
+  omitted need not be named. If the second data frame has only one row,
+  this is replicated to match the number of rows in the first. The
+  facility is primarily aimed at teasing out RRs that are non-linear
+  functions of a quantitative variable without setting up contrast
+  matrices using the same code as in the model.
+
+  Finally, only arguments \code{Exp}, \code{vcov}, \code{alpha} and
+  \code{sample} from \code{ci.lin} are honored when \code{ctr.mat} is a
+  data frame or a list of two data frames.
 
   You can leave out variables (columns) from the two data frames that
   would be constant and identical, basically variables not relevant for
@@ -188,8 +207,7 @@ ci.ratio( r1, r2,
   }
 \author{
   Bendix Carstensen,
-  \url{BendixCarstensen.com} &
-  Michael Hills
+  \url{BendixCarstensen.com} & Michael Hills
   }
 \seealso{See also \code{\link{ci.cum}} for a function computing
   cumulative sums of (functions of) parameter estimates. The example
@@ -247,6 +265,54 @@ Wald( mm, subset="f", ctr.mat=CM )
 # Rates and ci supplied, but only the range (lower and upper ci) is used
 ci.ratio( cbind(10,8,12.5), cbind(5,4,6.25) )
 ci.ratio( cbind(8,12.5), cbind(4,6.25) )
+
+# Beware of the offset when making predictions with ci.pred and ci.exp
+\dontrun{
+library( mgcv )
+data( mortDK )
+m.arg  <- glm( dt ~ age , offset=log(risk) , family=poisson, data=mortDK )
+m.form <- glm( dt ~ age + offset(log(risk)), family=poisson, data=mortDK )
+a.arg  <- gam( dt ~ age , offset=log(risk) , family=poisson, data=mortDK )
+a.form <- gam( dt ~ age + offset(log(risk)), family=poisson, data=mortDK )
+
+nd <- data.frame( age=60:65, risk=100 )
+round( ci.pred( m.arg , nd ), 4 )
+round( ci.pred( m.form, nd ), 4 )
+round( ci.exp ( m.arg , nd ), 4 )
+round( ci.exp ( m.form, nd ), 4 )
+round( ci.pred( a.arg , nd ), 4 )
+round( ci.pred( a.form, nd ), 4 )
+round( ci.exp ( a.arg , nd ), 4 )
+round( ci.exp ( a.form, nd ), 4 )
+
+nd <- data.frame( age=60:65 )
+try( ci.pred( m.arg , nd ) )
+try( ci.pred( m.form, nd ) )
+try( ci.exp ( m.arg , nd ) )
+try( ci.exp ( m.form, nd ) )
+try( ci.pred( a.arg , nd ) )
+try( ci.pred( a.form, nd ) )
+try( ci.exp ( a.arg , nd ) )
+try( ci.exp ( a.form, nd ) )
+}
+# The offset may be given as an argument (offset=log(risk))
+# or as a term (+offset(log)), and depending on whether we are using a
+# glm or a gam Poisson model and whether we use ci.pred or ci.exp to
+# predict rates the offset is either used or ignored and either
+# required or not; the state of affairs can be summarized as:
+#
+#                     offset
+#                     -------------------------------------
+#                     usage                 required?
+#                     ------------------    ---------------                      
+# function  model     argument   term       argument   term
+# ---------------------------------------------------------
+# ci.pred   glm       used       used       yes        yes
+#           gam       ignored    used       no         yes
+#  		      
+# ci.exp    glm       ignored    ignored    no         yes
+#           gam       ignored    ignored    no         yes
+# ---------------------------------------------------------
 }
 \keyword{models}
 \keyword{regression}

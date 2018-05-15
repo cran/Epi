@@ -1,0 +1,54 @@
+R version 3.4.4 (2018-03-15) 
+ ---------------------------------------------
+  Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
+ Started:  Thursday 03. May 2018, 16:35:00 
+ ---------------------------------------------
+Writing to file simLexis.tex
+Processing code chunks with options ...
+ 1 : keep.source term verbatim (simLexis.rnw:24)
+ 2 : echo keep.source term verbatim (label = start, simLexis.rnw:156)
+ 3 : echo keep.source term verbatim (label = Lexis, simLexis.rnw:163)
+ 4 : echo keep.source term verbatim (label = cut, simLexis.rnw:176)
+ 5 : echo keep.source term verbatim pdf  (label = boxes, simLexis.rnw:189)
+ 6 : echo keep.source term verbatim (label = split, simLexis.rnw:210)
+ 7 : echo keep.source term verbatim (label = knots, simLexis.rnw:238)
+ 8 : echo keep.source term verbatim (label = Poisson, simLexis.rnw:260)
+ 9 : echo keep.source term verbatim (label = prop-haz, simLexis.rnw:299)
+10 : echo keep.source term verbatim (label = get-dev, simLexis.rnw:327)
+11 : echo keep.source term verbatim (label = pr-array, simLexis.rnw:371)
+12 : echo keep.source term verbatim (simLexis.rnw:382)
+13 : echo keep.source term verbatim (label = make-pred, simLexis.rnw:389)
+14 : echo keep.source term verbatim pdf  (label = mort-int, simLexis.rnw:416)
+15 : echo keep.source term verbatim (label = Tr, simLexis.rnw:478)
+16 : echo keep.source term verbatim (label = make-ini, simLexis.rnw:497)
+17 : echo keep.source term verbatim (label = ini-fill, simLexis.rnw:509)
+18 : echo keep.source term verbatim (label = simL, simLexis.rnw:530)
+19 : echo keep.source term verbatim (label = sum-simL, simLexis.rnw:542)
+20 : echo keep.source term verbatim (label = Tr.p-simP, simLexis.rnw:559)
+21 : echo keep.source term verbatim (label = Cox-dur, simLexis.rnw:576)
+22 : echo keep.source term verbatim (label = TR.c, simLexis.rnw:604)
+23 : echo keep.source term verbatim (label = nState, simLexis.rnw:621)
+24 : echo keep.source term verbatim pdf  (label = pstate0, simLexis.rnw:635)
+25 : echo keep.source term verbatim pdf  (label = pstatex, simLexis.rnw:653)
+26 : echo keep.source term verbatim pdf  (label = pstatey, simLexis.rnw:691)
+27 : echo keep.source term verbatim pdf  (label = comp-0, simLexis.rnw:740)
+28 : keep.source (label = CHANGE1, simLexis.rnw:909)
+29 : keep.source term hide (label = CHANGE2, simLexis.rnw:913)
+30 : echo keep.source term verbatim (simLexis.rnw:934)
+31 : echo keep.source term verbatim (simLexis.rnw:962)
+32 : echo keep.source term verbatim (simLexis.rnw:980)
+33 : echo keep.source term verbatim (simLexis.rnw:993)
+34 : echo keep.source term verbatim (simLexis.rnw:1006)
+35 : echo keep.source term verbatim (simLexis.rnw:1017)
+36 : echo keep.source term verbatim (simLexis.rnw:1027)
+37 : echo keep.source term verbatim (simLexis.rnw:1045)
+38 : echo keep.source term verbatim (simLexis.rnw:1055)
+39 : echo keep.source term verbatim (simLexis.rnw:1060)
+
+You can now run (pdf)latex on ‘simLexis.tex’
+
+ ---------------------------------------------
+  Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
+   Ended: Thursday 03. May 2018, 16:36:24
+ Elapsed: 00:01:24
+ ---------------------------------------------

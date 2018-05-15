@@ -181,27 +181,29 @@ apc.fit( data,
    time of observation in the subset. This is essential since \code{A}
    and \code{P} are used as quantitative variables in the models.
 
-   This is a different approach relative to the vast majority of the
-   uses of APC-models in the literature where a factor model is used for
-   age, perido and cohort effects. The latter can be obtained by using
+   This approach is different from to the vast majority of the uses of
+   APC-models in the literature where a factor model is used for age,
+   period and cohort effects. The latter can be obtained by using
    \code{model="factor"}.
    }
 \references{
    The considerations behind the parametrizations used in this function
-   are given in details in:
+   are given in detail in:
    B. Carstensen: Age-Period-Cohort models for the Lexis diagram.
    Statistics in Medicine, 10; 26(15):3018-45, 2007.
 
-   Various links to course material etc. is available through \url{http://BendixCarstensen.com/APC}
+   Various links to course material etc. is available through
+   \url{http://BendixCarstensen.com/APC} 
    }
 \author{
    Bendix Carstensen, \url{http://BendixCarstensen.com}
    }
 \seealso{
-   \code{\link{LCa.fit}},
    \code{\link{apc.frame}},
    \code{\link{apc.lines}},
-   \code{\link{apc.plot}}.
+   \code{\link{apc.plot}},
+   \code{\link{LCa.fit}},
+   \code{\link{apc.LCa}}.
    }
 \examples{
 library( Epi )
