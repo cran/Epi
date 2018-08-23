@@ -39,8 +39,9 @@ values of the parameters, and subsequently plots the estimates using
 }
 \examples{
 data( lungDK )
-attach( lungDK )
-apc1 <- apc.fit( A=Ax, P=Px, D=D, Y=Y/10^5 )
+apc1 <- apc.fit( transform( lungDK,
+                            A = Ax, P = Px, Y = Y/10^5 ),
+                 ref.c = 1920 )
 fp <- apc.plot( apc1 )
 apc.lines( apc1, frame.par=fp, drift=1.01, col="red" )
 for( i in 1:11 )

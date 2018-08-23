@@ -16,6 +16,8 @@ vcv <- VCOV( obj )
 if( length( intl ) == 1 ) intl <- rep( intl, nrow( ctr.mat ) )
 if( length( intl ) != nrow( ctr.mat ) ) stop( "intl must match ctr.mat" )
 
+if( inherits( ctr.mat, "data.frame" ) ) { ctr.mat <- df2ctr( obj, ctr.mat )
+} else {
 # Workaround to expand the vcov matrix with 0s so that it matches
 # the coefficients vector in case of (extrinsic) aliasing.
 if( any( is.na( cf ) ) )
@@ -49,7 +51,8 @@ if( dim( ctr.mat )[2] != length(cf) )
           ": ", paste(dim(ctr.mat), collapse = "x"),
           ", not compatible with no of parameters in ",
           deparse(substitute(obj)), ": ", length(cf), sep = ""))
-
+}
+    
 # Finally, here is the actual computation of the estimates
     ct <- ctr.mat %*% cf
     vc <- ctr.mat %*% vcv %*% t( ctr.mat )

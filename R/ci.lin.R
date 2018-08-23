@@ -16,6 +16,7 @@ VCOV.mer      <- function( x, ... ) as.matrix(vcov( x ))
 VCOV.lmerMod  <- function( x, ... ) as.matrix(vcov( x ))
 
 # For the rest of the non-conforming classes we then just need the methods not defined
+# VCOV.coxph    <- function( object, ... ) survival:A::vcov.coxph( object, complete=FALSE, ... )
 COEF.crr      <- function( object, ... ) object$coef
 VCOV.crr      <- function( object, ... ) object$var
 COEF.MIresult <- function( object, ... ) object$coefficients
@@ -125,7 +126,7 @@ if( any( is.na( cf ) ) )
     { # aliased parameters are only NAs in coef, but omitted from vcov
     wh <- !is.na(cf)
     cf <- cf[wh]
-    vcv <- vcv[wh,wh]
+    # vcv <- vcv[wh,wh]
     }
   else
     {  

@@ -64,8 +64,10 @@ if( !missing(data) )
 eqqnt <- function(n) round( (1:n-0.5)/n, 2 )
 # Define knots - we compute also the knots not needed
 if( is.list(npar) ) {
-  # Check if names is a named list
+  # Check if npar is a *named* list
   if( is.null(names(npar)) ) stop( "If npar= is a list, it must be a *named* list.\n" )
+  # Fill in a bogus 1 if some of the items are missing
+  for(ee in c('a.kn','p.kn','c.kn','pi.kn','ci.kn') ) if(is.null(npar[[ee]])) npar[[ee]] <- 1
     a.kn <- if( length(npar$a )>1 ) npar$a  else quantile( rep(  A,D), probs=eqqnt(npar$a ) )
     p.kn <- if( length(npar$p )>1 ) npar$p  else quantile( rep(P  ,D), probs=eqqnt(npar$p ) ) 
     c.kn <- if( length(npar$c )>1 ) npar$c  else quantile( rep(P-A,D), probs=eqqnt(npar$c ) )
@@ -168,9 +170,9 @@ pat[is.na(pat)] <- 0
 # and that the chnage in each is small
 newmat <- mat$deviance
 newmb  <-  mb$deviance
-conv <- ( reldif <- max( (abs(newmat-newmb)/(newmat+newmb)/2),
-                         (oldmat-newmat)/newmat,
-                         (oldmb -newmb )/newmb ) ) < eps
+conv <- ( reldif <- max( abs(newmat-newmb )/(newmat+newmb)/2,
+                         abs(oldmat-newmat)/ newmat,
+                         abs(oldmb -newmb )/        newmb) ) < eps
 one.more <- ( !conv & ( nit < maxit ) )
 oldmat <- newmat
 oldmb  <- newmb
@@ -509,9 +511,8 @@ if( is.logical(sim) & sim ) sim <- 1000
 if( !( "vcov" %in% names(object) ) )
     warning(
     "No variance-covariance in LCa object, only conditional c.i.s available.\n",
-    "no simulation (prametric bootstrap) is done.\n" )  
+    "no simulation (parametric bootstrap) is done.\n" )  
 else {   
-# require( MASS )    
 # using the parametric bootstrap based on the parameters and the
 # (numerically computed) Hessian
 eta <- NArray( list( pt = 1:nrow(pr0),
@@ -534,7 +535,7 @@ if( mt$mainP ) { kp <- Mp  %*% parms[i,nn+1:np]  ; nn <- nn+np }
 if( mt$mainC ) { kc <- Mc  %*% parms[i,nn+1:nc]  ; nn <- nn+nc }
 if( mt$intP  ) { pi <- Mpi %*% parms[i,nn+1:npi] ; nn <- nn+npi}
 if( mt$intC  ) { ci <- Mci %*% parms[i,nn+1:nci]               }
-eta[,i] <- ax + kp*pi + kc*ci
+eta[,i] <- ax + pi*kp + ci*kc
                   }
 # predicted rates with bootstrap confidence limits              
 pr.sim <- exp( t( apply( eta, 1, quantile,

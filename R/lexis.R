@@ -762,4 +762,4 @@ transform.Lexis <- function(`_data`, ... )
 }
 
 # order.Lexis <- function( x ) order( x$lex.id, lex[,timeScales(x)[1]] )
-# sort.Lexis <- function( x, ... ) x[order.Lexis(x,...),]
+#  sort.Lexis <- function( x, ... ) x[order.Lexis(x,...),]

@@ -50,7 +50,11 @@ matshade( x, y, lty = 1,
 \details{All shaded areas are plotted first, the curves added
   afterwards, so that lines are not 'overshadowed'.
 
-  Also not that if you repeat the same command, you will get the curves
+  If there are NAs in \code{x} or \code{y} there will be separate shaded
+  areas for each non-\code{NA} sequence. Applies separately to each set
+  of confidence bands in \code{y}. 
+  
+  Note that if you repeat the same command, you will get the curves
   and the shaded areas overplotted in the same frame, so the effect is to
   have the shades darker, because the transparent colors are plotted on
   top of those from the first command.
@@ -58,6 +62,8 @@ matshade( x, y, lty = 1,
 \value{NULL. Used for its side effects.
 }
 \author{Bendix Carstensen, \url{BendixCarstensen.com}
+}
+\seealso{\code{\link{pc.matshade}}
 }
 \examples{
 # Follow-up data of Danish DM patients
@@ -71,7 +77,8 @@ sL <- splitLexis( mL, breaks=0:100, time.scale="age")
 \dontrun{
 # the same thing with popEpi
 sL <- splitMulti( mL, age=0:100 )    
-}
+        }
+# Mortality rates separately for M and F:
 mort <- glm( (lex.Xst=="Dead") ~ sex*Ns(age,knots=c(15,3:8*10)),
              offset = log(lex.dur),
              family = poisson,
@@ -87,12 +94,16 @@ mort <- gam( (lex.Xst=="Dead") ~ s(age,by=sex) + sex,
 # predict rates (per 1000 PY) for men and women
 ndM <- data.frame( age=10:90, sex="M", lex.dur=1 )
 ndF <- data.frame( age=10:90, sex="F", lex.dur=1 )
-# gam objects ignores the offset in prediction
+# gam objects ignores the offset in prediction so
+# lex.dur=1000 in prediction frame wll not work.
 prM <- ci.pred( mort, ndM )*1000
 prF <- ci.pred( mort, ndF )*1000
 # predict rate-ratio
 MFr <- ci.exp( mort, ctr.mat=list(ndM,ndF) )
 # plot lines with shaded confidence limits
+# for illustration we make a holes for the RRs:
+MFr[40:45,2] <- NA
+MFr[44:49,1] <- NA
 matshade( ndM$age, cbind( MFr, prF, prM ), col=c(1,2,4), lwd=3,
           log="y", xlab="Age", ylab="Mortality per 1000 PY (and RR)" )
 abline( h=1 )

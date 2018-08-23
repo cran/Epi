@@ -15,20 +15,20 @@
 }
 \arguments{
   \item{x}{A(n unordered) factor}
-  \item{ref}{Vector, list, matrix or table.
+  \item{ref}{Vector, list or data frame, array, matrix or table.
 
     If \code{ref} is a vector (integer or character), it is assumed it
     contains the names or numbers of levels to be the first ones; non
     mentioned levels are kept.
 
-    If \code{ref} is a list, factor levels mentioned in each list
-    element are combined. If the list is named the names are used as new
-    factor levels, otherwise new level names are constructed from the
-    old.
+    If \code{ref} is a list (but not a data frame), factor levels
+    mentioned in each list element are combined. If the list is named
+    the names are used as new factor levels, otherwise new level names
+    are constructed from the old.
 
-    If \code{ref} is a matrix or table, the first column is assumed
-    to have unique levels of \code{x} and the second to have groupings
-    of this, respectively.
+    If \code{ref} is a data frame or 2-dimensional array, matrix or
+    table, the first column is assumed to have unique levels of \code{x}
+    and the second to have groupings of this, respectively.
 
     }
   \item{first}{Should the levels mentioned in \code{ref} (if it is a
@@ -53,7 +53,7 @@
   this facility will preserve the order of levels if \code{ref[,2]} is a
   factor.
 }
-\author{Bendix Carstensen, \url{BendixCarstensen.com}.}
+\author{Bendix Carstensen, \url{BendixCarstensen.com}, Lars Jorge Diaz}
 \seealso{\code{\link{Relevel.Lexis}}}
 \examples{
 # Grouping using a list (hard coding)
@@ -74,7 +74,7 @@ Relevel( ff, gg )
 Relevel( ff, gg[c(1:5,5:1),] )
 
 ## This crashes with an error
-## Relevel( ff, rbind( gg, c("Bear","Reptile") ) ) 
+try( Relevel( ff, rbind( gg, c("Bear","Reptile") ) ) )
 
 ff <- factor(c(as.character(ff),"Jellyfish","Spider"))
 Relevel( ff, gg )
@@ -82,6 +82,7 @@ Relevel( ff, gg, xlevels=FALSE )
 # If you do not want unknown animals classified, this returns NAs:
 Relevel( ff, gg, nogroup=FALSE )
 # Will give error because re-classification is ambiguous
-try( Relevel( ff, rbind(gg,c("Eagle","Mammal"),c("Snake","Mammal")) ) )
+( GG <- rbind(gg,c("Eagle","Mammal"),c("Snake","Mammal")) )
+try( Relevel( ff, GG ) )
 }
 \keyword{manip}

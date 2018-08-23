@@ -155,14 +155,19 @@ ci.ratio( r1, r2,
   If \code{ctr.mat} is a list of two data frames, the difference of the
   predictions from using the first versus the last as newdata arguments
   to predict is computed. Columns that are identical in the two data
-  frames can be omitted (see example), but names of numerical variables
+  frames can be omitted (see below), but names of numerical variables
   omitted must be supplied in a character vector \code{xvars}. Factors
   omitted need not be named. If the second data frame has only one row,
   this is replicated to match the number of rows in the first. The
   facility is primarily aimed at teasing out RRs that are non-linear
   functions of a quantitative variable without setting up contrast
-  matrices using the same code as in the model.
-
+  matrices using the same code as in the model. Note however if splines
+  are used with computed knots stored in a vector such as
+  \code{Ns(x,knots=kk)} then the \code{kk} must be available in the
+  (global) environment; it will not be found inside the model object. In
+  practical terms it means that if you save model objects for later
+  prediction you should save the knots used in the spline setups too.
+  
   Finally, only arguments \code{Exp}, \code{vcov}, \code{alpha} and
   \code{sample} from \code{ci.lin} are honored when \code{ctr.mat} is a
   data frame or a list of two data frames.

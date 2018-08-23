@@ -69,7 +69,7 @@ Lexis( entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   it is imputed.
 
   \code{entry}, \code{exit} must be numeric, using  \code{\link{Date}}
-  variables will cause some of the utilites to crash. Transformation by
+  variables will cause some of the utilities to crash. Transformation by
   \code{\link{cal.yr}} is recommended.
 
   If only either \code{exit} or \code{duration} are supplied it is assumed that
@@ -98,7 +98,7 @@ Lexis( entry, exit, duration, entry.status = 0, exit.status = 0, id, data,
   }
 \value{
   An object of class \code{Lexis}. This is represented as a data frame
-  with a column for each time scale (with neaes equal to the union of
+  with a column for each time scale (with names equal to the union of
   the names of \code{entry} and \code{exit}), and additional columns with the
   following names:
   \item{lex.id}{Identification of the persons.}
@@ -128,9 +128,10 @@ xcoh <- cal.yr( xcoh, format="\%d/\%m/\%Y", wh=2:4 )
 xcoh
 str( xcoh )
 
-# Define as Lexis object with timescales calendar time and age
+# Define a Lexis object with timescales calendar time and age
 Lcoh <- Lexis( entry = list( per=entry ),
-                exit = list( per=exit, age=exit-birth ),
+                exit = list( per=exit,
+                             age=exit-birth ),
          exit.status = fail,
                 data = xcoh )
 Lcoh
@@ -154,8 +155,11 @@ Lexis( entry = list( per=entry ),
    \code{\link{splitLexis}},
    \code{\link{cutLexis}},
    \code{\link{mcutLexis}},
-   \code{\link{merge.Lexis}},
    \code{\link{addCov.Lexis}},
+%   \code{\link{glm.Lexis}},
+%   \code{\link{gam.Lexis}},
+%   \code{\link{coxph.Lexis}},
+   \code{\link{merge.Lexis}},
    \code{\link{subset.Lexis}},
    \code{\link{cbind.Lexis}},
    \code{\link{rbind.Lexis}},
@@ -168,3 +172,4 @@ Lexis( entry = list( per=entry ),
    \code{\link{dur}}
    }
 \keyword{survival}
+\keyword{manip}

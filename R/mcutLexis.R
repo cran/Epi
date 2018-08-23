@@ -42,8 +42,8 @@ if( is.character(new.scales) & length(new.scales) != length(wh) )
   warning( "new.scales not of same length as wh. Set to: ",
            new.scales, "\n" )
   }
-if( is.character(new.scales) & length(intersect(new.states,timeScales(L0))) )
-  stop( "Names of new time scales must be different from names of timescales:\n",
+if( is.character(new.scales) & length(intersect(new.scales,timeScales(L0))) )
+  stop( "Names of new time scales must be different from names of existing timescales:\n",
         timeScales(L0) )  
     
 ### Tied transition times untied    

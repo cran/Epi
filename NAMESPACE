@@ -35,6 +35,7 @@ lines.apc,
   contr.cum,
   contr.diff,
   detrend,
+  decurve,
   dur,
   erl, surv1, surv2, erl1, yll,
   effx,
@@ -93,6 +94,9 @@ lines.apc,
          msdata.Lexis,
             etm.Lexis,
             crr.Lexis,
+            glm.Lexis,
+            gam.Lexis,
+          coxph.Lexis,
              simLexis,
          addCov.Lexis,
          subset.stacked.Lexis,
@@ -129,6 +133,11 @@ lines.apc,
   plotEst,
   pointsEst,
   projection.ip,
+  in.span,
+  inSpan,
+  id.span,
+  idSpan,
+  thinCol,
   linesEst,
   rateplot,
   Aplot,
@@ -141,7 +150,8 @@ lines.apc,
   twoby2,
   Wald,
   stat.table,
-  clogistic)
+  clogistic,
+  poisreg)
 # Import generic methods
 importFrom( utils, stack )
 # importFrom( base, cbind, rbind )
@@ -150,8 +160,9 @@ importFrom( plyr, rbind.fill )
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 # importFrom( mstate, msdata )
-importFrom( MASS, mvrnorm )
-importFrom( survival, clogit )
+importFrom( MASS, mvrnorm, ginv )
+importFrom( survival, clogit, coxph, Surv )
+importFrom( mgcv, gam )
 importFrom( numDeriv, hessian )
 importFrom( Matrix, nearPD )
 importFrom( zoo, na.locf )
@@ -162,12 +173,13 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "polygon", "rect", "rug", "segments", "strheight",
            "strwidth", "text")
 importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
-           "ave", "binomial", "coef", "complete.cases", "contr.sum",
+           "ave", "as.formula", "binomial", "coef", "complete.cases", "contr.sum",
            "fisher.test", "fitted", "formula", "gaussian", "glm",
-           "is.empty.model", "median", "model.extract", "model.matrix",
+           "is.empty.model", "lm", "median", "model.extract", "model.matrix",
            "model.offset", "model.response", "nlm", "pchisq", "pnorm",
            "poisson", "predict", "qnorm", "qt", "quantile", "runif",
-           "termplot", "update", "vcov", "weighted.mean", "xtabs" )
+           "termplot", "update", "vcov", "weighted.mean", "xtabs",
+           "dpois", "rpois", "make.link")
 importFrom("utils", "flush.console", "str")
 
 # register S3 methods
@@ -206,6 +218,9 @@ S3method(    boxes, matrix)
 S3method(    boxes, MS)
 S3method(   msdata, Lexis)
 S3method(      etm, Lexis)
+S3method(      glm, Lexis)
+S3method(      gam, Lexis)
+S3method(    coxph, Lexis)
 S3method(    print, LCa)
 S3method(  summary, LCa)
 S3method(  predict, LCa)

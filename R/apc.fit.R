@@ -76,7 +76,7 @@ lu <- paste(formatC(c(alpha/2, 1 - alpha/2) * 100, format = "f",
     digits = 1), "%", sep = "")
 proj.ip <- function(X, M, orth = FALSE, weight = rep(1, nrow(X))) {
     if (nrow(X) != length(weight))
-        stop("Dimension of space and length of weights differ!")
+        stop("Dimension of space and length of i.p. weights differ!")
     if (nrow(X) != nrow(M))
         stop("Dimension of space and rownumber of model matrix differ!")
     Pp <- solve(crossprod(X * sqrt(weight)), t(X * weight)) %*%
@@ -199,15 +199,18 @@ if (is.character(dr.extr))
    { 
    wt <- rep(1, length(D) )
    drtyp <- "1-weights"
-   if( toupper(substr(dr.extr, 1, 1)) %in% c("W","T","D") )
+   if( toupper(substr(dr.extr, 1, 1)) %in% c("T","D") )
      { wt <- D
-       drtyp <- "D-weights" }
+       drtyp <- "D-weights" } else
    if( toupper(substr(dr.extr, 1, 1)) %in% c("L","R") )
      { wt <- (Y^2)/D
-       drtyp <- "Y2/D-weights" }
+       drtyp <- "Y^2/D-weights" } else
    if( toupper(substr(dr.extr, 1, 1)) %in% c("Y") )
      { wt <- Y
-       drtyp <- "Y-weights" }
+       drtyp <- "Y-weights" } else
+   if( dr.extr %in% names(data) )
+     { wt <- data[,dr.extr]
+       drtyp <- paste( dr.extr, "weights" ) }
    }            
 if ( is.numeric(dr.extr) ) wt <- dr.extr
 Rp <- matrix(Rp, nrow = 1)

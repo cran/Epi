@@ -33,7 +33,7 @@ stackedCIF( x, group = 1,
 	the first level of the event factor represents censoring and the
 		remaining ones the alternative competing events.
 }
-  \item{event}{Determines the event for which the cumulative incidence curve is plotted by \code{plotCIF}.
+\item{event}{Determines the event for which the cumulative incidence curve is plotted by \code{plotCIF}.
 }
 \item{group}{An integer showing the selected level of a possible grouping factor
 	appearing in the model formula in \code{survfit} when plotting by \code{stackedCIF}
