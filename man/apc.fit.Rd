@@ -21,7 +21,7 @@ apc.fit( data,
         ref.p,
           dist = c("poisson","binomial"),
          model = c("ns","bs","ls","factor"),
-       dr.extr = "weighted",
+       dr.extr = "Y",
           parm = c("ACP","APC","AdCP","AdPC","Ad-P-C","Ad-C-P","AC-P","AP-C"),
           npar = c( A=5, P=5, C=5 ),
          scale = 1,
@@ -48,8 +48,9 @@ apc.fit( data,
   \item{dist}{Distribution (or more precisely: Likelihood) used for modeling.
               if a binomial model us used, \code{Y} is assumed to be the
               denominator; \code{"binomial"} gives a binomial model with logit
-              link.}
-  \item{model}{Type of model fitted:
+              link. The Age-effects returned are converted to the
+	      probability scale, Period and Cohort effects are still odds-ratios.}
+  \item{model}{Type of model (covariate effects) fitted:
     \itemize{
 	    \item \code{ns} fits a model with natural splines for each of
 	      the terms, with \code{npar} parameters for the terms.
@@ -77,8 +78,8 @@ apc.fit( data,
     induce the use of the standard inner product putting equal weight on
     all units in the dataset.
 
-    If given as a numeric vector this is used as the diagonal of the
-    matrix inducing the inner product.
+    If \code{dr.extr} is a numeric vector this is used as the diagonal
+    of the matrix inducing the inner product.
 
     The setting of this parameter has no effect on the fit of the model,
     only on the parametrization.
@@ -129,9 +130,10 @@ apc.fit( data,
   \item{npar}{The number of parameters/knots to use for each of the terms in
     the model. If it is vector of length 3, the numbers are taken as the
     no. of knots for Age, Period and Cohort, respectively. Unless it has
-    a names attribute with vales "A", "P" and "C" in which case these
+    a names attribute with values "A", "P" and "C" in which case these
     will be used. The knots chosen are the quantiles
-    \code{(1:nk-0.5)/nk} of the events (i.e. of \code{rep(A,D)})
+    \code{(1:nk-0.5)/nk} of the events (i.e. of \code{rep(A,D)} and
+    similarly for \code{P} and \code{C}).
 
     \code{npar} may also be a named list of three numerical vectors with
     names "A", "P" and "C", in which case these taken as the knots for
@@ -170,13 +172,13 @@ apc.fit( data,
   \item{Type}{Character string explaining the model and the parametrization.}
   \item{Knots}{If \code{model} is one of \code{"ns"} or \code{"bs"}, a list
     with three components: \code{Age}, \code{Per}, \code{Coh}, each one a
-    vector of knots. The max and the min are the boundary knots.}
+    vector of knots. The max and the min of the vectors are the boundary knots.}
 }
 \details{
    Each record in the input data frame represents a subset of a Lexis
    diagram. The subsets need not be of equal length on the age and
    period axes, in fact there are no restrictions on the shape of
-   these; they could be Lexis triangels for example. The requirement is
+   these; they could be Lexis triangles for example. The requirement is
    that \code{A} and \code{P} are coded with the mean age and calendar
    time of observation in the subset. This is essential since \code{A}
    and \code{P} are used as quantitative variables in the models.

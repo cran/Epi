@@ -7,7 +7,7 @@
 \alias{Wald}
 \title{
   Compute linear functions of parameters with standard errors and
-  confidence limits
+  confidence limits, optionally transforming to a different scale.
   }
 \description{
   For a given model object the function computes a linear function of
@@ -61,11 +61,11 @@ ci.ratio( r1, r2,
   }
   \item{ctr.mat}{Matrix, data frame or list (of two data frames).
 
-    If it is a matrix, it should be a contrast matrix to be multiplied
-    to the parameter vector, i.e. the desired linear function of the
-    parameters.
+    If \code{ctr.mat} is a matrix, it should be a contrast matrix to be
+    multiplied to the parameter vector, i.e. the desired linear function
+    of the parameters.
 
-    If it is a data.frame it should have columns corresponding to a
+    If it is a data frame it should have columns corresponding to a
     prediction frame, see details.
     
     If it is a list, it must contain two data frames that are (possibly
@@ -83,7 +83,8 @@ ci.ratio( r1, r2,
     select a subset of parameters and only the \code{int}ersection
     of these is returned.}
   \item{diffs}{If TRUE, all differences between parameters
-    in the subset are computed. \code{ctr.mat} is ignored. If \code{obj}
+    in the subset are computed, and the \code{subset} argumnt is
+    required. The argument \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
     \code{subset} is used to search among the factors in the model and
     differences of all factor levels for the first match are shown.
@@ -91,14 +92,14 @@ ci.ratio( r1, r2,
     pairwise differences between parameters matching are returned.}
   \item{fnam}{Should the common part of the parameter names be included
     with the annotation of contrasts? Ignored if \code{diffs==T}. If a
-    sting is supplied this will be prefixed to the labels.}
+    string is supplied this will be prefixed to the labels.}
   \item{vcov}{Should the covariance matrix of the set of parameters be
     returned? If this is set, \code{Exp} is ignored. See details.}
   \item{alpha}{Significance level for the confidence intervals.}
   \item{df}{Integer. Number of degrees of freedom in the t-distribution used
     to compute the quantiles used to construct the confidence intervals.}
   \item{Exp}{For \code{ci.lin}, if \code{TRUE} columns 5:6 are replaced
-    with exp( columns 1,5,6 ). For \code{ci.exp} of \code{FALSE}, the
+    with exp( columns 1,5,6 ). For \code{ci.exp}, if \code{FALSE}, the
     untransformed parameters are returned. For \code{ci.pred} it
     indicates whether the predictions should be exponentiated - the
     default (\code{Exp=NULL}) is to make a prediction with a Wald CI on
@@ -144,13 +145,16 @@ ci.ratio( r1, r2,
   exponentiated, use \code{ci.exp(...,Exp=FALSE)}.
   
   If \code{ctr.mat} is a data frame, the model matrix corresponding to
-  this is constructed and supplied, so the default behaviour will be to
-  produce the same as \code{ci.pred}, apparently superfluous. The purpose
-  of this is to allow the use of the arguments \code{vcov} that produces
-  the variance-covariance matrix of the predictions, and \code{sample}
-  that produces a sample of predictions using sampling from the
-  multivariate normal with mean equal to parameters and variance equal
-  to the hessian.
+  this is constructed and supplied. This is only supported for objects
+  of class \code{lm}, \code{glm}, \code{gam} and \code{coxph}.
+
+  So the default behaviour will be to produce the same as
+  \code{ci.pred}, apparently superfluous. The purpose of this is to
+  allow the use of the arguments \code{vcov} that produces the
+  variance-covariance matrix of the predictions, and \code{sample} that
+  produces a sample of predictions using sampling from the multivariate
+  normal with mean equal to parameters and variance equal to the
+  hessian.
 
   If \code{ctr.mat} is a list of two data frames, the difference of the
   predictions from using the first versus the last as newdata arguments
@@ -247,11 +251,11 @@ ndb <- data.frame( x=-3:3, g="b", f="b" )
 ci.lin( mi, list(nda,ndb) )
 # Same result if f column is omitted because "f" columns are identical
 ci.lin( mi, list(nda[,-3],ndb[,-3]) )
-# However, Crashes if knots in spline is supplied, and non-factor omitted
+# However, crashes if knots in spline is supplied, and non-factor omitted
 xk <- -1:1
 xi <- c(-0.5,0.5)
 ww <- rnorm(200)
-mi <- update( mm, . ~ . -x +ww + Ns(x,knots=xk) + g:Ns(x,knots=xi) )
+mi <- update( mm, . ~ . -x + ww + Ns(x,knots=xk) + g:Ns(x,knots=xi) )
 # Will crash 
 try( cbind( nda$x, ci.lin( mi, list(nda,ndb) ) ) )
 # Must specify num vars (not factors) omitted from nda, ndb

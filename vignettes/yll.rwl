@@ -1,7 +1,7 @@
 R version 3.4.4 (2018-03-15) 
  ---------------------------------------------
   Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
- Started:  Thursday 03. May 2018, 16:36:26 
+ Started:  Tuesday 09. October 2018, 14:58:17 
  ---------------------------------------------
 Writing to file yll.tex
 Processing code chunks with options ...
@@ -16,8 +16,8 @@ Processing code chunks with options ...
  9 : echo keep.source term verbatim pdf  (label = imm, yll.rnw:378)
 10 : echo keep.source term verbatim pdf  (label = tot, yll.rnw:402)
 11 : echo keep.source term verbatim pdf  (label = sus, yll.rnw:405)
-12 : keep.source (label = CHANGE1, yll.rnw:465)
-13 : keep.source term hide (label = CHANGE2, yll.rnw:469)
+12 : keep.source term hide (label = CHANGE1, yll.rnw:465)
+13 : keep.source (label = CHANGE2, yll.rnw:469)
 14 : echo keep.source term verbatim (yll.rnw:484)
 15 : echo keep.source term verbatim (yll.rnw:489)
 16 : echo keep.source term verbatim (yll.rnw:497)
@@ -28,6 +28,6 @@ You can now run (pdf)latex on ‘yll.tex’
 
  ---------------------------------------------
   Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
-   Ended: Thursday 03. May 2018, 16:36:44
- Elapsed: 00:00:18
+   Ended: Tuesday 09. October 2018, 14:58:35
+ Elapsed: 00:00:17
  ---------------------------------------------

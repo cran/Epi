@@ -14,56 +14,67 @@ and \code{\link{coxph}}. But it is only a set of wrappers fro
 }
 \usage{
   glm.Lexis( Lx,         # Lexis object	
-           resp,         # 'to' states	
+           from = preceding(Lx,to), # 'from' states
+             to = absorbing(Lx)   , # 'to' states
         formula,         # ~ model	
-           xpos,         # 'from' states
+         paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
-             ... )
+          \dots )        # further arguments to glm
   gam.Lexis( Lx,         # Lexis object	
-           resp,         # 'to' states	
+           from = preceding(Lx,to), # 'from' states
+             to = absorbing(Lx)   , # 'to' states	
         formula,         # ~ model	
-           xpos,         # 'from' states
+         paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
-             ... )
-coxph.Lexis( Lx, # Lexis object	
-           resp, # 'to' states	
-        formula, # timescale ~ model	
-           xpos, # 'from' states
+          \dots )        # further arguments to glm
+coxph.Lexis( Lx,         # Lexis object	
+           from = preceding(Lx,to), # 'from' states
+             to = absorbing(Lx)   , # 'to' states	
+        formula,         # timescale ~ model	
+         paired = FALSE, # only the pairwise
         verbose = TRUE,  # report what is done?
-             ... )
+          \dots )        # further arguments to glm
 }
 \arguments{
   \item{Lx}{A \code{\link{Lexis}} object representing cohort follow-up.
 }
-  \item{resp}{Character vector of states \bold{to} which a transition is
+  \item{from}{Character vector of states \bold{from} which transitions
+    are considered. May also be an integer vector in which case the
+    reference will be to the position of levels of
+    \code{lex.Cst}. Defaults to the collection of transient states
+    immediately preceding the absorbing states. 
+}
+  \item{to}{Character vector of states \bold{to} which a transition is
     considered an event. May also be an integer vector in which case the
-    reference will be to the position of levels of \code{lex.Xst}. 
+    reference will be to the position of levels of \code{lex.Xst}.
+    Defaults to the set of absorbing states.  
 }
   \item{formula}{Model formula describing the model for the
-    intensity. For \code{glm} and \code{gam}, the formula should be
+    intensity(-ies). For \code{glm} and \code{gam}, the formula should be
     one-sided; for \code{coxph} the formula should be two-sided and have
     the name of the time-scale used for baseline as the l.h.s.
 }
-\item{xpos}{Character vector of states \bold{from} which transitions
-    are considered. May also be an integer vector in which case the
-    reference will be to the position of levels of \code{lex.Cst}. If
-    missing (that is not supplied), the entire \code{Lexis} object is
-    used in the modeling.
+  \item{paired}{Logical. Should the states mentioned in \code{to},
+    rep. \code{from} be taken as pairs, indicating the only transitions
+    modeled. If \code{FALSE} all transitions from any of the states in
+    \code{from} to any states in \code{to} are modeled.
 }
-\item{link}{Link function used, allowed values are \code{log} (the
-    default), \code{identity} and \code{sqrt}, see the family
-    \code{\link{poisreg}}. 
+  \item{link}{Character; name of the link function used, allowed values
+    are \code{'log'} (the default), \code{'identity'} and \code{'sqrt'},
+    see the family \code{\link{poisreg}}. 
 }
 \item{scale}{Scalar. \code{lex.dur} is divided by this number before
   analysis, so that you can get resulting rates on a scale of your wish. 
 }
-  \item{verbose}{Print information on the states modeled?
+\item{verbose}{Print information on the states modeled?
 }
-  \item{\dots}{Arguments passed on to the methods.  }
+\item{\dots}{Further arguments passed on to \code{glm}, \code{glm} or
+  \code{coxph} 
+}
 }
 
 \details{
@@ -75,30 +86,52 @@ coxph.Lexis( Lx, # Lexis object
   \code{lex.dur} (and would ignore this) as variable in the
   \code{newdata}. \code{ci.pred} returns the estimated rates in
   units of the \code{lex.dur} in the \code{Lexis} object, scaled by
-  \code{scale}.
+  \code{scale}, which has a default value of 1.
 
+  The default is to model all transitions into any absorbing state by
+  the same model (how wise is that??). If only \code{from} is given,
+  \code{to} is set to all states reachable from \code{from}, which may
+  be a really goofy model and if so a warning is issued. If only
+  \code{to} is given, \code{from} is set to the collection of states
+  from which \code{to} can be reached directly --- see
+  \code{\link{preceding}} and its cousins.
+
+  Occasionally you only want to model a subset of the possible
+  transitions from states in \code{from} to states in \code{to}, in
+  which case you specify \code{from} and \code{to} as character vectors
+  of the same length and then only transitions \code{from[i]} to
+  \code{to[i]}, \code{i}=1,2,... will be modeled.
+  
+  There is no working \code{update} functions for these objects (yet). 
+  
   Strictly speaking, it is a bit counter-intuitive to have the time-scale
   on the l.h.s. of the formula for the \code{coxph} since the time scale
   is also a predictor of the occurrence rate. On the other hand, calling
   \code{coxph} directly would also entail having the name of the time
   scale in the \code{Surv} object on the l.h.s. of the formula. So the
   inconsistency is merely carried over from \code{coxph}.
-
-  The functions are slightly experimental so far. Argument names and
-  ordering may change in the future. The \code{update} methods do not
-  always work.
 }
 
-\value{\code{glm} returns a \code{\link{glm}} object, \code{gam} returns
-  a \code{\link[mgcv]{gam}} object and \code{coxph} returns a
-  \code{\link[survival]{coxph}} object. The returned objects all have an
-  extra attribute, \code{Lexis}; a list with names \code{Exposure} and
-  \code{Events}; character vectors of state names from which transitions
-  are modeled and that are considered events, respectively. The
-  \code{glm} object also has a \code{scale} element in the list, an scalar
-  indicating the scaling of \code{lex.dur} before modeling. The
-  \code{coxph} object also has a \code{Timescale} element in the list, a
-  character indicating the underlying timescale variable.
+\value{\code{glm.Lexis} returns a \code{\link{glm}} object, which is
+  also of class \code{glm.lex},
+  \code{gam.Lexis} returns a \code{\link[mgcv]{gam}} object, which is
+  also of class \code{gam.lex}, and
+  \code{coxph.Lexis} returns a \code{\link[survival]{coxph}} object, which is
+  also of class \code{coxph.lex}. These extra class attributes are meant
+  to facilitate the (still pending) implementation of an \code{update} function.
+
+  The returned objects all have an extra attribute, \code{Lexis} which
+  is a list with names \code{from}, \code{to} and \code{data}; character
+  vectors of state names from which and to which transitions are
+  modeled, respectively, and the name of the \code{Lexis} object
+  modeled. Note that it is \emph{not} the object, only the name of it,
+  which may not be portable.
+  
+  The \code{glm} and \code{gam} objects also has a \code{scale} element
+  in the list; a scalar indicating the scaling of \code{lex.dur} before
+  modeling. The \code{coxph} object has a \code{timescale} element in
+  the list, a character scalar with the name of the underlying timescale
+  variable.
 }
 
 \author{
@@ -106,7 +139,12 @@ Bendix Carstensen, \url{http://BendixCarstensen.com}.
 }
 
 \seealso{
-\code{\link{Lexis}}, \code{\link{cutLexis}}
+  \code{\link{Lexis}},
+  \code{\link{cutLexis}},
+  \code{\link{mcutLexis}},
+  \code{\link{addCov.Lexis}},
+  \code{\link{absorbing}},
+  \code{\link{transient}}
 }
 
 \examples{
@@ -132,9 +170,10 @@ summary( sL )
 
 # glm models for rates based on the time-split dataset by insulin and sex
 
-# proportional hazards model with insulin as time-dependent variable
-mt <- glm.Lexis( sL, resp="Dead",
-                     ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
+# Proportional hazards model with insulin as time-dependent variable
+# - uses the defaul of modeling all transitions from both transient
+# states ("Alive" and "Ins") to the absorbing state ("Dead"). 
+mt <- glm.Lexis( sL, formula= ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
 
 # prediction of mortality rates from "Alive" with and without PH assumption
 nA <- data.frame( age=40:70, sex="M", lex.Cst="Alive" )
@@ -150,7 +189,7 @@ mt.gam <- gam.Lexis( sL, "Dead", ~ sex + lex.Cst + s(age), scale=1000 )
         }
 
 # Fit a Cox model with age as baseline time scale and insulin as time-dependent
-mt.cox <- coxph.Lexis( sL, "Dead", age ~ sex + lex.Cst )
+mt.cox <- coxph.Lexis( sL, c("Alive","Ins"), "Dead", age ~ sex + lex.Cst )
 
 # Pretty much the same results for regression paramters as the glm:
   ci.exp( mt    , subset="ex" )

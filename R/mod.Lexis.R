@@ -1,40 +1,68 @@
 modLexis <- 
-function( Lx, resp, formula, xpos, link="log", scale, verbose=TRUE, ..., model )
+function( Lx, nameLx,
+              from = preceding(Lx,to),
+                to = absorbing(Lx),
+           formula,
+            paired = FALSE,
+              link = "log", scale = 1, verbose = TRUE,
+             model, ... )
 {
-# A common wrapper for glm and gam modeling of Lexis FU
-  
+# a common wrapper for glm and gam modeling of Lexis FU  
 # is this a Lexis object ?
-if( !inherits(Lx,"Lexis") ) stop( "The first argument must be a Lexis object.\n")
-nameLx <- deparse(substitute(Lx))
-# Beginning of a new feature with a countmultiplier of the transitions considered 
-if( !("lex.N" %in% names(Lx)) ) Lx$lex.N <- 1
+if( !inherits(Lx,"Lexis") ) stop("The first argument must be a Lexis object.\n")
     
 # check that events are actual levels of lex.Xst 
-if( is.numeric(resp) ) resp <- levels( Lx$lex.Xst )[resp]
-wh <- match( resp, levels(Lx$lex.Xst) )
-if( any(is.na(wh)) ) stop("'resp' must be a subset of: '", 
+if( is.numeric(to) ) to <- levels( Lx$lex.Xst )[to]
+wh <- match( to, levels(Lx$lex.Xst) )
+if( any(is.na(wh)) ) stop("'to' must be a subset of: '", 
                      paste(levels(Lx$lex.Xst), collapse="','", sep=""), "'\n" )  
 
-# is xpos supplied?
-if( missing(xpos) ) {
-  xpos <- levels( factor(Lx$lex.Cst) )
-  } else {
-# check that xpos are actual levels of lex.Cst 
-if( is.numeric(xpos) ) xpos <- levels( Lx$lex.Cst )[xpos]
-wh <- match( xpos, levels(Lx$lex.Cst) )
-if( any(is.na(wh)) ) stop("'xpos' must be a subset of: '", 
+# check that from are actual levels of lex.Cst 
+if( is.numeric(from) ) from <- levels( Lx$lex.Cst )[from]
+wh <- match( from, levels(Lx$lex.Cst) )
+if( any(is.na(wh)) ) stop("'from' must be a subset of: '", 
                      paste(levels(Lx$lex.Cst), collapse="','", sep=""), "'\n" )  
-Lx <- Lx[Lx$lex.Cst %in% xpos,]                     
-  } 
-                     
-# construct the model formula - note that we want the possibility of
-# transitions to transient states, hence the lex.Xst != lex.Cst
-if( length(formula) != 2 ) stop( "formula must be a one-sided formula")
-form <- cbind( (Lx$lex.Xst %in% resp &
-                Lx$lex.Xst != Lx$lex.Cst)*Lx$lex.N,
+Lx <- Lx[Lx$lex.Cst %in% from,]                     
+
+# work out which transitions are modeled
+# first a small utility (transition as text)
+trt <- function( f, t ) paste( f, "->", t, sep="" )
+if( paired )
+  {
+if( length(from) != length(to) ) stop("If 'paired' is TRUE, from and to must have same length!\n")
+if( any(from==to) ) stop("If 'paired' is TRUE, entries in from and to must be pairwise different\n")
+trnam <- trt( from, to )
+  } else {  
+tm <- tmat( Lx )[from,to,drop=FALSE]
+trnam <- outer( rownames(tm), colnames(tm), trt )[tm>0]
+trnam <- trnam[!is.na(trnam)]
+  }
+# just for formatting the explanatory text
+onetr <- length( trnam )==1
+trprn <- paste( trnam, collapse=", " )
+    
+# warn if a potentially silly model is defined
+if( any( (ts<-table(sapply( strsplit(trnam,"->"), function(x) x[1] )))>1 ) ) warning(
+ "NOTE:\nMultiple transitions *from* state '",names(ts[ts>1]),"' - are you sure?",
+ "\nThe analysis requested is effectively merging outcome states.", 
+ "\nYou may want analyses using a *stacked* dataset - see ?stack.Lexis\n" )
+
+# Beginning of a new feature with a countmultiplier of the transitions
+# allowing tabular records to be merged to a Lexis object
+# --- not used subsequently in this function (yet)
+# if( !("lex.N" %in% names(Lx)) ) Lx$lex.N <- 1
+ 
+# construct the model formula - note that we already made sure that
+# from and to are pairwise different
+if( length(formula) != 2 ) stop("formula must be a one-sided formula")
+
+form <- cbind( trt(Lx$lex.Cst,Lx$lex.Xst) %in% trnam, #*Lx$lex.N,
                Lx$lex.dur ) ~ 1
+## form <- cbind( (Lx$lex.Xst %in% to &
+##                 Lx$lex.Xst != Lx$lex.Cst), #*Lx$lex.N,
+##                 Lx$lex.dur ) ~ 1
 form[3] <- formula[2]
-xpos <- levels( factor(Lx$lex.Cst) ) # only levels present in lex.Cst
+from <- levels( factor(Lx$lex.Cst) ) # only levels present in lex.Cst
 
 # Scaling
 Lx$lex.dur <- Lx$lex.dur/scale
@@ -43,62 +71,115 @@ Lx$lex.dur <- Lx$lex.dur/scale
 if( verbose ){
 cat( deparse(substitute(model)),
      " Poisson analysis of Lexis object ", nameLx, " with ", link, " link",
-     ":\n Transition rates from '", paste( xpos, collapse="','"), 
-                          "' to '", paste( resp, collapse="','"), "'",
-     if( scale!=1 ) paste(" scaled by", scale ), "\n", sep="" )
+     ":\nRates for", if(  onetr ) " the", " transition",
+                     if( !onetr ) "s", " ", trprn,
+     if( scale!=1 ) paste(", PY scaled by", scale ), "\n", sep="" )
              }
     
 # Fit the model
 mod <- model( form, family = poisreg(link=link), data = Lx, ... )
-
-# An explanatory attribute
-attr( mod, "Lexis" ) <- list( Exposure=xpos, Events=resp, scale=scale )     
+    
+# Add an explanatory attribute
+attr( mod, "Lexis" ) <- list( transitions=trnam, data=nameLx, scale=scale )     
 mod
 }
 
-# Here are the actual functions of interest
-
+# Here are the actual functions of interest:
+# the glm function
 glm.Lexis <- 
-function( Lx, resp, formula, xpos, link="log", scale=1    , verbose=TRUE   , ... ) {
-modLexis( Lx, resp, formula, xpos, link=link , scale=scale, verbose=verbose, ..., model=stats::glm ) }
+function( Lx, from = preceding(Lx,to),
+                to = absorbing(Lx),
+           formula,
+            paired = FALSE,
+              link = "log",
+             scale = 1,
+           verbose = TRUE,
+               ... )
+{
+# name of the supplied object
+nameLx <- deparse(substitute(Lx))
 
+# sensible defaults if one of to and from is missing
+if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
+if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
+xx <- modLexis( Lx, nameLx,
+                from, to, formula,
+                paired = paired, link = link, scale = scale, verbose = verbose,
+                 model = stats::glm, ... )
+class( xx ) <- c( "glm.lex", class(xx) )
+xx
+}
+# the gam function
 gam.Lexis <- 
-function( Lx, resp, formula, xpos, link="log", scale=1    , verbose=TRUE   , ... ) {
-modLexis( Lx, resp, formula, xpos, link=link , scale=scale, verbose=verbose, ..., model= mgcv::gam ) }
+function( Lx, from = preceding(Lx,to),
+                to = absorbing(Lx),
+           formula,
+            paired = FALSE,
+              link = "log",
+             scale = 1,
+           verbose = TRUE,
+               ... )
+{
+# name of the supplied object
+nameLx <- deparse(substitute(Lx))
 
-# and here the coxph counterpart:
+# sensible defaults if one of the two is missing
+if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
+if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
+xx <- modLexis( Lx, nameLx,
+                from, to, formula,
+                paired = paired, link = link, scale = scale, verbose = verbose,
+                 model = mgcv::gam, ... )
+class( xx ) <- c( "gam.lex", class(xx) )
+xx
+}
 
+# And here is the coxph counterpart:
 coxph.Lexis <- 
 function( Lx, # Lexis object 
-        resp, # Events ('to' states)
+        from = preceding(Lx,to), # Exposure ('from' states)
+          to = absorbing(Lx)   , # Events ('to' states)
      formula, # timescale ~ model
-        xpos, # exposure states ('from' states)
+      paired = FALSE,
      verbose = TRUE,
           ... )
 {
 # Lexis object ?
 if( !inherits(Lx,"Lexis") ) stop( "The first argument must be a Lexis object.\n")
+
+# sensible defaults if only one of to and from is missing
+if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
+if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
+
+# name of the dataset
 nameLx <- deparse(substitute(Lx))
 
-# check levels    
-if( is.numeric(resp) ) resp <- levels( Lx$lex.Xst )[resp]
-wh <- match(resp,levels(Lx$lex.Xst))
-if( any(is.na(wh)) ) stop("'resp' must be a subset of: '", 
-                     paste(levels(Lx$lex.Xst), collapse="','", sep=""), "'\n" )  
-
-# is xpos supplied?
-if( !missing(xpos) )
+# work out which transitions are modeled
+# first a small utility
+trt <- function( f, t ) paste( f, "->", t, sep="" )
+if( paired )
   {
-# check that xpos are actual levels of lex.Cst 
-if( is.numeric(xpos) ) xpos <- levels( Lx$lex.Cst )[xpos]
-wh <- match( xpos, levels(Lx$lex.Cst) )
-if( any(is.na(wh)) ) stop("'xpos' must be a subset of: '", 
-                     paste(levels(Lx$lex.Cst), collapse="', '", sep=""), "'\n" )  
-Lx <- Lx[Lx$lex.Cst %in% xpos,]                     
-  } 
+if( length(from) != length(to) ) stop("If 'paired' is TRUE, from and to must have same length!\n")
+if( any(from==to) ) stop("If 'paired' is TRUE, entries in from and to must be pairwise different\n")
+trnam <- trt( from, to )
+  } else {  
+tm <- tmat( Lx )[from,to,drop=FALSE]
+trnam <- outer( rownames(tm), colnames(tm), trt )[tm>0]
+trnam <- trnam[!is.na(trnam)]
+  }
+# just for formatting explanatory text
+onetr <- length( trnam )==1
+trprn <- paste( trnam, collapse=", " )
+    
+# warn if a potentially silly model is defined
+if( any( ts<-table(sapply( strsplit(trprn,"->"), function(x) x[1] ))>1 ) ) warning(
+ "NOTE:\nMultiple transitions *from* state '",names(ts[ts>1]),"' - are you sure?",
+ "\nThe analysis requested is effectively merging outcome states.", 
+ "\nYou may want analyses using a *stacked* dataset - see ?stack.Lexis\n" )
 
 # Correct formula?
-if( length(formula) != 3 ) stop("'formula' must be a 2-sided formula, with the l.h.s. the timescale")
+if( length(formula) != 3 )
+    stop("'formula' must be a 2-sided formula, with the l.h.s. the timescale")
 
 # Is the l.h.s. a timescale?
 ts <- as.character( formula[2] )
@@ -106,25 +187,31 @@ if( !(ts %in% (tms<-timeScales(Lx))) )
   stop( "l.h.s. of formula must be a timescale; one of:\n", tms, "\n" )
 
 # What are the 'from' states
-xpos <- levels( factor(Lx$lex.Cst) )
+from <- levels( factor(Lx$lex.Cst) )
     
 # construct a Surv response object, and note that we want the possibility
 # of transitions to transient states, hence the lex.Xst != lex.Cst 
 Sobj <- Surv( Lx[,ts], 
               Lx[,ts]+Lx$lex.dur,
-              Lx$lex.Xst %in% resp &
-              Lx$lex.Xst != Lx$lex.Cst )
+              trt( Lx$lex.Cst, Lx$lex.Xst ) %in% trnam )
+#              Lx$lex.Xst %in% to &
+#              Lx$lex.Xst != Lx$lex.Cst )
 
 # Tell what we intend to and then do it    
-cat( "survival::coxph analysis of Lexis object ", nameLx, " using timescale ", ts,
-     ":\nTransition rates from '", paste( xpos, collapse="','"), 
-                         "' to '", paste( resp, collapse="','"),  "'\n", sep="" )
+if( verbose ){
+cat( deparse(substitute(model)),
+     " survival::coxph analysis of Lexis object ", nameLx,
+     ":\nRates for", if(  onetr ) " the", " transition",
+                     if( !onetr ) "s", " ", trprn, "\n", sep="" )
+             }
+
 mod <- coxph( as.formula( paste( "Sobj", 
                                  as.character(formula[3]),
                                  sep="~") ), 
               data = Lx, ... )
 
-# An explanatory attribute
-attr( mod, "Lexis" ) <- list( Exposure=xpos, Events=resp, Timescale=ts )
+# Add an explanatory attribute
+attr( mod, "Lexis" ) <- list( transitions=trnam, data=nameLx, scale=scale )     
+class( mod ) <- c( "coxph.lex", class(mod ) )    
 mod
 }

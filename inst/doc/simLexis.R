@@ -2,7 +2,7 @@
 ### Encoding: UTF-8
 
 ###################################################
-### code chunk number 1: simLexis.rnw:24-27
+### code chunk number 1: simLexis.rnw:23-26
 ###################################################
 options( width=90,
          SweaveHooks=list( fig=function()
@@ -80,6 +80,25 @@ DM.Ins <- glm( (lex.Xst=="Ins") ~ Ns( Age  , knots=ai.kn ) +
                                   I(Per-2000) + sex,
                family=poisson, offset=log(lex.dur),
                data = subset(Si,lex.Cst=="DM") )
+ci.exp( DM.Ins )
+class( DM.Ins )
+
+
+###################################################
+### code chunk number 9: simLexis.rnw:278-285
+###################################################
+DM.Ins <- glm.Lexis( Si, from = "DM",
+                           to = "Ins",
+                      formula = ~ Ns( Age  , knots=ai.kn ) +
+                                  Ns( DMdur, knots=di.kn ) +
+                                  I(Per-2000) + sex )
+ci.exp( DM.Ins )
+class( DM.Ins )
+
+
+###################################################
+### code chunk number 10: simLexis.rnw:290-311
+###################################################
 DM.Dead <- glm( (lex.Xst=="Dead") ~ Ns( Age  , knots=ad.kn ) +
                                     Ns( DMdur, knots=dd.kn ) +
                                     I(Per-2000) + sex,
@@ -91,10 +110,20 @@ Ins.Dead <- glm( (lex.Xst=="Dead(Ins)") ~ Ns( Age  , knots=ad.kn ) +
                                           I(Per-2000) + sex,
                family=poisson, offset=log(lex.dur),
                data = subset(Si,lex.Cst=="Ins") )
+DM.Dead <- glm.Lexis( Si, from = "DM",
+                            to = "Dead",
+                       formula = ~ Ns( Age  , knots=ad.kn ) +
+                                   Ns( DMdur, knots=dd.kn ) +
+                                   I(Per-2000) + sex )
+Ins.Dead <- glm.Lexis( Si, from = "Ins",
+                        formula = ~ Ns( Age  , knots=ad.kn ) +
+                                    Ns( DMdur, knots=dd.kn ) +
+                                    Ns( t.Ins, knots=ti.kn ) +
+                                    I(Per-2000) + sex )
 
 
 ###################################################
-### code chunk number 9: prop-haz
+### code chunk number 11: prop-haz
 ###################################################
 with( Si, table(lex.Cst) )
 All.Dead <- glm( (lex.Xst %in% c("Dead(Ins)","Dead")) ~
@@ -108,7 +137,18 @@ round( ci.exp( All.Dead ), 3 )
 
 
 ###################################################
-### code chunk number 10: get-dev
+### code chunk number 12: simLexis.rnw:345-351
+###################################################
+All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
+                      formula = ~ Ns( Age  , knots=ad.kn ) +
+                                  Ns( DMdur, knots=dd.kn ) +
+                                  lex.Cst +
+                                  I(Per-2000) + sex )
+round( ci.exp( All.Dead ), 3 )
+
+
+###################################################
+### code chunk number 13: get-dev
 ###################################################
 what <- c("null.deviance","df.null","deviance","df.residual")
 ( rD <- unlist(  DM.Dead[what] ) )
@@ -118,7 +158,7 @@ round( c( dd <- rA-(rI+rD), "pVal"=1-pchisq(dd[3],dd[4]+1) ), 3 )
 
 
 ###################################################
-### code chunk number 11: pr-array
+### code chunk number 14: pr-array
 ###################################################
 pr.rates <- NArray( list( DMdur = seq(0,12,0.1),
                           DMage = 4:7*10,
@@ -129,13 +169,13 @@ str( pr.rates )
 
 
 ###################################################
-### code chunk number 12: simLexis.rnw:382-383
+### code chunk number 15: simLexis.rnw:425-426
 ###################################################
 ci.pred
 
 
 ###################################################
-### code chunk number 13: make-pred
+### code chunk number 16: make-pred
 ###################################################
 nd <- data.frame( DMdur = as.numeric( dimnames(pr.rates)[[1]] ),
                 lex.Cst = factor( 1, levels=1:4,
@@ -161,7 +201,7 @@ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
 
 
 ###################################################
-### code chunk number 14: mort-int
+### code chunk number 17: mort-int
 ###################################################
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
 plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
@@ -176,7 +216,7 @@ for( aa in 4:7*10 ) for( ii in 1:4 )
 
 
 ###################################################
-### code chunk number 15: Tr
+### code chunk number 18: Tr
 ###################################################
 Tr <- list( "DM" = list( "Ins"       = DM.Ins,
                          "Dead"      = DM.Dead  ),
@@ -184,7 +224,7 @@ Tr <- list( "DM" = list( "Ins"       = DM.Ins,
 
 
 ###################################################
-### code chunk number 16: make-ini
+### code chunk number 19: make-ini
 ###################################################
 str( Si[NULL,1:9] )
 ini <- subset(Si,FALSE,select=1:9)
@@ -194,7 +234,7 @@ str( ini )
 
 
 ###################################################
-### code chunk number 17: ini-fill
+### code chunk number 20: ini-fill
 ###################################################
 ini[1:2,"lex.id"] <- 1:2
 ini[1:2,"lex.Cst"] <- "DM"
@@ -206,7 +246,7 @@ ini
 
 
 ###################################################
-### code chunk number 18: simL
+### code chunk number 21: simL
 ###################################################
 set.seed( 52381764 )
 Nsim <- 5000
@@ -217,13 +257,13 @@ system.time( simL <- simLexis( Tr,
 
 
 ###################################################
-### code chunk number 19: sum-simL
+### code chunk number 22: sum-simL
 ###################################################
 summary( simL, by="sex" )
 
 
 ###################################################
-### code chunk number 20: Tr.p-simP
+### code chunk number 23: Tr.p-simP
 ###################################################
 Tr.p <- list( "DM" = list( "Ins"       = DM.Ins,
                            "Dead"      = All.Dead  ),
@@ -236,7 +276,7 @@ summary( simP, by="sex" )
 
 
 ###################################################
-### code chunk number 21: Cox-dur
+### code chunk number 24: Cox-dur
 ###################################################
 library( survival )
 Cox.Dead <- coxph( Surv( DMdur, DMdur+lex.dur,
@@ -250,7 +290,7 @@ round( ci.exp( All.Dead ), 3 )
 
 
 ###################################################
-### code chunk number 22: TR.c
+### code chunk number 25: TR.c
 ###################################################
 Tr.c <- list( "DM" = list( "Ins"       = Tr$DM$Ins,
                            "Dead"      = Cox.Dead  ),
@@ -263,7 +303,7 @@ summary( simC, by="sex" )
 
 
 ###################################################
-### code chunk number 23: nState
+### code chunk number 26: nState
 ###################################################
 system.time(
 nSt <- nState( subset(simL,sex=="M"),
@@ -272,7 +312,7 @@ nSt[1:10,]
 
 
 ###################################################
-### code chunk number 24: pstate0
+### code chunk number 27: pstate0
 ###################################################
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
@@ -287,7 +327,7 @@ box()
 
 
 ###################################################
-### code chunk number 25: pstatex
+### code chunk number 28: pstatex
 ###################################################
 clr <- c("limegreen","orange")
 # expand with a lighter version of the two chosen colors
@@ -321,7 +361,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 
 
 ###################################################
-### code chunk number 26: pstatey
+### code chunk number 29: pstatey
 ###################################################
 par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
 # Men
@@ -359,7 +399,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 
 
 ###################################################
-### code chunk number 27: comp-0
+### code chunk number 30: comp-0
 ###################################################
 PrM  <- pState( nState( subset(simP,sex=="M"),
                         at=seq(0,11,0.2),
@@ -397,13 +437,13 @@ box( lwd=3 )
 
 
 ###################################################
-### code chunk number 28: CHANGE1 (eval = FALSE)
+### code chunk number 31: CHANGE1 (eval = FALSE)
 ###################################################
 ## source( "../R/simLexis.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 29: CHANGE2
+### code chunk number 32: CHANGE2
 ###################################################
 simX <- Epi:::simX
 sim1 <- Epi:::sim1
@@ -413,63 +453,63 @@ chop.lex <- Epi:::chop.lex
 
 
 ###################################################
-### code chunk number 30: simLexis.rnw:934-937
+### code chunk number 33: simLexis.rnw:977-980
 ###################################################
 cbind(
-attr( ini, "time.scale" ),
+attr( ini, "time.scales" ),
 attr( ini, "time.since" ) )
 
 
 ###################################################
-### code chunk number 31: simLexis.rnw:962-963
+### code chunk number 34: simLexis.rnw:1005-1006
 ###################################################
 simLexis
 
 
 ###################################################
-### code chunk number 32: simLexis.rnw:980-981
+### code chunk number 35: simLexis.rnw:1023-1024
 ###################################################
 simX
 
 
 ###################################################
-### code chunk number 33: simLexis.rnw:993-994
+### code chunk number 36: simLexis.rnw:1036-1037
 ###################################################
 sim1
 
 
 ###################################################
-### code chunk number 34: simLexis.rnw:1006-1007
+### code chunk number 37: simLexis.rnw:1049-1050
 ###################################################
 lint
 
 
 ###################################################
-### code chunk number 35: simLexis.rnw:1017-1018
+### code chunk number 38: simLexis.rnw:1060-1061
 ###################################################
 get.next
 
 
 ###################################################
-### code chunk number 36: simLexis.rnw:1027-1028
+### code chunk number 39: simLexis.rnw:1070-1071
 ###################################################
 chop.lex
 
 
 ###################################################
-### code chunk number 37: simLexis.rnw:1045-1046
+### code chunk number 40: simLexis.rnw:1088-1089
 ###################################################
 nState
 
 
 ###################################################
-### code chunk number 38: simLexis.rnw:1055-1056
+### code chunk number 41: simLexis.rnw:1098-1099
 ###################################################
 pState
 
 
 ###################################################
-### code chunk number 39: simLexis.rnw:1060-1062
+### code chunk number 42: simLexis.rnw:1103-1105
 ###################################################
 plot.pState
 lines.pState

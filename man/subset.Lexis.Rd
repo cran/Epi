@@ -32,5 +32,5 @@
   A \code{Lexis} object with selected rows and columns.
 }
 \author{Martyn Plummer}
-\seealso{\code{\link{Lexis}}, \code{\link{merge.Lexis}}}
+\seealso{\code{\link{Lexis}}, \code{\link{merge.Lexis}}, \code{\link{bootLexis}}}
 \keyword{manip}

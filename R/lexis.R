@@ -702,6 +702,34 @@ status <- function(x, at="exit", by.id = FALSE)
   res
 }
 
+transient <-
+function( x )
+{
+if( !is.Lexis(x) ) stop( "Not a Lexis object" )
+tc <- tapply( x$lex.dur, x$lex.Cst, sum )
+nt <- names( tc[tc>0] )
+nt[!is.na(nt)]
+}    
+
+absorbing <-
+function( x )
+{
+if( !is.Lexis(x) ) stop( "Not a Lexis object" )
+tc <- table( x$lex.Xst )
+setdiff( names( tc[tc>0] ), transient(x) )
+}    
+
+updn <-
+function( x, tt, states )
+{
+if( any(is.na(match(states,levels(x)))) )
+  stop( "'states' must be among states: ", paste(levels(x),sep=',') )
+tt <- tt[,states,drop=FALSE]
+setdiff( rownames( tt[apply(tt,1,sum)>0,,drop=FALSE] ), states )
+}
+before <- preceding <- function( x, states ) updn( x, table(x$lex.Cst,x$lex.Xst), states )
+after <- succeeding <- function( x, states ) updn( x, table(x$lex.Xst,x$lex.Cst), states )
+
 timeScales <- function(x)
 {
   return (attr(x,"time.scales"))

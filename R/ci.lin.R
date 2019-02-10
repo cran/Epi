@@ -4,7 +4,7 @@
 COEF          <- function( x, ... ) UseMethod("COEF")
 COEF.default  <- function( x, ... ) coef( x, ... )
 VCOV          <- function( x, ... ) UseMethod("VCOV")
-VCOV.default  <- function( x, ... ) vcov( x, complete=FALSE, ... )
+VCOV.default  <- function( x, ... ) vcov( x, complete=TRUE, ... )
 
 # Then we can get from these methods what we want from lme, mer etc.
 COEF.lme      <- function( x, ... ) nlme::fixed.effects( x )
@@ -30,6 +30,8 @@ VCOV.rq       <- function( object, ... ) summary(object, cov=TRUE)$cov
 df2ctr <-
 function( obj, nd )
     {
+if( !( inherits(obj,"lm") | inherits(obj,"coxph") ) )
+  stop("data frame facility not inplemented for ", class(obj), " objects" )
 # Factors in the prediction frame must have more than one level, which
 # they typically do not have in the specification, so we find the
 # factors in the prediction frame and expand levels to the complete
@@ -38,9 +40,15 @@ dcl <- attr( obj$terms, "dataClasses" )
 whf <- ( dcl == "factor" )
 if( any(whf) ) for( fn in names(dcl)[which(whf)] )
                 nd[,fn] <- factor( nd[,fn], levels=obj$xlevels[[fn]] )
-# The contrast matrix - differ a bit between glm and gam
-if( inherits(obj,"gam") ) model.matrix(         obj     , newdata=nd )
-                     else model.matrix( formula(obj)[-2],    data=nd )
+# The contrast matrix from the model - differs a bit between (g)lm, gam and coxph
+# this is needed to keep NA rows from the data frame supplied
+org.op <- options( na.action='na.pass' )
+on.exit( options( org.op ) )
+if( inherits(obj,"coxph") ) MM <- model.matrix(         obj     ,    data=nd )
+if( inherits(obj,"gam"  ) ) MM <- model.matrix(         obj     , newdata=nd )
+    else
+if( inherits(obj,"lm"   ) ) MM <- model.matrix( formula(obj)[-2],    data=nd )
+return( MM )
     }
 
 ci.dfr <-
@@ -118,33 +126,9 @@ if( inherits( ctr.mat, "list" ) )
 # First extract all the coefficients and the variance-covariance matrix
 cf  <- COEF( obj )
 vcv <- VCOV( obj )
-# Workaround to expand the vcov matrix with 0s so that it matches
-# the coefficients vector in case of (extrinsic) aliasing.
-if( any( is.na( cf ) ) )
-  {
-  if( inherits( obj, c("coxph") ) )
-    { # aliased parameters are only NAs in coef, but omitted from vcov
-    wh <- !is.na(cf)
-    cf <- cf[wh]
-    # vcv <- vcv[wh,wh]
-    }
-  else
-    {  
-  if( inherits( obj, c("clogistic") ) )
-    {
-    cf[is.na(cf)] <- 0
-    }
-  else
-    {
-    vM <- matrix( 0, length( cf ), length( cf ) )
-    dimnames( vM ) <- list( names( cf ), names( cf ) )
-    vM[!is.na(cf),!is.na(cf)] <- vcv
-    # vM <- vcv
-    cf[is.na(cf)] <- 0
-    vcv <- vM
-    }
-    }
-  }
+# Alised parameters are set to 0
+if( any( is.na(  cf ) ) )  cf[is.na(cf )] <- 0
+if( any( is.na( vcv ) ) ) vcv[is.na(vcv)] <- 0
 
 # Function for computing a contrast matrix for all possible
 # differences between a set of parameters.
@@ -184,11 +168,10 @@ cm[cbind(1:nr,ctr[,1])] <- 1
 cm[cbind(1:nr,ctr[,2])] <- -1
 rownames( cm ) <- rn
 cm
-# end of the function all.dif for all differences 
 }
+# end of the function all.dif for all differences 
 
 # Were all differences requested?
-#
 if( diffs )
   {
   if( is.character( subset ) )

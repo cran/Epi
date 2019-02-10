@@ -139,11 +139,14 @@ function( set, breaks, lags, lag.dec )
   #    indicator being off drug (set$off) and
   # the date a person goes off drug, doff (set to NA for remaining records)
   # with b) the break dates (which is where we want things computed)
-  # Note we merge on the variable dof.
-  dfr <-  merge( data.frame( set[,c("id","dof","off")],
-                             doff = ifelse(set$off,set$dof,NA) ),
-                 data.frame( id = set$id[1],
+  # Note we merge on the variable dof and have the data frame with
+  # dof=xval as the >first< so that values of xval will be in the
+  # resulting dfr$dof even if dof-values in set are almost equal til
+  # an xval value. Ensures that sum(dfr$dof %in% xval)==length(xval)   
+  dfr <-  merge( data.frame( id = set$id[1],
                             dof = xval ),
+                 data.frame( set[,c("id","dof","off")],
+                             doff = ifelse(set$off,set$dof,NA) ),
                  all=TRUE )
   # carry the off drug indicator forward to all break dates
   dfr$off <- zoo::na.locf( dfr$off, na.rm=FALSE )
@@ -157,6 +160,7 @@ function( set, breaks, lags, lag.dec )
   dfr$tfi  <- pmax( 0, dfr$dof-doi )
   # restrict to the desired timepoints
   dfr <- subset( dfr, dof %in% xval )
+  dfr <- dfr[!duplicated(dfr$dof),]
   # linear interpolation of the cumulative dose and time from the
   # purchase data (set)
   dfr$cdos <- approx( set$dof, set$cum.amt, xout=xval, rule=2 )$y

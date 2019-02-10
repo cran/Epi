@@ -57,7 +57,7 @@ poisreg(link = "log")
   ## age and sex
   data(DMepi)
   DMepi$agegrp <- cut(DMepi$A, seq(from=0, to=100, by=5))
-  inc.diab <- glm(cbind(X, Y.nD) ~ 0 + agegrp + sex, family=poisreg,
+  inc.diab <- glm(cbind(X, Y.nD) ~ -1 + agegrp + sex, family=poisreg,
                   data=DMepi)
   ## The coefficients for agegrp are log incidence rates for men in each
   ## age group. The coefficient for sex is the log of the female:male
@@ -70,9 +70,11 @@ poisreg(link = "log")
   gam.diab <- gam( cbind(X, Y.nD) ~ s(A,by=sex) + sex,
                    family=poisreg,
                    data=DMepi)
+
   ## There is no need/use for Y.nD in prediction data frames:
   nM <- data.frame( A=20:90, sex="M" )
   nF <- data.frame( A=20:90, sex="F" )
+
   ## Rates are returned in units of (1 year)^-1, so we must scale the
   ## rates by hand: 
   matshade( nM$A, cbind( ci.pred(gam.diab,     nM    )*1000,

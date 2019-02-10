@@ -196,7 +196,7 @@ if( is.numeric(show.Y) )
 # Compute the rates - vectors are automatically expanded to matrices columnwise
 R <- D / Y * ifelse(scale.R,scale.R,1)
 
-# If no person-years available anywhere, they or rates cannot be shown
+# If no person-years available anywhere, neither they nor rates can be shown
 if( all(is.na(Y)) ) show.Y <- show.R <- FALSE
 
 # Derive state names, no. states and no. transitions
@@ -235,9 +235,9 @@ subset <- sbst
 
 # Recycling of box-arguments
 if( !missing(ht) )
-if( length(ht         )<n.st ) ht         <- rep(ht        ,n.st)[1:n.st]
+if(   length(ht       )<n.st ) ht         <- rep(ht        ,n.st)[1:n.st]
 if( !missing(wd) )
-if( length(wd         )<n.st ) wd         <- rep(wd        ,n.st)[1:n.st]
+if(   length(wd       )<n.st ) wd         <- rep(wd        ,n.st)[1:n.st]
 if( length(font       )<n.st ) font       <- rep(font      ,n.st)[1:n.st]
 if( length(lwd        )<n.st ) lwd        <- rep(lwd       ,n.st)[1:n.st]
 if( length(col.border )<n.st ) col.border <- rep(col.border,n.st)[1:n.st]
@@ -286,7 +286,7 @@ if( is.logical(boxpos) )
   xx <- cos( ang ) * 35 + 50
   yy <- sin( ang ) * 35 + 50
   }
-else
+  else
   {
   xx <- yy <- numeric(n.st)
   for( i in subset )

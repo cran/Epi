@@ -5,9 +5,9 @@
 \alias{factorize}
 \alias{factorize.Lexis}
 \alias{levels.Lexis}
-\alias{order.Lexis}
-\alias{sort.Lexis}
-\title{Transform a Lexis (or stacked.Lexis) objects}
+% \alias{order.Lexis}
+% \alias{sort.Lexis}
+\title{Transform a Lexis (or stacked.Lexis) object}
 \description{
   Modify a Lexis object.
 }
@@ -16,9 +16,9 @@
 \method{Relevel}{Lexis}( x, states, print = TRUE, \dots )
 \method{levels}{Lexis}( x )
 \method{factorize}{Lexis}( x, states, print = TRUE, \dots )
-%\method{order}{Lexis}( x, \dots )
-%\method{sort}{Lexis}( x, \dots )
 \method{transform}{stacked.Lexis}( `_data`, \dots)
+% order.Lexis( x, \dots )
+%  sort.Lexis( x, \dots )
 }
 \arguments{
   \item{_data}{an object of class \code{Lexis}.}
@@ -29,7 +29,8 @@
     sanity check for the latter operation is undertaken.}
   \item{print}{Should a conversion between old and new levels be printed?}
   \item{\dots}{Additional arguments to be passed to
-    \code{\link{transform.data.frame}} or \code{\link{Relevel}}.}
+    \code{\link{transform.data.frame}}, \code{\link{Relevel}}
+    \code{order} or \code{sort}.}
 }
 \details{
   The transform method for \code{Lexis} objects works exactly as the
@@ -58,7 +59,7 @@
 %  it by (\code{lex.id},\code{timeScales[x]}).
 
 %  \code{sort} returns the Lexis object sorted by
-%  (\code{lex.id},\code{timeScales[x]}). 
+%  (\code{lex.id},\code{timeScales[x]}).  
 }
 \value{
   A transformed \code{Lexis} object.
@@ -71,7 +72,9 @@
          \code{\link{merge.Lexis}},
          \code{\link{subset.Lexis}},
          \code{\link{subset.stacked.Lexis}},
-         \code{\link{Relevel}}}
+         \code{\link{Relevel}},
+         \code{\link{transient}},
+         \code{\link{absorbing}}}
 \examples{
 data( nickel )
 nic <- Lexis( data = nickel,

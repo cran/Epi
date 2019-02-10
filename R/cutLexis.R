@@ -139,7 +139,7 @@ cutLexis <- function(data,
                      new.scale = FALSE,
                      split.states = FALSE,
                      progressive = FALSE,
-                     precursor.states = NULL,
+                     precursor.states = NULL, #transient(data),
                      count = FALSE)
 {
     if (!inherits(data, "Lexis"))

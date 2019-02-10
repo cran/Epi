@@ -21,7 +21,8 @@ else
 bootLexis <-
 function( Lx,
         size = NULL,
-          by = NULL )
+          by = NULL,
+     replace = TRUE )
 {
 if( !inherits( Lx, "Lexis" ) ) stop("Only meaningful for Lexis objects.")
     
@@ -32,7 +33,7 @@ if( isDT ) class( Lx ) <- c("Lexis","data.frame")
 if( is.null( size ) ) size <- nid.Lexis( Lx, by = by )
 
 # allowing for a length 1 x-vector
-REsample <- function(x,sz) x[sample.int(length(x),size=sz,replace=TRUE)]
+REsample <- function(x,sz) x[sample.int(length(x),size=sz,replace=replace)]
     
 if( is.null(by) ) { # Simple bootstrap
   bLx <- subid.Lexis( Lx, REsample( unique(Lx$lex.id), size ) )

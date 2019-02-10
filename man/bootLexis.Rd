@@ -14,7 +14,7 @@ bootstrap sample.
 \usage{
 nid( Lx, \dots )
 \method{nid}{Lexis}( Lx, by=NULL, \dots )
-bootLexis( Lx, size = NULL, by = NULL )
+bootLexis( Lx, size = NULL, by = NULL, replace=TRUE )
 }
 \arguments{
   \item{Lx}{A \code{Lexis} object.}
@@ -23,8 +23,8 @@ bootLexis( Lx, size = NULL, by = NULL )
     \code{Lexis} object. Defaults to the number of persons in the
     \code{Lx}, or, if \code{by} is given, to the number of persons in
     each level of \code{by}. If by is given \code{size} can have length
-    \code{nid(Lx)}, to indicate how many are sampled from each level of
-      \code{by}.} 
+    \code{lebgth(unique(by))}, to indicate how many are sampled from
+    each level of \code{by}.}  
   \item{by}{Character. Name of a variable (converted to factor) in the
     \code{Lexis} object.
 
@@ -32,7 +32,10 @@ bootLexis( Lx, size = NULL, by = NULL )
 
     Calculation of the number of persons (\code{lex.id}) is done within
     each level of \code{by}, and a vector returned.
-    }
+  }
+  \item{replace}{Should persons be sampled by replacement? Setting
+    \code{replace} to \code{FALSE} enables selecting a random subset of
+    persons from the Lexis object.}
 }
 \value{
   A Lexis object of the same structure as the input, with \emph{persons}
@@ -43,7 +46,7 @@ bootLexis( Lx, size = NULL, by = NULL )
   \code{by}. If \code{by} is given, a named vector is returned.
 }
 \author{Bendix Carstensen, \url{BendixCarstensen.com}.}
-\seealso{\code{\link{Relevel.Lexis}}}
+\seealso{\code{\link{Relevel.Lexis}},\code{\link{subset.Lexis}}}
 \examples{
 # A small bogus cohort
 xcoh <- data.frame( id = c("A", "B", "C"),

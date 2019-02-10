@@ -80,6 +80,8 @@ effx(bweight,exposure=hyp,data=births)
 effx(bweight,exposure=hyp,strata=sex,data=births)
 # effect of hypertension on birth weight controlled for sex
 effx(bweight,exposure=hyp,control=sex,data=births)
+
+print( options('na.action') )
 # effect of gestation time on birth weight
 effx(bweight,exposure=gestwks,data=births)
 # effect of gestation time on birth weight stratified by sex

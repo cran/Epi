@@ -1,13 +1,36 @@
+Changes in 2.34
+
+o cleanup of ci.lin to exploit the (post 3.5.0) behaviour of coef/vcov
+  which are now in sync
+
+o apc.fit nomenclature for drift extraction has been changed from
+  "weighted" to "Y" in concert with BxCs recent paper.
+
+Changes in 2.33
+
+o Fixed bug in gen.exp causing a crash when purchase dates were
+  indestinguishable from FU-dates by match() but not by %in%.  
+
+o Previously, apc.fit with dist="bin" returned odds in the Age
+  component. Now returns probabilities.
+
+o Argument names and -order have been changed for glm.Lexis, gam.Lexis
+  and coxph.Lexis, they are now x, from, to and formula.
+
+o Utility functions to describe state characteristics and
+  relationships have been added: absorbing(), transient(),
+  preceding(), succeeding(), before() and after()
+
 Changes in 2.32
 
 o gen.exp: time since drug cessation was only computed for latest
   cessation, not for intermittent ones. Rectified and expanded set of
-  result variables keeping track of patients' status are added.
+  result variables that keep track of patients' status are added.
 
   gen.exp also gains an argument, rm.dose, indicating whether doses
   purchased should be counted if time-allocation of purchases are
   limited by the push.max argument. Several disjoint FU-periods for
-  persone are now allowed.
+  persons are now allowed.
 
 o The changed functionality of vcov() returning 0s for aliased
   parameters (instead of omitting them) is now used and hence ci.lin

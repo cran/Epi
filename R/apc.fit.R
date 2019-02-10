@@ -8,7 +8,7 @@ function( data,
          ref.p,
            dist = c("poisson","binomial"),
           model = c("ns","bs","ls","factor"),
-        dr.extr = "weighted",
+        dr.extr = "Y",
            parm = c("ACP","APC","AdCP","AdPC","Ad-P-C","Ad-C-P","AC-P","AP-C"),
            npar = c( A=5, P=5, C=5 ),
           scale = 1,
@@ -49,51 +49,36 @@ else
       stop( "\nLengths of variables (", paste(paste(names(lv),
             lv, sep = ":"), collapse = ", "), ") are not the same." )
   }
+
+# Utility to compute where the median amount y is on the x scale
 med <-
 function(x, y)
 {
-# Computes where the median number of ys is on the x scale
 o <- order(x)
 a <- y[o]
 names(a) <- x[o]
 return( as.numeric(names(a[cumsum(a)/sum(a) > 0.5][1])) )
 }
-p0 <- ifelse(missing(ref.p), med(P, D), ref.p)
-c0 <- ifelse(missing(ref.c), med(P - A, D), ref.c)
-ref.p <- !missing(ref.p)
-ref.c <- !missing(ref.c)
+# Set the reference points on the period and cohort scales
+p0 <- ifelse( ref.p<-!missing( ref.p ), ref.p, med(P  , D) )
+c0 <- ifelse( ref.c<-!missing( ref.c ), ref.c, med(P-A, D) )
+
+# Number of parameters in the spline modeling 
 if( is.list(npar) & length(npar)<3 )
-  stop("npar as a list should have length 3! \n")
+  stop("npar as a list - should have length 3! \n")
 if( !is.list(npar) & length(npar)!=3 )
   {
   npar <- rep(npar, 3)[1:3]
   names(npar) = c("A","P","C")
-  cat("NOTE: npar is specified as:")
-  print( npar )
+  cat("NOTE: npar is specified as:\n") ; print( npar )
   }
+
 if( is.null(names(npar)) ) names(npar) <- c("A", "P", "C")
-lu <- paste(formatC(c(alpha/2, 1 - alpha/2) * 100, format = "f",
-    digits = 1), "%", sep = "")
-proj.ip <- function(X, M, orth = FALSE, weight = rep(1, nrow(X))) {
-    if (nrow(X) != length(weight))
-        stop("Dimension of space and length of i.p. weights differ!")
-    if (nrow(X) != nrow(M))
-        stop("Dimension of space and rownumber of model matrix differ!")
-    Pp <- solve(crossprod(X * sqrt(weight)), t(X * weight)) %*%
-        M
-    PM <- X %*% Pp
-    if (orth)
-        PM <- M - PM
-    else PM
-}
-Thin.col <- function(X, tol = 1e-06) {
-    QR <- qr(X, tol = tol, LAPACK = FALSE)
-    X[, QR$pivot[seq(length = QR$rank)], drop = FALSE]
-}
-detrend <- function(M, t, weight = rep(1, nrow(M))) {
-    Thin.col(proj.ip(cbind(1, t), M, orth = TRUE, weight = weight))
-}
-if (is.list(model)) {
+# Labeling of confidence intervals
+lu <- paste(formatC( c(alpha/2, 1 - alpha/2) * 100,
+                     format = "f", digits = 1), "%", sep = "")
+
+if( is.list(model) ) {
     if (!all(sapply(model, is.function)))
         stop("'model' is a list, but not all elements are functions as they should be.")
     if ((lmod <- length(model)) < 3)
@@ -102,7 +87,7 @@ if (is.list(model)) {
         names(model) <- c("A", "P", "C")
     MA <- model[["A"]](A)
     MP <- model[["P"]](P)
-    MC <- model[["C"]](P - A)
+    MC <- model[["C"]](P-A)
     Rp <- model[["P"]](p0)
     Rc <- model[["C"]](c0)
 }
@@ -172,7 +157,8 @@ if (tolower(substr(dist, 1, 2)) == "po") {
         family = poisson)
     Dist <- "Poisson with log(Y) offset"
 }
-if (tolower(substr(dist, 1, 3)) %in% c("bin")) {
+is.bin <- FALSE
+if (is.bin <- tolower(substr(dist, 1, 3)) %in% c("bin")) {
     m.APC <- glm(cbind(D, Y - D) ~ MA + I(P - p0) + MP +
         MC, family = binomial)
     Dist <- "Binomial regression (logistic) of D/Y"
@@ -193,8 +179,11 @@ P.pos <- match(P.pt, P)
 C.pt <- unique(P - A)
 C.pos <- match(C.pt, P - A)
 MA <- cbind(1, MA)
+
+# Determine the inner product (diagonal) for projection
 if (!mode(dr.extr) %in% c("character", "numeric"))
     stop("\"dr.extr\" must be of mode \"character\" or \"numeric\".\n")
+
 if (is.character(dr.extr))
    { 
    wt <- rep(1, length(D) )
@@ -211,13 +200,21 @@ if (is.character(dr.extr))
    if( dr.extr %in% names(data) )
      { wt <- data[,dr.extr]
        drtyp <- paste( dr.extr, "weights" ) }
-   }            
-if ( is.numeric(dr.extr) ) wt <- dr.extr
+   } 
+if ( is.numeric(dr.extr) )
+   {
+   if( length(dr.extr)==1 )
+     { wt <- D + dr.extr*Y
+       drtyp <- paste("D+",dr.extr,"*Y weights",sep="") }
+   if( length(dr.extr)==nrow(data) )
+     { wt <- dr.extr
+       drtyp <- "extn-weights" }
+   }
 Rp <- matrix(Rp, nrow = 1)
 Rc <- matrix(Rc, nrow = 1)
-xP <- detrend(rbind(Rp, MP), c(p0, P), weight = c(0, wt))
-xC <- detrend(rbind(Rc, MC), c(c0, P - A), weight = c(0,
-    wt))
+xP <- Epi::detrend(rbind(Rp, MP), c(p0, P  ), weight = c(0, wt))
+xC <- Epi::detrend(rbind(Rc, MC), c(c0, P-A), weight = c(0, wt))
+ 
 MPr <- xP[-1,,drop=FALSE] - ref.p * xP[rep(1, nrow(MP)),,drop=FALSE]
 MCr <- xC[-1,,drop=FALSE] - ref.c * xC[rep(1, nrow(MC)),,drop=FALSE]
 if (length(grep("-", parm)) == 0) {
@@ -297,6 +294,10 @@ else {
     colnames(Coh)[-1] <- c("C.eff", lu)
     Type <- paste("Sequential modelling", Dist, ": (", parm, "):\n")
 }
+# If the model was binomial we convert to probabilities
+o2p <- function(o) o/(1+o)
+if( is.bin ) Age[,-1] <- o2p(Age[,-1]) 
+
 res <- list(Type = Type,
            Model = Model,
              Age = Age,

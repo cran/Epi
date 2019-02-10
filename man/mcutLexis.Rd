@@ -43,9 +43,9 @@ mcutLexis( L0, timescale = 1, wh,
     not accept that two events occur at the same time for a person
     (ties). If \code{TRUE} a random quantity in the range
     \code{c(-1,1)/100} will be added to all event times in all records
-    with at least one tie. If numeric a random quantity in the range
-    \code{c(-1,1)*ties.resolve} will be added to all event times in all
-    records with at least one tie.}
+    with at least one tie. If \code{ties.resolve} is numeric a random
+    quantity in the range \code{c(-1,1)*ties.resolve} will be added to
+    all event times in all records with at least one tie.}
 }
 \value{A \code{\link{Lexis}} object with extra states created by
   occurrence of a number of intermediate events.

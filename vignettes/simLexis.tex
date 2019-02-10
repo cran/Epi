@@ -1,5 +1,4 @@
 
-
 %\VignetteIndexEntry{Simulation of multistate models with multiple timescales: simLexis}
 \documentclass[a4paper,twoside,12pt]{report}
 
@@ -8,11 +7,11 @@
 \newcommand{\Tit}{Multistate models with multiple timescales}
 \newcommand{\Version}{Version 2.4}
 \newcommand{\Dates}{\today}
-\newcommand{\Where}{SDC}
+\newcommand{\Where}{SDCC}
 \newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi/simLexis.pdf}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
-  & Steno Diabetes Center, Gentofte, Denmark\\
+  & Steno Diabetes Center Copenhagen, Gentofte, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
@@ -94,8 +93,15 @@ one(s) of the timescales that are defined as time since entry into a
 particular state. Hence, starting conditions should be represented as
 a \texttt{Lexis} object (where \texttt{lex.dur} and \texttt{lex.Xst}
 are ignored, since there is no follow-up yet), where the time scale
-information is in the attributes \texttt{time.scale} and
-\texttt{time.since} respectively.
+information is in the attributes \texttt{time.scales} and
+\texttt{time.since} respectively. 
+
+Note that \texttt{time.scales} attribute is a vector of names of
+variables in the \texttt{Lexis} object, so all of these variables
+should be present even if they are not used in the models for the
+transitions, and they should be set to 0; if they are not in the
+initial dataset, \texttt{simLexis} will crash, if they are
+\texttt{NA}, the \texttt{simLexis} will produce an object with 0 rows.
 
 Thus there are two main arguments to a function to simulate from a
 multistate model:
@@ -167,13 +173,14 @@ attached base packages:
 [1] utils     datasets  graphics  grDevices stats     methods   base     
 
 other attached packages:
-[1] Epi_2.29
+[1] Epi_2.33
 
 loaded via a namespace (and not attached):
- [1] cmprsk_2.2-7      zoo_1.8-0         MASS_7.3-49       compiler_3.4.4   
- [5] Matrix_1.2-14     plyr_1.8.4        parallel_3.4.4    survival_2.42-3  
- [9] etm_1.0.1         Rcpp_0.12.12      splines_3.4.4     grid_3.4.4       
-[13] data.table_1.10.4 numDeriv_2016.8-1 lattice_0.20-35  
+ [1] Rcpp_0.12.12      lattice_0.20-35   zoo_1.8-0         MASS_7.3-50      
+ [5] grid_3.4.4        plyr_1.8.4        nlme_3.1-137      etm_1.0.1        
+ [9] data.table_1.11.2 Matrix_1.2-14     splines_3.4.4     cmprsk_2.2-7     
+[13] numDeriv_2016.8-1 survival_2.42-6   parallel_3.4.4    compiler_3.4.4   
+[17] mgcv_1.8-24      
 \end{Soutput}
 \end{Schunk}
 First we load the diabetes data and set up a simple illness-death
@@ -375,6 +382,72 @@ specification of the rates:
 +                                   I(Per-2000) + sex,
 +                family=poisson, offset=log(lex.dur),
 +                data = subset(Si,lex.Cst=="DM") )
+> ci.exp( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+                           exp(Est.)       2.5%      97.5%
+(Intercept)               0.88620306 0.78461551 1.00094358
+Ns(Age, knots = ai.kn)1   0.22437549 0.18399810 0.27361348
+Ns(Age, knots = ai.kn)2   0.22501948 0.19013161 0.26630905
+Ns(Age, knots = ai.kn)3   0.02515672 0.02028289 0.03120168
+Ns(Age, knots = ai.kn)4   0.37966591 0.32859388 0.43867585
+Ns(DMdur, knots = di.kn)1 0.10074951 0.07461088 0.13604535
+Ns(DMdur, knots = di.kn)2 0.36196627 0.30490149 0.42971118
+Ns(DMdur, knots = di.kn)3 0.04497516 0.03152148 0.06417101
+Ns(DMdur, knots = di.kn)4 0.82441456 0.67746672 1.00323654
+I(Per - 2000)             0.97540937 0.96239640 0.98859829
+sexF                      0.73305678 0.66474951 0.80838306
+\end{Soutput}
+\begin{Sinput}
+> class( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+[1] "glm" "lm" 
+\end{Soutput}
+\end{Schunk}
+We can also fit this model with a slightly simpler syntax using the
+\texttt{glm.Lexis} function:
+\begin{Schunk}
+\begin{Sinput}
+> DM.Ins <- glm.Lexis( Si, from = "DM",
++                            to = "Ins",
++                       formula = ~ Ns( Age  , knots=ai.kn ) +
++                                   Ns( DMdur, knots=di.kn ) +
++                                   I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition DM->Ins
+\end{Soutput}
+\begin{Sinput}
+> ci.exp( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+                           exp(Est.)       2.5%      97.5%
+(Intercept)               0.88620306 0.78461560 1.00094347
+Ns(Age, knots = ai.kn)1   0.22437549 0.18399811 0.27361346
+Ns(Age, knots = ai.kn)2   0.22501948 0.19013161 0.26630904
+Ns(Age, knots = ai.kn)3   0.02515672 0.02028290 0.03120168
+Ns(Age, knots = ai.kn)4   0.37966591 0.32859389 0.43867585
+Ns(DMdur, knots = di.kn)1 0.10074951 0.07461084 0.13604543
+Ns(DMdur, knots = di.kn)2 0.36196627 0.30490144 0.42971125
+Ns(DMdur, knots = di.kn)3 0.04497516 0.03152145 0.06417106
+Ns(DMdur, knots = di.kn)4 0.82441456 0.67746634 1.00323710
+I(Per - 2000)             0.97540937 0.96239641 0.98859829
+sexF                      0.73305678 0.66474952 0.80838305
+\end{Soutput}
+\begin{Sinput}
+> class( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+[1] "glm.lex" "glm"     "lm"     
+\end{Soutput}
+\end{Schunk}
+So we have a slightly simpler syntax, and we get an informative
+message of which transition(s) we are modeling. However we do not have
+\texttt{update} method for these objects.
+\begin{Schunk}
+\begin{Sinput}
 > DM.Dead <- glm( (lex.Xst=="Dead") ~ Ns( Age  , knots=ad.kn ) +
 +                                     Ns( DMdur, knots=dd.kn ) +
 +                                     I(Per-2000) + sex,
@@ -386,7 +459,27 @@ specification of the rates:
 +                                           I(Per-2000) + sex,
 +                family=poisson, offset=log(lex.dur),
 +                data = subset(Si,lex.Cst=="Ins") )
+> DM.Dead <- glm.Lexis( Si, from = "DM",
++                             to = "Dead",
++                        formula = ~ Ns( Age  , knots=ad.kn ) +
++                                    Ns( DMdur, knots=dd.kn ) +
++                                    I(Per-2000) + sex )
 \end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition DM->Dead
+\end{Soutput}
+\begin{Sinput}
+> Ins.Dead <- glm.Lexis( Si, from = "Ins",
++                         formula = ~ Ns( Age  , knots=ad.kn ) +
++                                     Ns( DMdur, knots=dd.kn ) +
++                                     Ns( t.Ins, knots=ti.kn ) +
++                                     I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition Ins->Dead(Ins)
+\end{Soutput}
 \end{Schunk}
 Note the similarity of the code used to fit the three models, is is
 mainly redefining the response variable (``to'' state) and the subset
@@ -425,6 +518,38 @@ lex.Cst
 +                  I(Per-2000) + sex,
 +                  family=poisson, offset=log(lex.dur),
 +                  data = Si )
+> round( ci.exp( All.Dead ), 3 )
+\end{Sinput}
+\begin{Soutput}
+                          exp(Est.)   2.5%  97.5%
+(Intercept)                   0.049  0.043  0.056
+Ns(Age, knots = ad.kn)1       4.120  3.479  4.879
+Ns(Age, knots = ad.kn)2       4.652  4.054  5.338
+Ns(Age, knots = ad.kn)3      15.460 13.575 17.608
+Ns(Age, knots = ad.kn)4       7.529  6.711  8.447
+Ns(DMdur, knots = dd.kn)1     0.520  0.429  0.629
+Ns(DMdur, knots = dd.kn)2     0.707  0.622  0.803
+Ns(DMdur, knots = dd.kn)3     0.319  0.238  0.428
+Ns(DMdur, knots = dd.kn)4     0.829  0.742  0.926
+lex.CstIns                    2.168  1.946  2.414
+I(Per - 2000)                 0.965  0.954  0.977
+sexF                          0.665  0.614  0.720
+\end{Soutput}
+\end{Schunk}
+Alternatively we may use the \texttt{glm.Lexis} function:
+\begin{Schunk}
+\begin{Sinput}
+> All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
++                       formula = ~ Ns( Age  , knots=ad.kn ) +
++                                   Ns( DMdur, knots=dd.kn ) +
++                                   lex.Cst +
++                                   I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for transitions Ins->Dead(Ins), DM->Dead
+\end{Soutput}
+\begin{Sinput}
 > round( ci.exp( All.Dead ), 3 )
 \end{Sinput}
 \begin{Soutput}
@@ -575,7 +700,7 @@ function (obj, newdata, Exp = NULL, alpha = 0.05)
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
-So set up the prediction data frame and modify it in loops over
+So we set up the prediction data frame and modify it in loops over
 ages at onset and insulin onset. Note that we set \texttt{lex.dur} to
 1000 in the prediction frame, so that we obtain rates in units of
 events per 1000 PY.
@@ -807,7 +932,7 @@ the user.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 19.076   2.634  20.723 
+ 20.861   2.207  21.986 
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{Lexis} object --- a data frame representing
@@ -823,19 +948,19 @@ $M
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  1431 2059 1510         0      5000     3569   36693.61      5000
-  Ins    0 1410    0       649      2059      649   10931.47      2059
-  Sum 1431 3469 1510       649      7059     4218   47625.08      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM   0 2991 2009         0      5000     5000    7521.59      5000
+  Ins  0   31    0      2960      2991     2960    6639.28      2991
+  Sum  0 3022 2009      2960      7991     7960   14160.88      5000
 
 $F
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  2171 1697 1132         0      5000     2829   42283.74      5000
-  Ins    0 1360    0       337      1697      337    9541.50      1697
-  Sum 2171 3057 1132       337      6697     3166   51825.24      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM   4 3032 1964         0      5000     4996   10562.52      5000
+  Ins  0  209    0      2823      3032     2823   10034.48      3032
+  Sum  4 3241 1964      2823      8032     7819   20596.99      5000
 \end{Soutput}
 \end{Schunk}
 
@@ -864,7 +989,7 @@ transition object:
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 18.898   3.572  21.412 
+ 20.163   1.906  20.988 
 \end{Soutput}
 \begin{Sinput}
 > summary( simP, by="sex" )
@@ -874,19 +999,19 @@ $M
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  1637 2076 1287         0      5000     3363   37695.03      5000
-  Ins    0 1209    0       867      2076      867   10129.68      2076
-  Sum 1637 3285 1287       867      7076     4230   47824.71      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM   0 3019 1981         0      5000     5000    7689.36      5000
+  Ins  0    5    0      3014      3019     3014    5064.94      3019
+  Sum  0 3024 1981      3014      8019     8014   12754.30      5000
 
 $F
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  2274 1733  993         0      5000     2726   42968.05      5000
-  Ins    0 1201    0       532      1733      532    8624.01      1733
-  Sum 2274 2934  993       532      6733     3258   51592.05      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM   4 3126 1870         0      5000     4996   10846.01      5000
+  Ins  0   48    0      3078      3126     3078    7282.40      3126
+  Sum  4 3174 1870      3078      8126     8074   18128.41      5000
 \end{Soutput}
 \end{Schunk}
 
@@ -965,7 +1090,7 @@ for different transitions
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 20.321   3.608  22.891 
+ 31.984   1.905  32.834 
 \end{Soutput}
 \begin{Sinput}
 > summary( simC, by="sex" )
@@ -975,19 +1100,19 @@ $M
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  1671 2121 1208         0      5000     3329   37403.75      5000
-  Ins    0 1419    0       702      2121      702   10384.18      2121
-  Sum 1671 3540 1208       702      7121     4031   47787.93      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  13 4605  382         0      5000     4987   11568.30      5000
+  Ins  0 2360    0      2245      4605     2245   31015.73      4605
+  Sum 13 6965  382      2245      9605     7232   42584.02      5000
 
 $F
      
 Transitions:
      To
-From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
-  DM  2272 1807  921         0      5000     2728   42185.28      5000
-  Ins    0 1418    0       389      1807      389    9439.83      1807
-  Sum 2272 3225  921       389      6807     3117   51625.11      5000
+From  DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  61 4579  360         0      5000     4939   15176.73      5000
+  Ins  0 2998    0      1581      4579     1581   32402.21      4579
+  Sum 61 7577  360      1581      9579     6520   47578.94      5000
 \end{Soutput}
 \end{Schunk}
 
@@ -1005,7 +1130,7 @@ equal to the starting time for the simulated individuals.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  0.747   0.000   0.746 
+  0.793   0.000   0.792 
 \end{Soutput}
 \begin{Sinput}
 > nSt[1:10,]
@@ -1014,15 +1139,15 @@ equal to the starting time for the simulated individuals.
         State
 when       DM  Ins Dead Dead(Ins)
   1995   5000    0    0         0
-  1995.2 4933   38   29         0
-  1995.4 4849   87   62         2
-  1995.6 4777  128   89         6
-  1995.8 4709  169  116         6
-  1996   4632  212  148         8
-  1996.2 4549  258  183        10
-  1996.4 4480  292  216        12
-  1996.6 4411  331  240        18
-  1996.8 4340  360  277        23
+  1995.2 4409  332  241        18
+  1995.4 3900  580  450        70
+  1995.6 3445  792  614       149
+  1995.8 3032  956  774       238
+  1996   2629 1099  926       346
+  1996.2 2283 1187 1064       466
+  1996.4 1991 1249 1193       567
+  1996.6 1726 1280 1304       690
+  1996.8 1499 1302 1409       790
 \end{Soutput}
 \end{Schunk}
 We see that as time goes by, the 5000 men slowly move away from the
@@ -1042,11 +1167,11 @@ colorful layout, or a more minimalist version (both in figure \ref{fig:pstate0})
         State
 when         DM    Ins Dead(Ins) Dead
   1995   1.0000 1.0000    1.0000    1
-  1995.2 0.9866 0.9942    0.9942    1
-  1995.4 0.9698 0.9872    0.9876    1
-  1995.6 0.9554 0.9810    0.9822    1
-  1995.8 0.9418 0.9756    0.9768    1
-  1996   0.9264 0.9688    0.9704    1
+  1995.2 0.8818 0.9482    0.9518    1
+  1995.4 0.7800 0.8960    0.9100    1
+  1995.6 0.6890 0.8474    0.8772    1
+  1995.8 0.6064 0.7976    0.8452    1
+  1996   0.5258 0.7456    0.8148    1
 \end{Soutput}
 \begin{Sinput}
 > par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
@@ -1343,7 +1468,7 @@ entry into the ``Ins'' state, and hence:
 \begin{Schunk}
 \begin{Sinput}
 > cbind(
-+ attr( ini, "time.scale" ),
++ attr( ini, "time.scales" ),
 + attr( ini, "time.since" ) )
 \end{Sinput}
 \begin{Soutput}
@@ -1382,63 +1507,100 @@ which is further detailed below.
 > simLexis
 \end{Sinput}
 \begin{Soutput}
-function (Tr, init, N = 1, lex.id, t.range = 20, n.int = 101, 
-    time.pts = seq(0, t.range, length.out = n.int)) 
+function( Tr, # List of lists of transition objects
+        init, # Lexis object of persons to simulate.
+           N = 1, # No. persons simulated per line in init
+      lex.id,
+     t.range = 20, # Range for rate computation in the simulation
+       n.int = 101, # length of time intervals
+    time.pts = seq(0,t.range,length.out=n.int)
+         )
 {
-    if (time.pts[1] != 0) 
-        stop("First time point must be 0, time.pts[1:3]= ", time.pts[1:3])
-    if (!missing(N)) {
-        if (length(N) == 1) 
-            init <- init[rep(1:nrow(init), each = N), ]
-        else init <- init[rep(1:nrow(init), N), ]
-    }
-    if (!missing(lex.id)) {
-        if (length(lex.id) == nrow(init)) 
-            init$lex.id <- lex.id
-        else init$lex.id <- 1:nrow(init)
-    }
-    else init$lex.id <- 1:nrow(init)
-    if (is.null(tS <- attr(init, "time.scales"))) 
-        stop("No time.scales attribute for init")
-    if (is.null(tF <- attr(init, "time.since"))) {
-        attr(init, "time.since") <- tF <- rep("", tS)
-        warning("'time.since' attribute set to blanks")
-    }
-    np <- length(time.pts)
-    tr.st <- names(Tr)
-    sf <- NULL
-    nxt <- init[init$lex.Cst %in% tr.st, ]
-    if (nrow(nxt) < nrow(init)) {
-        tt <- table(init$lex.Cst)
-        tt <- tt[tt > 0]
-        nt <- length(tt)
-        warning("\nSome initiators start in a absorbing state\n", 
-            "Initiator states represented are: ", paste(rbind(names(tt), 
-                rep(":", nt), paste(tt), rep(" ", nt)), collapse = ""), 
-            "\n", "Transient states are: ", paste(names(Tr), 
-                coll = " "))
-        if (nrow(nxt) == 0) 
-            stop("\nNo initiators in transient states!")
-    }
-    while (nrow(nxt) > 0) {
-        nx <- do.call(rbind.data.frame, lapply(split(nxt, nxt$lex.Cst), 
-            simX, Tr, time.pts, tS))
-        sf <- rbind.data.frame(sf, nx)
-        nxt <- get.next(nx, tr.st, tS, tF)
-    }
-    sf$lex.Xst <- factor(sf$lex.Xst, levels = levels(sf$lex.Cst))
-    sf$lex.Xst[is.na(sf$lex.Xst)] <- sf$lex.Cst[is.na(sf$lex.Xst)]
-    nord <- match(c("lex.id", tS, "lex.dur", "lex.Cst", "lex.Xst"), 
-        names(sf))
-    noth <- setdiff(1:ncol(sf), nord)
-    sf <- sf[order(sf$lex.id, sf[, tS[1]]), c(nord, noth)]
-    rownames(sf) <- NULL
-    attr(sf, "time.scales") <- tS
-    attr(sf, "time.since") <- tF
-    chop.lex(sf, tS, max(time.pts))
+# Expand the input data frame using N and put in lex.id
+if( time.pts[1] !=0 )
+    stop( "First time point must be 0, time.pts[1:3]= ",
+          time.pts[1:3] )
+
+# Expand init
+if( !missing(N) )
+  {
+  if( length(N) == 1 )
+       init <- init[rep(1:nrow(init),each=N),]
+  else init <- init[rep(1:nrow(init),     N),]
+  }
+# and update lex.id if necessary
+if( !missing(lex.id) )
+  {
+  if( length(lex.id)==nrow(init) )
+       init$lex.id <- lex.id
+  else init$lex.id <- 1:nrow(init)
+  }
+else   init$lex.id <- 1:nrow(init)
+
+# Check/fix attributes
+if( is.null( tS <- attr(init,"time.scales") ) )
+  stop( "No time.scales attribute for init" )
+if( is.null( tF <- attr(init,"time.since") ) )
+  {
+  attr(init,"time.since") <- tF <- rep( "", tS )
+  warning( "'time.since' attribute set to blanks" )
+  }
+
+# Convenience constants
+np <- length( time.pts )
+tr.st <- names( Tr )
+
+# Set up a NULL object to hold the follow-up records
+sf <- NULL
+
+# Take as initiators only those who start in a transient state
+nxt <- init[init$lex.Cst %in% tr.st,]
+
+# If some are not in a transient state then say so
+if( nrow(nxt) < nrow(init) )
+  {
+  tt <- table(init$lex.Cst)
+  tt <- tt[tt>0]
+  nt <- length(tt)
+  warning("\nSome initiators start in a absorbing state\n",
+          "Initiator states represented are: ",
+          paste( rbind( names(tt), rep(":",nt),
+                        paste(tt), rep(" ",nt) ), collapse="" ), "\n",
+          "Transient states are: ", paste( names( Tr ), coll=" " ) )
+  if( nrow(nxt)==0 ) stop( "\nNo initiators in transient states!" )
+  }
+
+# Then we update those who are in a transient states and keep on doing
+# that till all are in absorbing states or censored
+while( nrow(nxt) > 0 )
+{
+nx <- do.call( rbind.data.frame,
+               lapply( split( nxt,
+                              nxt$lex.Cst ),
+                       simX,
+                       Tr, time.pts, tS ) )
+sf <- rbind.data.frame( sf, nx )
+nxt <- get.next( nx, tr.st, tS, tF )
 }
-<bytecode: 0x35b51b08>
-<environment: namespace:Epi>
+
+# Doctor lex.Xst levels, fix values for the censored
+sf$lex.Xst <- factor( sf$lex.Xst, levels=levels(sf$lex.Cst) )
+sf$lex.Xst[is.na(sf$lex.Xst)] <- sf$lex.Cst[is.na(sf$lex.Xst)]
+
+# Nicely order the output by persons, then times and states
+nord <- match( c( "lex.id", tS,
+                  "lex.dur",
+                  "lex.Cst",
+                  "lex.Xst" ), names(sf) )
+noth <- setdiff( 1:ncol(sf), nord )
+sf <- sf[order(sf$lex.id,sf[,tS[1]]),c(nord,noth)]
+rownames(sf) <- NULL
+# Finally, supply attributes - note we do not supply the "breaks"
+# attribute as this is irrelevant for simulated objects
+attr( sf, "time.scales" ) <- tS
+attr( sf, "time.since"  ) <- tF
+chop.lex( sf, tS, max(time.pts) )
+}
 \end{Soutput}
 \end{Schunk}
 
@@ -1461,44 +1623,69 @@ The dataset on which this prediction is done has
 > simX
 \end{Sinput}
 \begin{Soutput}
-function (nd, Tr, time.pts, tS) 
+function( nd, Tr, time.pts, tS )
 {
-    np <- length(time.pts)
-    nr <- nrow(nd)
-    if (nr == 0) 
-        return(NULL)
-    cst <- as.character(unique(nd$lex.Cst))
-    if (length(cst) > 1) 
-        stop("More than one lex.Cst present:\n", cst, "\n")
-    prfrm <- nd[rep(1:nr, each = np), ]
-    prfrm[, tS] <- prfrm[, tS] + rep(time.pts, nr)
-    prfrm$lex.dur <- il <- min(diff(time.pts))
-    prfrp <- prfrm
-    prfrp[, tS] <- prfrp[, tS] + il/2
-    rt <- data.frame(lex.id = prfrm$lex.id)
-    for (i in 1:length(Tr[[cst]])) {
-        if (inherits(Tr[[cst]][[i]], "glm")) 
-            rt <- cbind(rt, predict(Tr[[cst]][[i]], type = "response", 
-                newdata = prfrp))
-        else if (inherits(Tr[[cst]][[i]], "coxph")) 
-            rt <- cbind(rt, predict(Tr[[cst]][[i]], type = "expected", 
-                newdata = prfrm))
-        else if (is.function(Tr[[cst]][[i]])) 
-            rt <- cbind(rt, Tr[[cst]][[i]](prfrm))
-        else stop("Invalid object supplied as transition, elements of the list must be either:\n", 
-            "- a glm(poisson) object fitted to a Lexis object\n", 
-            "- a coxph object fitted to a Lexis object\n", "- a function that takes a Lexis object as argument and returns\n", 
-            "  average rates for each record in the same units as lex.dur.")
-    }
-    names(rt)[-1] <- names(Tr[[cst]])
-    xx <- match(c("lex.dur", "lex.Xst"), names(nd))
-    if (any(!is.na(xx))) 
-        nd <- nd[, -xx[!is.na(xx)]]
-    merge(nd, do.call(rbind, lapply(split(rt, rt$lex.id), sim1, 
-        time.pts)), by = "lex.id")
+# Simulation is done from the data frame nd, in chunks of starting
+# state, lex.Cst. This is necessary because different states have
+# different (sets of) exit rates. Therefore, this function simulates
+# for a set of persons from the same starting state.
+np <- length( time.pts )
+nr <- nrow( nd )
+if( nr==0 ) return( NULL )
+
+# The 'as.character' below is necessary because indexing by a factor
+# by default is by the number of the level, and we are not indexing by
+# this, but by components of Tr which just happens to have names that
+# are a subset of the levels of lex.Cst.
+cst <- as.character( unique(nd$lex.Cst) )
+if( length(cst)>1 ) stop( "More than one lex.Cst present:\n", cst, "\n" )
+
+# Expand each person by the time points
+prfrm <- nd[rep(1:nr,each=np),]
+prfrm[,tS] <- prfrm[,tS] + rep(time.pts,nr)
+prfrm$lex.dur <- il <- min( diff(time.pts) )
+# Poisson-models should use the estimated rate at the midpoint of the
+# intervals:
+prfrp <- prfrm
+prfrp[,tS] <- prfrp[,tS]+il/2
+
+# Make a data frame with predicted rates for each of the transitions
+# out of this state for these times
+rt <- data.frame( lex.id = prfrm$lex.id )
+for( i in 1:length(Tr[[cst]]) )
+   {
+   if( inherits( Tr[[cst]][[i]], "glm" ) )
+   rt <- cbind( rt, predict( Tr[[cst]][[i]],
+                             type="response",
+                             newdata=prfrp ) )
+   else
+   if( inherits( Tr[[cst]][[i]], "coxph" ) )
+   rt <- cbind( rt, predict( Tr[[cst]][[i]],
+                             type="expected",
+                             newdata=prfrm ) )
+   else
+   if( is.function( Tr[[cst]][[i]] ) )
+   rt <- cbind( rt, Tr[[cst]][[i]](prfrm) )
+   else
+   stop( "Invalid object supplied as transition, elements of the list must be either:\n",
+         "- a glm(poisson) object fitted to a Lexis object\n",
+         "- a coxph object fitted to a Lexis object\n",
+         "- a function that takes a Lexis object as argument and returns\n",
+         "  average rates for each record in the same units as lex.dur.")
+   }
+names( rt )[-1] <- names( Tr[[cst]] )
+
+# Then find the transition time and exit state for each person:
+xx <- match( c("lex.dur","lex.Xst"), names(nd) )
+if( any(!is.na(xx)) ) nd <- nd[,-xx[!is.na(xx)]]
+merge( nd,
+       do.call( rbind,
+                lapply( split( rt,
+                               rt$lex.id ),
+                        sim1,
+                        time.pts ) ),
+       by="lex.id" )
 }
-<bytecode: 0x1e5f44a8>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 As we see, \texttt{simX} calls \texttt{sim1} which simulates the
@@ -1516,19 +1703,22 @@ appended to the \texttt{nd} data frame. This way we have simulated
 > sim1
 \end{Sinput}
 \begin{Soutput}
-function (rt, time.pts) 
+function( rt, time.pts )
 {
-    ci <- apply(rbind(0, rt[, -1, drop = FALSE]), 2, cumsum)[1:nrow(rt), 
-        , drop = FALSE]
-    tt <- uu <- -log(runif(ncol(ci)))
-    for (i in 1:ncol(ci)) tt[i] <- lint(ci[, i], time.pts, uu[i])
-    data.frame(lex.id = rt[1, 1], lex.dur = min(tt, na.rm = TRUE), 
-        lex.Xst = factor(if (min(tt) < max(time.pts)) 
-            colnames(ci)[tt == min(tt)]
-        else NA))
+# Simulates a single transition time and state based on the data frame
+# rt with columns lex.id and timescales. It is assumed that the coumns
+# in in rt are the id, followed by the set of estimated transition
+# rates to the different states reachable from the current one.
+ci <- apply( rbind(0,rt[,-1,drop=FALSE]), 2, cumsum )[1:nrow(rt),,drop=FALSE]
+tt <- uu <- -log( runif(ncol(ci)) )
+for( i in 1:ncol(ci) ) tt[i] <- lint( ci[,i], time.pts, uu[i] )
+# Note this resulting data frame has 1 row and is NOT a Lexis object
+data.frame( lex.id  = rt[1,1],
+            lex.dur = min(tt,na.rm=TRUE),
+            lex.Xst = factor( if( min(tt) < max(time.pts) )
+                                  colnames(ci)[tt==min(tt)]
+                              else NA ) )
 }
-<bytecode: 0x8fc7c40>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 The \texttt{sim1} function uses \texttt{lint} to do linear interpolation.
@@ -1546,19 +1736,19 @@ exploiting the fact the the \texttt{ci} is non-decreasing and
 > lint
 \end{Sinput}
 \begin{Soutput}
-function (ci, tt, u) 
+function( ci, tt, u )
 {
-    if (any(diff(ci) < 0) | any(diff(tt) < 0)) 
-        stop("Non-icreasing arguments")
-    c.u <- min(c(ci[ci > u], max(ci)))
-    c.l <- max(c(ci[ci < u], min(ci)))
-    t.u <- min(c(tt[ci > u], max(tt)))
-    t.l <- max(c(tt[ci < u], min(tt)))
-    ifelse(c.u == c.l, t.l, t.l + (u - c.l)/(c.u - c.l) * (t.u - 
-        t.l))
+# Makes a linear interpolation, but does not crash if all ci values are
+# identical, but requires that both ci and tt are non-decreasing.
+# ci plays the role of cumulative intensity, tt of time
+if( any( diff(ci)<0 ) | any( diff(tt)<0 ) ) stop("Non-icreasing arguments")
+c.u <- min( c( ci[ci>u], max(ci) ) )
+c.l <- max( c( ci[ci<u], min(ci) ) )
+t.u <- min( c( tt[ci>u], max(tt) ) )
+t.l <- max( c( tt[ci<u], min(tt) ) )
+# c.u==c.l if u is outside the range of ci
+ifelse( c.u==c.l, t.l, t.l + (u-c.l)/(c.u-c.l)*(t.u-t.l) )
 }
-<bytecode: 0x19df7750>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 
@@ -1574,22 +1764,23 @@ accomplished by the function \texttt{get.next}:
 > get.next
 \end{Sinput}
 \begin{Soutput}
-function (sf, tr.st, tS, tF) 
+function( sf, tr.st, tS, tF )
 {
-    if (nrow(sf) == 0) 
-        return(sf)
-    nxt <- sf[sf$lex.Xst %in% tr.st, ]
-    if (nrow(nxt) == 0) 
-        return(nxt)
-    nxt[, tS] <- nxt[, tS] + nxt$lex.dur
-    wh <- tF
-    for (i in 1:length(wh)) if (wh[i] != "") 
-        nxt[nxt$lex.Xst == wh[i], tS[i]] <- 0
-    nxt$lex.Cst <- nxt$lex.Xst
-    return(nxt)
+# Produces an initial Lexis object for the next simulation for those
+# who have ended up in a transient state.
+# Note that this exploits the existence of the "time.since" attribute
+# for Lexis objects and assumes that a character vector naming the
+# transient states is supplied as argument.
+if( nrow(sf)==0 ) return( sf )
+nxt <- sf[sf$lex.Xst %in% tr.st,]
+if( nrow(nxt) == 0 ) return( nxt )
+nxt[,tS] <- nxt[,tS] + nxt$lex.dur
+wh <- tF
+for( i in 1:length(wh) )
+   if( wh[i] != "" ) nxt[nxt$lex.Xst==wh[i],tS[i]] <- 0
+nxt$lex.Cst <- nxt$lex.Xst
+return( nxt )
 }
-<bytecode: 0x8b7c718>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 
@@ -1604,19 +1795,25 @@ same designated time after \emph{initial} entry.
 > chop.lex
 \end{Sinput}
 \begin{Soutput}
-function (obj, tS, cens) 
+function( obj, tS, cens )
 {
-    zz <- entry(obj, 1, by.id = TRUE)
-    ww <- merge(obj, data.frame(lex.id = as.numeric(names(zz)), 
-        cens = zz + cens))
-    ww <- ww[ww[, tS[1]] < ww$cens, ]
-    x.dur <- pmin(ww$lex.dur, ww[, "cens"] - ww[, tS[1]])
-    ww$lex.Xst[x.dur < ww$lex.dur] <- ww$lex.Cst[x.dur < ww$lex.dur]
-    ww$lex.dur <- pmin(x.dur, ww$lex.dur)
-    ww
+# A function that chops off all follow-up beyond cens since entry for
+# each individual
+# Entry times on 1st timescale
+zz <- entry( obj, 1, by.id=TRUE )
+# Merge with the revised exit times on this timescale
+ww <- merge( obj, data.frame( lex.id = as.numeric(names(zz)),
+                                cens = zz+cens ) )
+# Only retain records with an entry time prior to the revised exit time
+ww <- ww[ww[,tS[1]] < ww$cens,]
+# Revise the duration according the the revised exit time
+x.dur <- pmin( ww$lex.dur, ww[,"cens"]-ww[,tS[1]] )
+# Change lex.Xst to lex.Cst for those with shortened follow-up
+ww$lex.Xst[x.dur<ww$lex.dur] <- ww$lex.Cst[x.dur<ww$lex.dur]
+# Insert the updated follow-yp time
+ww$lex.dur <- pmin( x.dur, ww$lex.dur )
+ww
 }
-<bytecode: 0x15fadac8>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 
@@ -1639,25 +1836,42 @@ of occupants in each state, (\texttt{at}).
 > nState
 \end{Sinput}
 \begin{Soutput}
-function (obj, at, from, time.scale = 1) 
+function ( obj,
+            at,
+          from,
+     time.scale = 1 )
 {
-    tS <- check.time.scale(obj, time.scale)
-    TT <- tmat(obj)
-    absorb <- rownames(TT)[apply(!is.na(TT), 1, sum) == 0]
-    transient <- setdiff(rownames(TT), absorb)
-    tab.frm <- obj[rep(1:nrow(obj), each = length(at)), c(tS, 
-        "lex.dur", "lex.Cst", "lex.Xst")]
-    tab.frm$when <- rep(at, nrow(obj)) + from
-    tab.tr <- tab.frm[tab.frm[, tS] <= tab.frm$when & tab.frm[, 
-        tS] + tab.frm$lex.dur > tab.frm$when, ]
-    tab.tr$State <- tab.tr$lex.Cst
-    tab.ab <- tab.frm[tab.frm[, tS] + tab.frm$lex.dur <= tab.frm$when & 
-        tab.frm$lex.Xst %in% absorb, ]
-    tab.ab$State <- tab.ab$lex.Xst
-    with(rbind(tab.ab, tab.tr), table(when, State))
+# Counts the number of persons in each state of the Lexis object 'obj'
+# at the times 'at' from the time 'from' in the time scale
+# 'time.scale'
+
+# Determine timescales and absorbing and transient states
+tS <- check.time.scale(obj,time.scale)
+TT <- tmat(obj)
+absorb <- rownames(TT)[apply(!is.na(TT),1,sum)==0]
+transient <- setdiff( rownames(TT), absorb )
+
+# Expand each record length(at) times
+tab.frm <- obj[rep(1:nrow(obj),each=length(at)),
+               c(tS,"lex.dur","lex.Cst","lex.Xst")]
+
+# Stick in the corresponding times on the chosen time scale
+tab.frm$when <- rep( at, nrow(obj) ) + from
+
+# For transient states keep records that includes these points in time
+tab.tr <- tab.frm[tab.frm[,tS]                 <= tab.frm$when &
+                  tab.frm[,tS]+tab.frm$lex.dur >  tab.frm$when,]
+tab.tr$State <- tab.tr$lex.Cst
+
+# For absorbing states keep records where follow-up ended before
+tab.ab <- tab.frm[tab.frm[,tS]+tab.frm$lex.dur <= tab.frm$when &
+                  tab.frm$lex.Xst %in% absorb,]
+tab.ab$State <- tab.ab$lex.Xst
+
+# Make a table using the combination of those in transient and
+# absorbing states.
+with( rbind( tab.ab, tab.tr ), table( when, State ) )
 }
-<bytecode: 0x9877de0>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 
@@ -1672,14 +1886,15 @@ of class \texttt{pState}:
 > pState
 \end{Sinput}
 \begin{Soutput}
-function (nSt, perm = 1:ncol(nSt)) 
+function( nSt, perm=1:ncol(nSt) )
 {
-    tt <- t(apply(nSt[, perm], 1, cumsum))
-    tt <- sweep(tt, 1, tt[, ncol(tt)], "/")
-    class(tt) <- c("pState", "matrix")
-    tt
+# Compute cumulative proportions of persons across states in order
+# designate by 'perm'
+tt <- t( apply( nSt[,perm], 1, cumsum ) )
+tt <- sweep( tt, 1, tt[,ncol(tt)], "/" )
+class( tt ) <- c("pState","matrix")
+tt
 }
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 There is also a \texttt{plot} and \texttt{lines} method for the
@@ -1689,34 +1904,48 @@ resulting \texttt{pState} objects:
 > plot.pState
 \end{Sinput}
 \begin{Soutput}
-function (x, col = rainbow(ncol(x)), border = "transparent", 
-    xlab = "Time", ylim = 0:1, ylab = "Probability", ...) 
+function( x,
+        col = rainbow(ncol(x)),
+     border = "transparent",
+       xlab = "Time",
+       ylim = 0:1,
+       ylab = "Probability", ... )
 {
-    matplot(as.numeric(rownames(x)), x, type = "n", ylim = ylim, 
-        yaxs = "i", xaxs = "i", xlab = xlab, ylab = ylab, ...)
-    lines.pState(x, col = col, border = border, ...)
+# Function to plot cumulative probabilities along the time scale.
+matplot( as.numeric(rownames(x)), x, type="n",
+         ylim=ylim, yaxs="i", xaxs="i",
+         xlab=xlab, ylab=ylab, ... )
+lines.pState( x,
+        col = col,
+     border = border, ... )
 }
-<environment: namespace:Epi>
 \end{Soutput}
 \begin{Sinput}
 > lines.pState
 \end{Sinput}
 \begin{Soutput}
-function (x, col = rainbow(ncol(x)), border = "transparent", 
-    ...) 
+function( x,
+        col = rainbow(ncol(x)),
+     border = "transparent", ... )
 {
-    nc <- ncol(x)
-    col <- rep(col, nc)[1:nc]
-    border <- rep(border, nc)[1:nc]
-    pSt <- cbind(0, x)
-    for (i in 2:ncol(pSt)) {
-        polygon(c(as.numeric(rownames(pSt)), rev(as.numeric(rownames(pSt)))), 
-            c(pSt[, i], rev(pSt[, i - 1])), col = col[i - 1], 
-            border = border[i - 1], ...)
-    }
+# Function to plot cumulative probabilities along the time scale.
+
+# Fixing the colors:
+nc <- ncol(x)
+col    <- rep( col   , nc )[1:nc]
+border <- rep( border, nc )[1:nc]
+
+# Just for coding convenience when plotting polygons
+pSt <- cbind( 0, x )
+for( i in 2:ncol(pSt) )
+   {
+   polygon( c(    as.numeric(rownames(pSt)) ,
+              rev(as.numeric(rownames(pSt))) ),
+            c(    pSt[,i  ],
+              rev(pSt[,i-1]) ),
+            col=col[i-1], border=border[i-1], ... )
+   }
 }
-<bytecode: 0x2f9bda58>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 

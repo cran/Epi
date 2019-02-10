@@ -23,15 +23,15 @@ This data frame contains the following columns:
                  \code{\link{Date}} variable. \cr
 \code{dob}: \tab date of birth, a
                  \code{\link{Date}} variable. \cr
-\code{y}: \tab - number of years at risk, a numeric vector. \cr
-\code{fail}: \tab status on exit, a numeric vector (codes 1, 3, 11, and
+\code{y}: \tab number of years at risk, a numeric vector. \cr
+\code{fail}: \tab status on exit, a numeric vector (codes 1, 3 and
 13 represent CHD events) \cr
 \code{job}: \tab occupation, a factor with levels
                  \code{Driver} 
                  \code{Conductor} 
                  \code{Bank worker} \cr
 \code{month}: \tab month of dietary survey, a numeric vector \cr
-\code{energy}: \tab total energy intake (KCal per day/100), a numeric
+\code{energy}: \tab total energy intake (kCal per day/100), a numeric
 vector \cr
 \code{height}: \tab (cm), a numeric vector \cr
 \code{weight}: \tab (kg), a numeric vector \cr

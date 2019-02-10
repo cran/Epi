@@ -44,7 +44,7 @@ pState( nSt, perm = 1:ncol(nSt) )
     list. Elements of the intter lists represent transitions. See details.}
   \item{init}{A (pre-)\code{\link{Lexis}} object representing the initial
     state of the persons whose trajectories through the multiple states
-    we want to simulate. Must have an attribute "time.since" --- see
+    we want to simulate. Must have attributes "time.scales" and "time.since" --- see
     details. Duplicate values of \code{lex.id} are not sensible and not
     accepted.}
   \item{N}{Numeric. How many persons should be simulated. \code{N}
@@ -218,11 +218,9 @@ Tr <- list( "DM" = list( "Ins"       = DM.Ins,
            "Ins" = list( "Dead(Ins)" = Ins.Dead ) )
 lapply( Tr, names )
 
-# Define an initial object - note the combination of "select=" and NULL
-# which ensures that the relevant attributes from the Lexis object 'Si'
-# are carried over to 'ini' ( Si[NULL,1:9] will lose essential
-# attributes ):
-ini <- subset(Si,select=1:9)[NULL,]
+# Define an initial object - note the subsetting that ensures that
+# all attributes are carried over
+ini <- Si[1,1:9][-1,]
 ini[1:2,"lex.Cst"] <- "DM"
 ini[1:2,"Per"] <- 1995
 ini[1:2,"Age"] <- 60
