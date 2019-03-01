@@ -69,7 +69,8 @@ ci.ratio( r1, r2,
     prediction frame, see details.
     
     If it is a list, it must contain two data frames that are (possibly
-    partial) prediction frames for \code{obj}, see \code{xvars} and details.}
+    partial) prediction frames for \code{obj}, see argument \code{xvars}
+    and details.}
   \item{xvars}{Character vector. If variables in the model are omitted
     from data frames supplied in a list to \code{ctr.mat}, they should
     be listed here. Omitted factors need not be mentioned here.}
@@ -177,12 +178,12 @@ ci.ratio( r1, r2,
   data frame or a list of two data frames.
 
   You can leave out variables (columns) from the two data frames that
-  would be constant and identical, basically variables not relevant for
-  the calculation of the contrast. In many cases \code{ci.lin} (really
+  would be identical, basically variables not relevant for the
+  calculation of the contrast. In many cases \code{ci.lin} (really
   \code{Epi:::ci.dfr}) can figure out the names of the omitted columns,
   but occasionally you will have to supply the names of the omitted
   variables in the \code{xvars} argument. Factors omitted need not be
-  listed in \code{xvars}, though no harm is done doing so.
+  listed in \code{xvars}, although no harm is done doing so.
 
   \code{Wald} computes a Wald test for a subset of (possibly linear
   combinations of) parameters being equal to the vector of null

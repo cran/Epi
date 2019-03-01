@@ -70,9 +70,8 @@ if( nrow(trans)==2 )
   trans <- trans[1,,drop = FALSE]
 res <- list( Transitions = trans,
                    Rates = rates[-nrow(rates),,drop=FALSE],
-              timeScales = data.frame( "time scale" = attr( object, "time.scales" ),
-                                       "time since" = attr( object,  "time.since" ) )
-)
+              timeScales = timeSince(object) )
+
 if( !timeScales ) res <- res[-3]
 if( !Rates      ) res <- res[-2]
 class( res ) <- "summary.Lexis"

@@ -229,12 +229,12 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     }
     lex <- cbind(lex, data)
   }
-
+  
   ## Drop rows with short or negative duration for consistency with splitLexis
   short.dur <- lex$lex.dur <= tol
   if ( any(short.dur) ) {
-      warning("Dropping ", sum(short.dur),
-              " rows with duration of follow up < tol\n",
+       cat("NOTE: Dropping ", sum(short.dur),
+           " rows with duration of follow up < tol\n",
       if( keep.dropped ) "  The dropped rows are in the attribute 'dropped'\n",
       if( keep.dropped ) "  To see them type attr(Obj,'dropped'),\n",
       if( keep.dropped ) "  to get rid of them type: attr(Obj,'dropped') <- NULL\n",
@@ -733,6 +733,13 @@ after <- succeeding <- function( x, states ) updn( x, table(x$lex.Xst,x$lex.Cst)
 timeScales <- function(x)
 {
   return (attr(x,"time.scales"))
+}
+
+timeSince <- function(x)
+{
+        tt  <- attr(x,"time.since")
+  names(tt) <- attr(x,"time.scales")
+  return( tt )
 }
 
 timeBand <- function(lex, time.scale, type="integer")

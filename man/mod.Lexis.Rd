@@ -121,17 +121,18 @@ coxph.Lexis( Lx,         # Lexis object
   to facilitate the (still pending) implementation of an \code{update} function.
 
   The returned objects all have an extra attribute, \code{Lexis} which
-  is a list with names \code{from}, \code{to} and \code{data}; character
-  vectors of state names from which and to which transitions are
-  modeled, respectively, and the name of the \code{Lexis} object
-  modeled. Note that it is \emph{not} the object, only the name of it,
-  which may not be portable.
+  is a list with entries
+  \code{data}, the name of the \code{Lexis} object modeled (note that it
+  is \emph{not} the object, only the name of it, which may not be portable);
+  \code{trans}, a character vector of transitions modeled;
+  \code{formula}, the model formula; and
+  \code{scale}, the scaling applied to \code{lex.dur} before modeling. 
   
-  The \code{glm} and \code{gam} objects also has a \code{scale} element
+  Only the \code{glm} and \code{gam} objects have the \code{scale} element
   in the list; a scalar indicating the scaling of \code{lex.dur} before
-  modeling. The \code{coxph} object has a \code{timescale} element in
-  the list, a character scalar with the name of the underlying timescale
-  variable.
+  modeling. Note that the formula component if the \code{Lexis}
+  attribute of a \code{coxph} object, the \code{formula} component is a
+  two-sided formula with the baseline time scale as the l.h.s.
 }
 
 \author{
@@ -183,9 +184,9 @@ matshade( nA$age, cbind( ci.pred(mt,nA),
           lwd=3, lty=1, log="y", col=c("black","blue","red"),
           xlab="Age", ylab="Mortality per 1000 PY" )
  
-# gam models takes quite some time so we leave it out
+# gam models may take some time to run so we leave it out
 \dontrun{
-mt.gam <- gam.Lexis( sL, "Dead", ~ sex + lex.Cst + s(age), scale=1000 )
+mt.gam <- gam.Lexis( sL, to="Dead", formula=~ sex + lex.Cst + s(age), scale=1000 )
         }
 
 # Fit a Cox model with age as baseline time scale and insulin as time-dependent

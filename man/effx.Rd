@@ -19,14 +19,13 @@ effx( response, type = "metric",
 	      digits = 3,
 	        data = NULL )
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
 \item{response}{The \code{response} variable - must be numeric or
   logical. If logical, \code{TRUE} is considered the outcome.}
 \item{type}{The type of response\code{type} - must be one of "metric",
       "binary", "failure", or "count"}
 \item{fup}{The \code{fup} variable contains the follow-up time for a
-      failure response}. This must be numeric.
+      failure response. This must be numeric.}
 \item{exposure}{The \code{exposure} variable can be numeric or a factor}
 \item{strata}{The \code{strata} stratifying variable - must be a factor}
 \item{control}{The \code{control} variable(s) (confounders) - these are

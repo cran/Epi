@@ -1,3 +1,26 @@
+Changes in 2.35
+
+o Major re-write of vignette of  follow-up data
+
+o glm.Lexis example updated
+
+o Lexis now gives a not and not a warning when dropping persons with
+  no FU 
+
+o Epi.Rd included as man page, allowing easy access to the index via ?Epi.
+
+o simLexis updated to cope with poisreg family in modeling input
+
+o timeSince funtion added to tell which time scales are defined as
+  time since entry to a state. Allows for a slightly more compact
+  output from summary.Lexis, when timeScales=TRUE.
+
+o such timescales are NA before entry. In modeling we may want these to
+  be 0, hence the model tsNA20 (timescale NAs to zero), that does this
+  for such time scales. And optionally for all.
+
+o improved readbility of error message from ci.lin
+
 Changes in 2.34
 
 o cleanup of ci.lin to exploit the (post 3.5.0) behaviour of coef/vcov

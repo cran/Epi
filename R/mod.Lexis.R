@@ -80,7 +80,10 @@ cat( deparse(substitute(model)),
 mod <- model( form, family = poisreg(link=link), data = Lx, ... )
     
 # Add an explanatory attribute
-attr( mod, "Lexis" ) <- list( transitions=trnam, data=nameLx, scale=scale )     
+attr( mod, "Lexis" ) <- list( data=nameLx,
+                             trans=trnam,
+                           formula=form[-2],
+                             scale=scale )     
 mod
 }
 
@@ -211,7 +214,9 @@ mod <- coxph( as.formula( paste( "Sobj",
               data = Lx, ... )
 
 # Add an explanatory attribute
-attr( mod, "Lexis" ) <- list( transitions=trnam, data=nameLx, scale=scale )     
+attr( mod, "Lexis" ) <- list( data=nameLx,
+                             trans=trnam,
+                           formula=formula )     
 class( mod ) <- c( "coxph.lex", class(mod ) )    
 mod
 }

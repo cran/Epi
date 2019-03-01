@@ -63,10 +63,12 @@ if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
 if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
     ( any(names(ndx) != names(ndr)) ) )
     stop("\nThe two prediction frames must have same dimensions and column names:",
-         "but dimensions are: ", dim(ndx), " and ", dim(ndr), "\n", 
+         "but dimensions are: (",
+         paste( dim(ndx),collapse=","), ") and ()",
+         paste( dim(ndr),collapse=","), ")\n", 
          "and column names are:\n",
-         "exp: ", names(ndx), "\n",
-         "ref: ", names(ndr), "\n")
+         "exp: ", paste( names(ndx), collapse=", " ), "\n",
+         "ref: ", paste( names(ndr), collapse=", " ), "\n")
 # Now supply and fix those variables that are needed in order to get model.matrix working:
 # Supplied variable names:
  cols <- names( ndx )

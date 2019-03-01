@@ -62,8 +62,11 @@ prfrm <- nd[rep(1:nr,each=np),]
 prfrm[,tS] <- prfrm[,tS] + rep(time.pts,nr)
 prfrm$lex.dur <- il <- min( diff(time.pts) )
 # Poisson-models should use the estimated rate at the midpoint of the
-# intervals:
+# intervals, and have risk time equal to 1 in order to accommodate
+# both poisson and poisreg families - they only produce identical
+# predictions if lex.dur is 1 (i.e. offset is 0), scaling is after prediction
 prfrp <- prfrm
+prfrp[,"lex.dur"] <- 1
 prfrp[,tS] <- prfrp[,tS]+il/2
 
 # Make a data frame with predicted rates for each of the transitions
@@ -74,7 +77,7 @@ for( i in 1:length(Tr[[cst]]) )
    if( inherits( Tr[[cst]][[i]], "glm" ) )
    rt <- cbind( rt, predict( Tr[[cst]][[i]],
                              type="response",
-                             newdata=prfrp ) )
+                             newdata=prfrp ) * il ) # scaled to interval
    else
    if( inherits( Tr[[cst]][[i]], "coxph" ) )
    rt <- cbind( rt, predict( Tr[[cst]][[i]],

@@ -2,7 +2,7 @@
 # 1) run rw on simLexis and yll with eval=TRUE in the lines with
 #    CHANGE1 in order to get a version with properly formatted
 #    code. 
-# 2) Move the .pdfs to sL.pdf and yl.pdf, respectively. 
+# 2) Move the .tex files to sL.tex and yl.tex, and compile.
 # 3) Swap TRUE and FALSE in the CHANGE1/2 lines in the rnw files.
 # Then we are ready for the following:
 

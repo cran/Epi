@@ -304,3 +304,14 @@ countLexis <- function(data, cut, timescale = 1)
 
     return(lx[order(lx$lex.id,lx[,timescale]),])
 }
+
+tsNA20 <- function( x, all.scales=FALSE ) {
+    tsc <- timeSince(x)
+    if( !all.scales ) tsc <- tsc[tsc!=""]
+    if( length(tsc)>0 )
+    for( ts in names(tsc) )
+       {
+    x[,ts] <- ifelse( is.na(x[,ts]), 0, x[,ts] )
+       }
+    x
+    }

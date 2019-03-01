@@ -1,4 +1,4 @@
-\name{start.Lexis}
+\name{entry.Lexis}
 \alias{entry}
 \alias{exit}
 \alias{status}
@@ -45,23 +45,28 @@ succeeding( x, states )
   returned.
 
   The \code{status} function returns a vector giving the status at
-  "\code{at}" (entry or exit) and \code{dur} returns a vector with the
-  lengths of the follow-up intervals.
+  "\code{at}" (either '\code{entry}' or '\code{exit}') and \code{dur}
+  returns a vector with the lengths of the follow-up intervals.
 
+  \code{entry}, \code{exit}, \code{status} and \code{dur} return vectors
+  of length \code{nrow(x)} if \code{by.id=FALSE}; if \code{by.id=TRUE} a
+  vector of length \code{length(unique(lex.id))}.
+  
   The functions \code{transient} and \code{absorbing} return character
-  vectors of the transient, resp. absorbing states. These are necessariy
-  disjoint but the union may not be the same as \code{levels(x)}, since
-  the latter may have levels that are never assumed by either
-  \code{lex.Cst} or \code{lex.Xst}.
+  vectors of the transient, resp. absorbing states in \code{x}. These
+  are necessariy disjoint but the union may be a proper subset of
+  \code{levels(x)}, since the latter may have levels that are never
+  assumed by either \code{lex.Cst} or \code{lex.Xst}.
 
-  \code{preceding} returns a character vector with names of the states of the
-  Lexis object \code{x} from which one of the states in
+  \code{preceding} returns a character vector with names of the states
+  of the Lexis object \code{x} from which one of the states in
   \code{states} can be reached directly - the preceding
   states. \code{before} is just a synonym for \code{preceding}.
 
-  \code{succeeding} returns a character vector with names of the states of the
-  Lexis object \code{x} that can be reached directly from one of the
-  states in \code{states}. \code{after} is just a synonym for \code{succeeding}.
+  \code{succeeding} returns a character vector with names of the states
+  of the Lexis object \code{x} that can be reached directly from one of
+  the states in \code{states}. \code{after} is just a synonym for
+  \code{succeeding}.
 }
 \author{Martyn Plummer & Bendix Carstensen}
 \seealso{\code{\link{Lexis}}}

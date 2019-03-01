@@ -52,6 +52,10 @@ countLexis( data, cut, timescale = 1 )
   and one after the cutpoint. An extra time-scale is added; the time
   since the event at \code{cut}. This is \code{NA} for any follow-up
   prior to the intermediate event.
+
+  The function \code{tsNA20} will replace all missing values in
+  timescales with 0. This is commonly meeded when timescales defined as
+  time since entry into an inermediate state are used in modeling.
   }
 \note{
   The \code{cutLexis} function superficially resembles the
@@ -125,6 +129,7 @@ countLexis( data, cut, timescale = 1 )
   \code{\link{splitLexis}},
   \code{\link{Lexis}},
   \code{\link{summary.Lexis}},
+  \code{\link{timeSince}},
   \code{\link{boxes.Lexis}}
 }
 \examples{
