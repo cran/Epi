@@ -9,7 +9,10 @@ Modeling intensities based on Lexis objects, exploiting the structure of the
 Lexis objects where the events and risk time have predefined
 representations. This allows a simpler syntax than the
 traditional explicit modeling using \code{\link{glm}}, \code{\link{gam}}
-and \code{\link{coxph}}. But it is only a set of wrappers fro
+and \code{\link{coxph}}. Requires that \code{lex.Cst} and \code{lex.Xst}
+are defined as factors.
+
+But it is just a set of wrappers fro
 \code{glm}, \code{gam} and \code{coxph}.
 }
 \usage{
@@ -94,13 +97,16 @@ coxph.Lexis( Lx,         # Lexis object
   be a really goofy model and if so a warning is issued. If only
   \code{to} is given, \code{from} is set to the collection of states
   from which \code{to} can be reached directly --- see
-  \code{\link{preceding}} and its cousins.
+  \code{\link{preceding}} and its cousins. This convention means that if
+  you have a \code{\link{Lexis}} object representing a simple survival
+  analysis, with states, say, "alive" and "dead", you can dispense with
+  the \code{from} and \code{to} arguments.
 
   Occasionally you only want to model a subset of the possible
   transitions from states in \code{from} to states in \code{to}, in
   which case you specify \code{from} and \code{to} as character vectors
-  of the same length and then only transitions \code{from[i]} to
-  \code{to[i]}, \code{i}=1,2,... will be modeled.
+  of the same length and set \code{paired=TRUE}. Then only transitions
+  \code{from[i]} to \code{to[i]}, \code{i}=1,2,... will be modeled.
   
   There is no working \code{update} functions for these objects (yet). 
   
@@ -167,6 +173,7 @@ cL <- cutLexis( mL, cut = mL$doins,
 
 # Split follow-up on age-axis
 system.time( sL <- splitLexis( cL, breaks=0:25*4, time.scale="age") )
+# ( consider splitMulti from the popEpi package )
 summary( sL )
 
 # glm models for rates based on the time-split dataset by insulin and sex

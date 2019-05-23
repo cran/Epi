@@ -162,26 +162,26 @@ We start by loading the \texttt{Epi} package:
 > print( sessionInfo(), l=F )
 \end{Sinput}
 \begin{Soutput}
-R version 3.5.2 (2018-12-20)
+R version 3.6.0 (2019-04-26)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 14.04.5 LTS
+Running under: Ubuntu 14.04.6 LTS
 
 Matrix products: default
-BLAS: /usr/lib/openblas-base/libopenblas.so.0
+BLAS:   /usr/lib/openblas-base/libopenblas.so.0
 LAPACK: /usr/lib/lapack/liblapack.so.3.0
 
 attached base packages:
 [1] utils     datasets  graphics  grDevices stats     methods   base     
 
 other attached packages:
-[1] Epi_2.35
+[1] Epi_2.37
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.0        lattice_0.20-38   zoo_1.8-4         MASS_7.3-51.1    
- [5] grid_3.5.2        plyr_1.8.4        nlme_3.1-137      etm_1.0.4        
- [9] data.table_1.12.0 Matrix_1.2-15     splines_3.5.2     tools_3.5.2      
-[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_2.43-3   parallel_3.5.2   
-[17] compiler_3.5.2    mgcv_1.8-27      
+ [5] grid_3.6.0        plyr_1.8.4        nlme_3.1-139      etm_1.0.4        
+ [9] data.table_1.12.0 Matrix_1.2-17     splines_3.6.0     tools_3.6.0      
+[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_2.44-1.1 parallel_3.6.0   
+[17] compiler_3.6.0    mgcv_1.8-28      
 \end{Soutput}
 \end{Schunk}
 First we load the diabetes data and set up a simple illness-death
@@ -409,7 +409,7 @@ We can also fit this model with a slightly simpler syntax using the
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object Si with log link:
-Rates for the transition DM->Ins
+Rates for the transition: DM->Ins
 \end{Soutput}
 \begin{Sinput}
 > ci.exp( DM.Ins )
@@ -447,7 +447,7 @@ message of which transition(s) we are modeling. However we do not have
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object Si with log link:
-Rates for the transition DM->Dead
+Rates for the transition: DM->Dead
 \end{Soutput}
 \begin{Sinput}
 > Ins.Dead <- glm.Lexis( Si, from = "Ins",
@@ -458,7 +458,7 @@ Rates for the transition DM->Dead
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object Si with log link:
-Rates for the transition Ins->Dead(Ins)
+Rates for the transition: Ins->Dead(Ins)
 \end{Soutput}
 \end{Schunk}
 Note the similarity of the code used to fit the three models, is is
@@ -495,7 +495,7 @@ function:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object Si with log link:
-Rates for transitions Ins->Dead(Ins), DM->Dead
+Rates for transitions: Ins->Dead(Ins), DM->Dead
 \end{Soutput}
 \begin{Sinput}
 > round( ci.exp( All.Dead ), 3 )
@@ -831,7 +831,7 @@ the user.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 17.503   1.029  17.509 
+ 17.598   1.289  17.857 
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{Lexis} object --- a data frame representing
@@ -888,7 +888,7 @@ transition object:
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  16.24    0.98   16.16 
+ 16.996   0.776  16.802 
 \end{Soutput}
 \begin{Sinput}
 > summary( simP, by="sex" )
@@ -971,7 +971,7 @@ for different transitions
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 17.934   0.955  17.848 
+ 18.346   0.953  18.291 
 \end{Soutput}
 \begin{Sinput}
 > summary( simC, by="sex" )
@@ -1011,7 +1011,7 @@ equal to the starting time for the simulated individuals.
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
-  0.738   0.001   0.738 
+  0.717   0.001   0.717 
 \end{Soutput}
 \begin{Sinput}
 > nSt[1:10,]
@@ -1443,7 +1443,7 @@ function (Tr, init, N = 1, lex.id, t.range = 20, n.int = 101,
     attr(sf, "time.since") <- tF
     chop.lex(sf, tS, max(time.pts))
 }
-<bytecode: 0xb289bc8>
+<bytecode: 0xcc375d8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1504,7 +1504,7 @@ function (nd, Tr, time.pts, tS)
     merge(nd, do.call(rbind, lapply(split(rt, rt$lex.id), sim1, 
         time.pts)), by = "lex.id")
 }
-<bytecode: 0xad52c38>
+<bytecode: 0xbc7f480>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1534,7 +1534,7 @@ function (rt, time.pts)
             colnames(ci)[tt == min(tt)]
         else NA))
 }
-<bytecode: 0xadb4240>
+<bytecode: 0xbc809c8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1556,7 +1556,7 @@ exploiting the fact the the \texttt{ci} is non-decreasing and
 function (ci, tt, u) 
 {
     if (any(diff(ci) < 0) | any(diff(tt) < 0)) 
-        stop("Non-icreasing arguments")
+        stop("Non-increasing arguments")
     c.u <- min(c(ci[ci > u], max(ci)))
     c.l <- max(c(ci[ci < u], min(ci)))
     t.u <- min(c(tt[ci > u], max(tt)))
@@ -1564,7 +1564,7 @@ function (ci, tt, u)
     ifelse(c.u == c.l, t.l, t.l + (u - c.l)/(c.u - c.l) * (t.u - 
         t.l))
 }
-<bytecode: 0x2445ad10>
+<bytecode: 0x1c416320>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1595,7 +1595,7 @@ function (sf, tr.st, tS, tF)
     nxt$lex.Cst <- nxt$lex.Xst
     return(nxt)
 }
-<bytecode: 0x7ac0d10>
+<bytecode: 0x16ca4640>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1622,7 +1622,7 @@ function (obj, tS, cens)
     ww$lex.dur <- pmin(x.dur, ww$lex.dur)
     ww
 }
-<bytecode: 0x31ada6a0>
+<bytecode: 0xd384160>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1663,7 +1663,7 @@ function (obj, at, from, time.scale = 1)
     tab.ab$State <- tab.ab$lex.Xst
     with(rbind(tab.ab, tab.tr), table(when, State))
 }
-<bytecode: 0x356e9f68>
+<bytecode: 0x3a516e28>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1686,7 +1686,7 @@ function (nSt, perm = 1:ncol(nSt))
     class(tt) <- c("pState", "matrix")
     tt
 }
-<bytecode: 0x11fcf718>
+<bytecode: 0x19ee0e00>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -1704,7 +1704,7 @@ function (x, col = rainbow(ncol(x)), border = "transparent",
         yaxs = "i", xaxs = "i", xlab = xlab, ylab = ylab, ...)
     lines.pState(x, col = col, border = border, ...)
 }
-<bytecode: 0x39673490>
+<bytecode: 0x453c1e20>
 <environment: namespace:Epi>
 \end{Soutput}
 \begin{Sinput}
@@ -1724,7 +1724,7 @@ function (x, col = rainbow(ncol(x)), border = "transparent",
             border = border[i - 1], ...)
     }
 }
-<bytecode: 0x24d5c8e0>
+<bytecode: 0x44f215f8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}

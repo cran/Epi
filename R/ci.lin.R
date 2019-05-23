@@ -64,7 +64,7 @@ if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
     ( any(names(ndx) != names(ndr)) ) )
     stop("\nThe two prediction frames must have same dimensions and column names:",
          "but dimensions are: (",
-         paste( dim(ndx),collapse=","), ") and ()",
+         paste( dim(ndx),collapse=","), ") and (",
          paste( dim(ndr),collapse=","), ")\n", 
          "and column names are:\n",
          "exp: ", paste( names(ndx), collapse=", " ), "\n",

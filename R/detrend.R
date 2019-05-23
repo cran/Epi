@@ -39,6 +39,8 @@ detrend <-
 function( M, t, weight=rep(1,nrow(M)) )
 {
 # Detrend the matrix using a weighted inner product.
+# Numerically unstable if too large t, so scaled
+t <- scale(t)
 thinCol( projection.ip( cbind( 1, t ), M , orth = TRUE, weight = weight ) )
 }
 
@@ -46,5 +48,6 @@ decurve <-
 function( M, t, weight=rep(1,nrow(M)) )
 {
 # De-trend and -curve the matrix using a weighted inner product.
+t <- scale(t)
 thinCol( projection.ip( cbind( 1, t, t^2 ), M , orth = TRUE, weight = weight ) )
 }

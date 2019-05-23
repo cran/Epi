@@ -14,13 +14,16 @@ for( mod in models ){ cat( mod, ":\n" )
 APC <- apc.fit( data, npar = list( A=LCa.list[[2]]$knots$a.kn,
                                    P=LCa.list[[1]]$knots$p.kn,
                                    C=LCa.list[[1]]$knots$c.kn ) )
-dev <- c( APC$Anova[c(2,5,3,4),2],
+dev <- c( APC$Anova[c(2,5,3,4),"Mod. dev."],
           sapply( LCa.list, function(x) x$deviance ) )
-df  <- c( APC$Anova[c(2,5,3,4),1],
+df  <- c( APC$Anova[c(2,5,3,4),"Mod. df."],
           sapply( LCa.list, function(x) x$df ) )
 names(dev)[1:4] <- names(df)[1:4] <-
-gsub( "rift","", gsub("eriod","", gsub("ohort","", gsub("-","",
-gsub( "ge", "", rownames(APC$Anova)[c(2,5,3,4)])))))
+gsub( "rift","",
+gsub("eriod","",
+gsub("ohort","",
+gsub(    "-","",
+gsub(  "ge", "", APC$Anova[c(2,5,3,4),"Model"])))))
 if( keep.models ) return( list( dev = cbind( dev, df ),
                                 apc = APC,
                                 LCa = LCa.list ) )
@@ -30,7 +33,8 @@ if( keep.models ) return( list( dev = cbind( dev, df ),
 show.apc.LCa <-
 function( x, dev.scale=TRUE, top="Ad", ... )
 {
-if( is.list(x) ) x <- x[[1]]     
+if( is.list(x) ) x <- x[[1]]
+print(x)
 TM <- matrix(NA,9,9)
 rownames( TM ) <- colnames( TM ) <-
 paste( rownames(x), "\n", formatC(x[,1],format="f",digits=1) )
@@ -41,12 +45,14 @@ TM[4,c(7,8)] <-
 TM[5,7] <-
 TM[6,8] <-
 TM[c(7,8),9] <- 1
-TM
 bp <- list( x=c(50,30,70,50,10,90,30,70,50),
             y=c(90,70,70,50,50,50,30,30,10) )
 if( !dev.scale )
   boxes.matrix( TM, boxpos=bp, hm=1.5, wm=1.5, ... )
 else {
+    print( top )
+    print( str(x) )
+    print( rownames(x) )
   bp$y <- 5+90*(pmin(x[top,1],x[,1])-x[9,1])/(x[top,1]-x[9,1])
   boxes.matrix( TM, boxpos=bp, hm=1.5, wm=1.5, ... )
   }

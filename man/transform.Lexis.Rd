@@ -50,10 +50,18 @@
   matrix as a second argument - the number of levels of \code{lex.Cst}
   is rarely (if ever) large.
 
+  Note that if \code{states} is an integer vector, the levels of
+  \code{lex.Cst} and \code{lex.Xst} are permuted. If \code{states} is a
+  list of numbers or strings, the levels of \code{lex.Cst} and
+  \code{lex.Xst} will be permuted. But if \code{states} is a character
+  vector it must have length \code{nlevels(lex.Cst)}, and the result
+  will be a \emph{renaming} of the levels.
+  
   If \code{states} is \code{NULL}, as when for example the argument is
   not passed to the function, the returned object have levels of
   \code{lex.Cst}, \code{lex.Xst} (and for \code{stacked.Lexis} objects
-  \code{lex.Tr}) shaved down to the actually occurring values.
+  \code{lex.Tr}) shaved down to the actually occurring values; that is,
+  empty levels are discarded.
 
 %  \code{order} returns the order of the rows in a Lexis object to sort
 %  it by (\code{lex.id},\code{timeScales[x]}).

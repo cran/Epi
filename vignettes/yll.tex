@@ -462,7 +462,7 @@ We now collect the estimated years of life lost classified by method
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 16.447   8.492  14.569 
+ 16.748   8.634  14.860 
 \end{Soutput}
 \begin{Sinput}
 > round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
@@ -671,7 +671,7 @@ function (int, mu, age.in = 0, A = NULL)
     rownames(surv) <- NULL
     return(surv)
 }
-<bytecode: 0x94314a0>
+<bytecode: 0x92aacd8>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -690,7 +690,7 @@ function (int, mu, age.in = 0)
     cbind(age = age, surv = surv, erl = c(musmuc((surv[-1] - 
         diff(surv)/2))/surv[-length(surv)], 0) * int)
 }
-<bytecode: 0x628fae8>
+<bytecode: 0x74e9238>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -750,7 +750,7 @@ function (int, muW, muD, lam, age.in = 0, A = NULL)
     colnames(surv)[-1] <- paste("A", c(age.in, Al), sep = "")
     return(surv)
 }
-<bytecode: 0x872d270>
+<bytecode: 0x8a919b0>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -802,7 +802,7 @@ function (int, muW, muD, lam = NULL, age.in = 0, A = NULL, immune = is.null(lam)
     }
     return(erl)
 }
-<bytecode: 0x946c8c0>
+<bytecode: 0x92b1d18>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
@@ -817,7 +817,7 @@ function (int, muW, muD, lam = NULL, age.in = 0, A = NULL, immune = is.null(lam)
     note = TRUE) 
 erl(int = int, muW = muW, muD = muD, lam = lam, age.in = age.in, 
     A = A, immune = immune, yll = TRUE, note = note)[, "YLL"]
-<bytecode: 0xb2408c0>
+<bytecode: 0xab9bdf0>
 <environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}

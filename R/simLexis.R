@@ -8,7 +8,7 @@ function( ci, tt, u )
 # Makes a linear interpolation, but does not crash if all ci values are
 # identical, but requires that both ci and tt are non-decreasing.
 # ci plays the role of cumulative intensity, tt of time
-if( any( diff(ci)<0 ) | any( diff(tt)<0 ) ) stop("Non-icreasing arguments")
+if( any( diff(ci)<0 ) | any( diff(tt)<0 ) ) stop("Non-increasing arguments")
 c.u <- min( c( ci[ci>u], max(ci) ) )
 c.l <- max( c( ci[ci<u], min(ci) ) )
 t.u <- min( c( tt[ci>u], max(tt) ) )

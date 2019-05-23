@@ -19,7 +19,12 @@ function( data,
 model <- match.arg(model)
 drtyp <- deparse(substitute(dr.extr))
  parm <- toupper(match.arg(parm))
-if(!missing(data))
+
+has.data <- !missing( data )
+has.pref <- !missing( ref.p )
+has.cref <- !missing( ref.c )
+
+if(has.data)
   {
   if (length(match(c("A", "P", "D", "Y"), names(data))) != 4)
   stop("Data frame ", deparse(substitute(data)),
@@ -60,12 +65,12 @@ names(a) <- x[o]
 return( as.numeric(names(a[cumsum(a)/sum(a) > 0.5][1])) )
 }
 # Set the reference points on the period and cohort scales
-p0 <- ifelse( ref.p<-!missing( ref.p ), ref.p, med(P  , D) )
-c0 <- ifelse( ref.c<-!missing( ref.c ), ref.c, med(P-A, D) )
-
+p0 <- ifelse( has.pref, ref.p, med(P  , D) )
+c0 <- ifelse( has.cref, ref.c, med(P-A, D) )
+ 
 # Number of parameters in the spline modeling 
 if( is.list(npar) & length(npar)<3 )
-  stop("npar as a list - should have length 3! \n")
+  stop("npar given as a list - should have length 3! \n")
 if( !is.list(npar) & length(npar)!=3 )
   {
   npar <- rep(npar, 3)[1:3]
@@ -108,15 +113,17 @@ else {
         if( is.null(names(npar)) ) names(npar) <- c("A","P","C")
         # if names too long or wrong case, rectify
         names( npar ) <- toupper( substr(names(npar),1,1) )
-        MA <- if (knl) Ns(  A, knots = npar[["A"]] )
-              else     Ns(  A, knots = quantile( rep(A,D),
-                                     probs=(1:npar["A"]-0.5)/npar["A"] ) )
-        MP <- if (knl) Ns(P  , knots = npar[["P"]] )
-              else     Ns(P  , knots = quantile( rep(P,D),
-                                     probs=(1:npar["P"]-0.5)/npar["P"] ) )
-        MC <- if (knl) Ns(P-A, knots = npar[["C"]] )
-              else     Ns(P-A, knots = quantile( rep(P-A,D),
-                                     probs=(1:npar["C"]-0.5)/npar["C"] ) )
+        # if not a list make it one with the correct knots
+        if( !knl ){
+          nkn <- npar
+          eqp <- function(n) (1:n-0.5)/n
+          npar <- list( A = quantile( rep(  A,D), probs=eqp(nkn["A"]) ),
+                        P = quantile( rep(P  ,D), probs=eqp(nkn["P"]) ),
+                        C = quantile( rep(P-A,D), probs=eqp(nkn["C"]) ) )                       
+          }
+        MA <- Ns(  A, knots = npar[["A"]] )
+        MP <- Ns(P  , knots = npar[["P"]] )
+        MC <- Ns(P-A, knots = npar[["C"]] )
         Rp <- ns(p0, knots = attr(MP,"knots"),
             Boundary.knots = attr(MP,"Boundary.knots"))
         Rc <- ns(c0, knots = attr(MC,"knots"),
@@ -153,14 +160,14 @@ else {
     }
 }
 if (tolower(substr(dist, 1, 2)) == "po") {
-    m.APC <- glm(D ~ MA + I(P - p0) + MP + MC, offset = log(Y),
-        family = poisson)
+    m.APC <- glm(D ~ MA + I(P - p0) + MP + MC,
+                 offset = log(Y), family = poisson)
     Dist <- "Poisson with log(Y) offset"
 }
 is.bin <- FALSE
 if (is.bin <- tolower(substr(dist, 1, 3)) %in% c("bin")) {
-    m.APC <- glm(cbind(D, Y - D) ~ MA + I(P - p0) + MP +
-        MC, family = binomial)
+    m.APC <- glm(cbind(D, Y - D) ~ MA + I(P - p0) + MP + MC,
+                 family = binomial)
     Dist <- "Binomial regression (logistic) of D/Y"
 }
 m.AP <- update(m.APC, . ~ . - MC)
@@ -169,9 +176,22 @@ m.Ad <- update(m.AP, . ~ . - MP)
 m.A <- update(m.Ad, . ~ . - I(P - p0))
 m.0 <- update(m.A, . ~ . - MA)
 AOV <- anova(m.A, m.Ad, m.AC, m.APC, m.AP, m.Ad, test = "Chisq")
-attr(AOV, "heading") <- "\nAnalysis of deviance for Age-Period-Cohort model\n"
-attr(AOV, "row.names") <- c("Age", "Age-drift", "Age-Cohort",
-    "Age-Period-Cohort", "Age-Period", "Age-drift")
+colnames(AOV)[1:4] <- c("Mod. df.","Mod. dev.",
+                        "Test df.","Test dev.")
+AOV <- abs(AOV)
+AOV <- cbind( Model = c("Age",
+                        "Age-drift",
+                        "Age-Cohort",
+                        "Age-Period-Cohort",
+                        "Age-Period",
+                        "Age-drift"),
+              AOV,
+      'Test dev/df' = AOV[,"Test dev."]/AOV[,"Test df."],
+      'H0      ' = c("","zero drift ",  
+                        "Coh eff|dr.",   
+                        "Per eff|Coh",  
+                        "Coh eff|Per",  
+                        "Per eff|dr.") )
 A.pt <- unique(A)
 A.pos <- match(A.pt, A)
 P.pt <- unique(P)
@@ -196,11 +216,8 @@ if (is.character(dr.extr))
        drtyp <- "Y^2/D-weights" } else
    if( toupper(substr(dr.extr, 1, 1)) %in% c("Y") )
      { wt <- Y
-       drtyp <- "Y-weights" } else
-   if( dr.extr %in% names(data) )
-     { wt <- data[,dr.extr]
-       drtyp <- paste( dr.extr, "weights" ) }
-   } 
+       drtyp <- "Y-weights" }
+   }
 if ( is.numeric(dr.extr) )
    {
    if( length(dr.extr)==1 )
@@ -208,6 +225,7 @@ if ( is.numeric(dr.extr) )
        drtyp <- paste("D+",dr.extr,"*Y weights",sep="") }
    if( length(dr.extr)==nrow(data) )
      { wt <- dr.extr
+       if( any(wt<0) ) stop("dr.extr must be non-negative")
        drtyp <- "extn-weights" }
    }
 Rp <- matrix(Rp, nrow = 1)
@@ -215,8 +233,8 @@ Rc <- matrix(Rc, nrow = 1)
 xP <- Epi::detrend(rbind(Rp, MP), c(p0, P  ), weight = c(0, wt))
 xC <- Epi::detrend(rbind(Rc, MC), c(c0, P-A), weight = c(0, wt))
  
-MPr <- xP[-1,,drop=FALSE] - ref.p * xP[rep(1, nrow(MP)),,drop=FALSE]
-MCr <- xC[-1,,drop=FALSE] - ref.c * xC[rep(1, nrow(MC)),,drop=FALSE]
+MPr <- xP[-1,,drop=FALSE] - has.pref * xP[rep(1, nrow(MP)),,drop=FALSE]
+MCr <- xC[-1,,drop=FALSE] - has.cref * xC[rep(1, nrow(MC)),,drop=FALSE]
 if (length(grep("-", parm)) == 0) {
     if (parm %in% c("ADPC", "ADCP", "APC", "ACP"))
         m.APC <- update(m.0, . ~ . - 1 + MA + I(P - p0) + MPr + MCr)
@@ -318,13 +336,13 @@ if (print.AOV) {
     print(res$Anova)
 }
 # Print warnings about reference points:
-if( !ref.p & parm %in% c("APC","ADPC") )
-    cat( "No reference period given:\n",
-         "Reference period for age-effects is chosen as\n",
+if( !has.pref & parm %in% c("APC","ADPC") )
+    cat( "No reference period given; ",
+         "reference period for age-effects is chosen as\n",
          "the median date of event: ", p0, ".\n" )
-if( !ref.c & parm %in% c("ACP","ADCP") )
-    cat( "No reference period given:\n",
-         "Reference period for age-effects is chosen as\n",
+if( !has.cref & parm %in% c("ACP","ADCP") )
+    cat( "No reference cohort given; ",
+         "reference cohort for age-effects is chosen as\n",
          "the median date of birth for persons  with event: ", c0, ".\n" )
 class(res) <- "apc"
 invisible(res)

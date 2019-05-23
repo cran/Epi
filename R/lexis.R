@@ -1,6 +1,6 @@
 Lexis <-
 function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
-         merge=TRUE, states, tol=.Machine$double.eps^0.5,
+         merge=TRUE, states, notes=TRUE, tol=.Machine$double.eps^0.5,
          keep.dropped=FALSE )
 {
   nmissing <- missing(entry) + missing(exit) + missing(duration)
@@ -42,7 +42,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     if( is.logical( exit.status ) )
         {
         entry.status <- FALSE
-        cat("NOTE: entry.status has been set to FALSE for all.\n" )
+        if( notes ) cat("NOTE: entry.status has been set to FALSE for all.\n" )
         }
     if( is.character( exit.status ) )
         {
@@ -54,13 +54,13 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
                                      length(exit.status)),
                                 levels=levels(exit.status),
                                 labels=levels(exit.status) )
-        cat("NOTE: entry.status has been set to",
+        if( notes ) cat("NOTE: entry.status has been set to",
             paste( '"', levels(exit.status)[1], '"', sep='' ),
             "for all.\n" )
         }
     if( is.numeric( exit.status ) )
         {
-        entry.status <- rep( 0, length( exit.status ) )
+        if( notes ) entry.status <- rep( 0, length( exit.status ) )
         cat("NOTE: entry.status has been set to 0 for all.\n" )
         }
     }
@@ -76,7 +76,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
               all.levels = union(levels(entry.status),levels(exit.status))
               entry.status <- factor( entry.status, levels=all.levels )
                exit.status <- factor(  exit.status, levels=all.levels )
-            cat("Incompatible factor levels in entry.status and exit.status:\n",
+          if( notes ) cat("Incompatible factor levels in entry.status and exit.status:\n",
                 "both lex.Cst and lex.Xst now have levels:\n", all.levels, "\n")
           }
       }
@@ -101,7 +101,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
         {
         entry <- exit
         entry[[1]] <- 0*entry[[1]]
-        cat( "NOTE: entry is assumed to be 0 on the",names(exit),"timescale.\n")
+        if( notes ) cat( "NOTE: entry is assumed to be 0 on the",names(exit),"timescale.\n")
         }
       }
     else
@@ -112,7 +112,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
         {
         entry <- duration
         entry[[1]] <- 0*entry[[1]]
-        cat( "NOTE: entry is assumed to be 0 on the",names(duration),"timescale.\n")
+        if( notes ) cat( "NOTE: entry is assumed to be 0 on the",names(duration),"timescale.\n")
         }
       }
     else
@@ -233,7 +233,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
   ## Drop rows with short or negative duration for consistency with splitLexis
   short.dur <- lex$lex.dur <= tol
   if ( any(short.dur) ) {
-       cat("NOTE: Dropping ", sum(short.dur),
+      if( notes ) cat("NOTE: Dropping ", sum(short.dur),
            " rows with duration of follow up < tol\n",
       if( keep.dropped ) "  The dropped rows are in the attribute 'dropped'\n",
       if( keep.dropped ) "  To see them type attr(Obj,'dropped'),\n",

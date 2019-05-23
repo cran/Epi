@@ -1,7 +1,7 @@
-R version 3.5.2 (2018-12-20) 
+R version 3.6.0 (2019-04-26) 
  ---------------------------------------------
   Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
- Started:  Friday 01. March 2019, 12:18:32 
+ Started:  Thursday 23. May 2019, 10:22:24 
  ---------------------------------------------
 Writing to file yll.tex
 Processing code chunks with options ...
@@ -28,6 +28,6 @@ You can now run (pdf)latex on ‘yll.tex’
 
  ---------------------------------------------
   Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
-   Ended: Friday 01. March 2019, 12:18:48
+   Ended: Thursday 23. May 2019, 10:22:41
  Elapsed: 00:00:16
  ---------------------------------------------

@@ -58,8 +58,8 @@ apc.fit( data,
 	      the terms, with \code{npar} parameters for the terms.
 	    \item \code{ls} fits a model with linear splines.
       \item \code{factor} fits a factor model with one parameter
-	      per value of \code{A}, \code{P} and \code{C}. \code{npar}
-	      is ignored in this case.
+	      per value of \code{A}, \code{P} and \code{P-A}. \code{npar}
+	      is ignored in this case. 
            }
       }
   \item{dr.extr}{Character or numeric.	
@@ -68,21 +68,33 @@ apc.fit( data,
     definition of orthogonality of the period / cohort effects to the
     linear effects --- in terms of a diagonal matrix.
 
-    \code{"weighted"} (or "t") (default) uses the no. cases, \code{D},
-    corresponding to the observed information about the log-rate
-    (usually termed "theta", hence the "\code{t}"). \code{"r"} or \code{"l"} uses
-    \code{Y*Y/D} corresponding to the observed information about the
-    rate (usually termed "lambda", hence the "\code{l}"). \code{"y"}
-    uses the person-years as the weight in the inner product. If given
-    "\code{n}" (Naive) (well, in fact any other character value) will
+    \code{"Y"} (default) uses the no. person-time, \code{Y},
+    corresponding to the observed information about the square root of
+    the rate.
+
+    \code{"R"} or \code{"L"} uses \code{Y*Y/D} corresponding to the
+    observed information about the rate (usually termed "lambda", hence
+    the "\code{L}"). 
+
+    \code{"D"} or \code{"T"} uses the no. events as the weight in the
+    inner product, corresponding to the information about the log-rate
+    (usually termed "theta", hence the "\code{T}").
+    
+    If given \code{"n"} (naive) (well, in fact any other character value) will
     induce the use of the standard inner product putting equal weight on
     all units in the dataset.
 
     If \code{dr.extr} is a numeric vector this is used as the diagonal
-    of the matrix inducing the inner product.
+    of the matrix inducing the inner product. 
 
+    If \code{dr.extr} is a numeric scalar, \code{D + dr.extr*Y} is used
+    as the diagonal of the matrix inducing the inner product. This
+    family of inner products are the only ones that meet the
+    split-observation invariance criterion.
+    
     The setting of this parameter has no effect on the fit of the model,
-    only on the parametrization.
+    it only influences the parametrization returned in the \code{Age},
+    \code{Per} and \code{Coh} elements of the resulting list.
   }
   \item{parm}{Character. Indicates the parametrization of the effects.
     The first four refer to the ML-fit of the Age-Period-Cohort model,
@@ -148,7 +160,7 @@ apc.fit( data,
 \value{
   An object of class "apc" (recognized by \code{\link{apc.plot}} and
   \code{\link{apc.lines}}) --- a list with components:
-  \item{Type}{Text describing the model and parametrization returned}
+  \item{Type}{Text describing the model and parametrization returned.}
   \item{Model}{The model object(s) on which the parametrization is based.}
   \item{Age}{Matrix with 4 columns: \code{A.pt} with the ages (equals
     \code{unique(A)}) and three columns giving the estimated rates with
@@ -167,9 +179,8 @@ apc.fit( data,
     latter is given.}
   \item{Ref}{Numerical vector of length 2 with reference period and cohort.
              If ref.p or ref.c was not supplied the corresponding element is NA.}
-  \item{AOV}{Analysis of deviance table comparing the five classical
+  \item{Anova}{Analysis of deviance table comparing the five classical
     models.}
-  \item{Type}{Character string explaining the model and the parametrization.}
   \item{Knots}{If \code{model} is one of \code{"ns"} or \code{"bs"}, a list
     with three components: \code{Age}, \code{Per}, \code{Coh}, each one a
     vector of knots. The max and the min of the vectors are the boundary knots.}
@@ -186,7 +197,9 @@ apc.fit( data,
    This approach is different from to the vast majority of the uses of
    APC-models in the literature where a factor model is used for age,
    period and cohort effects. The latter can be obtained by using
-   \code{model="factor"}.
+   \code{model="factor"}. Note however that the cohort factor is defined
+   from \code{A} and \code{P}, so that it is not possible in this
+   framework to replicate the Boyle-Robertson fallacy.
    }
 \references{
    The considerations behind the parametrizations used in this function
@@ -211,26 +224,30 @@ apc.fit( data,
 library( Epi )
 data(lungDK)
 
-# Taylor a dataframe that meets the requirements
+# Taylor a dataframe that meets the requirements for variable names
 exd <- lungDK[,c("Ax","Px","D","Y")]
 names(exd)[1:2] <- c("A","P")
 
-# Two different ways of parametrizing the APC-model, ML
-ex.H <- apc.fit( exd, npar=7, model="ns", dr.extr="Holford",  parm="ACP", scale=10^5 )
-ex.W <- apc.fit( exd, npar=7, model="ns", dr.extr="weighted", parm="ACP", scale=10^5 )
+# Three different ways of parametrizing the APC-model, ML
+ex.1 <- apc.fit( exd, npar=7, model="ns", dr.extr="1", parm="ACP", scale=10^5 )
+ex.D <- apc.fit( exd, npar=7, model="ns", dr.extr="D", parm="ACP", scale=10^5 )
+ex.Y <- apc.fit( exd, npar=7, model="ns", dr.extr="Y", parm="ACP", scale=10^5 )
 
 # Sequential fit, first AC, then P given AC.
 ex.S <- apc.fit( exd, npar=7, model="ns", parm="AC-P", scale=10^5 )
 
 # Show the estimated drifts
-ex.H[["Drift"]]
-ex.W[["Drift"]]
+ex.1[["Drift"]]
+ex.D[["Drift"]]
+ex.Y[["Drift"]]
 ex.S[["Drift"]]
 
 # Plot the effects
-fp <- apc.plot( ex.H )
-apc.lines( ex.W, frame.par=fp, col="red" )
-apc.lines( ex.S, frame.par=fp, col="blue" )
+lt <- c("solid","22")[c(1,1,2)]
+apc.plot( ex.1, lty=c(1,1,3) )
+apc.lines( ex.D, col="red", lty=c(1,1,3) )
+apc.lines( ex.Y, col="limegreen", lty=c(1,1,3) )
+apc.lines( ex.S, col="blue", lty=c(1,1,3) )
 }
 \keyword{models}
 \keyword{regression}

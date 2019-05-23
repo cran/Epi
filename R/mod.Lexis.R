@@ -29,8 +29,10 @@ Lx <- Lx[Lx$lex.Cst %in% from,]
 trt <- function( f, t ) paste( f, "->", t, sep="" )
 if( paired )
   {
-if( length(from) != length(to) ) stop("If 'paired' is TRUE, from and to must have same length!\n")
-if( any(from==to) ) stop("If 'paired' is TRUE, entries in from and to must be pairwise different\n")
+if( length(from) != length(to) )
+    stop("If 'paired' is TRUE, from and to must have same length!\n")
+if( any(from==to) )
+    stop("If 'paired' is TRUE, entries in from and to must be different within pairs\n")
 trnam <- trt( from, to )
   } else {  
 tm <- tmat( Lx )[from,to,drop=FALSE]
@@ -72,7 +74,7 @@ if( verbose ){
 cat( deparse(substitute(model)),
      " Poisson analysis of Lexis object ", nameLx, " with ", link, " link",
      ":\nRates for", if(  onetr ) " the", " transition",
-                     if( !onetr ) "s", " ", trprn,
+                     if( !onetr ) "s", ": ", trprn,
      if( scale!=1 ) paste(", PY scaled by", scale ), "\n", sep="" )
              }
     
@@ -217,6 +219,6 @@ mod <- coxph( as.formula( paste( "Sobj",
 attr( mod, "Lexis" ) <- list( data=nameLx,
                              trans=trnam,
                            formula=formula )     
-class( mod ) <- c( "coxph.lex", class(mod ) )    
+class( mod ) <- c( "coxph.lex", class(mod) )    
 mod
 }

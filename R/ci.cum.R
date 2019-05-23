@@ -20,14 +20,15 @@ if( inherits( ctr.mat, "data.frame" ) ) { ctr.mat <- df2ctr( obj, ctr.mat )
 } else {
 # Workaround to expand the vcov matrix with 0s so that it matches
 # the coefficients vector in case of (extrinsic) aliasing.
-if( any( is.na( cf ) ) )
-  {
-  vM <- matrix( 0, length( cf ), length( cf ) )
-  dimnames( vM ) <- list( names( cf ), names( cf ) )
-  vM[!is.na(cf),!is.na(cf)] <- vcv
-  cf[is.na(cf)] <- 0
-  vcv <- vM
-  }
+## NOT needed after 3.5.0
+## if( any( is.na( cf ) ) )
+##   {
+##   vM <- matrix( 0, length( cf ), length( cf ) )
+##   dimnames( vM ) <- list( names( cf ), names( cf ) )
+##   vM[!is.na(cf),!is.na(cf)] <- vcv
+##   cf[is.na(cf)] <- 0
+##   vcv <- vM
+##   }
 
 if( is.character( subset ) ) {
   sb <- numeric(0)
@@ -56,7 +57,7 @@ if( dim( ctr.mat )[2] != length(cf) )
 # Finally, here is the actual computation of the estimates
     ct <- ctr.mat %*% cf
     vc <- ctr.mat %*% vcv %*% t( ctr.mat )
-# If a sample is requested replace the eatimate by a sample
+# If a sample is requested replace the estimate by a sample
     if( sample ) ct <- t( mvrnorm( sample, ct, vc ) )
 # If Exp was requested, we take the exponential of the estimates
 # before we cumulate the sum
@@ -87,4 +88,24 @@ if( Exp )
         return( cbind( cum, "Erf"=exp( qnorm(1-alpha/2)*se/as.vector(ct) ) ) )
         } 
       }
+}
+
+ci.surv <-
+function( obj,
+      ctr.mat = NULL,
+       subset = NULL,
+         intl = 1,
+        alpha = 0.05,
+          Exp = TRUE,
+       sample = FALSE )
+{
+CH <- ci.cum( obj,
+      ctr.mat = ctr.mat,
+       subset = subset,
+         intl = intl,
+        alpha = alpha,
+          Exp = Exp,
+       ci.Exp = TRUE,
+       sample = sample )
+exp( -rbind(0,CH[1:(nrow(CH)-1),-4]) )        
 }

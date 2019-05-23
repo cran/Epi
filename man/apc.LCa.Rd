@@ -55,7 +55,7 @@ Bendix Carstensen, \url{http://BendixCarstensen.com}
 }
 \examples{
 library( Epi )
-
+clear()
 # Danish lung cancer incidence in 5x5x5 Lexis triangles
 data( lungDK )
 lc <- subset( lungDK, Ax>40 )[,c("Ax","Px","D","Y")]
@@ -63,10 +63,7 @@ names( lc )[1:2] <- c("A","P")
 head( lc )
 
 al <- apc.LCa( lc, npar=c(9,6,6,6,10), keep.models=TRUE, maxit=500, eps=10e-3 )
-show.apc.LCa( al, dev=FALSE )
-show.apc.LCa( al, top="AP" )
-show.apc.LCa( al, top="APa" )
-show.apc.LCa( al, top="ACa" )
+show.apc.LCa( al, dev=TRUE )
 
 # Danish mortality data
 \dontrun{

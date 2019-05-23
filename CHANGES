@@ -1,17 +1,43 @@
+Changes in 2.37
+
+o ci.surv added to facilitate calculation of survival function from a
+  smooth parametrtic model
+
+o Bug in apc.LCa - wrong labeling of resulting list element has been
+  rectified.
+
+Changes in 2.36
+
+o Lexis gains an 'notes' argument allowing to silence notes
+
+o Documentation of bootLexis upadated and groomed
+ 
+o Description of units of measurment in diet dataset corrected
+
+o Problems with default reference period/cohort in apc.fit fixed
+
+o apc.lines gains an argument shade= enabling shaded confidence limits
+  of estimated curves.
+
+o Scaling of the trend internally in projection.ip to avoid numerical
+  problems in solve()
+
+o Default vertical scaling of the box size in boxes.MS increased a bit
+
 Changes in 2.35
 
 o Major re-write of vignette of  follow-up data
 
 o glm.Lexis example updated
 
-o Lexis now gives a not and not a warning when dropping persons with
-  no FU 
+o Lexis now gives a note and not a warning when dropping persons with
+  no follow-up time
 
 o Epi.Rd included as man page, allowing easy access to the index via ?Epi.
 
 o simLexis updated to cope with poisreg family in modeling input
 
-o timeSince funtion added to tell which time scales are defined as
+o timeSince function added to tell which time scales are defined as
   time since entry to a state. Allows for a slightly more compact
   output from summary.Lexis, when timeScales=TRUE.
 

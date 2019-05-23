@@ -35,8 +35,8 @@ This data frame contains the following columns:
 vector \cr
 \code{height}: \tab (cm), a numeric vector \cr
 \code{weight}: \tab (kg), a numeric vector \cr
-\code{fat}: \tab   fat intake (g/day), a numeric vector \cr
-\code{fibre}: \tab dietary fibre intake (g/day), a numeric vector \cr
+\code{fat}: \tab   fat intake (10 g/day), a numeric vector \cr
+\code{fibre}: \tab dietary fibre intake (10 g/day), a numeric vector \cr
 \code{energy.grp}: \tab high daily energy intake, a factor with levels
 \code{<=2750 KCal}
 \code{>2750 KCal} \cr

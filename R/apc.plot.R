@@ -56,6 +56,7 @@ function( x,
         col = "black",
        type = "l",
       knots = FALSE,
+      shade = FALSE,
         ...
         )
 {
@@ -116,12 +117,23 @@ if( p0 != c0+a0 )
                           exp( mean(      A[,2] ) ),
                           exp( mean( log( A[,2] ) ) ) ) )
   # Now we can plot the lines
-  matlines( A[,1], A[,ifelse( ci[1], -1, 2)],
+if( !shade )
+  {  
+  matlines( A[,1]               , A[,ifelse( ci[1], -1, 2)],
             col=col[1], lwd=lwd, lty=lty[1], type=type[1], ... )
   matlines( P[,1] - frame.par[1], P[,ifelse( ci[2], -1, 2)] * frame.par[2],
             col=col[2], lwd=lwd, lty=lty[2], type=type[2], ... )
   matlines( C[,1] - frame.par[1], C[,ifelse( ci[3], -1, 2)] * frame.par[2],
             col=col[3], lwd=lwd, lty=lty[3], type=type[3], ... )
+  } else {  
+  matshade( A[,1]               , A[,-1],
+            col=col[1], lwd=lwd, lty=lty[1], ... )
+  matshade( P[,1] - frame.par[1], P[,-1] * frame.par[2],
+            col=col[2], lwd=lwd, lty=lty[2], ... )
+  matshade( C[,1] - frame.par[1], C[,-1] * frame.par[2],
+            col=col[3], lwd=lwd, lty=lty[3], ... )
+  }
+    
   points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=16, col="white" )
   points( obj$Ref - frame.par[1], frame.par[c(2,2)], pch=1, lwd=2, col=col[2:3] )
   if( knots & inherits( obj, "apc" ) )

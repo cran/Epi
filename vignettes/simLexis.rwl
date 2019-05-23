@@ -1,7 +1,7 @@
-R version 3.5.2 (2018-12-20) 
+R version 3.6.0 (2019-04-26) 
  ---------------------------------------------
   Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
- Started:  Friday 01. March 2019, 12:17:13 
+ Started:  Thursday 23. May 2019, 10:21:05 
  ---------------------------------------------
 Writing to file simLexis.tex
 Processing code chunks with options ...
@@ -51,6 +51,6 @@ You can now run (pdf)latex on ‘simLexis.tex’
 
  ---------------------------------------------
   Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
-   Ended: Friday 01. March 2019, 12:18:30
- Elapsed: 00:01:17
+   Ended: Thursday 23. May 2019, 10:22:22
+ Elapsed: 00:01:16
  ---------------------------------------------

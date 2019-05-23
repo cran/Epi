@@ -24,6 +24,7 @@
           col = "black",
          type = "l",
         knots = FALSE,
+        shade = FALSE,
           ... )
  apc.lines( x, P, C,
         scale = c("log","ln","rates","inc","RR"),
@@ -38,6 +39,7 @@
           col = "black",
          type = "l",
         knots = FALSE,
+        shade = FALSE,
           ... )
 }
 \arguments{
@@ -77,6 +79,8 @@
   \item{col}{Colours for the three effects.}
   \item{type}{What type of lines / points should be used.}
   \item{knots}{Should knots from the model be shown?}
+  \item{shade}{Should confidence intervals be plotted as shaded areas?
+    If true, the setting of \code{ci} is ignored.}
   \item{...}{Further parameters to be transmitted to \code{points}
     \code{lines}, \code{matpoints} or \code{matlines} used
     for plotting the three sets of curves.}

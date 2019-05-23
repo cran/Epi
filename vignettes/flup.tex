@@ -126,26 +126,26 @@ For illustration we need to load the \texttt{Epi} package:
 > print( sessionInfo(), l=F )
 \end{Sinput}
 \begin{Soutput}
-R version 3.5.2 (2018-12-20)
+R version 3.6.0 (2019-04-26)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 14.04.5 LTS
+Running under: Ubuntu 14.04.6 LTS
 
 Matrix products: default
-BLAS: /usr/lib/openblas-base/libopenblas.so.0
+BLAS:   /usr/lib/openblas-base/libopenblas.so.0
 LAPACK: /usr/lib/lapack/liblapack.so.3.0
 
 attached base packages:
 [1] utils     datasets  graphics  grDevices stats     methods   base     
 
 other attached packages:
-[1] Epi_2.35
+[1] Epi_2.37
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.0        lattice_0.20-38   zoo_1.8-4         MASS_7.3-51.1    
- [5] grid_3.5.2        plyr_1.8.4        nlme_3.1-137      etm_1.0.4        
- [9] data.table_1.12.0 Matrix_1.2-15     splines_3.5.2     tools_3.5.2      
-[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_2.43-3   parallel_3.5.2   
-[17] compiler_3.5.2    mgcv_1.8-27      
+ [5] grid_3.6.0        plyr_1.8.4        nlme_3.1-139      etm_1.0.4        
+ [9] data.table_1.12.0 Matrix_1.2-17     splines_3.6.0     tools_3.6.0      
+[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_2.44-1.1 parallel_3.6.0   
+[17] compiler_3.6.0    mgcv_1.8-28      
 \end{Soutput}
 \end{Schunk}
 In the \texttt{Epi} package, follow-up in a cohort is represented in a
@@ -1067,7 +1067,7 @@ called \texttt{glm.Lexis} it is \emph{not} an S3 method for
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition DM->Dead
+Rates for the transition: DM->Dead
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{glm} object but with an extra attribute, \texttt{Lexis}:
@@ -1084,7 +1084,7 @@ $trans
 
 $formula
 ~Ns(age, knots = a.kn)
-<environment: 0x914f510>
+<environment: 0xbe99468>
 
 $scale
 [1] 1
@@ -1103,7 +1103,7 @@ modeled:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \end{Schunk}
 We can check if the four models fitted are the same:
@@ -1223,7 +1223,7 @@ modeling all transitions \emph{into} the absorbing state
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > c( deviance(Pm), deviance(pm) )
@@ -1478,7 +1478,7 @@ At first glance we might think of doing:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \end{Schunk}
 But this will fit a model with a rate-ratio between persons with and
@@ -1499,7 +1499,7 @@ conceptually alike but mathematically different:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > im <- glm.Lexis( tsNA20(dmCs), 
@@ -1510,7 +1510,7 @@ Rates for transitions DM->Dead, Ins->Dead
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \end{Schunk}
 The first model (\texttt{Im}) has a common age-effect (\texttt{Ns(age,...}) for
@@ -1634,7 +1634,7 @@ the prediction code is the same:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions: DM->Dead, Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > pgi <- ci.pred( gm, ndI )
@@ -1703,7 +1703,7 @@ have been more sensible to model the two transitions separately:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition DM->Dead
+Rates for the transition: DM->Dead
 \end{Soutput}
 \begin{Sinput}
 > ind <- glm.Lexis( dmCs,
@@ -1715,7 +1715,7 @@ Rates for the transition DM->Dead
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition Ins->Dead
+Rates for the transition: Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > ini <- ci.pred( ind, ndI )
@@ -1842,12 +1842,12 @@ NOTE:  9996 records with tied events times resolved.
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD-Ins Ins-OAD  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2958  688       0       0      7532     4702   22920.12      7532
-  OAD        0  992 3327    0    1006       0      5325     1998   22965.33      5325
-  Ins        0  152    0  462       0     171       785      323    3883.14       785
-  OAD-Ins    0  265    0    0     741       0      1006      265    3789.45      1006
-  Ins-OAD    0   34    0    0       0     137       171       34     715.23       171
-  Sum     2830 2499 6285 1150    1747     308     14819     7322   54273.27      9996
+  DM      2830 1056 2957  689       0       0      7532     4702   22920.21      7532
+  OAD        0  992 3327    0    1005       0      5324     1997   22965.30      5324
+  Ins        0  152    0  462       0     172       786      324    3883.14       786
+  OAD-Ins    0  266    0    0     739       0      1005      266    3770.53      1005
+  Ins-OAD    0   33    0    0       0     139       172       33     734.09       172
+  Sum     2830 2499 6284 1151    1744     311     14819     7322   54273.27      9996
 
 Timescales:
   per   age   tfD   tfI   tfO 
@@ -1865,19 +1865,19 @@ states.
 +        digits=6, row.names=FALSE )
 \end{Sinput}
 \begin{Soutput}
- lex.id       tfI       tfO     per     age       tfD   lex.dur lex.Cst lex.Xst   doins   dooad
-     18        NA        NA 1996.75 61.7221 0.0000000 1.1690623      DM     OAD 2005.99 1997.92
-     18        NA 0.0000000 1997.92 62.8912 1.1690623 8.0793977     OAD OAD-Ins 2005.99 1997.92
-     18 0.0000000 8.0793977 2005.99 70.9706 9.2484600 4.0027379 OAD-Ins OAD-Ins 2005.99 1997.92
-     20        NA        NA 2009.25 53.2183 0.0000000 0.0258631      DM     OAD 2009.29 2009.27
-     20        NA 0.0000000 2009.27 53.2442 0.0258631 0.0124144     OAD OAD-Ins 2009.29 2009.27
-     20 0.0000000 0.0124144 2009.29 53.2566 0.0382775 0.7118936 OAD-Ins OAD-Ins 2009.29 2009.27
-     38        NA        NA 2008.37 63.9316 0.0000000 0.0930869      DM     Ins 2008.46 2008.67
-     38 0.0000000        NA 2008.46 64.0246 0.0930869 0.2135524     Ins Ins-OAD 2008.46 2008.67
-     38 0.2135524 0.0000000 2008.67 64.2382 0.3066393 1.3251198 Ins-OAD    Dead 2008.46 2008.67
-     39        NA        NA 2005.96 55.5264 0.0000000 0.0574949      DM     Ins 2006.02 2006.05
-     39 0.0000000        NA 2006.02 55.5838 0.0574949 0.0301164     Ins Ins-OAD 2006.02 2006.05
-     39 0.0301164 0.0000000 2006.05 55.6140 0.0876112 3.9452430 Ins-OAD Ins-OAD 2006.02 2006.05
+ lex.id       tfI     tfO     per     age       tfD   lex.dur lex.Cst lex.Xst   doins   dooad
+     18        NA      NA 1996.75 61.7221 0.0000000 1.1690623      DM     OAD 2005.99 1997.92
+     18        NA 0.00000 1997.92 62.8912 1.1690623 8.0793977     OAD OAD-Ins 2005.99 1997.92
+     18 0.0000000 8.07940 2005.99 70.9706 9.2484600 4.0027379 OAD-Ins OAD-Ins 2005.99 1997.92
+     25        NA      NA 2003.69 60.3422 0.0000000 1.8809035      DM     OAD 2008.64 2005.57
+     25        NA 0.00000 2005.57 62.2231 1.8809035 3.0691307     OAD OAD-Ins 2008.64 2005.57
+     25 0.0000000 3.06913 2008.64 65.2923 4.9500342 1.3579740 OAD-Ins OAD-Ins 2008.64 2005.57
+     20        NA      NA 2009.25 53.2183 0.0000000 0.0316523      DM     Ins 2009.28 2009.29
+     20 0.0000000      NA 2009.28 53.2500 0.0316523 0.0105728     Ins Ins-OAD 2009.28 2009.29
+     20 0.0105728 0.00000 2009.29 53.2606 0.0422251 0.7079461 Ins-OAD Ins-OAD 2009.28 2009.29
+     38        NA      NA 2008.37 63.9316 0.0000000 0.0930869      DM     Ins 2008.46 2008.67
+     38 0.0000000      NA 2008.46 64.0246 0.0930869 0.2135524     Ins Ins-OAD 2008.46 2008.67
+     38 0.2135524 0.00000 2008.67 64.2382 0.3066393 1.3251198 Ins-OAD    Dead 2008.46 2008.67
 \end{Soutput}
 \begin{Sinput}
 > summary( dmM, t=T )
@@ -1886,12 +1886,12 @@ states.
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD-Ins Ins-OAD  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2958  688       0       0      7532     4702   22920.12      7532
-  OAD        0  992 3327    0    1006       0      5325     1998   22965.33      5325
-  Ins        0  152    0  462       0     171       785      323    3883.14       785
-  OAD-Ins    0  265    0    0     741       0      1006      265    3789.45      1006
-  Ins-OAD    0   34    0    0       0     137       171       34     715.23       171
-  Sum     2830 2499 6285 1150    1747     308     14819     7322   54273.27      9996
+  DM      2830 1056 2957  689       0       0      7532     4702   22920.21      7532
+  OAD        0  992 3327    0    1005       0      5324     1997   22965.30      5324
+  Ins        0  152    0  462       0     172       786      324    3883.14       786
+  OAD-Ins    0  266    0    0     739       0      1005      266    3770.53      1005
+  Ins-OAD    0   33    0    0       0     139       172       33     734.09       172
+  Sum     2830 2499 6284 1151    1744     311     14819     7322   54273.27      9996
 
 Timescales:
   per   age   tfD   tfI   tfO 
@@ -1937,11 +1937,11 @@ with both insulin and OAD to one, regardless of order (figure
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD+Ins  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2958  688       0      7532     4702   22920.12      7532
-  OAD        0  992 3327    0    1006      5325     1998   22965.33      5325
-  Ins        0  152    0  462     171       785      323    3883.14       785
-  OAD+Ins    0  299    0    0     878      1177      299    4504.68      1177
-  Sum     2830 2499 6285 1150    2055     14819     7322   54273.27      9996
+  DM      2830 1056 2957  689       0      7532     4702   22920.21      7532
+  OAD        0  992 3327    0    1005      5324     1997   22965.30      5324
+  Ins        0  152    0  462     172       786      324    3883.14       786
+  OAD+Ins    0  299    0    0     878      1177      299    4504.62      1177
+  Sum     2830 2499 6284 1151    2055     14819     7322   54273.27      9996
 \end{Soutput}
 \begin{Sinput}
 > boxes( dmMr, boxpos=list(x=c(15,50,15,85,85),
