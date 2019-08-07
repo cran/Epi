@@ -61,7 +61,7 @@ matshade( x, y, lty = 1,
 }
 \value{NULL. Used for its side effects.
 }
-\author{Bendix Carstensen, \url{BendixCarstensen.com}
+\author{Bendix Carstensen, \url{http://BendixCarstensen.com}
 }
 \seealso{\code{\link{pc.matshade}}
 }

@@ -1,18 +1,28 @@
+Changes in 2.38
+
+o Minor editorial changes in urls in documentation files
+
+o The poisreg family now works with anova
+
+o Superfluous 'nanes' attributes on all variables in data sets bdendo and
+  bdendo11 have been removed. Documentation for both now in the same
+  file. bdendo11.Rd removed.
+
 Changes in 2.37
 
 o ci.surv added to facilitate calculation of survival function from a
-  smooth parametrtic model
+  smooth parametric model
 
 o Bug in apc.LCa - wrong labeling of resulting list element has been
   rectified.
 
 Changes in 2.36
 
-o Lexis gains an 'notes' argument allowing to silence notes
+o Lexis gains a 'notes' argument allowing to silence notes
 
 o Documentation of bootLexis upadated and groomed
  
-o Description of units of measurment in diet dataset corrected
+o Description of units of measurement in diet dataset corrected
 
 o Problems with default reference period/cohort in apc.fit fixed
 

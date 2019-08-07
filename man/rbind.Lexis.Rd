@@ -83,4 +83,5 @@ sD <- splitLexis( Dcoh, time.scale="tfe", breaks=0:50*2 )
 sDL <- rbind( sD, sL )
 }
 
-\keyword{survival,manip}
+\keyword{survival}
+\keyword{manip}

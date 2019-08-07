@@ -45,7 +45,7 @@ and \code{transitions} - a table of transitions and censorings showing
 which transition was analysed and which were taken as competing events.
 }
 
-\author{ Bendix Carstensen, \url{BendixCarstensen.com} }
+\author{Bendix Carstensen, \url{http://BendixCarstensen.com} }
 
 \seealso{
   \code{\link[cmprsk:crr]{crr}}, \code{\link{Lexis}}

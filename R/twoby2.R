@@ -68,11 +68,12 @@ twoby2 <-
                           paste( 100*(1-alpha),"% conf.", sep="" ), 
                           "interval" )
     if( print ) print( round( rmat, dec ) )
-    if( print ) cat( if( Fisher )
-                    "\n             Exact P-value:",
-                     if( Fisher )                    round( ft$p.value, dec ),
-                    "\n        Asymptotic P-value:", round( as.pval, dec ),
-                    "\n------------------------------------------------------\n")
+    if( print ) cat(
+        if( Fisher ) "\n             Exact P-value:",
+        if( Fisher ) formatC( ft$p.value, format="f", digits=dec ),
+                     "\n        Asymptotic P-value:",
+                     formatC( as.pval,    format="f", digits=dec ),
+        "\n------------------------------------------------------\n")
     invisible( list( table = tbl,
                   measures = rmat,
                    p.value = c(as.pval,if( Fisher )ft$p.value) ) )

@@ -1,5 +1,5 @@
-
 %\VignetteIndexEntry{Years of life lost (YLL)}
+
 \documentclass[a4paper,twoside,12pt]{report}
 
 \newcommand{\Title}{Years of Life Lost (YLL)
@@ -462,7 +462,7 @@ We now collect the estimated years of life lost classified by method
 \end{Sinput}
 \begin{Soutput}
    user  system elapsed 
- 16.748   8.634  14.860 
+ 17.061   8.139  15.387 
 \end{Soutput}
 \begin{Sinput}
 > round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
@@ -646,33 +646,43 @@ conditional survival given being alive at prespecified ages:
 > surv1
 \end{Sinput}
 \begin{Soutput}
-function (int, mu, age.in = 0, A = NULL) 
+function( int, mu, age.in=0, A=NULL )
 {
-    if (any(is.na(mu))) {
-        mu[is.na(mu)] <- 0
-        warning("NAs in agument 'mu' set to 0")
-    }
-    age <- 0:length(mu) * int + age.in
-    Mu <- c(0, cumsum(mu) * int)
-    Sv <- exp(-Mu)
-    surv <- data.frame(age = age, surv = Sv)
-    if (cond <- !is.null(A)) {
-        j <- 0
-        cage <- NULL
-        for (ia in A) {
-            j <- j + 1
-            cA <- which(diff(age > ia) == 1)
-            surv <- cbind(surv, pmin(1, surv$surv/(surv$surv[cA])))
-            cage[j] <- surv$age[cA]
-        }
-    }
-    names(surv)[-1] <- paste("A", c(age.in, if (cond) cage else NULL), 
-        sep = "")
-    rownames(surv) <- NULL
-    return(surv)
+# Computes the survival function from age A till the end, assuming
+# that mu is a vector of mortalities in intervals of length int. 
+# int and mu should be in compatible units that is T and T^-1 for
+# some unit T (months, years, ...) 
+
+# impute 0s for NAs
+if( any(is.na(mu)) ){ mu[is.na(mu)] <- 0 ; warning("NAs in agument 'mu' set to 0") }
+    
+# age-class boundaries    
+age <- 0:length(mu)*int + age.in
+
+# cumulative rates and survival at the boundaries    
+Mu <- c( 0, cumsum( mu )*int )
+Sv <- exp( -Mu )
+surv <- data.frame( age=age, surv=Sv )
+    
+# if a vector of conditioning ages A is given
+if( cond <- !is.null(A) )
+  {
+  j <- 0
+  # actual conditioning ages
+  cage <- NULL
+  for( ia in A )
+     {
+     j <- j+1
+     # Where is the age we condition on
+     cA <- which( diff(age>ia)==1 )
+     surv <- cbind( surv, pmin( 1, surv$surv/(surv$surv[cA]) ) )
+     cage[j] <- surv$age[cA]
+     }
+  }
+names( surv )[-1] <- paste( "A", c( age.in, if( cond ) cage else NULL ), sep="" )
+rownames( surv ) <- NULL
+return( surv ) 
 }
-<bytecode: 0x92aacd8>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 \texttt{erl1} basically just expands the result of \texttt{surv1} with
@@ -682,16 +692,21 @@ a column of expected residual life times:
 > erl1
 \end{Sinput}
 \begin{Soutput}
-function (int, mu, age.in = 0) 
+function( int, mu, age.in = 0 )
 {
-    age <- 0:length(mu) * int + age.in
-    musmuc <- function(x) rev(cumsum(rev(x)))
-    surv <- surv1(int = int, mu = mu, age.in = age.in)[, 2]
-    cbind(age = age, surv = surv, erl = c(musmuc((surv[-1] - 
-        diff(surv)/2))/surv[-length(surv)], 0) * int)
+# Computes expected residual life time at all ages    
+age <- 0:length(mu)*int + age.in
+
+# Small utility: cumulative cumulative sum from the end of a vector
+musmuc <- function( x ) rev( cumsum( rev(x) ) )
+
+# The survival function with a 0 at end, and the integral from the upper end
+surv <- surv1( int = int, mu = mu, age.in = age.in )[,2]
+cbind( age = age,
+      surv = surv,
+       erl = c( musmuc( ( surv[-1]-diff(surv)/2 ) ) /
+                surv[-length(surv)], 0 ) * int )
 }
-<bytecode: 0x74e9238>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 We also define a function, \texttt{surv2}, that computes the survival
@@ -704,54 +719,82 @@ handling years of life lost to a particular illness:
 > surv2
 \end{Sinput}
 \begin{Soutput}
-function (int, muW, muD, lam, age.in = 0, A = NULL) 
+function( int, muW, muD, lam, age.in=0, A=NULL )
 {
-    if (length(muW) != length(muD) | length(muD) != length(lam)) 
-        stop("Vectors with rates must have same length:\n", "length(muW)=", 
-            length(muW), ", length(muD)=", length(muD), ", length(lam)=", 
-            length(lam))
-    if (!is.null(lam)) {
-        if (any(is.na(lam))) {
-            lam[is.na(lam)] <- 0
-            warning("NAs in agument 'lam' set to 0")
-        }
-    }
-    if (any(is.na(muD))) {
-        muD[is.na(muD)] <- 0
-        warning("NAs in agument 'muD' set to 0")
-    }
-    if (any(is.na(muW))) {
-        muW[is.na(muW)] <- 0
-        warning("NAs in agument 'muW' set to 0")
-    }
-    wsurv2 <- function(int, muW, muD, lam, age.in = 0, A = 0) {
-        age <- 0:length(muW) * int + age.in
-        MuW <- cumsum(c(0, muW) * (age > A)) * int
-        MuD <- cumsum(c(0, muD) * (age > A)) * int
-        Lam <- cumsum(c(0, lam) * (age > A)) * int
-        pW <- exp(-(Lam + MuW))
-        Dis <- c(0, lam) * (age > A) * exp(-(Lam + MuW)) * int
-        pDM <- Dis * 0
-        for (ia in 1:length(age)) pDM[ia] <- sum(Dis[1:ia] * 
-            exp(-(MuD[ia] - MuD[1:ia])))
-        surv <- data.frame(age = age, surv = pDM + pW)
-        return(surv)
-    }
-    surv <- wsurv2(int, muW, muD, lam, age.in = age.in, A = 0)
-    if (!is.null(A)) {
-        for (j in 1:length(A)) {
-            surv <- cbind(surv, wsurv2(int, muW, muD, lam, age.in = age.in, 
-                A = A[j])[, 2])
-        }
-    }
-    Al <- A
-    for (i in 1:length(A)) Al[i] <- max(surv$age[surv$age <= 
-        A[i]])
-    colnames(surv)[-1] <- paste("A", c(age.in, Al), sep = "")
-    return(surv)
+# check the vectors
+if( length(muW) != length(muD) | 
+    length(muD) != length(lam) ) 
+  stop( "Vectors with rates must have same length:\n",
+          "length(muW)=", length(muW),
+        ", length(muD)=", length(muD),
+        ", length(lam)=", length(lam) )
+
+# Replace NAs with 0s
+if( !is.null(lam) ) {
+if( any(is.na(lam)) ){ lam[is.na(lam)] <- 0 ; warning("NAs in agument 'lam' set to 0") } }
+if( any(is.na(muD)) ){ muD[is.na(muD)] <- 0 ; warning("NAs in agument 'muD' set to 0") }
+if( any(is.na(muW)) ){ muW[is.na(muW)] <- 0 ; warning("NAs in agument 'muW' set to 0") }
+
+# First the workhorse that computes the survival function for a
+# person in Well assuming that the mortality rate from this state is
+# muW, disease incidence is in lam, and mortality in the diseased
+# state is muD, and that all refer to constant rates intervals of
+# length int starting from age.in, conditional on survival to A 
+wsurv2 <-
+function( int, muW, muD, lam, age.in=0, A=0 )
+{
+# age-class boundaries - note one longer than rate vectors as it
+# refers to boundaries of intervals not midpoints  
+age <- 0:length(muW)*int + age.in
+    
+# cumulative rates at the boundaries, given survival to A
+MuW <-  cumsum( c( 0, muW ) * ( age > A ) ) * int
+MuD <-  cumsum( c( 0, muD ) * ( age > A ) ) * int
+Lam <-  cumsum( c( 0, lam ) * ( age > A ) ) * int
+    
+# probability of being well
+pW <- exp( -( Lam + MuW ) )
+    
+# probability of diagnosis at s --- first term in the integral for
+# P(DM at a). Note that we explicitly add a 0 at the start so we get a
+# probability of 0 of transition at the first age point 
+Dis <- c(0,lam) * ( age > A ) * exp( -(Lam+MuW) ) * int
+    
+# for each age (age[ia]) we compute the integral over the range
+# [0,age] of the product of the probability of diagnosis and the
+# probability of surviving from diagnosis till age ia
+pDM <- Dis * 0
+for( ia in 1:length(age) )
+   pDM[ia] <- sum( Dis[1:ia] * exp( -(MuD[ia]-MuD[1:ia]) ) )
+                   # 1st term as function of s (1:ia)
+                               # 2nd term integral over range s:age
+                   # upper integration limit is age (ia) and the lower
+                   # limit is the intermediate age (at DM) (1:ia)
+# Finally, we add the probabilities of being in Well resp. DM to get
+# the overall survival:
+surv <- data.frame( age = age, surv = pDM + pW )
+return( surv )
+}    
+
+# survival from start    
+surv <- wsurv2( int, muW, muD, lam, age.in=age.in, A=0 )
+
+# add columns for conditioning ages    
+if( !is.null(A) )
+   { 
+   for( j in 1:length(A) )
+      { 
+      surv <- cbind( surv, 
+                     wsurv2( int, muW, muD, lam, age.in=age.in, A=A[j] )[,2] )
+      }
+   }
+Al <- A
+for( i in 1:length(A) ) Al[i] <- max( surv$age[surv$age <= A[i]] )
+colnames( surv )[-1] <- paste( "A", c( age.in, Al ), sep="" )    
+
+# done!    
+return( surv )
 }
-<bytecode: 0x8a919b0>
-<environment: namespace:Epi>
 \end{Soutput}
 \end{Schunk}
 Finally we devised a function using these to compute the expected
@@ -761,49 +804,60 @@ residual lifetime at select ages:
 > erl
 \end{Sinput}
 \begin{Soutput}
-function (int, muW, muD, lam = NULL, age.in = 0, A = NULL, immune = is.null(lam), 
-    yll = TRUE, note = TRUE) 
+function( int,
+          muW,
+          muD,
+          lam = NULL,
+       age.in = 0,
+            A = NULL,
+       immune = is.null(lam),
+          yll = TRUE,
+         note = TRUE )
 {
-    trsum <- function(x) {
-        x[c(diff(x) == 0, TRUE)] <- NA
-        sum((x[-length(x)] + x[-1])/2, na.rm = TRUE)
-    }
-    if (!immune & is.null(lam)) 
-        stop("'lam' is required when immune=FALSE\n")
-    if (!is.null(lam)) {
-        if (any(is.na(lam))) {
-            lam[is.na(lam)] <- 0
-            warning("NAs in agument 'lam' set to 0")
-        }
-    }
-    if (any(is.na(muD))) {
-        muD[is.na(muD)] <- 0
-        warning("NAs in agument 'muD' set to 0")
-    }
-    if (any(is.na(muW))) {
-        muW[is.na(muW)] <- 0
-        warning("NAs in agument 'muW' set to 0")
-    }
-    sD <- surv1(int = int, muD, age.in = age.in, A = A)
-    if (immune) 
-        sW <- surv1(int = int, muW, age.in = age.in, A = A)
-    else sW <- surv2(int = int, muW, muD, lam, age.in = age.in, 
-        A = A)
-    erl <- cbind(apply(sW[, -1], 2, trsum), apply(sD[, -1], 2, 
-        trsum)) * int
-    colnames(erl) <- c("Well", "Dis")
-    rownames(erl) <- colnames(sW)[-1]
-    if (yll) 
-        erl <- cbind(erl, YLL = erl[, "Well"] - erl[, "Dis"])
-    if (immune) {
-        attr(erl, "NOTE") <- "Calculations assume that Well persons cannot get Ill (quite silly!)."
-        if (note) 
-            cat("NOTE:", attr(erl, "NOTE"), "\n")
-    }
-    return(erl)
+# Computes expected residual life time for Well and Dis states
+# respectively in an illness-death model, optionally ignoring
+# the well->ill transition
+
+# Utility to integrate a survival function from the last point where
+# it is 1, assuming points are 1 apart
+trsum <-
+function( x )
+{
+x[c(diff(x)==0,TRUE)] <- NA     
+sum( ( x[-length(x)] + x[-1] ) / 2, na.rm=TRUE )
 }
-<bytecode: 0x92b1d18>
-<environment: namespace:Epi>
+
+# Check sensibility
+if( !immune & is.null(lam) ) stop( "'lam' is required when immune=FALSE\n" )
+
+# Replace NAs with 0s
+if( !is.null(lam) ) {
+if( any(is.na(lam)) ){ lam[is.na(lam)] <- 0 ; warning("NAs in agument 'lam' set to 0") } }
+if( any(is.na(muD)) ){ muD[is.na(muD)] <- 0 ; warning("NAs in agument 'muD' set to 0") }
+if( any(is.na(muW)) ){ muW[is.na(muW)] <- 0 ; warning("NAs in agument 'muW' set to 0") }
+    
+# Survival functions    
+             sD <- surv1( int=int,      muD,      age.in = age.in, A = A )
+if( immune ) sW <- surv1( int=int, muW,           age.in = age.in, A = A )    
+else         sW <- surv2( int=int, muW, muD, lam, age.in = age.in, A = A )
+
+# Area under the survival functions    
+erl <- cbind( apply( sW[,-1], 2, trsum ),
+              apply( sD[,-1], 2, trsum ) ) * int
+colnames( erl ) <- c("Well","Dis")
+rownames( erl ) <- colnames( sW )[-1]
+
+# Should we compute years of life lost? 
+if( yll ) erl <- cbind( erl, YLL = erl[,"Well"] - erl[,"Dis"] )
+
+# Cautionary note
+if( immune )
+  {
+  attr( erl, "NOTE" ) <- "Calculations assume that Well persons cannot get Ill (quite silly!)."
+  if( note ) cat("NOTE:",  attr( erl, "NOTE" ), "\n" )
+  }  
+return( erl )
+}
 \end{Soutput}
 \end{Schunk}
 \ldots and a wrapper for this if we only want the years of life lost
@@ -813,12 +867,22 @@ returned:
 > yll
 \end{Sinput}
 \begin{Soutput}
-function (int, muW, muD, lam = NULL, age.in = 0, A = NULL, immune = is.null(lam), 
-    note = TRUE) 
-erl(int = int, muW = muW, muD = muD, lam = lam, age.in = age.in, 
-    A = A, immune = immune, yll = TRUE, note = note)[, "YLL"]
-<bytecode: 0xab9bdf0>
-<environment: namespace:Epi>
+function( int,
+          muW,
+          muD,
+          lam = NULL,
+       age.in = 0,
+            A = NULL,
+       immune = is.null(lam),
+         note = TRUE ) erl( int = int,      
+                            muW = muW,      
+                            muD = muD,      
+                            lam = lam,      
+                         age.in = age.in,   
+                              A = A,        
+                         immune = immune,   
+                            yll = TRUE,
+                           note = note )[,"YLL"]
 \end{Soutput}
 \end{Schunk}
 

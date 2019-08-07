@@ -47,7 +47,7 @@ bootLexis( Lx, size = NULL, by = NULL, replace=TRUE )
   \code{nid} counts the number of persons in a Lexis object, possibly by
   \code{by}. If \code{by} is given, a named vector is returned.
 }
-\author{Bendix Carstensen, \url{BendixCarstensen.com}.}
+\author{Bendix Carstensen, \url{http://BendixCarstensen.com}.}
 \seealso{\code{\link{Relevel.Lexis}},\code{\link{subset.Lexis}}}
 \examples{
 # A small bogus cohort

@@ -38,7 +38,7 @@ state, \code{other}, say, will be changed to transitions from
 A \code{\link{Lexis}} object with the indicated transition removed.
 }
 \author{
-Bendix Carstensen, \url{BendixCarstensen.com}.
+Bendix Carstensen, \url{http://BendixCarstensen.com}.
 }
 \seealso{
 \code{\link{Relevel}}

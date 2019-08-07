@@ -1,15 +1,17 @@
 \name{bdendo}
 \alias{bdendo}
+\alias{bdendo11}
 \docType{data}
 \title{A case-control study of endometrial cancer}
 \description{
-The \code{bdendo} data frame has 315 rows and 13 columns.
-These data concern a study in which each case of endometrial cancer was
-matched with 4 controls. Matching was by date of birth (within one
-year), marital status, and residence.
+The \code{bdendo} data frame has 315 rows and 13 columns,
+\code{bdendo11} 126 rows.  These data concern a study in which each case
+of endometrial cancer was matched with 4 controls. \code{bdendo11} is a
+1:1 mathed subset of \code{bdendo}. Matching was by date of birth
+(within one year), marital status, and residence.
 }
 \format{
-This data frame contains the following columns:
+These data frames have the following columns:
 \tabular{rl}{
 \code{set}: \tab Case-control set: a numeric vector  \cr
 \code{d}: \tab Case or control: a numeric vector (1=case, 0=control) \cr
@@ -25,15 +27,15 @@ This data frame contains the following columns:
 \code{est}: \tab A factor with levels
                  \code{No} 
                  \code{Yes}. \cr
-\code{dur}: \tab Duration of conjugated oestrogen therapy: an ordered factor with levels
-                 \code{0} < \code{1} < \code{2} < \code{3} < \code{4}. \cr
+\code{dur}: \tab Duration of conjugated oestrogen therapy: a factor with levels
+                 \code{0}, \code{1}, \code{2}, \code{3}, \code{4}. \cr
 \code{non}: \tab Use of non oestrogen drugs: a factor with levels
                  \code{No} 
                  \code{Yes}. \cr
 \code{duration}: \tab Months of oestrogen therapy: a numeric vector.  \cr
 \code{age}: \tab A numeric vector. \cr
-\code{cest}: \tab Conjugated oestrogen dose: an ordered factor with levels
-\code{0} < \code{1} < \code{2} < \code{3}. \cr
+\code{cest}: \tab Conjugated oestrogen dose: a factor with levels
+\code{0}, \code{1}, \code{2}, \code{3}. \cr
 \code{agegrp}: \tab A factor with levels
                     \code{55-59} 
                     \code{60-64} 
@@ -54,5 +56,6 @@ Publications, IARC:Lyon, 1980.
 }
 \examples{
 data(bdendo)
+str(bdendo)
 }
 \keyword{datasets}

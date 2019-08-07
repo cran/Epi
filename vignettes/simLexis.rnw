@@ -1,5 +1,5 @@
-\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 %\VignetteIndexEntry{Simulation of multistate models with multiple timescales: simLexis}
+\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
 
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple

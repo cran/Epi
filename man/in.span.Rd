@@ -68,7 +68,7 @@ thinCol( A, tol = 1e-06, col.num = FALSE )
   (one possible set of) positions of columns forming a full rank basis
   for the column space of \code{A} is returned.
 }
-\author{Bendix Carstensen, \url{BendixCarstensen.com} with essential
+\author{Bendix Carstensen, \url{http://BendixCarstensen.com} with essential
   help from Lars Jorge Diaz and Peter Dalgaard.
 }
 \seealso{\code{\link{det}}

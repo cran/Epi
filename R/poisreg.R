@@ -32,27 +32,41 @@ poisreg <- function (link = "log")
 	-2*sum(ifelse(n > 0, (wt/n), 0)*dpois(round(y*n), mu*n, log=TRUE))
     }
     initialize <- expression({
-        if (NCOL(y) != 2) {
+        if (NCOL(y) == 1) {
+            n <- rep.int(1, nobs)
+            y[weights == 0] <- 0
+            if (any(y < 0)) {
+                stop("y values must be >= 0")
+            }
+            m <- weights * y
+            if (any(abs(m - round(m)) > 0.001)) {
+                warning("non-integer #successes in poisreg glm!")
+            }
+            mustart <- m + 0.1
+        }
+        else if (NCOL(y) == 2) {
+            if (any(y[,1] < 0)) {
+                stop("negative values not allowed for the 'poisreg' family")
+            }
+            if (any(y[,2] < 0)) {
+                stop("negative time not allowed for the 'poisreg' family")
+            }
+            if(any(y[,1] > 0 & y[,2] == 0)) {
+                stop("non-zero counts in zero time in a poisreg glm!")
+            }
+            if(any(abs(y[,1] - round(y[,1])) > 1e-3)) {
+                warning("non-integer counts in a poisreg glm!")
+            }
+
+            n <- y[,2]
+            y <- ifelse(n == 0, 0, y[, 1]/n)
+            
+            weights <- weights * n
+            mustart <- y + 0.1
+        }
+        else {
             stop("for the 'poisreg' family, y must be a 2 column matrix where col 1 is no. events and col 2 is time")
         }
-        if (any(y[,1] < 0)) {
-	    stop("negative values not allowed for the 'poisreg' family")
-        }
-        if (any(y[,2] < 0)) {
-	    stop("negative time not allowed for the 'poisreg' family")
-        }
-        if(any(y[,1] > 0 & y[,2] == 0)) {
-            stop("non-zero counts in zero time in a poisreg glm!")
-        }
-        if(any(abs(y[,1] - round(y[,1])) > 1e-3)) {
-            warning("non-integer counts in a poisreg glm!")
-        }
-
-        n <- y[,2]
-        y <- ifelse(n == 0, 0, y[, 1]/n)
-
-        weights <- weights * n
-	mustart <- y + 0.1
     })
     simfun <- function(object, nsim) {
         wts <- object$prior.weights

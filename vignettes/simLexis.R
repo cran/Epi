@@ -402,19 +402,19 @@ box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
 
 
 ###################################################
-### code chunk number 30: CHANGE1 (eval = FALSE)
+### code chunk number 30: CHANGE1
 ###################################################
-## source( "../R/simLexis.R", keep.source=TRUE )
+source( "../R/simLexis.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 31: CHANGE2
+### code chunk number 31: CHANGE2 (eval = FALSE)
 ###################################################
-simX <- Epi:::simX
-sim1 <- Epi:::sim1
-lint <- Epi:::lint
-get.next <- Epi:::get.next
-chop.lex <- Epi:::chop.lex
+## simX <- Epi:::simX
+## sim1 <- Epi:::sim1
+## lint <- Epi:::lint
+## get.next <- Epi:::get.next
+## chop.lex <- Epi:::chop.lex
 
 
 ###################################################

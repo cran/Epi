@@ -53,7 +53,7 @@
   this facility will preserve the order of levels if \code{ref[,2]} is a
   factor.
 }
-\author{Bendix Carstensen, \url{BendixCarstensen.com}, Lars Jorge Diaz}
+\author{Bendix Carstensen \url{http://BendixCarstensen.com}, Lars Jorge Diaz}
 \seealso{\code{\link{Relevel.Lexis}}}
 \examples{
 # Grouping using a list (hard coding)

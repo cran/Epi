@@ -164,19 +164,19 @@ plyll("Sus")
 
 
 ###################################################
-### code chunk number 12: CHANGE1 (eval = FALSE)
+### code chunk number 12: CHANGE1
 ###################################################
-## source( "../R/erl.R", keep.source=TRUE )
+source( "../R/erl.R", keep.source=TRUE )
 
 
 ###################################################
-### code chunk number 13: CHANGE2
+### code chunk number 13: CHANGE2 (eval = FALSE)
 ###################################################
-surv1 <- Epi::surv1
-surv2 <- Epi::surv2
-erl1 <- Epi::erl1
-erl <- Epi::erl
-yll <- Epi::yll
+## surv1 <- Epi::surv1
+## surv2 <- Epi::surv2
+## erl1 <- Epi::erl1
+## erl <- Epi::erl
+## yll <- Epi::yll
 
 
 ###################################################
