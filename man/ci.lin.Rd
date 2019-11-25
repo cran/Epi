@@ -59,7 +59,7 @@ ci.ratio( r1, r2,
     \code{polr},
  or \code{rq}).
   }
-  \item{ctr.mat}{Matrix, data frame or list (of two data frames).
+  \item{ctr.mat}{Matrix, data frame or list (of two or four data frames).
 
     If \code{ctr.mat} is a matrix, it should be a contrast matrix to be
     multiplied to the parameter vector, i.e. the desired linear function
@@ -68,10 +68,10 @@ ci.ratio( r1, r2,
     If it is a data frame it should have columns corresponding to a
     prediction frame, see details.
     
-    If it is a list, it must contain two data frames that are (possibly
-    partial) prediction frames for \code{obj}, see argument \code{xvars}
-    and details.}
-  \item{xvars}{Character vector. If variables in the model are omitted
+    If it is a list, it must contain two or four data frames that are
+    (possibly partial) prediction frames for \code{obj}, see argument
+    \code{xvars} and details.}
+  \item{xvars}{Character vector. If quantitative variables in the model are omitted
     from data frames supplied in a list to \code{ctr.mat}, they should
     be listed here. Omitted factors need not be mentioned here.}
   \item{subset}{The subset of the parameters to be used. If given as a
@@ -159,19 +159,27 @@ ci.ratio( r1, r2,
 
   If \code{ctr.mat} is a list of two data frames, the difference of the
   predictions from using the first versus the last as newdata arguments
-  to predict is computed. Columns that are identical in the two data
-  frames can be omitted (see below), but names of numerical variables
-  omitted must be supplied in a character vector \code{xvars}. Factors
-  omitted need not be named. If the second data frame has only one row,
-  this is replicated to match the number of rows in the first. The
-  facility is primarily aimed at teasing out RRs that are non-linear
-  functions of a quantitative variable without setting up contrast
-  matrices using the same code as in the model. Note however if splines
-  are used with computed knots stored in a vector such as
-  \code{Ns(x,knots=kk)} then the \code{kk} must be available in the
-  (global) environment; it will not be found inside the model object. In
-  practical terms it means that if you save model objects for later
-  prediction you should save the knots used in the spline setups too.
+  to predict is computed. Columns that would be identical in the two
+  data frames can be omitted (see below), but names of numerical
+  variables omitted must be supplied in a character vector
+  \code{xvars}. Factors omitted need not be named.
+
+  If the second data frame has only one row, this is replicated to match
+  the number of rows in the first. This facility is primarily aimed at
+  teasing out RRs that are non-linear functions of a quantitative
+  variable without setting up contrast matrices using the same code as
+  in the model. Note however if splines are used with computed knots
+  stored in a vector such as \code{Ns(x,knots=kk)} then the \code{kk}
+  must be available in the (global) environment; it will not be found
+  inside the model object. In practical terms it means that if you save
+  model objects for later prediction you should save the knots used in
+  the spline setups too.
+
+  If \code{ctr.mat} is a list of four data frames, the difference of the
+  difference of predictions from using the first and second versus
+  difference of predictions from using the third and fourth is computed.
+  Simply \code{(pr1-pr2) - (pr3-pr4)} with obvious notation. Useful to
+  derive esoteric interaction effects.
   
   Finally, only arguments \code{Exp}, \code{vcov}, \code{alpha} and
   \code{sample} from \code{ci.lin} are honored when \code{ctr.mat} is a
@@ -218,12 +226,15 @@ ci.ratio( r1, r2,
 \author{
   Bendix Carstensen,
   \url{http://BendixCarstensen.com} & Michael Hills
-  }
+}
+
 \seealso{See also \code{\link{ci.cum}} for a function computing
-  cumulative sums of (functions of) parameter estimates. The example
-  code for  \code{\link{matshade}} has an application of predicting a
-  rate-ratio using a list of two prediction frame in the \code{ctr.mat}
-  argument.}
+  cumulative sums of (functions of) parameter estimates, and
+  \code{\link{ci.surv}} for a function computing confidence intervals
+  for survival functions based on smoothed rates. The example code for
+  \code{\link{matshade}} has an application of predicting a rate-ratio
+  using a list of two prediction frame in the \code{ctr.mat} argument.}
+
 \examples{
 # Bogus data:
 f <- factor( sample( letters[1:5], 200, replace=TRUE ) )

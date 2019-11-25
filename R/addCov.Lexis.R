@@ -1,5 +1,5 @@
 # The addCov method
-addCov <- function (x, ...) UseMethod("addCov")
+addCov <- function (Lx, ...) UseMethod("addCov")
 
 addCov.default <-
 addCov.Lexis <-
@@ -11,7 +11,18 @@ function( Lx,
    addScales = FALSE )
 {
 # Function to add clinically measured covariates to a Lexis object
-    
+
+# Two utility functions used to sort a Lexis object by (lex.id,time)    
+order.Lexis <- function( Lx )
+               {
+               # Some time scale may contain missing values
+               # So find (any) one that does not so we can sort on it 
+       N.NA <- apply(Lx[,timeScales(Lx)],2,function(x) sum(is.na(x)))
+    full.ts <- which(N.NA==0)[1]
+               order(Lx$lex.id,Lx[,timeScales(Lx)[full.ts]])
+               }
+sort.Lexis <- function( Lx ) Lx[order.Lexis(Lx),]
+   
 # The point is to cut the Lexis diagram at the examination dates
 # and subsequently add the clinical records
 # ...but first the usual cheking of paraphernalia
@@ -40,8 +51,8 @@ clin <- clin[order(clin$lex.id,clin[,ts]),]
 if( any( dd <- duplicated(clin[,c("lex.id",ts)]) ) )
     {
   warning( "Examination dates must be unique within persons\n",
-           sum(dd), " records with duplicate times from clin object ", clin.nam, 
-           " excluded.")
+           sum(dd), " records with duplicate times from clin object ",
+          clin.nam, " excluded.")
   clin <- clin[!dd,]
     }
     
@@ -58,8 +69,8 @@ if( !(exnam %in% names(clin)) )
 # Add copy of the time of examination to be carried forward
 clin[,tfc] <- clin[,ts]
     
-# Clinical variables to be merged in --- note we take examination date
-# and name as a cinical variable too 
+# Clinical variables to be merged in
+# --- note we take examination date and name as a cinical variable too 
 cvar <- setdiff( names(clin), mvar )
 
 # A data frame of cutting times
@@ -94,11 +105,12 @@ mx$lex.Xst <- mx$org.Xst
 wh.rm <- match( c("org.Cst","org.Xst"), names(mx) )
 mx <- mx[,-wh.rm]
     
-# Merge in the clinical variables
+# Merge in the clinical variables and make sure it's sorted
 mx <- merge( mx, clin, by=mvar, all.x=TRUE, sort=TRUE )
-
-# And carry them forward within each lex.id
+mx <- sort.Lexis( mx )
     
+# And carry them forward within each lex.id
+
 # locf within each person (should be easier in data.table)
 locf.df <- function( df ) as.data.frame( lapply( df, na.locf, na.rm=FALSE ) )
 
@@ -120,10 +132,11 @@ mx[,tfc] <- apply( mx[,new.scales,drop=FALSE], 1, min, na.rm=TRUE )
 options(op) # reset the previous value
 attr( mx, "time.scales") <- c( attr( mx, "time.scales"), tfc ) 
 attr( mx, "time.since" ) <- c( attr( mx, "time.since"), "" )
-brt <- list( x=NULL ) ; names( brt ) <- tfc
+brt <- list( x=NULL )
+names( brt ) <- tfc
 attr( mx, "breaks") <- c( attr( mx, "breaks"), brt ) 
   }
     
 # Done! - well order first
-mx[order(mx[,"lex.id"],mx[,timeScales(mx)[1]]),]
+sort.Lexis( mx )
 }

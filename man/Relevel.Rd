@@ -33,13 +33,14 @@
     }
   \item{first}{Should the levels mentioned in \code{ref} (if it is a
     list) come before those not?} 
-  \item{collapse}{String used when constructing names for combined factor levels.}
+  \item{collapse}{String used when constructing names for combined
+  factor levels.} 
   \item{xlevels}{Logical. Should all levels in the 2nd column of
     \code{ref} be maintained as levels of the result, or (if
     \code{FALSE}) only the actually occurring.}
   \item{nogroup}{Logical. Should levels present in the input but not in
     the 1st column of \code{ref} be maintained as levels after the
-    grouping? If \code{FALSE}), NAs will be returned for such elements.}
+    grouping? If \code{FALSE}, NAs will be returned for such elements.}
   \item{\dots}{Arguments passed on to other methods.}
 }
 \value{
@@ -49,9 +50,11 @@
 \details{
   The facility where \code{ref} is a two-column matrix mimics the
   SAS-facility of formats where a dataset can be used to construct a
-  format --- SAS format is the grouping tool for variable values. Using
-  this facility will preserve the order of levels if \code{ref[,2]} is a
-  factor.
+  format --- SAS format is the grouping tool for variable
+  values.
+
+  If \code{ref} is a two-column object and \code{ref[,2]} is a factor
+  \code{Relevel} will preserve the order of levels from \code{ref[,2]}.  
 }
 \author{Bendix Carstensen \url{http://BendixCarstensen.com}, Lars Jorge Diaz}
 \seealso{\code{\link{Relevel.Lexis}}}
@@ -69,20 +72,19 @@ ff
 ## A grouping table
 ( gg <- data.frame( Animal=c("Bear","Whale","Crocodile","Snake","Eagle"),
                      Class=c("Mammal","Mammal","Reptile","Reptile","Bird") ) )
+str( gg )
 Relevel( ff, gg, xlevels=FALSE )
 Relevel( ff, gg )
 Relevel( ff, gg[c(1:5,5:1),] )
 
 ## This crashes with an error
-try( Relevel( ff, rbind( gg, c("Bear","Reptile") ) ) )
+( GG <- rbind( gg, c("Bear","Reptile") ) )
+try( Relevel( ff, GG ) )
 
 ff <- factor(c(as.character(ff),"Jellyfish","Spider"))
 Relevel( ff, gg )
 Relevel( ff, gg, xlevels=FALSE )
 # If you do not want unknown animals classified, this returns NAs:
 Relevel( ff, gg, nogroup=FALSE )
-# Will give error because re-classification is ambiguous
-( GG <- rbind(gg,c("Eagle","Mammal"),c("Snake","Mammal")) )
-try( Relevel( ff, GG ) )
 }
 \keyword{manip}

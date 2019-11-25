@@ -94,6 +94,64 @@ ci.lin( obj,
      sample = sample )
 }
 
+ci.dfr2 <-
+function( obj, nd1, nd2, nd3, nd4,
+         xvars = NULL,
+          vcov = FALSE,
+         alpha = 0.05,
+           Exp = FALSE,
+        sample = FALSE )
+{
+if( nrow(nd2)==1 ) nd2 <- nd2[rep(1,nrow(nd1)),,drop=FALSE]
+if( nrow(nd3)==1 ) nd3 <- nd3[rep(1,nrow(nd1)),,drop=FALSE]
+if( nrow(nd4)==1 ) nd4 <- nd4[rep(1,nrow(nd1)),,drop=FALSE]
+if( ( nrow(nd2) !=  nrow(nd1)) |
+    ( nrow(nd3) !=  nrow(nd1)) |
+    ( nrow(nd4) !=  nrow(nd1)) |
+ any(names(nd2) != names(nd1)) |
+ any(names(nd3) != names(nd1)) |
+ any(names(nd4) != names(nd1)) )
+    stop("\nThe prediction frames must have same dimensions and column names:",
+         "but dimensions are: (",
+         paste( dim(nd1),collapse=","), ") and (",
+         paste( dim(nd2),collapse=","), ") and (",
+         paste( dim(nd3),collapse=","), ") and (",
+         paste( dim(nd4),collapse=","), ")\n", 
+         "and column names are:\n",
+         "1: ", paste( names(nd1), collapse=", " ), "\n",
+         "2: ", paste( names(nd2), collapse=", " ), "\n",
+         "3: ", paste( names(nd3), collapse=", " ), "\n",
+         "4: ", paste( names(nd4), collapse=", " ), "\n")
+# Now supply and fix those variables that are needed in order to get model.matrix working:
+# Supplied variable names:
+ cols <- names( nd1 )
+# Factors in model; which are supplied; derive names of omitted factors (ofacs)
+ facs <- names( obj$xlevels )
+ofacs <- setdiff( facs, cols )
+# omitted *variables* must be supplied
+ovars <- setdiff( xvars, facs )
+# Construct the extra columns with bogus data (their contribution will be null)
+xcols <- nd1[,NULL]
+if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
+if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
+if( dim(xcols)[2]>0 )
+  {
+  nd1 <- cbind( nd1, xcols )
+  nd2 <- cbind( nd2, xcols ) 
+  nd3 <- cbind( nd3, xcols )
+  nd4 <- cbind( nd4, xcols ) 
+  }
+ci.lin( obj,
+    ctr.mat = df2ctr( obj, nd1 )
+             -df2ctr( obj, nd2 )
+             -df2ctr( obj, nd3 )
+             +df2ctr( obj, nd4 ),
+       vcov = vcov,
+      alpha = alpha,
+        Exp = Exp,
+     sample = sample )
+}
+
 ci.lin <-
 function( obj,
       ctr.mat = NULL,
@@ -114,15 +172,34 @@ if( inherits( ctr.mat, "data.frame" ) ) ctr.mat <- df2ctr( obj, ctr.mat )
 # If ctr.mat is a list of two dataframes then call ci.dfr
 if( inherits( ctr.mat, "list" ) )
   {
+  if( length(ctr.mat)==2 )
+    {  
   if( !inherits( ctr.mat[[1]], "data.frame" ) |
       !inherits( ctr.mat[[2]], "data.frame" ) )
-      stop( "If ctr.mat is a list it must be a list of two data frames" )
+      stop("If ctr.mat is a list it must be a list of data frames")
   return( ci.dfr( obj, ctr.mat[[1]], ctr.mat[[2]],
                 xvars = xvars,
                  vcov = vcov,
                 alpha = alpha,
                   Exp = Exp,
                sample = sample ) )
+    }
+# If ctr.mat is a list of two dataframes then call ci.dfr2 for 2nd
+# order differences
+  if( length(ctr.mat)==4 )
+    {  
+  if( !inherits( ctr.mat[[1]], "data.frame" ) |
+      !inherits( ctr.mat[[2]], "data.frame" ) |
+      !inherits( ctr.mat[[3]], "data.frame" ) |
+      !inherits( ctr.mat[[4]], "data.frame" ) )
+      stop("If ctr.mat is a list it must be a list of data frames")
+  return( ci.dfr2( obj, ctr.mat[[1]], ctr.mat[[2]], ctr.mat[[3]], ctr.mat[[4]],
+                 xvars = xvars,
+                  vcov = vcov,
+                 alpha = alpha,
+                   Exp = Exp,
+                sample = sample ) )
+    }
   }
 
 # First extract all the coefficients and the variance-covariance matrix
@@ -260,20 +337,32 @@ if( !diffs )
                     exp( res[,c(1,5,6),drop=FALSE] ) )
       colnames( res )[5] <- "exp(Est.)"
       }
+  # class( res ) <- c("ci.lin","matrix")
     }
 # Return the requested structure
-if( sample ) invisible( res ) else
+if( sample ) invisible( res )
+else
 if( vcov ) invisible( list( coef=ct[,1], vcov=vc ) ) else res
 }
+
+# print.ci.lin <-
+# function( x, ..., digits=3 )
+# {
+# print( round( unclass(x), digits ) )
+# }
 
 # Handy wrapper
 ci.exp <-
 function( ..., Exp=TRUE, pval=FALSE )
 {
-if( Exp )
+res <- if( Exp ) 
+         {
 ci.lin( ..., Exp=TRUE  )[,if(pval) c(5:7,4)   else 5:7     ,drop=FALSE]
-else
+         } else {
 ci.lin( ..., Exp=FALSE )[,if(pval) c(1,5,6,4) else c(1,5,6),drop=FALSE]
+                }
+# class( res ) <- c( "ci.lin", "matrix" )
+res
 }
 
 # Wrapper for predict.glm to give estimates and confidence intervals
@@ -282,8 +371,11 @@ function( obj, newdata,
          Exp = NULL,
        alpha = 0.05 )
 {
-if( !inherits( obj, "glm" ) ) stop("Not usable for non-glm objects")
+if( !inherits( obj, "lm" ) ) stop("Not usable for non-(g)lm objects")
+if( !inherits( obj, "glm" ) & inherits( obj, "lm" ) )
+    return( predict.lm( obj, newdata=newdata, interval="confidence" ) )
 # get the prediction and se on the link scale
+else {
 zz <- predict( obj, newdata=newdata, se.fit=TRUE, type="link" )
 # compute ci on link scale
 zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha )
@@ -291,7 +383,8 @@ zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha )
 if( missing(Exp) ) {   return( obj$family$linkinv(zz) )
 } else {  if(  Exp ) { return(                exp(zz) ) 
    } else if( !Exp )   return(                    zz  )
-       }  
+       }
+     }
 }
 
 # Function to calculate RR with CIs from independent rates with CIs;

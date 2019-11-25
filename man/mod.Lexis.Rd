@@ -17,33 +17,38 @@ But it is just a set of wrappers fro
 }
 \usage{
   glm.Lexis( Lx,         # Lexis object	
+        formula,         # ~ model	
            from = preceding(Lx,to), # 'from' states
              to = absorbing(Lx)   , # 'to' states
-        formula,         # ~ model	
          paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
           \dots )        # further arguments to glm
   gam.Lexis( Lx,         # Lexis object	
+        formula,         # ~ model	
            from = preceding(Lx,to), # 'from' states
              to = absorbing(Lx)   , # 'to' states	
-        formula,         # ~ model	
          paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
           \dots )        # further arguments to glm
 coxph.Lexis( Lx,         # Lexis object	
+        formula,         # timescale ~ model	
            from = preceding(Lx,to), # 'from' states
              to = absorbing(Lx)   , # 'to' states	
-        formula,         # timescale ~ model	
          paired = FALSE, # only the pairwise
         verbose = TRUE,  # report what is done?
           \dots )        # further arguments to glm
 }
 \arguments{
   \item{Lx}{A \code{\link{Lexis}} object representing cohort follow-up.
+}
+  \item{formula}{Model formula describing the model for the
+    intensity(-ies). For \code{glm} and \code{gam}, the formula should be
+    one-sided; for \code{coxph} the formula should be two-sided and have
+    the name of the time-scale used for baseline hazard as the l.h.s.
 }
   \item{from}{Character vector of states \bold{from} which transitions
     are considered. May also be an integer vector in which case the
@@ -55,11 +60,6 @@ coxph.Lexis( Lx,         # Lexis object
     considered an event. May also be an integer vector in which case the
     reference will be to the position of levels of \code{lex.Xst}.
     Defaults to the set of absorbing states.  
-}
-  \item{formula}{Model formula describing the model for the
-    intensity(-ies). For \code{glm} and \code{gam}, the formula should be
-    one-sided; for \code{coxph} the formula should be two-sided and have
-    the name of the time-scale used for baseline as the l.h.s.
 }
   \item{paired}{Logical. Should the states mentioned in \code{to},
     rep. \code{from} be taken as pairs, indicating the only transitions
@@ -181,7 +181,7 @@ summary( sL )
 # Proportional hazards model with insulin as time-dependent variable
 # - uses the defaul of modeling all transitions from both transient
 # states ("Alive" and "Ins") to the absorbing state ("Dead"). 
-mt <- glm.Lexis( sL, formula= ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
+mt <- glm.Lexis( sL, ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
 
 # prediction of mortality rates from "Alive" with and without PH assumption
 nA <- data.frame( age=40:70, sex="M", lex.Cst="Alive" )
@@ -193,11 +193,13 @@ matshade( nA$age, cbind( ci.pred(mt,nA),
  
 # gam models may take some time to run so we leave it out
 \dontrun{
-mt.gam <- gam.Lexis( sL, to="Dead", formula=~ sex + lex.Cst + s(age), scale=1000 )
+mt.gam <- gam.Lexis( sL, ~ sex + lex.Cst + s(age), to="Dead",
+                     scale=1000 )
         }
 
-# Fit a Cox model with age as baseline time scale and insulin as time-dependent
-mt.cox <- coxph.Lexis( sL, c("Alive","Ins"), "Dead", age ~ sex + lex.Cst )
+# Fit a Cox model for mortality with age as baseline time scale and
+# insulin (lex.Cst) as time-dependent covariate 
+mt.cox <- coxph.Lexis( sL, age ~ sex + lex.Cst, c("Alive","Ins"), "Dead" )
 
 # Pretty much the same results for regression paramters as the glm:
   ci.exp( mt    , subset="ex" )

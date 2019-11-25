@@ -4,12 +4,13 @@
 
 \title{Plotting Aalen-Johansen curves for competing events
 }
-\description{Function \code{plotCIF} plots, for one or more groups, 
-the cumulative incidence curves for a selected event out of two or more
-competing events. Function \code{stackedCIF} plots, for one group or population, 
-the cumulative incidence curves for two or more competing events such that
-the cumulative incidences are stacked upon each other. The CIFs are
-are estimated by the Aalen-Johansen method.
+
+\description{Function \code{plotCIF} plots, for one or more groups, the
+cumulative incidence curves for a selected event out of two or more
+competing events. Function \code{stackedCIF} plots, for one group or
+population, the cumulative incidence curves for two or more competing
+events such that the cumulative incidences are stacked upon each
+other. The CIFs are are estimated by the Aalen-Johansen method.
 }
 \usage{
 ## S3 method for class 'survfit'
@@ -17,45 +18,48 @@ are estimated by the Aalen-Johansen method.
               xlab = "Time",
               ylab = "Cumulative incidence",
               ylim = c(0, 1),
-               lty = NULL,
-               col = NULL, ... )
+               lty = 1,
+               col = "black", ... )
 
 ## S3 method for class 'survfit'
 stackedCIF( x, group = 1,
-              colour = NULL,
-                ylim = c(0, 1),
+                 col = "black",
+                fill = "white",
+                ylim = c(0,1),
                 xlab = "Time",
                 ylab = "Cumulative incidence", ... )
 }
 \arguments{
-  \item{x}{An object of class \code{\link{survfit}}, the \code{type}
-	of \code{event} in \code{Surv()} being "\code{mstate}";  
-	the first level of the event factor represents censoring and the
-		remaining ones the alternative competing events.
+  
+\item{x}{An object of class \code{\link{survfit}}, the \code{type} of
+  \code{event} in \code{Surv()} being "\code{mstate}"; the first level
+  of the event factor represents censoring and the remaining ones the
+  alternative competing events. 
 }
-\item{event}{Determines the event for which the cumulative incidence curve is plotted by \code{plotCIF}.
+\item{event}{Determines the event for which the cumulative incidence
+  curve is plotted by \code{plotCIF}.
 }
-\item{group}{An integer showing the selected level of a possible grouping factor
-	appearing in the model formula in \code{survfit} when plotting by \code{stackedCIF}
+\item{group}{An integer showing the selected level of a possible
+  grouping factor appearing in the model formula in \code{survfit} when
+  plotting by \code{stackedCIF} 
 }
-\item{col}{A vector specifying the plotting color(s) of the curve(s) 
-	for the different groups in \code{\link{plotCIF}}-- default: all "black".
+\item{col}{A vector specifying the plotting color(s) of the curve(s) for
+  the different groups in \code{\link{plotCIF}}-- default: all "black". 
 }
-\item{colour}{A vector indicating the colours to be
-   used for shading the areas pertinent to the separate outcomes in \code{\link{stackedCIF}} --
-	default: all \code{"white"}.
+\item{fill}{A vector indicating the colours to be used for shading the
+  areas pertinent to the separate outcomes in \code{\link{stackedCIF}}
+  - default: all \code{"white"}.
 }
 \item{xlab}{Label for the $x$-axis.
 }
-  \item{ylab}{Label for the $y$-axis.
+\item{ylab}{Label for the $y$-axis.
 }
-  \item{ylim}{Limits of the $y$-axis.
+\item{ylim}{Limits of the $y$-axis.
 }
-  
-  \item{lty}{A vector specifying the line type(s) of the curve(s) for the different groups -- 
-	default: all 1 (=solid).
+\item{lty}{A vector specifying the line type(s) of the curve(s) for
+    the different groups - default: all 1 (=solid). 
 }
-  \item{\dots}{Further graphical parameters to be passed.
+\item{\dots}{Further graphical parameters to be passed.
 }
 }
 \details{
@@ -66,7 +70,7 @@ be changed by permuting the levels as desired using function
 \code{Relevel}, after which \code{survfit} is called with the relevelled
 \code{event} variable in \code{Surv()}
 }
-\value{No value is returned but  a plot is produced as a side-effect.
+\value{No value is returned but a plot is produced as a side-effect.
 }
 \references{Putter, H., Fiocco, M., Geskus, R.B. (2007). 
 Tutorial in biostatistics: competing risks and multi-state models. 

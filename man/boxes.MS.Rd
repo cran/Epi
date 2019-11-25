@@ -79,7 +79,7 @@
   \item{wd}{width of boxes in percentage of the plot width.}
   \item{ht}{height of boxes in percentage of the plot height.}
   \item{font}{Font for the text. Defaults to 2 (=bold).}
-  \item{lwd}{Line width of the boxborders.}
+  \item{lwd}{Line width of the box borders.}
   \item{col.txt}{Color for the text in boxes.}
   \item{col.border}{Color of the box border.}
   \item{col.bg}{Background color for the interior of the box.}
@@ -107,7 +107,8 @@
                 click on the screen for the positions. This argument can also
                 be a named list with elements \code{x} and
                 \code{y}, both numerical vectors, giving the centers of
-                the boxes.}
+                the boxes. These must be numbers between 0 and 100
+    indicating percentages of the display in the two directions.}
   \item{wmult}{Multiplier for the width of the box relative to the width of the
                text in the box.}
   \item{hmult}{Multiplier for the height of the box relative to the height of the
@@ -121,16 +122,16 @@
   \item{digits.Y}{How many digits after the decimal point should be used for the
                   person-years.}
   \item{show.BE}{Logical. Should number of persons beginning
-    resp. ending follow up in each state be shown? If given as charcater
+    resp. ending follow up in each state be shown? If given as character
     "nz" or "noz" the numbers will be shown, but zeros omitted.}
   \item{BE.sep}{Character vector of length 4, used for annotation of the
-    number of persons beginning and ending in each state: 1st elemet
+    number of persons beginning and ending in each state: 1st element
     precedes no. beginning, 2nd trails it, 3rd precedes the no. ending
     (defaults to 8 spaces), and the 4th trails the no. ending.}
   \item{show.D}{Should no. transitions be put alongside the arrows.
                 Ignored if \code{obj} is not a \code{Lexis} object.}
-  \item{scale.D}{Synonumous with \code{scale.R}, retained for compatability.}
-  \item{digits.D}{Synonumous with \code{digits.R}, retained for compatability.}
+  \item{scale.D}{Synonymous with \code{scale.R}, retained for compatibility.}
+  \item{digits.D}{Synonymous with \code{digits.R}, retained for compatibility.}
   \item{show.R}{Should the transition rates be shown on the arrows?}
   \item{scale.R}{If this a scalar, rates instead of no. transitions are printed
                  at the arrows, scaled by \code{scale.R}.}
@@ -150,7 +151,7 @@
     row-wise sequence of non-NA elements of the transition matrix.
     Thus the first ones refer to the transitions out of state 1, in
     order of states.}
-  \item{lwd.arr}{Line withs of the arrows.}
+  \item{lwd.arr}{Line widths of the arrows.}
   \item{font.arr}{Font of the text annotation the arrows.}
   \item{pos.arr}{Numerical between 0 and 1, determines the position on
     the arrows where the text is written.}
@@ -192,8 +193,8 @@
   annotate the transitions with the number of transitions.
 
   A transition matrix can also be supplied, in which case the row/column
-  names are used as state names, diagnonal elements taken as
-  person-years, and off-diagnonal elements as number of transitions.
+  names are used as state names, diagonal elements taken as
+  person-years, and off-diagonal elements as number of transitions.
   This also works for \code{boxes.matrix}.
 
   Optionally returns the R-code reproducing the plot in a file, which
@@ -229,7 +230,7 @@
        arrow, designated to be used for annotation of the arrow.
 
        The function \code{boxes.Lexis} returns an \code{MS} object, a list with
-       five elements: 1) \code{Boxes} - a dataframe with one row
+       five elements: 1) \code{Boxes} - a data frame with one row
        per box and columns
        \code{xx},
        \code{yy},
@@ -257,7 +258,7 @@
        An \code{MS} object is used as input to
        \code{boxes.MS}, the primary use is to modify selected entries in
        the \code{MS} object first, e.g. colors, or supply
-       subsetting arguments in order to produce displays that have the
+       sub-setting arguments in order to produce displays that have the
        same structure, but with different colors etc.
        }
 \author{Bendix Carstensen}

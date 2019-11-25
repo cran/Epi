@@ -150,7 +150,7 @@ function(entry=0, exit, fail, origin=0, controls=1, match=list(),
       set <- set+1
       case <- (grp==g) & (t.exit==tf) & (fail!=0)
       ncase <- sum(case)
-      if (ncase>0)
+      if (ncase>1)
         ties <- TRUE
       noncase <- (grp==g) & (t.entry<=tf) &
       (t.exit>=tf) & !case

@@ -44,6 +44,7 @@ lines.apc,
   float,
   print.floated,
   gen.exp,
+  mat2pol,
   Icens,
   print.Icens,
   plotevent,
@@ -65,6 +66,7 @@ lines.apc,
   Lexis.diagram,
   Lexis.lines,
    Life.lines,
+     list.lex,
                 Lexis,
           merge.Lexis,
            plot.Lexis,
@@ -160,7 +162,8 @@ lines.apc,
   Wald,
   stat.table,
   clogistic,
-  poisreg)
+  poisreg,
+  harm)
 # Import generic methods
 importFrom( utils, stack )
 # importFrom( base, cbind, rbind )
@@ -182,13 +185,14 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "polygon", "rect", "rug", "segments", "strheight",
            "strwidth", "text")
 importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
-           "ave", "as.formula", "binomial", "coef", "complete.cases", "contr.sum",
-           "fisher.test", "fitted", "formula", "gaussian", "glm",
-           "is.empty.model", "lm", "median", "model.extract", "model.matrix",
-           "model.offset", "model.response", "nlm", "pchisq", "pnorm",
-           "poisson", "predict", "qnorm", "qt", "quantile", "runif",
-           "termplot", "update", "vcov", "weighted.mean", "xtabs",
-           "dpois", "rpois", "make.link")
+           "ave", "as.formula", "binomial", "coef", "complete.cases",
+           "contr.sum", "dpois", "fisher.test", "fitted", "formula",
+           "gaussian", "glm", "is.empty.model", "lm", "make.link",
+           "median", "model.extract", "model.matrix", "model.offset",
+           "model.response", "nlm", "pchisq", "pnorm", "poisson",
+           "predict", "predict.lm", "qnorm", "qt", "quantile",
+           "rpois", "runif", "termplot", "update", "vcov",
+           "weighted.mean", "xtabs") 
 importFrom("utils", "flush.console", "str")
 
 # register S3 methods

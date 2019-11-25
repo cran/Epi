@@ -1,10 +1,47 @@
+Changes in 2.40
+
+o plotCIF and stackedCIF have been modified to comply with changes in
+  survival (Esa Laara)
+
+Changes in 2.39
+
+o mat2pol added: function that takes a set of curves represented as columns
+  in a matrix (mat) and plots then as stacked polygons (pol)
+
+o the argument formula for glm.Lexis, gam.Lexis and coxph.Lexis is
+  moved up to be the second argument, making simple specification of
+  models for two-state (survival) models easier
+
+o addCov.Lexis was not exported as a proper method for Lexis, due to a
+  mis-named argument in the definition. 
+
+o addCov.Lexis produced erroneous results because of mistaken sorting
+  order variables
+
+o A new function harm generating a basis of harmonic functions
+
+o Cleanup of documentation for Relevel
+
+o ci.lin argument ctr.mat now allows a list of 4 data frames to
+  compute differences of differences of predictions. Useful for some
+  interaction models
+
+o Bug in notes from ccwc corrected (MP)
+
+o Minor editorial changes in annotation of output from coxph.Lexis
+
+o The by= argument to summary.Lexis crashed the function if the Lexis
+  object was a data.table. Now fixed.
+
+o Documentation of boxes.MS slightly amended.
+
 Changes in 2.38
 
 o Minor editorial changes in urls in documentation files
 
 o The poisreg family now works with anova
 
-o Superfluous 'nanes' attributes on all variables in data sets bdendo and
+o Superfluous 'names' attributes on all variables in data sets bdendo and
   bdendo11 have been removed. Documentation for both now in the same
   file. bdendo11.Rd removed.
 

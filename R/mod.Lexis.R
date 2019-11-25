@@ -1,11 +1,13 @@
 modLexis <- 
-function( Lx, nameLx,
-              from = preceding(Lx,to),
-                to = absorbing(Lx),
-           formula,
-            paired = FALSE,
-              link = "log", scale = 1, verbose = TRUE,
-             model, ... )
+function( Lx,
+      nameLx,
+     formula,
+        from = preceding(Lx,to),
+          to = absorbing(Lx),
+      paired = FALSE,
+        link = "log", scale = 1, verbose = TRUE,
+       model,
+         ... )
 {
 # a common wrapper for glm and gam modeling of Lexis FU  
 # is this a Lexis object ?
@@ -75,7 +77,7 @@ cat( deparse(substitute(model)),
      " Poisson analysis of Lexis object ", nameLx, " with ", link, " link",
      ":\nRates for", if(  onetr ) " the", " transition",
                      if( !onetr ) "s", ": ", trprn,
-     if( scale!=1 ) paste(", PY scaled by", scale ), "\n", sep="" )
+     if( scale!=1 ) paste(", lex.dur (person-time) scaled by", scale ), "\n", sep="" )
              }
     
 # Fit the model
@@ -90,16 +92,18 @@ mod
 }
 
 # Here are the actual functions of interest:
+######################################################################
 # the glm function
 glm.Lexis <- 
-function( Lx, from = preceding(Lx,to),
-                to = absorbing(Lx),
-           formula,
-            paired = FALSE,
-              link = "log",
-             scale = 1,
-           verbose = TRUE,
-               ... )
+function( Lx,
+     formula,
+        from = preceding(Lx,to),
+          to = absorbing(Lx),
+      paired = FALSE,
+        link = "log",
+       scale = 1,
+     verbose = TRUE,
+         ... )
 {
 # name of the supplied object
 nameLx <- deparse(substitute(Lx))
@@ -108,22 +112,25 @@ nameLx <- deparse(substitute(Lx))
 if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
 if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
 xx <- modLexis( Lx, nameLx,
-                from, to, formula,
+                formula, from, to,
                 paired = paired, link = link, scale = scale, verbose = verbose,
                  model = stats::glm, ... )
 class( xx ) <- c( "glm.lex", class(xx) )
 xx
 }
+
+######################################################################
 # the gam function
 gam.Lexis <- 
-function( Lx, from = preceding(Lx,to),
-                to = absorbing(Lx),
-           formula,
-            paired = FALSE,
-              link = "log",
-             scale = 1,
-           verbose = TRUE,
-               ... )
+function( Lx,
+     formula,
+        from = preceding(Lx,to),
+          to = absorbing(Lx),
+      paired = FALSE,
+        link = "log",
+       scale = 1,
+     verbose = TRUE,
+         ... )
 {
 # name of the supplied object
 nameLx <- deparse(substitute(Lx))
@@ -132,19 +139,20 @@ nameLx <- deparse(substitute(Lx))
 if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
 if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
 xx <- modLexis( Lx, nameLx,
-                from, to, formula,
+                formula, from, to,
                 paired = paired, link = link, scale = scale, verbose = verbose,
                  model = mgcv::gam, ... )
 class( xx ) <- c( "gam.lex", class(xx) )
 xx
 }
 
+######################################################################
 # And here is the coxph counterpart:
 coxph.Lexis <- 
-function( Lx, # Lexis object 
+function( Lx, # Lexis object
+     formula, # timescale ~ model
         from = preceding(Lx,to), # Exposure ('from' states)
           to = absorbing(Lx)   , # Events ('to' states)
-     formula, # timescale ~ model
       paired = FALSE,
      verbose = TRUE,
           ... )
@@ -160,7 +168,7 @@ if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
 nameLx <- deparse(substitute(Lx))
 
 # work out which transitions are modeled
-# first a small utility
+# first a small utility for annotation
 trt <- function( f, t ) paste( f, "->", t, sep="" )
 if( paired )
   {
@@ -204,10 +212,10 @@ Sobj <- Surv( Lx[,ts],
 
 # Tell what we intend to and then do it    
 if( verbose ){
-cat( deparse(substitute(model)),
-     " survival::coxph analysis of Lexis object ", nameLx,
+cat( "survival::coxph analysis of Lexis object ", nameLx,
      ":\nRates for", if(  onetr ) " the", " transition",
-                     if( !onetr ) "s", " ", trprn, "\n", sep="" )
+                     if( !onetr ) "s", " ", trprn,
+     "\nBaseline timescale: ", ts, sep="" )
              }
 
 mod <- coxph( as.formula( paste( "Sobj", 

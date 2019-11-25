@@ -1,7 +1,9 @@
 matshade <-
 function( x, y,
           lty = 1,
-          col = 1:(ncol(y)/3), col.shade=col, alpha=0.15,
+          col = 1:(ncol(y)/3),
+    col.shade = col,
+        alpha = 0.15,
          plot = dev.cur()==1,
           ... )
     {
@@ -43,4 +45,4 @@ for( i in 1:ncrv ) draw.shade( x, y[,i*3-1],
 # then curves on top of these
 matlines( x, y[,(1:ncrv)*3-2], col=col, lty=lty, ... )
     }
-
+       
