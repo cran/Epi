@@ -24,7 +24,7 @@ fit.baseline( y, rates.frame, start )
   A \code{\link{glm}} object, with binomial error and logaritmic link.
   }
 \author{
-  Martyn Plummer, \email{plummer@iarc.fr}
+  Martyn Plummer, \email{martyn.plummer@r-project.org}
   }
 \seealso{
   \code{\link{fit.add}}

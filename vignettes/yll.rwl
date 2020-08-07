@@ -1,0 +1,33 @@
+R version 3.6.3 (2020-02-29) 
+ ---------------------------------------------
+  Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
+ Started:  Thursday 06. August 2020, 21:41:41 
+ ---------------------------------------------
+Writing to file yll.tex
+Processing code chunks with options ...
+ 1 : keep.source term verbatim (yll.rnw:21)
+ 2 : keep.source term verbatim pdf  (label = states, yll.rnw:87)
+ 3 : keep.source term verbatim pdf  (label = states, yll.rnw:95)
+ 4 : echo keep.source term verbatim (yll.rnw:265)
+ 5 : echo keep.source term verbatim (yll.rnw:271)
+ 6 : echo keep.source term verbatim (yll.rnw:293)
+ 7 : echo keep.source term verbatim (yll.rnw:303)
+ 8 : echo keep.source term verbatim (yll.rnw:336)
+ 9 : echo keep.source term verbatim pdf  (label = imm, yll.rnw:378)
+10 : echo keep.source term verbatim pdf  (label = tot, yll.rnw:402)
+11 : echo keep.source term verbatim pdf  (label = sus, yll.rnw:405)
+12 : keep.source (label = CHANGE1, yll.rnw:465)
+13 : keep.source term hide (label = CHANGE2, yll.rnw:469)
+14 : echo keep.source term verbatim (yll.rnw:484)
+15 : echo keep.source term verbatim (yll.rnw:489)
+16 : echo keep.source term verbatim (yll.rnw:497)
+17 : echo keep.source term verbatim (yll.rnw:502)
+18 : echo keep.source term verbatim (yll.rnw:507)
+
+You can now run (pdf)latex on ‘yll.tex’
+
+ ---------------------------------------------
+  Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
+   Ended: Thursday 06. August 2020, 21:41:58
+ Elapsed: 00:00:16
+ ---------------------------------------------

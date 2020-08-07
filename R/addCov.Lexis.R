@@ -18,8 +18,8 @@ order.Lexis <- function( Lx )
                # Some time scale may contain missing values
                # So find (any) one that does not so we can sort on it 
        N.NA <- apply(Lx[,timeScales(Lx)],2,function(x) sum(is.na(x)))
-    full.ts <- which(N.NA==0)[1]
-               order(Lx$lex.id,Lx[,timeScales(Lx)[full.ts]])
+  a.full.ts <- which(N.NA==0)[1]
+               order(Lx$lex.id,Lx[,timeScales(Lx)[a.full.ts]])
                }
 sort.Lexis <- function( Lx ) Lx[order.Lexis(Lx),]
    
@@ -91,7 +91,8 @@ mc <- cutLexis( mc,
 mx <- Lx[,mvar]
 mx$org.Cst <- Lx$lex.Cst
 mx$org.Xst <- Lx$lex.Xst
-mx <- merge( mc, mx, by = mvar, all.x = TRUE, sort = TRUE )    
+mx <- merge( mc, mx, by = mvar, all.x = TRUE )    
+mx <- sort.Lexis( mx )
     
 # Complete the state variables    
 ( wh <- which(is.na(mx$org.Cst)) )
@@ -106,7 +107,7 @@ wh.rm <- match( c("org.Cst","org.Xst"), names(mx) )
 mx <- mx[,-wh.rm]
     
 # Merge in the clinical variables and make sure it's sorted
-mx <- merge( mx, clin, by=mvar, all.x=TRUE, sort=TRUE )
+mx <- merge( mx, clin, by=mvar, all.x=TRUE )
 mx <- sort.Lexis( mx )
     
 # And carry them forward within each lex.id
@@ -140,3 +141,4 @@ attr( mx, "breaks") <- c( attr( mx, "breaks"), brt )
 # Done! - well order first
 sort.Lexis( mx )
 }
+

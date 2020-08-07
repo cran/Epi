@@ -40,7 +40,7 @@ expand.data(fu, formula, breaks, data)
   men. Statistics in Medicine, 15(20):2177-2189, 1996.
   }
 \author{
-  Martyn Plummer, \email{plummer@iarc.fr}
+  Martyn Plummer, \email{martyn.plummer@r-project.org}
   }
 \seealso{
   \code{\link{Icens}}

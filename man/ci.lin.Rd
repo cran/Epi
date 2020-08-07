@@ -115,13 +115,15 @@ ci.ratio( r1, r2,
     returned.}
   \item{pval}{Logical. Should a column of P-values be included with the
     estimates and confidence intervals output by \code{ci.exp}.}
-  \item{H0}{Numeric. The null values for the selected/transformed parameters to
-    be tested by a Wald test. Must have the same length as the selected
-    parameter vector.}
+  \item{H0}{Numeric. The null values for the selected/transformed
+    parameters to be tested by a Wald test. Must have the same length as
+    the selected parameter vector.}
   \item{\ldots}{Parameters passed on to \code{ci.lin}.}
   \item{newdata}{Data frame of covariates where prediction is made.}
   \item{r1,r2}{Estimates of rates in two independent groups, with
-    confidence intervals.}
+    confidence limits. Can be either 3-column matrices or data frames
+    with estimates and confindece intervals or 2 two column structures
+    with confidence limits. Only the confidence limits}
   \item{se1,se2}{Standard errors of log-rates in the two groups. If
     given, it is assumed that \code{r1} and \code{r2} represent
     log-rates.}

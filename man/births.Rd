@@ -25,7 +25,6 @@ Anonymous
 \references{
 Michael Hills and Bianca De Stavola (2002). A Short Introduction to
 Stata 8 for Biostatistics, Timberlake Consultants Ltd
-\url{http://www.timberlake.co.uk}
 }
 \examples{
 data(births)

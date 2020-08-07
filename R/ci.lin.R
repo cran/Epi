@@ -398,6 +398,8 @@ function( r1, r2,
        alpha = 0.05,
         pval = FALSE )
 {
+if( is.data.frame(r1) ) r1 <- as.matrix( r1 )
+if( is.data.frame(r2) ) r2 <- as.matrix( r2 )
 if( is.matrix(r1) & !is.null(se1) ) warning("r1 is matrix, se1 is ignored")
 if( is.matrix(r2) & !is.null(se2) ) warning("r2 is matrix, se2 is ignored")
 

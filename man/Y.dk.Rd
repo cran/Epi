@@ -3,8 +3,9 @@
 \docType{data}
 \title{Population risk time in Denmark}
 \description{
-  Risk time (person-years) in the Danish population, classified by sex, age, period and
-  date of birth in 1-year classes. This corresponds to triangles in a Lexis diagram.
+  Risk time (person-years) in the Danish population, classified by sex,
+  age, period and date of birth in 1-year classes. This corresponds to
+  triangles in a Lexis diagram. 
 }
 \usage{data(Y.dk)}
 \format{
@@ -19,11 +20,8 @@
   }
 }
 \details{
-  The risk time is computed from the population size figures in \code{\link{N.dk}},
-  using the formulae devised in B. Carstensen:
-  "Demography and epidemiology: Age-Period-Cohort models in the computer age",
-  \url{http://biostat.ku.dk/reports/2006/ResearchReport06-1.pdf/}, later
-   published as:
+  The risk time is computed from the population size figures in
+  \code{\link{N.dk}}, using the formulae devised in:
    B. Carstensen: Age-period-cohort models for the Lexis diagram.
    Statistics in Medicine, 10; 26(15):3018-45, 2007.
 }

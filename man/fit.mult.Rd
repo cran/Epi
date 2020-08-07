@@ -45,7 +45,7 @@
   modelling approach. Statistics in Medicine, 15(3):283-292, 1996.
   }
 \author{
-  Martyn Plummer, \email{plummer@iarc.fr},
+  Martyn Plummer, \email{martyn.plummer@r-project.org},
   Bendix Carstensen, \email{b@bxc.dk} }
 \seealso{
   \code{\link{Icens}}

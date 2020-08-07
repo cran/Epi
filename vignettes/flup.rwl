@@ -1,7 +1,7 @@
-R version 3.6.1 (2019-07-05) 
+R version 3.6.3 (2020-02-29) 
  ---------------------------------------------
   Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
- Started:  Tuesday 06. August 2019, 08:48:52 
+ Started:  Thursday 06. August 2020, 21:39:31 
  ---------------------------------------------
 Writing to file flup.tex
 Processing code chunks with options ...
@@ -64,6 +64,6 @@ You can now run (pdf)latex on ‘flup.tex’
 
  ---------------------------------------------
   Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
-   Ended: Tuesday 06. August 2019, 08:49:33
- Elapsed: 00:00:41
+   Ended: Thursday 06. August 2020, 21:40:15
+ Elapsed: 00:00:43
  ---------------------------------------------

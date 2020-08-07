@@ -1,6 +1,6 @@
 Package: Epi
-Version: 2.40
-Date: 2019-11-20
+Version: 2.41
+Date: 2020-08-06
 Title: A Package for Statistical Analysis in Epidemiology
 Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
                     email = "b@bxc.dk"),
@@ -24,11 +24,11 @@ Description: Functions for demographic and epidemiological analysis in
 License: GPL-2
 URL: http://BendixCarstensen.com/Epi/
 NeedsCompilation: yes
-Packaged: 2019-11-20 11:58:04 UTC; bendix
+Packaged: 2020-08-06 19:53:40 UTC; bendix
 Author: Bendix Carstensen [aut, cre],
   Martyn Plummer [aut],
   Esa Laara [ctb],
   Michael Hills [ctb]
 Maintainer: Bendix Carstensen <b@bxc.dk>
 Repository: CRAN
-Date/Publication: 2019-11-25 10:20:02 UTC
+Date/Publication: 2020-08-07 05:22:34 UTC

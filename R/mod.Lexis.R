@@ -11,24 +11,29 @@ function( Lx,
 {
 # a common wrapper for glm and gam modeling of Lexis FU  
 # is this a Lexis object ?
-if( !inherits(Lx,"Lexis") ) stop("The first argument must be a Lexis object.\n")
+if( !inherits(Lx,"Lexis") )
+    stop("The first argument must be a Lexis object.\n")
     
 # check that events are actual levels of lex.Xst 
 if( is.numeric(to) ) to <- levels( Lx$lex.Xst )[to]
 wh <- match( to, levels(Lx$lex.Xst) )
-if( any(is.na(wh)) ) stop("'to' must be a subset of: '", 
-                     paste(levels(Lx$lex.Xst), collapse="','", sep=""), "'\n" )  
+if( any(is.na(wh)) )
+    stop("'to' must be a subset of: '", 
+         paste(levels(Lx$lex.Xst), collapse="','", sep=""), "'\n" )  
 
 # check that from are actual levels of lex.Cst 
 if( is.numeric(from) ) from <- levels( Lx$lex.Cst )[from]
 wh <- match( from, levels(Lx$lex.Cst) )
-if( any(is.na(wh)) ) stop("'from' must be a subset of: '", 
-                     paste(levels(Lx$lex.Cst), collapse="','", sep=""), "'\n" )  
+if( any(is.na(wh)) )
+    stop("'from' must be a subset of: '", 
+          paste(levels(Lx$lex.Cst), collapse="','", sep=""), "'\n" )
+# subset to these states
 Lx <- Lx[Lx$lex.Cst %in% from,]                     
 
-# work out which transitions are modeled
-# first a small utility (transition as text)
+# first a small utility to show transitions as text:
 trt <- function( f, t ) paste( f, "->", t, sep="" )
+
+# work out which transitions are modeled
 if( paired )
   {
 if( length(from) != length(to) )
@@ -138,9 +143,11 @@ nameLx <- deparse(substitute(Lx))
 # sensible defaults if one of the two is missing
 if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
 if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
-xx <- modLexis( Lx, nameLx,
-                formula, from, to,
-                paired = paired, link = link, scale = scale, verbose = verbose,
+xx <- modLexis( Lx, nameLx, formula, from, to,
+                paired = paired,
+                  link = link,
+                 scale = scale,
+               verbose = verbose,
                  model = mgcv::gam, ... )
 class( xx ) <- c( "gam.lex", class(xx) )
 xx
@@ -158,7 +165,8 @@ function( Lx, # Lexis object
           ... )
 {
 # Lexis object ?
-if( !inherits(Lx,"Lexis") ) stop( "The first argument must be a Lexis object.\n")
+if( !inherits(Lx,"Lexis") )
+    stop( "The first argument must be a Lexis object.\n")
 
 # sensible defaults if only one of to and from is missing
 if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
@@ -166,14 +174,19 @@ if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
 
 # name of the dataset
 nameLx <- deparse(substitute(Lx))
+# subset to the states we shall use
+Lx <- Lx[Lx$lex.Cst %in% from,]                         
 
 # work out which transitions are modeled
 # first a small utility for annotation
 trt <- function( f, t ) paste( f, "->", t, sep="" )
 if( paired )
   {
-if( length(from) != length(to) ) stop("If 'paired' is TRUE, from and to must have same length!\n")
-if( any(from==to) ) stop("If 'paired' is TRUE, entries in from and to must be pairwise different\n")
+if( length(from) != length(to) )
+    stop("If 'paired' is TRUE, from and to must have same length!\n")
+if( any(from==to) )
+    stop("If 'paired' is TRUE, entries in 'from' and 'to'",
+         " must be pairwise different\n")
 trnam <- trt( from, to )
   } else {  
 tm <- tmat( Lx )[from,to,drop=FALSE]
@@ -185,8 +198,10 @@ onetr <- length( trnam )==1
 trprn <- paste( trnam, collapse=", " )
     
 # warn if a potentially silly model is defined
-if( any( ts<-table(sapply( strsplit(trprn,"->"), function(x) x[1] ))>1 ) ) warning(
- "NOTE:\nMultiple transitions *from* state '",names(ts[ts>1]),"' - are you sure?",
+if( any( ts<-table(sapply( strsplit(trprn,"->"),
+                           function(x) x[1] ))>1 ) ) warning(
+ "NOTE:\nMultiple transitions *from* state '",names(ts[ts>1]),
+ "' - are you sure?",
  "\nThe analysis requested is effectively merging outcome states.", 
  "\nYou may want analyses using a *stacked* dataset - see ?stack.Lexis\n" )
 
@@ -197,9 +212,9 @@ if( length(formula) != 3 )
 # Is the l.h.s. a timescale?
 ts <- as.character( formula[2] )
 if( !(ts %in% (tms<-timeScales(Lx))) ) 
-  stop( "l.h.s. of formula must be a timescale; one of:\n", tms, "\n" )
+    stop( "l.h.s. of formula must be a timescale; one of:\n", tms, "\n" )
 
-# What are the 'from' states
+# What are the 'from' states actually present?
 from <- levels( factor(Lx$lex.Cst) )
     
 # construct a Surv response object, and note that we want the possibility

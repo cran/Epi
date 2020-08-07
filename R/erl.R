@@ -103,6 +103,7 @@ if( cond <- !is.null(A) )
      j <- j+1
      # Where is the age we condition on
      cA <- which( diff(age>ia)==1 )
+     # survival up to condtioning age is set to 1 
      surv <- cbind( surv, pmin( 1, surv$surv/(surv$surv[cA]) ) )
      cage[j] <- surv$age[cA]
      }

@@ -24,7 +24,7 @@ But it is just a set of wrappers fro
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
-          \dots )        # further arguments to glm
+            \dots )        # further arguments to glm
   gam.Lexis( Lx,         # Lexis object	
         formula,         # ~ model	
            from = preceding(Lx,to), # 'from' states
@@ -33,14 +33,14 @@ But it is just a set of wrappers fro
            link = "log", # link function
           scale = 1,     # scaling of PY
         verbose = TRUE,  # report what is done?
-          \dots )        # further arguments to glm
+            \dots )        # further arguments to gam
 coxph.Lexis( Lx,         # Lexis object	
         formula,         # timescale ~ model	
            from = preceding(Lx,to), # 'from' states
              to = absorbing(Lx)   , # 'to' states	
          paired = FALSE, # only the pairwise
         verbose = TRUE,  # report what is done?
-          \dots )        # further arguments to glm
+            \dots )        # further arguments to coxph
 }
 \arguments{
   \item{Lx}{A \code{\link{Lexis}} object representing cohort follow-up.
@@ -70,13 +70,13 @@ coxph.Lexis( Lx,         # Lexis object
     are \code{'log'} (the default), \code{'identity'} and \code{'sqrt'},
     see the family \code{\link{poisreg}}. 
 }
-\item{scale}{Scalar. \code{lex.dur} is divided by this number before
-  analysis, so that you can get resulting rates on a scale of your wish. 
+  \item{scale}{Scalar. \code{lex.dur} is divided by this number before 
+    analysis, so that you can get resulting rates on a scale of your wish. 
 }
-\item{verbose}{Print information on the states modeled?
+  \item{verbose}{Print information on the states modeled?
 }
-\item{\dots}{Further arguments passed on to \code{glm}, \code{glm} or
-  \code{coxph} 
+  \item{\dots}{Further arguments passed on to \code{glm}, \code{glm} or
+    \code{coxph} 
 }
 }
 
@@ -87,7 +87,7 @@ coxph.Lexis( Lx,         # Lexis object
   two-column vector of events and person-time respectively, so the
   predictions, for example using \code{\link{ci.pred}} does not require
   \code{lex.dur} (and would ignore this) as variable in the
-  \code{newdata}. \code{ci.pred} returns the estimated rates in
+  \code{newdata}. \code{ci.pred} will return the estimated rates in
   units of the \code{lex.dur} in the \code{Lexis} object, scaled by
   \code{scale}, which has a default value of 1.
 
@@ -136,8 +136,8 @@ coxph.Lexis( Lx,         # Lexis object
   
   Only the \code{glm} and \code{gam} objects have the \code{scale} element
   in the list; a scalar indicating the scaling of \code{lex.dur} before
-  modeling. Note that the formula component if the \code{Lexis}
-  attribute of a \code{coxph} object, the \code{formula} component is a
+  modeling. Note that the formula component of the \code{Lexis}
+  attribute of a \code{coxph} object is a
   two-sided formula with the baseline time scale as the l.h.s.
 }
 

@@ -1,3 +1,12 @@
+Changes in 2.41
+
+o A bug in addCov.Lexis messing up states due to unexpected sort order
+  of a merge, has been rectified.
+
+o the ccwc function could select invalid controls when there was only
+  one eligible non-case, due to the documented behaviour of sample for
+  vectors of length 1.
+
 Changes in 2.40
 
 o plotCIF and stackedCIF have been modified to comply with changes in

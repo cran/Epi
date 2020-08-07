@@ -27,8 +27,14 @@ adding a U(-7,7) (days).
     \item{\code{dox}}{Date of exit from follow-up.}
   }
 }
-\details{All dates are given in fractions of years, so 1997.00
-  corresponds to 1 January 1997 and 1997.997 to 31 December 1997.
+\details{All dates are given in fractions of years, so 1998.000
+  corresponds to 1 January 1998 and 1998.997 to 31 December 1998.
+
+  All dates are randomly perturbed by a small amount, so no real
+  persons have any of the combinations of the 6 dates in the
+  dataset. But results derived from the data will be quite close to
+  those that would be obtained if the entire 'real' diabetes register
+  were used.
 }
 \source{
 Danish National Board of Health.
