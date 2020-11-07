@@ -48,7 +48,7 @@ show.apc.LCa( x,
   with 5 \code{LCa} objects (from \code{\link{LCa.fit}}). 
 }
 \author{
-Bendix Carstensen, \url{http://BendixCarstensen.com}
+Bendix Carstensen, \url{http://bendixcarstensen.com}
 }
 \seealso{
 \code{ \link{apc.fit}}, \code{\link{LCa.fit} }

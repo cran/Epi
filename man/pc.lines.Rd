@@ -49,7 +49,7 @@
   }
 \author{
   Bendix Carstensen, Steno Diabetes Center Copenhagen,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
   }
 \seealso{
   \code{\link{apc.frame}}, \code{\link{apc.fit}}, \code{\link{plot.apc}}, \code{\link{lines.apc}}

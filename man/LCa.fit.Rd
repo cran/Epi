@@ -245,7 +245,7 @@ LCa.fit( data, A, P, D, Y,
   confidence limits.
   }
 \author{
-  Bendix Carstensen, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \url{http://bendixcarstensen.com}
 
   This function was conceived while teaching a course on APC models at
   the Max Planck Institute of Demographic Research (MPIDR,

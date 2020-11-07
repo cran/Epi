@@ -89,7 +89,7 @@ classes "\code{Date}" and  "\code{difftime}".
 }
 \author{
   Bendix Carstensen,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \examples{
 Lexis.diagram( entry.age = c(3,30,45),

@@ -37,7 +37,7 @@
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center Copenhagen,
-  \url{http://BendixCarstensen.com}, with essential help from Peter Dalgaard.
+  \url{http://bendixcarstensen.com}, with essential help from Peter Dalgaard.
 }
 \seealso{ \code{\link{projection.ip}} }
 \keyword{array}

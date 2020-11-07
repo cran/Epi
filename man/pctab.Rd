@@ -20,7 +20,7 @@ pctab(TT, margin = length(dim(TT)), dec=1)
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}.
+  \url{http://bendixcarstensen.com}.
   }
 \seealso{
   \code{\link{addmargins}}

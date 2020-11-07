@@ -94,7 +94,7 @@
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \examples{
 par( mar=c(4,4,1,4) )

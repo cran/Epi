@@ -82,7 +82,7 @@ ci.surv( obj,
 }
 \author{
   Bendix Carstensen,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \seealso{ See also \code{\link{ci.lin}}, \code{\link{ci.pred}} }
 \examples{

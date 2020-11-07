@@ -48,7 +48,7 @@
 \author{
   Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
   University of Copenhagen, \email{b@bxc.dk},
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{DateTimeClasses}},

@@ -88,6 +88,7 @@ lines.apc,
       factorize.Lexis,
              cutLexis,
             mcutLexis,
+            rcutLexis,
            countLexis,
           stack.Lexis,
            tmat.Lexis,
@@ -169,6 +170,7 @@ importFrom( utils, stack )
 # importFrom( base, cbind, rbind )
 importFrom( splines, ns, bs )
 importFrom( plyr, rbind.fill )
+importFrom( dplyr, summarize, group_by, arrange )
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 # importFrom( mstate, msdata )

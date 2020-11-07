@@ -159,7 +159,7 @@ pState( nSt, perm = 1:ncol(nSt) )
   has class \code{c("pState","matrix")}.
 }
 
-\author{Bendix Carstensen, \url{http://BendixCarstensen.com}.}
+\author{Bendix Carstensen, \url{http://bendixcarstensen.com}.}
 \seealso{
   \code{\link{Lexis}},
   \code{\link{cutLexis}},

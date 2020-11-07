@@ -156,6 +156,7 @@ Lexis( entry = list( per=entry ),
    \code{\link{splitLexis}},
    \code{\link{cutLexis}},
    \code{\link{mcutLexis}},
+   \code{\link{rcutLexis}},
    \code{\link{addCov.Lexis}},
 %   \code{\link{glm.Lexis}},
 %   \code{\link{gam.Lexis}},
@@ -170,6 +171,8 @@ Lexis( entry = list( per=entry ),
    \code{\link{timeBand}},
    \code{\link{entry}},
    \code{\link{exit}},
+   \code{\link{transient}},
+   \code{\link{absorbing}},
    \code{\link{dur}}
    }
 \keyword{survival}

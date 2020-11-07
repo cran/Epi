@@ -51,10 +51,11 @@ mcutLexis( L0, timescale = 1, wh,
   occurrence of a number of intermediate events.
 }
 \author{
-Bendix Carstensen, \url{http://BendixCarstensen.com}
+Bendix Carstensen, \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{cutLexis}},
+  \code{\link{rcutLexis}},
   \code{\link{addCov.Lexis}},
   \code{\link{Lexis}},
   \code{\link{splitLexis}}
@@ -62,14 +63,18 @@ Bendix Carstensen, \url{http://BendixCarstensen.com}
 \examples{
 # A dataframe of times
 set.seed(563248)
-dd <- data.frame( id = 1:10,
-                 doN = round(runif(10,-30, 0),1),
-                 doE = round(runif(10,  0,20),1),
-                 doX = round(runif(10, 50,60),1),
-                 doD = round(runif(10, 50,60),1),
+dd <- data.frame( id = 1:30,
+                 doN = round(runif(30,-30, 0),1),
+                 doE = round(runif(30,  0,20),1),
+                 doX = round(runif(30, 50,60),1),
+                 doD = round(runif(30, 50,60),1),
                  # these are the event times
-                 doA = c(NA,20,NA,27,35,NA,52, 5,43,80),
-                 doB = c(25,NA,37,40,NA,NA,15,23,36,61) )
+                 doA = c(NA,21,NA,27,35,NA,52, 5,43,80,
+                         NA,22,56,28,53,NA,51, 5,43,80,
+                         NA,23,NA,33,51,NA,55, 5,43,80),
+                 doB = c(NA,20,NA,53,27,NA, 5,52,34,83,
+                         NA,20,23,37,35,NA,52, 8,33,NA,
+                         25,NA,37,40,NA,NA,15,23,36,61) )
 
 # set up a Lexis object with time from entry to death/exit
 Lx <- Lexis( entry = list(time=doE,
@@ -89,9 +94,9 @@ summary( L2 )
 L2
 
 # show the states
-boxes( L2, boxpos=list(x=c(10,50,50,90,50,90),
-                       y=c(50,90,50,90,10,10)),
-           show.R=FALSE, show.BE=TRUE )
+boxes( L2, boxpos=list(x=c(10,60,50,90,50,90),
+                       y=c(50,50,90,90,10,10)),
+           scale.R=100, show.BE=TRUE, DR.sep=c(" (",")"))
 
 
 L3 <- mcutLexis( Lx, "time", wh=c("doA","doB"),
@@ -101,7 +106,7 @@ L3 <- mcutLexis( Lx, "time", wh=c("doA","doB"),
                  new.scales = c("tfA","tfB") )
 summary( L3 )
 boxes( L3, boxpos=list(x=c(10,50,50,90,50),
-                       y=c(50,90,50,50,10)),
+                       y=c(50,50,90,50,10)),
            show.R=FALSE, show.BE=TRUE )
 }
 \keyword{survival}

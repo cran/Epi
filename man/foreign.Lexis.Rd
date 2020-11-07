@@ -56,7 +56,7 @@ msdata(obj, ...)
   class \code{etm}.
 }
 \author{
-Bendix Carstensen, \email{b@bxc.dk}, \url{http://BendixCarstensen.com}
+Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
 }
 \examples{
 data(DMlate)

@@ -17,7 +17,7 @@ nice(x, log = F, lpos = c(1, 2, 5), ...)
   \item{\dots}{Arguments passed on to \code{pretty} if \code{log}=FALSE}
 }
 \value{A vector of breakpoints.}
-\author{Bendix Carstensen, \email{b@bxc.dk}, \url{http://BendixCarstensen.com}}
+\author{Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}}
 \seealso{pretty}
 \examples{
 nice( exp( rnorm( 100 ) ), log=TRUE )

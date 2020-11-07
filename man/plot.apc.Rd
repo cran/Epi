@@ -31,7 +31,7 @@ values of the parameters, and subsequently plots the estimates using
 \details{\code{plot.apc} is just a wrapper for \code{apc.plot}.}
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{apc.lines}}, \code{\link{lines.apc}},

@@ -230,7 +230,7 @@ if( verbose ){
 cat( "survival::coxph analysis of Lexis object ", nameLx,
      ":\nRates for", if(  onetr ) " the", " transition",
                      if( !onetr ) "s", " ", trprn,
-     "\nBaseline timescale: ", ts, sep="" )
+     "\nBaseline timescale: ", ts, "\n", sep="" )
              }
 
 mod <- coxph( as.formula( paste( "Sobj", 

@@ -56,7 +56,7 @@
   If \code{ref} is a two-column object and \code{ref[,2]} is a factor
   \code{Relevel} will preserve the order of levels from \code{ref[,2]}.  
 }
-\author{Bendix Carstensen \url{http://BendixCarstensen.com}, Lars Jorge Diaz}
+\author{Bendix Carstensen \url{http://bendixcarstensen.com}, Lars Jorge Diaz}
 \seealso{\code{\link{Relevel.Lexis}}}
 \examples{
 # Grouping using a list (hard coding)

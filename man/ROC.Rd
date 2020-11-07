@@ -81,7 +81,7 @@ construction of the ROC curve}
 }
 \author{Bendix Carstensen, Steno Diabetes Center \& University of
   Copenhagen,
-  \url{http://BendixCarstensen.com} }
+  \url{http://bendixcarstensen.com} }
 \examples{
 x <- rnorm( 100 )
 z <- rnorm( 100 )

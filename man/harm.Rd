@@ -33,7 +33,7 @@ harm(x, ord=1, per=1, verbose=FALSE )
   \code{sin2}, \code{cos2} etc.
 }
 \author{
-  Bendix Carstensen, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \url{http://bendixcarstensen.com}
 }
 \examples{
 x <- seq(-1,1,0.01)

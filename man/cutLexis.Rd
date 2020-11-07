@@ -127,6 +127,7 @@ countLexis( data, cut, timescale = 1 )
 }
 \seealso{
   \code{\link{mcutLexis}},
+  \code{\link{rcutLexis}},
   \code{\link{addCov.Lexis}},
   \code{\link{splitLexis}},
   \code{\link{Lexis}},

@@ -46,7 +46,7 @@
   first component of the list is returned.
 }
 \author{
-   Bendix Carstensen, \url{http://BendixCarstensen.com}
+   Bendix Carstensen, \url{http://bendixcarstensen.com}
    }
 \examples{
 data( nickel )

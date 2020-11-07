@@ -73,7 +73,7 @@
     The implementation is clumpy, the function is slow.
 }
 \author{
-  Bendix Carstensen, \email{b@bxc.dk}, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
 }
 \seealso{
 \code{\link{cutLexis}},

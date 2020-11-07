@@ -46,7 +46,7 @@ Lexis.lines( entry.date = NA,
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \examples{
 Lexis.diagram( entry.age = c(3,30,45),

@@ -24,7 +24,7 @@ lgrep( pattern, x, ... )
 \value{Elements of the input \code{x} (\code{fgrep}) or its names
   attribute (\code{ngrep}) or levels attribute (\code{lgrep}).
 }
-\author{Bendix Carstensen, \email{b@bxc.dk}, \url{http://BendixCarstensen.com} }
+\author{Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com} }
 \seealso{\code{\link{grep}}}
 \examples{
 ff <- factor( ll <- paste( sample( letters[1:3], 20, replace=TRUE ),

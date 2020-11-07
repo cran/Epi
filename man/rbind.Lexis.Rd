@@ -39,7 +39,7 @@
   just adds columns to an existing Lexis object.
 }
 \author{
-  Bendix Carstensen, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{subset.Lexis}}

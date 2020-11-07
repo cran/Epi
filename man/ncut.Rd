@@ -27,7 +27,7 @@ A numerical vector of the same length as \code{x}.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center, \email{b@bxc.dk},
-  \url{http://BendixCarstensen.com}, with essential input
+  \url{http://bendixcarstensen.com}, with essential input
   from Martyn Plummer, \email{martyn.plummer@r-project.org}
 }
 \seealso{

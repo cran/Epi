@@ -1,3 +1,11 @@
+Changes in 2.42
+
+o Extra line feed in notes for coxph.Lexis to mak output nicer
+
+o function 'rcutLexis' added allowing mutiple transitions per person
+  to be specified for cuts, including recurrences. Only keeps track of
+  most recently occupied state, not history.
+
 Changes in 2.41
 
 o A bug in addCov.Lexis messing up states due to unexpected sort order

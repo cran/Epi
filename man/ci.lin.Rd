@@ -227,7 +227,7 @@ ci.ratio( r1, r2,
   }
 \author{
   Bendix Carstensen,
-  \url{http://BendixCarstensen.com} & Michael Hills
+  \url{http://bendixcarstensen.com} & Michael Hills
 }
 
 \seealso{See also \code{\link{ci.cum}} for a function computing

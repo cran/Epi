@@ -142,7 +142,7 @@ coxph.Lexis( Lx,         # Lexis object
 }
 
 \author{
-Bendix Carstensen, \url{http://BendixCarstensen.com}.
+Bendix Carstensen, \url{http://bendixcarstensen.com}.
 }
 
 \seealso{

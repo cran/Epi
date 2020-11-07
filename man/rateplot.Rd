@@ -154,7 +154,7 @@ the calculation of the axis ranges.
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{apc.frame}}

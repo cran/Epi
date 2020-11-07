@@ -150,11 +150,11 @@ other attached packages:
 [1] Epi_2.41
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3        lattice_0.20-41   zoo_1.8-4         MASS_7.3-51.6    
- [5] grid_3.6.3        plyr_1.8.5        nlme_3.1-147      etm_1.0.4        
+ [1] Rcpp_1.0.3        lattice_0.20-41   zoo_1.8-4         MASS_7.3-53      
+ [5] grid_3.6.3        plyr_1.8.5        nlme_3.1-149      etm_1.0.4        
  [9] data.table_1.12.0 Matrix_1.2-18     splines_3.6.3     tools_3.6.3      
-[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_3.1-12   parallel_3.6.3   
-[17] compiler_3.6.3    mgcv_1.8-31      
+[13] cmprsk_2.2-7      numDeriv_2016.8-1 survival_3.2-7    parallel_3.6.3   
+[17] compiler_3.6.3    mgcv_1.8-33      
 \end{Soutput}
 \end{Schunk}
 In the \texttt{Epi} package, follow-up in a cohort is represented in a
@@ -1078,7 +1078,7 @@ $trans
 
 $formula
 ~Ns(age, knots = a.kn)
-<environment: 0x882e230>
+<environment: 0xbf6e740>
 
 $scale
 [1] 1
@@ -1839,12 +1839,12 @@ NOTE:  9996 records with tied events times resolved.
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD-Ins Ins-OAD  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2957  689       0       0      7532     4702   22920.24      7532
-  OAD        0  992 3327    0    1005       0      5324     1997   22965.29      5324
-  Ins        0  152    0  462       0     172       786      324    3883.12       786
-  OAD-Ins    0  266    0    0     739       0      1005      266    3770.53      1005
-  Ins-OAD    0   33    0    0       0     139       172       33     734.09       172
-  Sum     2830 2499 6284 1151    1744     311     14819     7322   54273.27      9996
+  DM      2830 1056 2958  688       0       0      7532     4702   22920.14      7532
+  OAD        0  992 3327    0    1006       0      5325     1998   22965.37      5325
+  Ins        0  152    0  462       0     171       785      323    3883.17       785
+  OAD-Ins    0  265    0    0     741       0      1006      265    3789.40      1006
+  Ins-OAD    0   34    0    0       0     137       171       34     715.19       171
+  Sum     2830 2499 6285 1150    1747     308     14819     7322   54273.27      9996
 
 Timescales:
   per   age   tfD   tfI   tfO 
@@ -1862,19 +1862,19 @@ states.
 +        digits=6, row.names=FALSE )
 \end{Sinput}
 \begin{Soutput}
- lex.id        tfI     tfO     per     age       tfD    lex.dur lex.Cst lex.Xst   doins   dooad
-     18         NA      NA 1996.75 61.7221 0.0000000 1.16906229      DM     OAD 2005.99 1997.92
-     18         NA 0.00000 1997.92 62.8912 1.1690623 8.07939767     OAD OAD-Ins 2005.99 1997.92
-     18 0.00000000 8.07940 2005.99 70.9706 9.2484600 4.00273785 OAD-Ins OAD-Ins 2005.99 1997.92
-     25         NA      NA 2003.69 60.3422 0.0000000 1.88090349      DM     OAD 2008.64 2005.57
-     25         NA 0.00000 2005.57 62.2231 1.8809035 3.06913073     OAD OAD-Ins 2008.64 2005.57
-     25 0.00000000 3.06913 2008.64 65.2923 4.9500342 1.35797399 OAD-Ins OAD-Ins 2008.64 2005.57
-     20         NA      NA 2009.25 53.2183 0.0000000 0.03385755      DM     Ins 2009.28 2009.29
-     20 0.00000000      NA 2009.28 53.2522 0.0338576 0.00844329     Ins Ins-OAD 2009.28 2009.29
-     20 0.00844329 0.00000 2009.29 53.2606 0.0423008 0.70787028 Ins-OAD Ins-OAD 2009.28 2009.29
-     38         NA      NA 2008.37 63.9316 0.0000000 0.09308693      DM     Ins 2008.46 2008.67
-     38 0.00000000      NA 2008.46 64.0246 0.0930869 0.21355236     Ins Ins-OAD 2008.46 2008.67
-     38 0.21355236 0.00000 2008.67 64.2382 0.3066393 1.32511978 Ins-OAD    Dead 2008.46 2008.67
+ lex.id       tfI      tfO     per     age       tfD   lex.dur lex.Cst lex.Xst   doins   dooad
+     18        NA       NA 1996.75 61.7221 0.0000000 1.1690623      DM     OAD 2005.99 1997.92
+     18        NA 0.000000 1997.92 62.8912 1.1690623 8.0793977     OAD OAD-Ins 2005.99 1997.92
+     18 0.0000000 8.079398 2005.99 70.9706 9.2484600 4.0027379 OAD-Ins OAD-Ins 2005.99 1997.92
+     20        NA       NA 2009.25 53.2183 0.0000000 0.0270561      DM     OAD 2009.29 2009.27
+     20        NA 0.000000 2009.27 53.2454 0.0270561 0.0173270     OAD OAD-Ins 2009.29 2009.27
+     20 0.0000000 0.017327 2009.29 53.2627 0.0443831 0.7057880 OAD-Ins OAD-Ins 2009.29 2009.27
+     38        NA       NA 2008.37 63.9316 0.0000000 0.0930869      DM     Ins 2008.46 2008.67
+     38 0.0000000       NA 2008.46 64.0246 0.0930869 0.2135524     Ins Ins-OAD 2008.46 2008.67
+     38 0.2135524 0.000000 2008.67 64.2382 0.3066393 1.3251198 Ins-OAD    Dead 2008.46 2008.67
+     39        NA       NA 2005.96 55.5264 0.0000000 0.0574949      DM     Ins 2006.02 2006.05
+     39 0.0000000       NA 2006.02 55.5838 0.0574949 0.0301164     Ins Ins-OAD 2006.02 2006.05
+     39 0.0301164 0.000000 2006.05 55.6140 0.0876112 3.9452430 Ins-OAD Ins-OAD 2006.02 2006.05
 \end{Soutput}
 \end{Schunk}
 We can also illustrate the transitions to the different states, as in
@@ -1916,11 +1916,11 @@ with both insulin and OAD to one, regardless of order (figure
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD+Ins  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2957  689       0      7532     4702   22920.24      7532
-  OAD        0  992 3327    0    1005      5324     1997   22965.29      5324
-  Ins        0  152    0  462     172       786      324    3883.12       786
-  OAD+Ins    0  299    0    0     878      1177      299    4504.62      1177
-  Sum     2830 2499 6284 1151    2055     14819     7322   54273.27      9996
+  DM      2830 1056 2958  688       0      7532     4702   22920.14      7532
+  OAD        0  992 3327    0    1006      5325     1998   22965.37      5325
+  Ins        0  152    0  462     171       785      323    3883.17       785
+  OAD+Ins    0  299    0    0     878      1177      299    4504.59      1177
+  Sum     2830 2499 6285 1150    2055     14819     7322   54273.27      9996
 \end{Soutput}
 \begin{Sinput}
 > boxes( dmMr, boxpos=list(x=c(15,50,15,85,85),

@@ -58,7 +58,7 @@ detail.labs = FALSE )
 }
 \author{
   Bendix Carstensen, Esa Laara.
-  \url{http://BendixCarstensen.com}
+  \url{http://bendixcarstensen.com}
 }
 \seealso{
   \code{\link{twoby2}}, \code{\link{binom.test}}

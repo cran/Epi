@@ -23,7 +23,7 @@ projection.ip(X, M, orth = FALSE, weight = rep(1, nrow(X)))
 }
 \author{
   Bendix Carstensen, Steno Diabetes Center,
-  \url{http://BendixCarstensen.com}, with help from Peter Dalgaard.
+  \url{http://bendixcarstensen.com}, with help from Peter Dalgaard.
 }
 \seealso{ \code{\link{detrend}} }
 \keyword{array}

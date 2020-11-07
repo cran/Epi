@@ -32,13 +32,13 @@ citEntry(entry = "Article",
   volume       = "38",
   number       = "5",
   pages        = "1--12",
-  url          = "http://www.jstatsoft.org/v38/i05/",
+  url          = "https://www.jstatsoft.org/v38/i05/",
 
   textVersion  =
   paste("Martyn Plummer, Bendix Carstensen (2011).",
         "Lexis: An R Class for Epidemiological Studies with Long-Term Follow-Up.",
         "Journal of Statistical Software, 38(5), 1-12.",
-        "URL http://www.jstatsoft.org/v38/i05/."),
+        "URL https://www.jstatsoft.org/v38/i05/."),
 
   header = "If you use Lexis objects/diagrams, please also cite:"
 )
@@ -52,13 +52,13 @@ citEntry(entry = "Article",
   volume       = "38",
   number       = "6",
   pages        = "1--18",
-  url          = "http://www.jstatsoft.org/v38/i06/",
+  url          = "https://www.jstatsoft.org/v38/i06/",
 
   textVersion  =
   paste("Bendix Carstensen, Martyn Plummer (2011).",
         "Using Lexis Objects for Multi-State Models in R.",
         "Journal of Statistical Software, 38(6), 1-18.",
-        "URL http://www.jstatsoft.org/v38/i06/."),
+        "URL https://www.jstatsoft.org/v38/i06/."),
 
   header = "For use of Lexis objects in multi-state models, please also cite:"
 )

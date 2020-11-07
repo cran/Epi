@@ -61,7 +61,7 @@ N2Y( A, P, N,
   Lexis diagram. Statistics in Medicine, 26: 3018-3045, 2007.
 }
 \author{
-  Bendix Carstensen, \url{http://BendixCarstensen.com}
+  Bendix Carstensen, \url{http://bendixcarstensen.com}
        }
 \seealso{
 \code{\link{splitLexis}}, \code{\link{apc.fit}}
