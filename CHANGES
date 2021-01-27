@@ -1,8 +1,40 @@
+Changes in 2.43
+
+o a bug in addCov.Lexis ignored clinical mesurements prior to start of
+  follow-up. This lead to a major redesign of addCov.Lexis by taing
+  advatage of rcutLexis. It lost the add.scales argument, but time
+  since clinical measurement is returned as a timescale by default.
+
+o ci.Crisk added. Computes simulation-based confidence intervals for
+  cumulative risks in a competing risks situation.
+
+o sortLexis, orderLexis and order.Lexis added; order/sort of a Lexis
+  object by (lex.id,time).
+
+o precursor.states now defaults to transient(Lx) for cutLexis,
+  mcutLexis and rcutLexis, so precursor.states is no longer a required
+  argument.
+
+o mcutLexis reported wrong number of ties resolved; fixed
+
+o Bug in mcutLexis accidentally omitting new states as precursor states
+
+o Bug in boxes.Lexis causing text in boxes always to be printed in
+  bold font is fixed. Default font is changed to 1 instead of 2 
+
+o factorize.Lexis now only turns lex.Cst and lex.Xst into factors with
+  the same set of levels.
+
+o Relevel.Lexis now behaves like Relevel, specifically: a character
+  vector as second argument (ref=) will cause a reordering of levels
+  of lex.Cst and lex.Xst, earlier it would merely cause a renaming of
+  states, which could cause undetected rubbish.
+
 Changes in 2.42
 
-o Extra line feed in notes for coxph.Lexis to mak output nicer
+o Extra line feed in output from coxph.Lexis to make output nicer
 
-o function 'rcutLexis' added allowing mutiple transitions per person
+o function 'rcutLexis' added allowing multiple transitions per person
   to be specified for cuts, including recurrences. Only keeps track of
   most recently occupied state, not history.
 

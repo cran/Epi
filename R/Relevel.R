@@ -1,11 +1,3 @@
-# The levels method is already defined (in the utils package)
-# and hence imported in the NAMESPACE file
-levels.Lexis <-
-function( x )
-{
-union( levels(x$lex.Cst), levels(x$lex.Xst) )
-}
-
 # The Relevel method
 Relevel <- function (x, ...) UseMethod("Relevel")
 
@@ -51,8 +43,11 @@ if( xlevels ) grff else factor(grff)
 # The factor method is the default method
 Relevel.default <-
 Relevel.factor <-
-  function( x, ref, first=TRUE, collapse="+",
-            xlevels=TRUE, nogroup=TRUE, ... )
+function( x, ref, first = TRUE,
+               collapse = "+",
+                xlevels = TRUE,
+                nogroup = TRUE,
+                    ... )
   {
   # Function that collapses multiple sets of levels of a factor
   #

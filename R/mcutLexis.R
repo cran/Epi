@@ -1,9 +1,9 @@
 mcutLexis <-
 function( L0, # A Lexis object
        timescale = 1,    # the time scale referred to by L0[,wh]
-              wh,        # indices/names of columns holding dates of state entries (events)
+       wh, # indices/names of columns witha dates of state entries (events)
       new.states = NULL, # Names of the event types (states)
-precursor.states = NULL,
+precursor.states = transient(L0), # NULL,
       seq.states = TRUE, # Should state names reflect ordering of events
       new.scales = NULL, # Time-scales referring to time since
     ties.resolve = FALSE # Are tied event times accepted?
@@ -28,6 +28,10 @@ if( length(wh) != length(new.states) )
   stop( "wh and new.states must have same length, but lengths are",
         "wh:", length(wh), "and new.states:", length(new.states), "\n" )
 
+### precursor state
+if(missing(precursor.states))
+  cat("NOTE: Precursor states set to", precursor.states, "\n")
+    
 ### timescales
 # either all or none    
 if( is.logical(new.scales) )
@@ -52,16 +56,18 @@ has.ties <- any( wh.tied <- apply( L0[,wh], 1,
 if( has.ties & is.logical(ties.resolve) & !ties.resolve )
   stop( "Tied event times not allowed with ties.resolve=FALSE:\n",
         "there were", length(wh.tied), "records with tied event times.")
-if( has.ties & is.logical(ties.resolve) & ties.resolve ) ties.resolve = 1/100
+if( has.ties & is.logical(ties.resolve) & ties.resolve ) ties.resolve <- 1/100
 if( has.ties & is.numeric(ties.resolve) )
   {
   rnd <- L0[wh.tied,wh]*0
   rnd[,] <- runif(rnd,-1,1) * ties.resolve
   L0[wh.tied,wh] <- L0[wh.tied,wh] + rnd
-  cat( "NOTE: ", length(wh.tied),
-       "records with tied events times resolved.\n",
-       "Results only reproducible if the seed for the random number generator is set.")
-  }
+  cat("NOTE:", sum(wh.tied),
+ "records with tied events times resolved (adding", ties.resolve,
+ "random uniform),\n",
+ "     so results are only",
+ "reproducible if the random number seed was set.\n")
+  } 
 # End of checks
 
 # The object to return initiated as NULL

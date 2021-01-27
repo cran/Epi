@@ -10,7 +10,7 @@ events may occur in any order (but at most once for each).
 \usage{
 mcutLexis( L0, timescale = 1, wh,
               new.states = NULL,
-        precursor.states = NULL,
+        precursor.states = transient(L0),
               seq.states = TRUE,
               new.scales = NULL,
             ties.resolve = FALSE )

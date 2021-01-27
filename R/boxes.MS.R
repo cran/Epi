@@ -126,14 +126,14 @@ function( obj, boxpos = FALSE,
                    ht,
                subset = NULL,
               exclude = NULL,
-                 font = 2,
+                 font = 1,
                   lwd = 2,
            col.txt    = par("fg"),
            col.border = col.txt,
            col.bg     = "transparent",
            col.arr    = par("fg"),
-              lwd.arr = 2,
-             font.arr = 2,
+              lwd.arr = lwd,
+             font.arr = font,
               pos.arr = 0.45,
               txt.arr = NULL,
           col.txt.arr = col.arr,
@@ -250,6 +250,12 @@ if( length(lwd.arr    )<n.tr ) lwd.arr    <- rep(lwd.arr    ,n.tr)[1:n.tr]
 if( length(font.arr   )<n.tr ) font.arr   <- rep(font.arr   ,n.tr)[1:n.tr]
 if( length(pos.arr    )<n.tr ) pos.arr    <- rep(pos.arr    ,n.tr)[1:n.tr]
 
+if( length(col.arr    )>n.tr ) col.arr    <- col.arr    [1:n.tr]
+if( length(col.txt.arr)>n.tr ) col.txt.arr<- col.txt.arr[1:n.tr]
+if( length(lwd.arr    )>n.tr ) lwd.arr    <- lwd.arr    [1:n.tr]
+if( length(font.arr   )>n.tr ) font.arr   <- font.arr   [1:n.tr]
+if( length(pos.arr    )>n.tr ) pos.arr    <- pos.arr    [1:n.tr]
+
 # Here comes the plot
 # First setting up the plot area, and restoring the plot parameters later
 opar <- par( mar=c(0,0,0,0), cex=cex )
@@ -342,9 +348,9 @@ for( i in subset ) for( j in subset )
           font=font.arr[a], col=col.txt.arr[a] )
     }
   }
-# Redraw the boxes with white background to remove any arrows
+# Redraw the boxes with white background to remove any arrows crossing
 for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
-                         lwd=lwd[i], col.bg=par("bg") )
+                         font=font[i], lwd=lwd[i], col.bg=par("bg") )
 # Then redraw the boxes again
 for( i in subset ) tbox( pl.nam[i], xx[i], yy[i], wd[i], ht[i],
                                 font=font[i],

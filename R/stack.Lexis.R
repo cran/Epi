@@ -4,11 +4,12 @@
 # and hence imported in the NAMESPACE file
 
 stack.Lexis <-
-function( x, ... )
+function(x, ...)
 {
 ## Function to stack obervations for survival analysis
 ## Make sure that lex.Cst and lex.Xst are factors with identical levels
-x <- Relevel( x )
+x <- factorize(x)
+    
 ## Same covariates
 xx <- data.frame( cbind( x, lex.Tr="", lex.Fail=FALSE ) )[NULL,]
 tm <- tmat.Lexis( x )

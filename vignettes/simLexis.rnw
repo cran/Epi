@@ -948,7 +948,7 @@ This section explains the actually existing code for
 source( "../R/simLexis.R", keep.source=TRUE )
 @ %
 % When checking the package
-<<CHANGE2,echo=TRUE,results=hide,eval=TRUE>>=
+<<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
 simX <- Epi:::simX
 sim1 <- Epi:::sim1
 lint <- Epi:::lint

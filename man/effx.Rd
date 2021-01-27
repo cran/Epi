@@ -42,7 +42,7 @@ effx( response, type = "metric",
 \item{data}{\code{data} refers to the data used to evaluate the function}
 }
 \details{The function is a wrapper for glm. Effects are calculated as
-  differences in means for a metric response, odds ratios/relatiev risks
+  differences in means for a metric response, odds ratios/relative risks
   for a binary response, and rate ratios/rate differences for a failure
   or count response.
 
@@ -59,8 +59,7 @@ effx( response, type = "metric",
   \item{comp2 }{Tests of significance}
 % ...
 }
-\references{ www.mhills.pwp.blueyonder.co.uk }
-\author{Michael Hills}
+\author{Michael Hills (*1934-Jun-07, +2021-Jan-07)}
 %\note{ ~~further notes~~ }
 
 %\seealso{ ~~objects to See Also as \code{\link{~~fun~~}}, ~~~ }

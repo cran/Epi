@@ -6,6 +6,12 @@
 # 3) Swap TRUE and FALSE in the CHANGE1/2 lines in the rnw files.
 # Then we are ready for the following:
 
+rt crisk
+rw crisk
+bl crisk
+cp crisk.R  ../inst/doc
+cp crisk.pdf ../inst/doc
+
 rw flup
 rt flup
 bl flup

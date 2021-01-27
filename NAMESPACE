@@ -28,6 +28,10 @@ lines.apc,
   ci.pred,
   ci.ratio,
   ci.mat,
+      ci.Crisk,
+  sim2ci.Crisk,
+  sim2ci.Srisk,
+  sim2ci.Stime,
   matshade,
   lls,
   clear,
@@ -77,6 +81,9 @@ lines.apc,
              "[.Lexis",
           cbind.Lexis,
           rbind.Lexis,
+          order.Lexis,
+           orderLexis,
+            sortLexis,
         summary.Lexis,
   print.summary.Lexis,
            splitLexis,
@@ -169,8 +176,9 @@ lines.apc,
 importFrom( utils, stack )
 # importFrom( base, cbind, rbind )
 importFrom( splines, ns, bs )
+importFrom( purrr, '%>%' )
 importFrom( plyr, rbind.fill )
-importFrom( dplyr, summarize, group_by, arrange )
+importFrom( dplyr, summarize, group_by, arrange, left_join, select, rename )
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 # importFrom( mstate, msdata )
@@ -198,50 +206,58 @@ importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
 importFrom("utils", "flush.console", "str")
 
 # register S3 methods
-S3method(    print, Icens)
-S3method(    print, floated)
-S3method(     plot, apc)
-S3method(    lines, apc)
-S3method(     plot, Lexis)
-S3method(     plot, pState)
-S3method(    lines, pState)
-S3method(   points, Lexis)
-S3method(    lines, Lexis)
-S3method(   PY.ann, Lexis)
-S3method(    merge, Lexis)
-S3method(   subset, Lexis)
-S3method(   subset, stacked.Lexis)
-S3method(      "[", Lexis)
-S3method(    cbind, Lexis)
-S3method(    rbind, Lexis)
-S3method(  summary, Lexis)
-S3method(    print, summary.Lexis)
-S3method(transform, Lexis)
-S3method(transform, stacked.Lexis)
-S3method(   levels, Lexis)
-S3method(      nid, Lexis)
-S3method(      nid, default)
-S3method(  Relevel, Lexis)
-S3method(  Relevel, factor)
-S3method(  Relevel, default)
-S3method(factorize, Lexis)
-S3method(   addCov, Lexis)
-S3method(    stack, Lexis)
-S3method(     tmat, Lexis)
-S3method(    boxes, Lexis)
-S3method(    boxes, matrix)
-S3method(    boxes, MS)
-S3method(   msdata, Lexis)
-S3method(      etm, Lexis)
-S3method(      glm, Lexis)
-S3method(      gam, Lexis)
-S3method(    coxph, Lexis)
-S3method(    print, LCa)
-S3method(  summary, LCa)
-S3method(  predict, LCa)
-S3method(     plot, LCa)
-S3method(    print, stat.table)
-S3method(    print, clogistic)
-S3method(     coef, clogistic)
-S3method(     vcov, clogistic)
-S3method(  as.Date, cal.yr)
+S3method(     print, Icens)
+S3method(     print, floated)
+S3method(      plot, apc)
+S3method(     lines, apc)
+S3method(      plot, Lexis)
+S3method(      plot, pState)
+S3method(     lines, pState)
+S3method(    points, Lexis)
+S3method(     lines, Lexis)
+S3method(    PY.ann, Lexis)
+S3method(     merge, Lexis)
+S3method(    subset, Lexis)
+S3method(    subset, stacked.Lexis)
+S3method(       "[", Lexis)
+S3method(     cbind, Lexis)
+S3method(     rbind, Lexis)
+S3method(   summary, Lexis)
+S3method(     print, summary.Lexis)
+S3method( transform, Lexis)
+S3method( transform, stacked.Lexis)
+S3method(    levels, Lexis)
+S3method(       nid, Lexis)
+S3method(       nid, default)
+S3method(   Relevel, Lexis)
+S3method(   Relevel, factor)
+S3method(   Relevel, default)
+S3method( factorize, Lexis)
+S3method(    addCov, Lexis)
+S3method(     stack, Lexis)
+S3method(      tmat, Lexis)
+S3method(     boxes, Lexis)
+S3method(     boxes, matrix)
+S3method(     boxes, MS)
+S3method(    msdata, Lexis)
+S3method(       etm, Lexis)
+S3method(       glm, Lexis)
+S3method(       gam, Lexis)
+S3method(     coxph, Lexis)
+S3method(     print, LCa)
+S3method(   summary, LCa)
+S3method(   predict, LCa)
+S3method(      plot, LCa)
+S3method(     print, stat.table)
+S3method(     print, clogistic)
+S3method(      coef, clogistic)
+S3method(      vcov, clogistic)
+S3method(   as.Date, cal.yr)
+          
+          
+          
+          
+          
+          
+          
+          

@@ -13,12 +13,11 @@
   measurements forward in time to the next measurement occasion.
 }
 \usage{
-\method{addCov}{Lexis}( Lx,
-                      clin,
-                 timescale = 1,
-                     exnam,
-                       tfc = "tfc",
-                 addScales = FALSE )
+\method{addCov}{Lexis}(Lx,
+                     clin,
+                timescale = 1,
+                    exnam,
+                      tfc = "tfc")
 }
 \arguments{
   \item{Lx}{
@@ -42,25 +41,23 @@
     name indicating the time at which the covariate measurements were
     taken.
     }
-    \item{exnam}{
+  \item{exnam}{
     Character. Name of the variable in \code{clin} with the examination
     names (such as \code{wave1}, \code{wave2} etc.). Values may not be
-    repeated within person. Will be carried over to the resulting
+    repeated within person and cannot be equal to any of
+    \code{levels(Lx)}. Will be carried over to the resulting 
     \code{Lexis} object. If there is no such variable in \code{clin} it
     will be constructed; if the argument is omitted, a variable called
     \code{exnam} with values \code{ex1}, \code{ex2} etc. will be
     constructed.
     }
   \item{tfc}{      
-    Character (\code{t}ime \code{f}rom \code{c}ovariate). Name of the
+    Character (\code{t}ime \code{f}rom \code{c}linical visit). Name of the
     variable in the result which will contain the time since the most
     recent covariate date. If the argument is omitted a variable called
     \code{tfc} will be constructed. If \code{addScales} is \code{TRUE}
-    this is included among the time scales.
-    }
-  \item{addScales}{
-    Logical. Should timescales representing time since each examination time
-    time be added? They will be named \code{paste("tf",exnam)}.
+    this is included among the time scales, even it is not formally a
+    time scale.
     }
 }
 \value{
@@ -68,9 +65,6 @@
     with cuts added at the times of examination, and covariate
     measurements added for all records representing follow-up after the
     most recent time of measurement. 
-}
-\details{
-    The implementation is clumpy, the function is slow.
 }
 \author{
   Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
@@ -117,29 +111,24 @@ clin
 # Different behavours using exnam and addScales
 addCov.Lexis( Lx, clin )
 addCov.Lexis( Lx, clin, exnam="xnam" )
-addCov.Lexis( Lx, clin, addScales=TRUE )
-addCov.Lexis( Lx, clin, addScales=TRUE, exnam="xnam" )
 
 # Works with time split BEFORE
-Lb <- addCov.Lexis( splitLexis( Lx,
-                                time.scale="age",
-                                breaks=seq(0,80,5) ),
-                    clin,
-                    exnam="clX" )
+Lb <- addCov.Lexis(splitLexis(Lx,
+                              time.scale="age",
+                              breaks=seq(0,80,5) ),
+                   clin,
+                   exnam="clX" )
 Lb
-# ...or AFTER, but only if addScales is given
-La <- splitLexis( addCov.Lexis( Lx,
-                              clin,
-                             exnam = "xnam" ),
-                  breaks=seq(0,80,5),
-                  time.scale="age" )
+# and also AFTER
+La <- splitLexis(addCov.Lexis( Lx,
+                             clin,
+                            exnam = "xnam" ),
+                 breaks=seq(0,80,5),
+                 time.scale="age" )
 La
-La <- splitLexis( addCov.Lexis( Lx,
-                              clin,
-                             exnam = "xnam",
-                         addScales = TRUE ),
-                  breaks=seq(0,80,5),
-                  time.scale="age" )
-La
+La$tfc == Lb$tfc
+La$age == Lb$age
+str(La)
+str(Lb)
 }
 \keyword{ survival }

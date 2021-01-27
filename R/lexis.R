@@ -796,5 +796,14 @@ transform.Lexis <- function(`_data`, ... )
     y
 }
 
-# order.Lexis <- function( x ) order( x$lex.id, lex[,timeScales(x)[1]] )
-#  sort.Lexis <- function( x, ... ) x[order.Lexis(x,...),]
+# Two utility functions used to sort a Lexis object by (lex.id,time)    
+order.Lexis <-
+ orderLexis <- function( x )
+               {
+               # Some time scales may contain missing values
+               # So find (any) one that does not so we can sort on it 
+       N.NA <- apply(x[,timeScales(x)], 2, function(x) sum(is.na(x)))
+  a.full.ts <- timeScales(x)[which(N.NA == 0)[1]]
+               order(x$lex.id, x[,a.full.ts])
+               }
+  sortLexis <- function( x ) x[orderLexis(x),]

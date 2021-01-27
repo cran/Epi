@@ -115,21 +115,22 @@ function( data,
 # Added by BxC
 match.cut <-
 function( data, cut )
+{
+if(sum(!is.na(match(c("lex.id", "cut", "new.state"), names(cut)))) < 3 )
+   stop("The dataframe supplied in the cut= argument must have columns",
+        "'lex.id','cut','new.state', but the columns are:\n", names(cut))
+else
    {
-   if( sum(!is.na(match(c("lex.id","cut","new.state"),names(cut))))<3 )
-       stop( "The dataframe supplied in the cut= argument must have columns",
-             "'lex.id','cut','new.state', but the columns are:\n", names( cut ) )
+   if( length(unique(cut$lex.id)) < nrow(cut) )
+     stop("Values of 'lex.id' must be unique in the 'cut' dataframe\n",
+          "- maybe you are looking for rcutLexis?")
    else
-     {
-     if( length( unique( cut$lex.id ) ) < nrow( cut ) )
-         stop( "Values of 'lex.id' must be unique in the 'cut' dataframe" )
-     else
-       zz <- merge( data[,"lex.id",drop=FALSE], cut, all.x=TRUE )
-       if( is.factor ( data$lex.Cst ) ) zz$new.state <- as.character(zz$new.state)
-       if( is.numeric( data$lex.Cst ) ) zz$new.state <- as.numeric(zz$new.state)
-       return( zz )
-     }
+     zz <- merge( data[,"lex.id",drop=FALSE], cut, all.x=TRUE )
+     if(is.factor( data$lex.Cst)) zz$new.state <- as.character(zz$new.state)
+     if(is.numeric(data$lex.Cst)) zz$new.state <- as.numeric(zz$new.state)
+     return( zz )
    }
+}
 # End of addition / change
 
 cutLexis <- function(data,
@@ -139,7 +140,7 @@ cutLexis <- function(data,
                      new.scale = FALSE,
                      split.states = FALSE,
                      progressive = FALSE,
-                     precursor.states = NULL, #transient(data),
+                     precursor.states = transient(data),
                      count = FALSE)
 {
     if (!inherits(data, "Lexis"))
