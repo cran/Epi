@@ -29,14 +29,14 @@ maxn <- max(table(cut$lex.id))
 for(n in 1:maxn)
    {
    # the n'th transitions for each person
-   nx.cut <- summarize( cut,
-                        cut = getn(      cut, n),
-                  new.state = getn(new.state, n) )
+   nx.cut <- summarize(cut,
+                       cut = getn(      cut, n),
+                 new.state = getn(new.state, n) )
    # update with cuts at these for each person
-   nxL <- cutLexis( nxL,  
-                    cut = nx.cut,
-              timescale = timescale,
-       precursor.states = pr.st )
+   nxL <- cutLexis(nxL,  
+                   cut = nx.cut,
+             timescale = timescale,
+      precursor.states = pr.st )
    }
 # done, return result
 nxL

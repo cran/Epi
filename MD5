@@ -1,6 +1,6 @@
-e1a0b1ff300c9f143b871ea103d35815 *CHANGES
-66276aafeeac92be094572f88c4e9ea7 *DESCRIPTION
-5efc7111a232621a6f90dc960d1db701 *NAMESPACE
+3881e7db20d6d75465bf9685554851b9 *CHANGES
+7e340706aee63a43ebe09ccc2fd15733 *DESCRIPTION
+07c63ae136ed96ec8a22bda151bd0eab *NAMESPACE
 fac3c7f01ab0bd6930cf3cbea20e6bcc *R/Aplot.R
 a031997be7388601dd1df6a28fc55328 *R/Cplot.R
 6a1c4f4cbbf509d1f3c40b9f0adb6399 *R/Icens.R
@@ -17,7 +17,8 @@ b99336ee0c14ce41c007e5d7e5836ba0 *R/Relevel.Lexis.R
 566bde82417d3f255e04aab183eb8098 *R/Relevel.R
 0e3e3d23b8ab79dcf3046828190462b2 *R/Termplot.R
 3f30311f13dff23a36857e49a320536f *R/Wald.R
-e9e2dd6e3d26677e6397a57b3578734c *R/addCov.Lexis.R
+07d72feb7757464381a9318f35b010b3 *R/addCov.Lexis.R
+aae77bfd1a9b2dd4e6e1c3b9103f3611 *R/addDrug.Lexis.R
 3f1b3d03d4d91baa3625e6112d9bcb55 *R/apc.LCa.R
 0f9a88d6d781d2fa1e5292454fd64421 *R/apc.fit.R
 3c53b3d667196c204fab811d2231ccd5 *R/apc.frame.R
@@ -53,7 +54,7 @@ bdb5671bebcdac29f7feb52749c08007 *R/foreign.R
 da7b5d41fe7876ef6bab01839b613939 *R/ftrend.R
 fa3fd08784cc9ba4731ad8b5b974be50 *R/gen.exp.R
 edb1f704b064f67363d224d10461413e *R/harm.R
-c03e29d0a57561d1db73eb222ab4e29e *R/lexis.R
+36ff27447fc7512936d1c411d6556714 *R/lexis.R
 4b9c00f8e1833edf816e733cb5ddf8bd *R/list.lex.R
 f8eba91de17a8207c6303ffb7b34f0a7 *R/lls.R
 ae9b3e6688dda87762f9fce5482a69e8 *R/mat2pol.R
@@ -71,7 +72,7 @@ c0229c2819d977a8c557a22dea1dd5fa *R/print.Icens.r
 cca51283f637927702fbe217367011eb *R/print.floated.R
 961858aa39320463dffa6154c70c87f6 *R/projection.ip.r
 0c2a2e493c190c4e74587b5127e9bef6 *R/rateplot.R
-ac911097b061bca931145c28bb189595 *R/rcutLexis.R
+26e145b4a0930d29b0d6be659a5394fa *R/rcutLexis.R
 251d9ec19ef0ca158582f78d70255c23 *R/rm.tr.R
 1f3397f4132776aadb6742688f3b75df *R/simLexis.R
 358b6fa60093d8bbee969a76a88797c0 *R/splitLexis.R
@@ -145,6 +146,7 @@ bb2162d557dfb7685edac64ac3213b6c *man/S.typh.Rd
 9351888a37017068f2c9ac8b843c846d *man/Termplot.Rd
 3995803f52a91af5da0e7ba9f45d0769 *man/Y.dk.Rd
 16c2b0205cad182816811d39f03c05e4 *man/addCov.Lexis.Rd
+4091ff116479609b54b878a78876e77a *man/addDrug.Lexis.Rd
 4aa9775e619aedf1cf539b71fbc348f6 *man/apc.LCa.Rd
 6ae510f69bbae0c560915c9759ba1253 *man/apc.fit.Rd
 b2df9e1ef085b33cb9f8d4bd8f62a066 *man/apc.frame.Rd
@@ -219,14 +221,14 @@ a22aa8901f1f717b6d3a7ed086bc8e02 *man/splitLexis.Rd
 a1276119b4a28fd73149101911b6051b *man/start.Lexis.Rd
 4f43436fc863747dad4fcdd566948039 *man/stattable.Rd
 73cf4597fcb4a9d019bda47431b095be *man/stattable.funs.Rd
-beddd3d77bfb6767e7ab389c9fe9fa50 *man/steno2.Rd
+4b668d31d2d8cd3ae6abf92d9bea36ea *man/steno2.Rd
 f64993885912b74636bb8d1517cbff7e *man/subset.Lexis.Rd
 832f27234cfe339fc8b91a7b4e21dfd1 *man/summary.Lexis.Rd
 14711d23ae0b89d9d22b9f3b07211093 *man/testisDK.Rd
 e3446824b09ea4ad8e8a0ddfc1987eef *man/thoro.Rd
 6ea9cf64475187fa2f402275c40573a7 *man/time.band.Rd
 120a43f3c8f4bff2fd46ef1c4137a3a6 *man/time.scales.Rd
-2c47126b2c473ea6b46fc5d9f5893006 *man/transform.Lexis.Rd
+1e3d5075a2310c7a43a78ce7bca21b22 *man/transform.Lexis.Rd
 02fc311541fae16a5d3a580a04925050 *man/twoby2.Rd
 bcc0556f8f0a158637592731928cf835 *src/chinv2.c
 3e3a51847b5767274f0945350e947726 *src/cholesky2.c

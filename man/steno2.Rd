@@ -7,16 +7,16 @@
 Clinical trial: Steno2 baseline and follow-up. 
 }
 \description{
-  
 Steno-2 was a clinical trial conducted at Steno Diabetes Center
-1993-2001. Intervention was intensified treatment versus conventional
-treatment of diabetes patients with micro-albuminuria.
-concern the extended follow-up of the trial population till 2015. Three
-files are provided: \code{steno2} with one record per person,
-\code{st2clin} with one record per clinical visit and \code{st2alb} with
-one record per transition between states of albuminuria.
+1993-2001. The intervention was intensified treatment versus
+conventional treatment of diabetes patients with micro-albuminuria. The
+datsets here concern the extended follow-up of the trial population till
+2015. Three files are provided: \code{steno2} with one record per
+person, \code{st2clin} with one record per clinical visit and
+\code{st2alb} with one record per transition between states of
+albuminuria.
 
-These dataset are simulated entirely simulated, but designed to give
+These dataset are entirely simulated, but designed to give
 approximately the same results as the original.
 }
 \usage{data("steno2")
@@ -24,6 +24,7 @@ approximately the same results as the original.
        data("st2alb")
 }
 \format{
+
   \code{steno2} is a data frame with 160 observations on the following 14
   variables: 
   \describe{
@@ -43,6 +44,7 @@ approximately the same results as the original.
     \item{\code{doEnd}}{Date of exit from follow-up, a Date}
     \item{\code{doDth}}{Date of death, a Date}
   }
+
   \code{st2clin} is data frame with 750 observations on clinical
   measurements at different clinical visits:
   \describe{
@@ -52,6 +54,7 @@ approximately the same results as the original.
     \item{\code{chol}}{Total cholesterol, mg/mol}
     \item{\code{crea}}{Creatinine, mg/mol}
   }
+  
   \code{st2alb} is data frame with 307 observations of changes in
   complication (albuminuria) state
   \describe{

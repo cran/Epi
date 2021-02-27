@@ -801,9 +801,16 @@ order.Lexis <-
  orderLexis <- function( x )
                {
                # Some time scales may contain missing values
-               # So find (any) one that does not so we can sort on it 
-       N.NA <- apply(x[,timeScales(x)], 2, function(x) sum(is.na(x)))
-  a.full.ts <- timeScales(x)[which(N.NA == 0)[1]]
-               order(x$lex.id, x[,a.full.ts])
+               # So find one with minimal NAs so we can sort on it
+            if (!inherits(x, "Lexis"))
+               stop("Argument must be a Lexis object\n")
+               # Fixing things if a data.table
+                attr(x, "class") <- c("Lexis", "data.frame") 
+        nNA <- apply(x[, timeScales(x), drop=FALSE],
+                     2,
+                     function(x) sum(is.na(x)))
+       a.ts <- timeScales(x)[which( nNA == min(nNA))[1]]
+               order(x$lex.id, x[,a.ts], na.last = FALSE)
                }
+
   sortLexis <- function( x ) x[orderLexis(x),]

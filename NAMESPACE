@@ -110,6 +110,7 @@ lines.apc,
           coxph.Lexis,
              simLexis,
          addCov.Lexis,
+        addDrug.Lexis,
          subset.stacked.Lexis,
       transform.stacked.Lexis,
            plot.pState,
@@ -176,9 +177,10 @@ lines.apc,
 importFrom( utils, stack )
 # importFrom( base, cbind, rbind )
 importFrom( splines, ns, bs )
-importFrom( purrr, '%>%' )
 importFrom( plyr, rbind.fill )
-importFrom( dplyr, summarize, group_by, arrange, left_join, select, rename )
+importFrom( purrr, '%>%' )
+importFrom( dplyr, summarize, group_by, arrange, left_join, select,
+            rename, mutate, ungroup, filter)
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 # importFrom( mstate, msdata )
@@ -234,6 +236,7 @@ S3method(   Relevel, factor)
 S3method(   Relevel, default)
 S3method( factorize, Lexis)
 S3method(    addCov, Lexis)
+S3method(   addDrug, Lexis)
 S3method(     stack, Lexis)
 S3method(      tmat, Lexis)
 S3method(     boxes, Lexis)

@@ -69,8 +69,7 @@
   A transformed \code{Lexis} object.
 
   The function \code{levels} returns the names of the states (levels of
-  the factors \code{lex.Cst} and \code{lex.Xst}; the function
-  \code{levels<-} changes (names of) the levels of them.
+  the factors \code{lex.Cst} and \code{lex.Xst}.
   }
 \author{Martyn Plummer, Bendix Carstensen}
 \seealso{\code{\link{Lexis}},

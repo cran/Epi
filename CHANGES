@@ -1,3 +1,10 @@
+Changes in 2.44
+
+o addCov.Lexis now always return a data.frame
+
+o New function: addDrug.Lexis adding drug exposure variables from
+  files with drug exposure information to a Lexis object.
+
 Changes in 2.43
 
 o a bug in addCov.Lexis ignored clinical mesurements prior to start of
