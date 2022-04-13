@@ -114,20 +114,34 @@ function( data,
 
 # Added by BxC
 match.cut <-
-function( data, cut )
+function(data, cut, ts)
 {
 if(sum(!is.na(match(c("lex.id", "cut", "new.state"), names(cut)))) < 3 )
    stop("The dataframe supplied in the cut= argument must have columns",
-        "'lex.id','cut','new.state', but the columns are:\n", names(cut))
+        "'lex.id', 'cut', 'new.state', but the columns are:\n", names(cut))
 else
    {
    if( length(unique(cut$lex.id)) < nrow(cut) )
      stop("Values of 'lex.id' must be unique in the 'cut' dataframe\n",
           "- maybe you are looking for rcutLexis?")
    else
-     zz <- merge( data[,"lex.id",drop=FALSE], cut, all.x=TRUE )
-     if(is.factor( data$lex.Cst)) zz$new.state <- as.character(zz$new.state)
-     if(is.numeric(data$lex.Cst)) zz$new.state <- as.numeric(zz$new.state)
+     # added April 2021 if cut$cut exactly matches a time in data move
+     # the cut date a bit earlier in time
+     # first, exact mathes are put in wh
+     wh <- merge(cut,
+                 data[,c("lex.id", ts)],
+                 by.x = c("lex.id","cut"),
+                 by.y = c("lex.id",ts),
+                  all = FALSE) # ask for an inner join (the default)
+     if(nrow(wh) > 0) cut[cut$lex.id %in% wh$lex.id, "cut"] <-
+                      cut[cut$lex.id %in% wh$lex.id, "cut"] -
+                      min(data$lex.dur) / 100
+     # end added stuff
+     zz <- merge(data[, "lex.id", drop=FALSE], cut, all.x=TRUE )
+     if (is.factor( data$lex.Cst))
+        zz$new.state <- as.character(zz$new.state)
+     if (is.numeric(data$lex.Cst))
+        zz$new.state <- as.numeric(zz$new.state)
      return( zz )
    }
 }
@@ -145,12 +159,16 @@ cutLexis <- function(data,
 {
     if (!inherits(data, "Lexis"))
       stop("data must be a Lexis object")
-
+    data <- sortLexis(data)
+    
     if( count )
       return( countLexis( data=data, cut=cut, timescale=timescale ) )
 
     if( inherits( cut, "data.frame" ) ){
-      zz <- match.cut( data, cut )
+    # Added April 2021, BxC
+      zz <- match.cut(data,
+                      cut,
+                      check.time.scale(data, timescale))
       cut <- zz$cut
       new.state <- zz$new.state
       }
@@ -164,7 +182,7 @@ cutLexis <- function(data,
 
     timescale <- check.time.scale(data, timescale)
     if (length(timescale) > 1) {
-        stop("Multiple time scales")
+        stop("Multiple time scales not allowed")
     }
 
     ## If we want to add a new timescale, construct the name

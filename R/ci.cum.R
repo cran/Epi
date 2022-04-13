@@ -1,38 +1,43 @@
 ci.cum <-
-function( obj,
-      ctr.mat = NULL,
-       subset = NULL,
-         intl = 1,
-        alpha = 0.05,
-          Exp = TRUE,
-       ci.Exp = FALSE,
-       sample = FALSE )
+function(obj,
+     ctr.mat = NULL,
+      subset = NULL,
+        intl = NULL, 
+       alpha = 0.05,
+         Exp = TRUE,
+      ci.Exp = FALSE,
+      sample = FALSE)
 {
+qzwpr <- NULL
 # First extract all the coefficients and the variance-covariance matrix
-cf  <- COEF( obj )
-vcv <- VCOV( obj )
+cf  <- COEF(obj)
+vcv <- VCOV(obj)
 
+# use first column of ctr.mat to derive 
+if (is.null(intl))
+   {
+   cnam <- deparse(substitute(ctr.mat))
+   # if called from ci.surv the nane is in qzwpr
+   if (exists("qzwpr")) cnam <- qzwpr
+   tnam <- colnames(ctr.mat)[1]
+   if (is.null(tnam)) tnam <- paste0(cnam, "[,1]")
+   intl <- diff(ctr.mat[,1])[1]
+   cat("NOTE: interval length chosen from ", cnam, " as ",
+       tnam, "[2] - ", tnam, "[1]", "\n", sep = "")
+   }
 # Check if the intervals matches ctr.mat
 if( length( intl ) == 1 ) intl <- rep( intl, nrow( ctr.mat ) )
 if( length( intl ) != nrow( ctr.mat ) ) stop( "intl must match ctr.mat" )
 
-if( inherits( ctr.mat, "data.frame" ) ) { ctr.mat <- df2ctr( obj, ctr.mat )
-} else {
-# Workaround to expand the vcov matrix with 0s so that it matches
-# the coefficients vector in case of (extrinsic) aliasing.
-## NOT needed after 3.5.0
-## if( any( is.na( cf ) ) )
-##   {
-##   vM <- matrix( 0, length( cf ), length( cf ) )
-##   dimnames( vM ) <- list( names( cf ), names( cf ) )
-##   vM[!is.na(cf),!is.na(cf)] <- vcv
-##   cf[is.na(cf)] <- 0
-##   vcv <- vM
-##   }
-
-if( is.character( subset ) ) {
+if( inherits( ctr.mat, "data.frame" ) )
+  {
+  ctr.mat <- df2ctr( obj, ctr.mat )
+  } else
+  {
+if(is.character(subset)) {
   sb <- numeric(0)
-  for( i in 1:length( subset ) ) sb <- c(sb,grep( subset[i], names( cf )  ))
+  for(i in 1:length(subset)) sb <- c(sb, grep(subset[i],
+                                              names(cf)))
   subset <- sb # unique( sb )
   }
 # If subset is not given, make it the entire set
@@ -94,11 +99,14 @@ ci.surv <-
 function( obj,
       ctr.mat = NULL,
        subset = NULL,
-         intl = 1,
+         intl = NULL,
         alpha = 0.05,
           Exp = TRUE,
        sample = FALSE )
 {
+qzwpr <- NULL
+# carry the name across to ci.cum
+if (is.null(intl)) qzwpr <<- deparse(substitute(ctr.mat))
 CH <- ci.cum( obj,
       ctr.mat = ctr.mat,
        subset = subset,
@@ -107,5 +115,5 @@ CH <- ci.cum( obj,
           Exp = Exp,
        ci.Exp = TRUE,
        sample = sample )
-exp( -rbind(0,CH[1:(nrow(CH)-1),-4]) )        
+exp(-rbind(0, CH[1:(nrow(CH) - 1), -4]))        
 }

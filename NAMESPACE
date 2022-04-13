@@ -1,6 +1,5 @@
 useDynLib(Epi, .registration=TRUE)
 export(
-  as.Date.cal.yr,
   apc.frame,
   apc.fit,
   apc.plot,
@@ -28,10 +27,7 @@ lines.apc,
   ci.pred,
   ci.ratio,
   ci.mat,
-      ci.Crisk,
-  sim2ci.Crisk,
-  sim2ci.Srisk,
-  sim2ci.Stime,
+  ci.Crisk,
   matshade,
   lls,
   clear,
@@ -70,7 +66,6 @@ lines.apc,
   Lexis.diagram,
   Lexis.lines,
    Life.lines,
-     list.lex,
                 Lexis,
           merge.Lexis,
            plot.Lexis,
@@ -84,6 +79,7 @@ lines.apc,
           order.Lexis,
            orderLexis,
             sortLexis,
+          print.Lexis,
         summary.Lexis,
   print.summary.Lexis,
            splitLexis,
@@ -108,9 +104,11 @@ lines.apc,
             glm.Lexis,
             gam.Lexis,
           coxph.Lexis,
+            AaJ.Lexis,
              simLexis,
          addCov.Lexis,
         addDrug.Lexis,
+         coarse.Lexis,
          subset.stacked.Lexis,
       transform.stacked.Lexis,
            plot.pState,
@@ -175,17 +173,17 @@ lines.apc,
   harm)
 # Import generic methods
 importFrom( utils, stack )
-# importFrom( base, cbind, rbind )
 importFrom( splines, ns, bs )
 importFrom( plyr, rbind.fill )
-importFrom( purrr, '%>%' )
-importFrom( dplyr, summarize, group_by, arrange, left_join, select,
-            rename, mutate, ungroup, filter)
+# importFrom( purrr, "%>%" )
+importFrom( magrittr, "%>%" )
+importFrom( dplyr, summarize, group_by, arrange, left_join, inner_join,
+            select, rename, mutate, ungroup, filter, near)
 importFrom( cmprsk, crr)
 importFrom( etm, etm )
 # importFrom( mstate, msdata )
 importFrom( MASS, mvrnorm, ginv )
-importFrom( survival, clogit, coxph, Surv )
+importFrom( survival, clogit, coxph, Surv, survfit )
 importFrom( mgcv, gam )
 importFrom( numDeriv, hessian )
 importFrom( Matrix, nearPD )
@@ -196,7 +194,7 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "layout",
            "mtext", "par", "plot", "plot.new", "plot.window", "points",
            "polygon", "rect", "rug", "segments", "strheight",
            "strwidth", "text")
-importFrom("stats", ".getXlevels", "addmargins", "anova", "approx",
+importFrom("stats", ".getXlevels", "AIC", "addmargins", "anova", "approx",
            "ave", "as.formula", "binomial", "coef", "complete.cases",
            "contr.sum", "dpois", "fisher.test", "fitted", "formula",
            "gaussian", "glm", "is.empty.model", "lm", "make.link",
@@ -224,6 +222,7 @@ S3method(    subset, stacked.Lexis)
 S3method(       "[", Lexis)
 S3method(     cbind, Lexis)
 S3method(     rbind, Lexis)
+S3method(     print, Lexis)
 S3method(   summary, Lexis)
 S3method(     print, summary.Lexis)
 S3method( transform, Lexis)
@@ -247,6 +246,7 @@ S3method(       etm, Lexis)
 S3method(       glm, Lexis)
 S3method(       gam, Lexis)
 S3method(     coxph, Lexis)
+S3method(       AaJ, Lexis)
 S3method(     print, LCa)
 S3method(   summary, LCa)
 S3method(   predict, LCa)
@@ -256,11 +256,3 @@ S3method(     print, clogistic)
 S3method(      coef, clogistic)
 S3method(      vcov, clogistic)
 S3method(   as.Date, cal.yr)
-          
-          
-          
-          
-          
-          
-          
-          

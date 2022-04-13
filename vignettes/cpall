@@ -1,0 +1,11 @@
+cp flup.pdf ../inst/doc
+cp crisk.pdf ../inst/doc
+cp addLexis.pdf ../inst/doc
+cp simLexis.pdf ../inst/doc
+cp yll.pdf ../inst/doc
+
+cp flup.R ../inst/doc
+cp crisk.R ../inst/doc
+cp addLexis.R ../inst/doc
+cp simLexis.R ../inst/doc
+cp yll.R ../inst/doc

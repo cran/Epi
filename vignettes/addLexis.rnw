@@ -1,0 +1,619 @@
+%\VignetteIndexEntry{Time dependent covariates in Lexis objects: addCov & addDrug}
+\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
+\documentclass[a4paper,twoside,12pt]{report}
+
+\newcommand{\Title}{Time dependent covariates in\\ \texttt{Lexis} objects}
+\newcommand{\Tit}{addLex}
+\newcommand{\Version}{Version 5}
+\newcommand{\Dates}{March 2022}
+\newcommand{\Where}{SDCC}
+\newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
+\newcommand{\Faculty}{\begin{tabular}{rl}
+Bendix Carstensen
+  & Steno Diabetes Center Copenhagen, Gentofte, Denmark\\
+  & {\small \& Department of Biostatistics,
+               University of Copenhagen} \\
+  & \texttt{b@bxc.dk}\\
+  & \url{http://BendixCarstensen.com} \\[1em]
+                      \end{tabular}}
+\input{topreport}
+<<echo=FALSE>>=
+options( width=90,
+         SweaveHooks=list( fig=function()
+         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
+library(Epi)
+library(dplyr)
+@ %
+\renewcommand{\rwpre}{./addLexis}
+
+\chapter{Overview and rationale}
+
+This note describes the functions \texttt{addCov.Lexis} and
+\texttt{addDrug.Lexis} designed to add values of clinical measurements
+and drug exposures to time-split \texttt{Lexis} objects.  If
+time-dependent variables are binary, such as for example ``occurrence
+of CVD diagnosis'' it may be relevant to define a new state as, say,
+\texttt{CVD}. But the purposes of the two functions here are to append
+quantitative variables that in principle can take any (positive)
+value. Adding new states at intermediate events is the business of
+\texttt{cutLexis}.
+
+Both functions are so-called \texttt{S3} methods for \texttt{Lexis}
+objects, so in code you can omit the ``\texttt{.Lexis}''.  Note that
+neither \texttt{splitLexis} or \texttt{splitMulti} are \texttt{S3}
+methods---there is no ``\texttt{.}'' in the names.
+
+\section{\texttt{addCov.Lexis}}
+
+\ldots provides the ability to amend a \texttt{Lexis} object with
+clinical measurements taken at different times, and propagate the
+values as LOCF (Last Observation Carried Forward) to all subsequent
+records. This means that time-splitting of a \texttt{Lexis} object
+\emph{after} adding clinical measurements will be meaningful, because
+both \texttt{splitLexis} and \texttt{splitMulti} will carry variables
+forward to the split records. The follow-up in the resulting
+\texttt{Lexis} object will be cut at dates of clinical measurement.
+
+\texttt{addCov.Lexis} will also propagate missing values supplied as
+measurements. Therefore, if you want to have LOCF \emph{across}
+supplied times of measurement you must explicitly apply
+\texttt{tidyr::fill} to the resulting \texttt{Lexis} object, after a
+suitable \texttt{group\_by}.
+
+\section{\texttt{addDrug.Lexis}}
+
+As opposed to this, \texttt{addDrug.Lexis} will first use drug
+information at each date of recorded drug purchase, and subsequently
+\texttt{compute} cumulative exposure measures at the times in the
+resulting \texttt{Lexis} object. This is essentially by linear
+interpolation, so it will not be meaningful to further split an
+object resulting from \texttt{addDrug.Lexis}---LOCF is not meaningful
+for continuously time-varying covariates such as cumulative exposure.
+
+If persons present with very frequent drug purchases, the intervals may
+become very small and the sheer number of records may present an
+impediment to analysis. Therefore the function \texttt{coarse.Lexis} is
+provided to collapse adjacent follow-up records.
+
+\chapter{\texttt{addCov.Lexis}}
+
+\section{Rationale}
+The function has arisen out of a need to attach values measured at
+clinical visits to a Lexis object representing follow-up for events
+constituting a multistate model. Hence the data frame with
+measurements at clinical visits will be called \texttt{clin} for
+mnemonic reasons.
+
+\section{Example}
+For illustration we devise a small bogus cohort of 3 people, where we
+convert the character dates into numerical variables (fractional
+years) using \texttt{cal.yr}. Note that we are using a character
+variable as \texttt{id}:
+<<>>=
+xcoh <- structure(list(id = c("A", "B", "C"),
+                    birth = c("1952-07-14", "1954-04-01", "1987-06-10"),
+                    entry = c("1965-08-04", "1972-09-08", "1991-12-23"),
+                     exit = c("1997-06-27", "1995-05-23", "1998-07-24"),
+                     fail = c(1, 0, 1) ),
+                   .Names = c("id", "birth", "entry", "exit", "fail"),
+                row.names = c("1", "2", "3"),
+                    class = "data.frame" )
+xcoh$dob <- cal.yr(xcoh$birth)
+xcoh$doe <- cal.yr(xcoh$entry)
+xcoh$dox <- cal.yr(xcoh$exit )
+xcoh
+@ %
+
+\subsection{A \texttt{Lexis} object}
+
+Define this as a \texttt{Lexis} object with timescales calendar time
+(\texttt{per}, period) and age (\texttt{age}):
+<<>>=
+Lcoh <- Lexis(entry = list(per = doe),
+               exit = list(per = dox, 
+                           age = dox - dob),
+                 id = id,
+        exit.status = factor(fail, 0:1, c("Alive","Dead")),
+               data = xcoh)
+str(Lcoh)
+(Lx <- Lcoh[,1:6])
+@ %
+
+\subsubsection{Factor or character \texttt{lex.id}?}
+
+Note that when the \texttt{id} argument to \texttt{Lexis} is a
+character variable then the \texttt{lex.id} will be a factor. Which,
+if each person has a lot of records may save time, but if you subset
+may be a waste of space. Moreover merging (\ie joining in the language
+of \texttt{tidyverse}) may present problems with different
+levels. \texttt{merge} from the \texttt{base} \R, will coerce to
+factor with union of levels as levels, where as the \texttt{\_join}
+functions from \texttt{dplyr} will coerce to character.
+
+Thus the most reasonable strategy thus seems to keep \texttt{lex.id}
+as a character variable.
+<<>>=
+Lx$lex.id <- as.character(Lx$lex.id)
+str(Lx)
+Lx
+@ 
+
+\subsubsection{Clinical measurements}
+
+Then we generate data frame with clinical examination data, that is
+date of examination in \texttt{per}, some bogus clinical measurements
+and also names of the examination rounds:
+<<>>=
+clin <- data.frame(lex.id = c("A", "A", "C", "B", "C"),
+                      per = cal.yr(c("1977-3-17", 
+                                     "1973-7-29", 
+                                     "1996-3-1", 
+                                     "1990-7-14", 
+                                     "1989-1-31")),
+                       bp = c(120, 140, 160, 157, 145),
+                     chol = c(NA, 5, 8, 9, 6),
+                     xnam = c("X2", "X1", "X1", "X2", "X0"),
+         stringsAsFactors = FALSE)
+str(clin)
+clin
+@ %
+Note that we have chosen a measurement for person \texttt{C} from
+1989---before the person's entry to the study, and have an \texttt{NA}
+for \texttt{chol} for person \texttt{A}.
+
+\subsection{Adding clinical data}
+
+There is a slightly different behaviour according to whether the
+variable with the name of the examination is given or not, and whether
+the name of the (incomplete) time scale is given or not:
+<<>>=
+(Cx <- addCov.Lexis(Lx, clin))
+@ %
+Note that the clinical measurement preceding the entry of person
+\textsc{C} is included, and that the \texttt{tfc} (time from clinical
+measurement) is correctly rendered, we a non-zero value at date of entry.
+
+We also see that a variable \texttt{exnam} is constructed with
+consecutive numbering of examinations within each person, while the
+variable \texttt{xnam} is just carried over as any other.
+
+If we explicitly give the name of the variable holding the examination
+names we do not get a constructed \texttt{exnam}. We can also
+define the name of the (incomplete) timescale to hold the time
+since measurement, in this case as \texttt{tfCl}:
+<<>>=
+(Dx <- addCov.Lexis(Lx, clin, exnam = "xnam", tfc = "tfCl"))
+summary(Dx, t=T)
+@ %
+
+\section{Exchanging split and add}
+
+As noted in the beginning of this not \texttt{addCov.Lexis} uses LOCF,
+and so it is commutative with \texttt{splitLexis}:
+<<>>=
+# split BEFORE add
+Lb <- addCov.Lexis(splitLexis(Lx,
+                      time.scale = "age",
+                          breaks = seq(0, 80, 5)),
+                   clin,
+                   exnam = "xnam" )
+Lb
+#
+# split AFTER add
+La <- splitLexis(addCov.Lexis(Lx,
+                            clin,
+                           exnam = "xnam" ),
+                 time.scale = "age",
+                     breaks = seq(0, 80, 5))
+La
+@ %
+We see that the results are identical, bar the sequence of variables
+and attributes.
+
+We can more explicitly verify that the resulting data frames are the same:
+<<>>=
+La$tfc == Lb$tfc
+La$age == Lb$age
+La$per == Lb$per
+@ % 
+The same goes for \texttt{splitMulti}:
+<<>>=
+if (require(popEpi, quietly=TRUE)) {
+    ## split BEFORE add
+    Mb <- addCov.Lexis(splitMulti(Lx, age = seq(0, 80, 5)),
+                       clin,
+                       exnam = "xnam" )
+    ##
+    ## split AFTER add
+    Ma <- splitMulti(addCov.Lexis(Lx,
+                                  clin,
+                                  exnam = "xnam" ),
+                     age = seq(0, 80, 5))
+    La$tfc == Mb$tfc
+    Ma$tfc == Mb$tfc
+}
+@ %
+In summary, because both \texttt{addCov.Lexis} and
+\texttt{splitLexis}/\texttt{splitMulti} use LOCF for covariates the
+order of splitting and adding does not matter.
+
+This is certainly not the case with \textrm{addDrug.Lexis} as we shall see.
+
+\section{Filling the \texttt{NA}s}
+
+As mentioned in the beginning, clinical measurements given as
+\texttt{NA} in the \texttt{clin} data frame are carried forward. If
+you want to have these replaced by 'older' clinical measurements you
+can do that explicitly by \texttt{dplyr::fill} with a construction
+like:
+<<>>=
+if (require(tidyr, quietly=TRUE)) {
+    cov <- c("bp", "chol")
+    Lx <- La
+    Lx <- group_by(Lx, lex.id) %>% 
+        fill(all_of(cov)) %>% 
+        ungroup()
+    class(Lx)
+}
+@ %
+We see that the \texttt{Lexis} attributes are lost by using the
+\texttt{group\_by} function, so we fish out the covariates from the
+\texttt{tibble} and stick them back into the \texttt{Lexis} object:
+<<>>=
+if (require(tidyr, quietly=TRUE)) {
+    Lx <- La
+    Lx[,cov] <- as.data.frame( group_by(Lx, lex.id) 
+                              %>% fill(all_of(cov)))[,cov]
+    class(Lx)
+    La
+    Lx
+}
+@ %
+The slightly convoluted code where the covariate columns are
+explicitly selected, owes to the fact that the \texttt{dplyr}
+functions will strip the data frames of the \texttt{Lexis}
+attributes. So we needed to use \texttt{fill} to just generate the
+covariates and not touch the \texttt{Lexis} object itself.
+
+This should of course be built into \texttt{addCov.Lexis} as a
+separate argument, but is not yet.
+
+Note that the \texttt{tfc}, time from clinical measurement is now not
+a valid variable any more; the 5 in \texttt{chol} is measured in
+1971.5 but \texttt{tfc} is reset to 0 at 1977.3, despite only
+\texttt{bp} but not \texttt{chol} is measured at that time.
+If you want that remedied you will have to use \texttt{addCov.Lexis}
+twice, one with a \texttt{clin} data frame with only \texttt{bp} and
+another with a data frame with only \texttt{chol}, each generating a
+differently named time from clinical measurement.
+
+This is a problem that comes from the structure of the supplied
+\emph{data} not from the program features; in the example we had
+basically measurements of different clinical variables at different
+times, and so necessarily also a need for different times since last
+measurement. 
+
+\chapter{\texttt{addDrug.Lexis}}
+
+The general purpose of the function is to amend a \texttt{Lexis}
+object with drug exposure data. The data base with information on a
+specific drug is assumed to be a data frame with one entry per drug
+purchase (or prescription), containing the date and the amount
+purchased and optionally the prescribed dosage (that is how much is
+supposed to be taken per time). We assume that we have such a data
+base for each drug of interest, which also includes an id variable,
+\texttt{lex.id}, that matches the \texttt{lex.id} variable in the
+\texttt{Lexis} object.
+
+For each type of drug the function derives 4 variables:
+\begin{description}[noitemsep]
+ \item[\hspace*{1em}\texttt{ex}]: logical, is the person currently
+   \texttt{ex}posed 
+ \item[\hspace*{1em}\texttt{tf}]: numeric, \texttt{t}ime since
+   \texttt{f}irst purchase 
+ \item[\hspace*{1em}\texttt{ct}]: numeric, \texttt{c}umulative
+   \texttt{t}ime on the drug 
+ \item[\hspace*{1em}\texttt{cd}]: numeric, \texttt{c}umulative
+   \texttt{d}ose of the drug 
+\end{description}
+These names are pre- or suf-fixed by the drug name, so that exposures
+to different drugs can be distinguished; see the examples. 
+
+The resulting \texttt{Lexis} object has extra records corresponding to
+cuts at each drug purchase and at each expiry date of a purchase.  For
+each purchase the coverage period is derived (different methods for
+this are available), and if the end of this (the expiry date) is
+earlier than the next purchase of the person, the person is considered
+off the drug from the expiry date, and a cut in the follow-up is
+generated with \texttt{ex} set to \texttt{FALSE}.
+
+\section{The help example}
+
+The following is a slight modification of the code from the example
+section of the help page for \texttt{addDrug.Lexis}
+
+First we generate follow-up of 2 persons, and split the follow-up in
+intervals of length 0.6 years along the calendar time scale,
+\texttt{per}:
+<<>>=
+fu <- data.frame(doe = c(2006, 2008),
+                 dox = c(2015, 2018),
+                 dob = c(1950, 1951),
+                 xst = factor(c("A","D")))
+Lx <- Lexis(entry = list(per = doe,
+                         age = doe- dob),
+             exit = list(per = dox),
+      exit.status = xst,
+             data = fu)
+Lx <- subset(Lx, select = -c(doe, dob, dox, xst))
+Sx <- splitLexis(Lx, "per", breaks = seq(1990, 2020, 0.6))
+summary(Sx)
+str(Sx)
+@ %
+Note that as opposed to the previous example, the time scales are not
+of class \texttt{cal.yr}, they are just numerical.
+
+Then we generate drug purchases for these two persons, one data frame
+for each of the drugs \texttt{F} and \texttt{G}. Note that we generate
+\texttt{lex.id}$\in (1,2)$ referring to the values of \texttt{lex.id}
+in the lexis object \texttt{Sx}.
+<<>>=
+set.seed(1952)
+rf <- data.frame(per = c(2005 + runif(12, 0, 10)),
+                 amt = sample(2:4, 12, replace = TRUE),
+              lex.id = sample(1:2, 12, replace = TRUE)) %>%
+      arrange(lex.id, per)
+
+rg <- data.frame(per = c(2009 + runif(10, 0, 10)),
+                 amt = sample(round(2:4/3,1), 10, replace = TRUE),
+              lex.id = sample(1:2, 10, replace = TRUE)) %>%
+      arrange(lex.id, per)
+@ %
+We do not need to sort the drug purchase data frames (it is done
+internally by \texttt{addDrug.Lexis}), but it makes it easier to grasp
+the structure.
+
+The way purchase data is supplied to the function is in a
+\texttt{list} where each element is a data frame of purchase records
+for one type of drug. The list must be named, the names will be used
+as prefixes of the generated exposure variables. We can show the
+resulting data:
+<<>>=
+pdat <- list(F = rf, G = rg)
+pdat
+Lx
+@ %
+Note that we have generated data so that there are drug purchases of
+drug \texttt{F} that is \emph{before} start of follow-up for person 2. 
+
+We can then expand the time-split \texttt{Lexis} object, \texttt{Sx}
+with the drug information. \texttt{addDrug.Lexis} not only adds 8
+\emph{variables} (4 from each drug), it also adds \emph{records}
+representing cuts at the purchase dates and possible expiry dates.
+<<>>=
+summary(Sx) ; names(Sx)
+ex1 <- addDrug.Lexis(Sx, pdat, method = "ext") # default
+summary(ex1) ; names(ex1)
+ex1
+ex2 <- addDrug.Lexis(Sx, pdat, method = "ext", grace = 0.5)
+summary(ex2)
+ex2
+dos <- addDrug.Lexis(Sx, pdat, method = "dos", dpt = 6)
+summary(dos)
+dos
+fix <- addDrug.Lexis(Sx, pdat, method = "fix", maxt = 1)
+summary(fix)
+fix
+@ %
+
+\section{A more realistic example with timing}
+
+\subsection{Follow-up data: \texttt{DMlate}}
+
+As example data we use the \texttt{DMlate} example data from the
+\texttt{Epi} package:
+<<>>=
+data(DMlate) ; str(DMlate)
+Lx <- Lexis(entry = list(per = dodm,
+                         age = dodm - dobth,
+                         tfd = 0),
+             exit = list(per = dox),
+      exit.status = factor(!is.na(dodth),
+                           labels = c("DM", "Dead")),
+             data = DMlate)
+summary(Lx)
+@ %
+We split the data along the age-scale (omitting the variables we shall
+not need):
+<<>>=
+Sx <- splitLexis(Lx[,1:7], time.scale="age", breaks = 0:120)
+summary(Sx)
+@ %
+
+\subsection{Artificial prescription data}
+
+To explore how \texttt{addDrug.Lexis} works, we also need some drug
+exposure data, but these are unfortunately not available, so we
+simulate three datasets representing three types of drugs:
+<<>>=
+set.seed(1952)
+
+purA <-
+  ( data.frame(lex.id = rep(Lx$lex.id, 
+                            round(runif(nrow(Lx), 0, 20))))
+%>% left_join(Lx[,c("lex.id", "dodm", "dox")])
+%>% mutate(per = dodm + runif(length(dodm), -0.1, 0.99) * (dox - dodm),
+           amt = sample(4:20*10, length(dodm), replace = TRUE),
+           dpt = amt * round(runif(length(dodm), 3, 7)))
+%>% select(-dodm, -dox)
+%>% arrange(lex.id, per)            
+  )
+addmargins(table(table(purA$lex.id)))      
+str(purA)
+
+purB <-
+  ( data.frame(lex.id = rep(Lx$lex.id, 
+                            round(pmax(runif(nrow(Lx), -10, 15), 0))))
+%>% left_join(Lx[,c("lex.id", "dodm", "dox")])
+%>% mutate(per = dodm + runif(length(dodm), -0.1, 0.99) * (dox - dodm),
+           amt = sample(4:20*10, length(dodm), replace = TRUE),
+           dpt = amt * round(runif(length(dodm), 5, 9)))
+%>% select(-dodm, -dox)
+%>% arrange(lex.id, per) 
+  ) -> purB      
+addmargins(table(table(purB$lex.id)))      
+str(purB)
+
+purC <-
+  ( data.frame(lex.id = rep(Lx$lex.id, 
+                            round(pmax(runif(nrow(Lx), -5, 12), 0))))
+%>% left_join(Lx[,c("lex.id", "dodm", "dox")])
+%>% mutate(per = dodm + runif(length(dodm), -0.1, 0.99) * (dox - dodm),
+           amt = sample(4:20*10, length(dodm), replace = TRUE),
+           dpt = amt * round(runif(length(dodm), 5, 7)))
+%>% select(-dodm, -dox)
+%>% arrange(lex.id, per) 
+  ) 
+addmargins(table(table(purB$lex.id)))      
+str(purC)
+head(purC)
+@ %
+Note that the time scale is in years, so the \texttt{dpt} must be in
+amount per year, so that $\mathtt{dpt}/\mathtt{amt}$ is the
+approximate number of annual drug purchases.
+
+We now have three artificial drug purchase datasets so we can see how
+\texttt{addDrug.Lexis} performs on larger datasets:
+
+\subsection{Using \texttt{addDrug}}
+
+\subsubsection{1000 and 500 persons}
+
+We start out with a small sample and a two month grace period to limit
+the number of gaps:
+<<>>=
+Sx1 <- subset(Sx, lex.id < 1000)
+pur <- list(A = subset(purA, lex.id < 1000),
+            B = subset(purB, lex.id < 1000),
+            C = subset(purC, lex.id < 1000))
+system.time(ad1 <- addDrug.Lexis(Sx1, pur, tnam = "per", grace = 1/4))
+summary(Sx1)
+summary(ad1)
+@ %
+We then cut the number of persons in half:
+<<>>=
+Sx2 <- subset(Sx, lex.id < 500)
+pur <- list(A = subset(purA, lex.id < 500),
+            B = subset(purB, lex.id < 500),
+            C = subset(purC, lex.id < 500))
+system.time(ad2 <- addDrug.Lexis(Sx2, pur, tnam = "per", grace = 1/6))
+summary(Sx2)
+summary(ad2)
+@ %
+\ldots timing is broadly proportional to the number of persons.
+
+\subsubsection{Fewer prescription records}
+
+We can try to cut the number of purchases in half:
+<<>>=
+pur <- list(A = subset(purA, lex.id < 500 & runif(nrow(purA)) < 0.5),
+            B = subset(purB, lex.id < 500 & runif(nrow(purB)) < 0.5),
+            C = subset(purC, lex.id < 500 & runif(nrow(purC)) < 0.5))
+sapply(pur, nrow)
+system.time(ad3 <- addDrug.Lexis(Sx2, pur, tnam = "per", grace = 1/6))
+summary(Sx2)
+summary(ad3)
+@ %
+It also appears that the number of purchases per person is also a
+determinant of the run time too; the timing is largely proportional to
+the number of drug records.
+
+In any concrete application it is recommended to run the function on
+a fairly small sample of persons, say 1000 to get a feel for the run
+time. It may also be a good idea to run the function on chunks of the
+persons, to make sure that you do not lose all the processed data in a
+crash.
+
+\subsubsection{Fewer prescription types}
+
+Finally we try to cut the number of drugs, to assess how this
+influences the run time:
+<<>>=
+pur <- list(B = subset(purB, lex.id < 500),
+            C = subset(purC, lex.id < 500))
+sapply(pur, nrow)
+system.time(ad4 <- addDrug.Lexis(Sx2, pur, tnam = "per", grace = 1/6))
+summary(Sx2)
+summary(ad4)
+@ %
+We see that the number of drugs also influence the run time
+proportionally.
+
+\subsection{Too many records ---\texttt{coarse.Lexis}}
+
+If we look at the length of the intervals as given in \texttt{lex.dur}
+we see that some are are quite small:
+<<>>=
+summary(ad1$lex.dur)
+@ % $
+Half are smaller then 0.11 years, 40 days. We could without much loss
+of precision in the analysis based on the \texttt{Lexis} object merge
+adjacent records that have total risk time less than 3 months.
+
+The function \texttt{coarse.Lexis} will collapse records with short
+\texttt{lex.dur} with the subsequent record. The collapsing will use
+the covariates from the first record, and so the entire follow-up from
+the two records will have the characteristics of the first. Therefore
+it is wise to choose first records with reasonably short
+\texttt{lex.dur}---the approximation will be better than if the first
+record was with a larger \texttt{lex.dur}. Therefore there are two
+values supplied to \texttt{coarse.Lexis}; the maximal length of the
+first record's \texttt{lex.dur} and the maximal length of the
+\texttt{lex.dur} in the resulting combined record. The larger these
+parameters are, the more the \texttt{Lexis} object is coarsened.
+<<>>=
+summary(ad1)
+summary(adc <- coarse.Lexis(ad1, lim = c(1/6,1/2)))
+summary(adc$lex.dur)
+@ %
+This could cut the number of units for analysis substantially, in this
+case from about 27,000 to some 13,000.
+
+\subsubsection{Records to be kept}
+
+When we are dealing with drug exposure data we will be interested
+keeping the record that holds the start of a drug exposure. Some may
+argue that it does not matter much, though.
+
+The records (\ie beginnings of FU intervals) that should be kept must
+be given in logical vector in the argument \texttt{keep}:
+<<>>=
+summary(Sx2)
+system.time(ad4 <- addDrug.Lexis(Sx2, 
+                                 pur, 
+                                tnam = "per",
+                               grace = 1/6))
+summary(ad4)
+#
+ad5 <- coarse.Lexis(ad4, 
+                    lim = c(1/4, 1/2))
+summary(ad5)
+@ 
+We can identify the first date of exposure to drug \texttt{B}, say, by
+the exposure (\texttt{B.ex}) being true and the cumulative time on the
+drug (\texttt{B.ct}) being 0:
+<<>>=
+ad4$keep <- with(ad4, (B.ex & B.ct == 0) |
+                      (C.ex & C.ct == 0))
+ad6 <- coarse.Lexis(ad4, 
+                    lim = c(1/4, 1/2),
+                   keep = ad4$keep)
+summary(ad6)
+@ %
+We see the expected behaviour when we use \texttt{coarse.Lexis}: we get
+fewer records, but identical follow-up. And the \texttt{keep} argument
+gives the possibility to keep selected records, or more precisely
+beginnings. \texttt{keep} prevents a record to be collapsed with a
+previous one, but not with a subsequent one.
+
+\end{document}

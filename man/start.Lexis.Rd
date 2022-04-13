@@ -54,7 +54,7 @@ succeeding( x, states )
   
   The functions \code{transient} and \code{absorbing} return character
   vectors of the transient, resp. absorbing states in \code{x}. These
-  are necessariy disjoint but the union may be a proper subset of
+  are necessarily disjoint but the union may be a proper subset of
   \code{levels(x)}, since the latter may have levels that are never
   assumed by either \code{lex.Cst} or \code{lex.Xst}.
 

@@ -15,39 +15,54 @@ VCOV.lme      <- function( x, ... ) as.matrix(vcov( x ))
 VCOV.mer      <- function( x, ... ) as.matrix(vcov( x ))
 VCOV.lmerMod  <- function( x, ... ) as.matrix(vcov( x ))
 
-# For the rest of the non-conforming classes we then just need the methods not defined
-# VCOV.coxph    <- function( object, ... ) survival:A::vcov.coxph( object, complete=FALSE, ... )
+# For the rest of the non-conforming classes we then just need the
+# methods not defined 
+# VCOV.coxph    <- function(object, ...)
+#                  survival::vcov.coxph(object, complete=FALSE, ...) 
 COEF.crr      <- function( object, ... ) object$coef
 VCOV.crr      <- function( object, ... ) object$var
 COEF.MIresult <- function( object, ... ) object$coefficients
 VCOV.MIresult <- function( object, ... ) object$variance
 COEF.mipo     <- function( object, ... ) object$qbar
 VCOV.mipo     <- function( object, ... ) object$t
-COEF.polr     <- function( object, ... ) summary(object)$coefficients
 VCOV.gnlm     <- function( object, ... ) object$cov
 VCOV.rq       <- function( object, ... ) summary(object, cov=TRUE)$cov
 
 df2ctr <-
-function( obj, nd )
+function(obj, nd)
     {
-if( !( inherits(obj,"lm") | inherits(obj,"coxph") ) )
-  stop("data frame facility not inplemented for ", class(obj), " objects" )
+if (!(inherits(obj, "lm") | inherits(obj, "coxph")))
+  stop("data frame facility not inplemented for ", class(obj), " objects")
+
 # Factors in the prediction frame must have more than one level, which
-# they typically do not have in the specification, so we find the
-# factors in the prediction frame and expand levels to the complete
-# set of levels which should secure the working of model.matrix()
-dcl <- attr( obj$terms, "dataClasses" )
-whf <- ( dcl == "factor" )
-if( any(whf) ) for( fn in names(dcl)[which(whf)] )
-                nd[,fn] <- factor( nd[,fn], levels=obj$xlevels[[fn]] )
-# The contrast matrix from the model - differs a bit between (g)lm, gam and coxph
-# this is needed to keep NA rows from the data frame supplied
+# they typically do not have in the specification of a prediction
+# frame, so we find the factors in the prediction frame and expand
+# levels to the complete set of levels which we get from the model
+# object This should secure the working of model.matrix(); note that
+# the machinery differs between gam and non-gam glms
+
+dcl <- attr(obj$terms, "dataClasses")[-1] # the first is the reponse
+whf <- (dcl == "factor")
+if (any(whf))
+   {
+for (fn in names(dcl)[which(whf)])
+    {
+    nd[,fn] <- factor(nd[,fn],
+                      levels = if (inherits(obj, "gam"))
+                                  levels(obj$var.summary[[fn]])
+                             else        obj$xlevels    [[fn]])
+    }
+   }
+
+# The folowing is needed to keep NA rows from the data frame supplied
 org.op <- options( na.action='na.pass' )
 on.exit( options( org.op ) )
-if( inherits(obj,"coxph") ) MM <- model.matrix(         obj     ,    data=nd )
-if( inherits(obj,"gam"  ) ) MM <- model.matrix(         obj     , newdata=nd )
-    else
-if( inherits(obj,"lm"   ) ) MM <- model.matrix( formula(obj)[-2],    data=nd )
+
+# The contrast matrix from the model - differs a between (g)lm, gam and coxph
+if (inherits(obj,"coxph")) MM <- model.matrix(         obj     ,    data=nd)
+if (inherits(obj,"gam"  )) MM <- model.matrix(         obj     , newdata=nd)
+   else
+if (inherits(obj,"lm"   )) MM <- model.matrix( formula(obj)[-2],    data=nd)
 return( MM )
     }
 
@@ -62,22 +77,26 @@ function( obj, ndx, ndr,
 if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
 if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
     ( any(names(ndx) != names(ndr)) ) )
-    stop("\nThe two prediction frames must have same dimensions and column names:",
-         "but dimensions are: (",
-         paste( dim(ndx),collapse=","), ") and (",
-         paste( dim(ndr),collapse=","), ")\n", 
-         "and column names are:\n",
-         "exp: ", paste( names(ndx), collapse=", " ), "\n",
-         "ref: ", paste( names(ndr), collapse=", " ), "\n")
-# Now supply and fix those variables that are needed in order to get model.matrix working:
+    stop("\nThe two prediction frames must have same dimensions",
+         "and column names, but dimensions are (",
+         paste(dim(ndx), collapse=","), ") and (",
+         paste(dim(ndr), collapse=","), ")\n", 
+         "and the column names are:\n",
+         "exp: ", paste(names(ndx), collapse=", "), "\n",
+         "ref: ", paste(names(ndr), collapse=", "), "\n")
+# Now supply and fix those variables that are needed in order to get
+# model.matrix working:
+
 # Supplied variable names:
  cols <- names( ndx )
-# Factors in model; which are supplied; derive names of omitted factors (ofacs)
+# Factors in model; which are supplied; derive names of omitted
+# factors (called ofacs) 
  facs <- names( obj$xlevels )
 ofacs <- setdiff( facs, cols )
 # omitted *variables* must be supplied
 ovars <- setdiff( xvars, facs )
-# Construct the extra columns with bogus data (their contribution will be null)
+# Construct the extra columns with bogus data (their contribution will
+# be null) 
 xcols <- ndx[,NULL]
 if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
 if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
@@ -122,15 +141,18 @@ if( ( nrow(nd2) !=  nrow(nd1)) |
          "2: ", paste( names(nd2), collapse=", " ), "\n",
          "3: ", paste( names(nd3), collapse=", " ), "\n",
          "4: ", paste( names(nd4), collapse=", " ), "\n")
-# Now supply and fix those variables that are needed in order to get model.matrix working:
+# Now supply and fix those variables that are needed in order to get
+# model.matrix working:
 # Supplied variable names:
  cols <- names( nd1 )
-# Factors in model; which are supplied; derive names of omitted factors (ofacs)
+# Factors in model; which are supplied; derive names of omitted
+# factors (ofacs) 
  facs <- names( obj$xlevels )
 ofacs <- setdiff( facs, cols )
 # omitted *variables* must be supplied
 ovars <- setdiff( xvars, facs )
-# Construct the extra columns with bogus data (their contribution will be null)
+# Construct the extra columns with bogus data (their contribution will
+# be null) 
 xcols <- nd1[,NULL]
 if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
 if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1

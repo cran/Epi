@@ -19,6 +19,7 @@ org.Cst <- NULL
 org.Xst <- NULL
 lex.Cst <- NULL
 lex.Xst <- NULL
+lex.id  <- NULL
 
 # ...but first the usual cheking of paraphernalia
 
@@ -52,16 +53,20 @@ if(any(dd <- duplicated(clin[,c("lex.id",ts)])))
     
 # the variable holding the name of the examination
 if(missing(exnam)) exnam <- "exnam"
-# and if it is not there, construct it
-if(!(exnam %in% names(clin)))
-   clin[,exnam] <- paste("ex",
-                          ave(clin$lex.id,
-                              clin$lex.id,
-                              FUN = function(x) cumsum(x/x)),
-                          sep="" )
+# and if it is not there, construct it as ex1, ex2 etc.
+if (!(exnam %in% names(clin)))
+   {
+   clin <- group_by(clin, lex.id)              %>%
+           mutate(zz = paste0("ex",
+                              1:length(lex.id))) %>%
+           ungroup()
+   names(clin)[grep("zz",names(clin))] <- exnam
+   clin <- as.data.frame(clin)
+   }
+
 # exnam cannot have values that are also states
-if( length(common <- intersect(levels(Lx),
-                               unique(clin[,exnam]))) )
+if (length(common <- intersect(levels(Lx),
+                               unique(clin[,exnam]))))
   stop("Levels of Lx and examination names in clin must be disjoint",
        "\nbut", paste(common, collapse=", "), "are in both")
 
@@ -71,7 +76,7 @@ if( length(common <- intersect(levels(Lx),
 mvar <- c("lex.id", ts)
     
 # clinical variables to be merged in
-# --- note we take examination date and name as a cinical variable too 
+# --- note we take examination date and name as a clinical variable too 
 cvar <- setdiff(names(clin), mvar)
 
 # A data frame of cutting times of the examinations
@@ -125,11 +130,11 @@ Lc <- select(Lc, -lex.Cst,
     
 # Add tfc as a time.scale, time.since and breaks:
 attr(Lc, "time.scales") <- c(attr(Lx, "time.scales"), tfc) 
-attr(Lc, "time.since" ) <- c(attr(Lx, "time.since" ), "" )
+attr(Lc, "time.since" ) <- c(attr(Lx, "time.since" ), "X")
 brt <- list(x = NULL)
 names(brt) <- tfc
 attr(Lc, "breaks") <- c(attr(Lx, "breaks"), brt) 
-attr(Lc, "class") <- c("Lexis","data.frame")
+attr(Lc, "class")  <- c("Lexis","data.frame")
     
 # Done! - well order first
 sortLexis(Lc)

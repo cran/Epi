@@ -13,7 +13,7 @@
   Modify a Lexis object.
 }
 \usage{
-\method{factorize}{Lexis}(x, ...)
+\method{factorize}{Lexis}(x, ..., verbose = FALSE)
 \method{Relevel}{Lexis}(x, ref, \dots)
 \method{levels}{Lexis}(x)
 \method{transform}{Lexis}(`_data`, \dots)
@@ -32,6 +32,7 @@
     sanity check for the latter type of operation is undertaken.}
   \item{\dots}{Additional arguments to be passed to
     \code{\link{transform.data.frame}}, \code{\link{Relevel.factor}}.}
+  \item{verbose}{Logical. Should a list of new levels be printed?}
 %   \code{order} or \code{sort}.}
 }
 \details{

@@ -4,7 +4,7 @@ factorize <- function (x, ...) UseMethod("factorize")
 # Default method is just the Lexis method
 factorize.default <- 
 factorize.Lexis <-
-function(x, ...)
+function(x, ..., verbose = FALSE)
 {
 Cst <- Xst <- NULL
 # If lex.Cst and lex.Xst are not factors, make sure they are, and
@@ -18,8 +18,9 @@ x$lex.Cst <- factor(Cst, levels = all.levels)
 x$lex.Xst <- factor(Xst, levels = all.levels)
 
 # Note if levels changed
-if(length(setdiff(all.levels, levels(Cst))) > 0 |
-   length(setdiff(all.levels, levels(Xst))) > 0)
+if((length(setdiff(all.levels, levels(Cst))) > 0 |
+    length(setdiff(all.levels, levels(Xst))) > 0)
+   & verbose)
    cat( "NOTE: lex.Cst and lex.Xst now have levels:\n", all.levels, "\n")  
 return(x)
 }
@@ -49,8 +50,8 @@ return(x)
 levels.Lexis <-
 function( x )
 {
-union(levels(x$lex.Cst),
-      levels(x$lex.Xst))
+union(base::levels(x$lex.Cst),
+      base::levels(x$lex.Xst))
 }
 
 ## # The Lexis version of levels

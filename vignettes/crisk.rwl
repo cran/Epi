@@ -1,0 +1,54 @@
+R version 3.6.3 (2020-02-29) 
+ ---------------------------------------------
+  Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
+ Started:  Friday 08. April 2022, 07:08:26 
+ ---------------------------------------------
+Writing to file crisk.tex
+Processing code chunks with options ...
+ 1 : keep.source term verbatim (crisk.rnw:25)
+ 2 : echo keep.source term verbatim (crisk.rnw:162)
+ 3 : echo keep.source term verbatim (crisk.rnw:182)
+ 4 : echo keep.source term verbatim pdf  (label = boxes5, crisk.rnw:188)
+ 5 : echo keep.source term verbatim pdf  (label = boxes4, crisk.rnw:197)
+ 6 : echo keep.source term verbatim (crisk.rnw:222)
+ 7 : echo keep.source term verbatim (crisk.rnw:238)
+ 8 : echo keep.source term verbatim pdf  (label = rates, crisk.rnw:246)
+ 9 : echo keep.source term verbatim (crisk.rnw:282)
+10 : echo keep.source term verbatim (crisk.rnw:308)
+11 : echo keep.source term verbatim pdf  (label = stack, crisk.rnw:316)
+12 : echo keep.source term verbatim (crisk.rnw:342)
+13 : echo keep.source term verbatim (crisk.rnw:393)
+14 : echo keep.source term verbatim (crisk.rnw:399)
+15 : echo keep.source term verbatim (crisk.rnw:439)
+16 : echo keep.source term verbatim (crisk.rnw:480)
+17 : echo keep.source term verbatim (crisk.rnw:495)
+18 : echo keep.source term verbatim (crisk.rnw:520)
+19 : echo keep.source term verbatim pdf  (label = rates-ci, crisk.rnw:534)
+20 : echo keep.source term verbatim pdf  (label = crates, crisk.rnw:564)
+21 : echo keep.source term verbatim (crisk.rnw:584)
+22 : echo keep.source term verbatim pdf  (label = stack-ci, crisk.rnw:603)
+23 : echo keep.source term verbatim (crisk.rnw:622)
+24 : echo keep.source term verbatim (crisk.rnw:626)
+25 : echo keep.source term verbatim (crisk.rnw:645)
+26 : echo keep.source term verbatim (crisk.rnw:651)
+27 : echo keep.source term verbatim (crisk.rnw:657)
+28 : echo keep.source term verbatim (crisk.rnw:664)
+29 : echo keep.source term verbatim (crisk.rnw:672)
+30 : echo keep.source term verbatim pdf  (label = boxes, crisk.rnw:683)
+31 : echo keep.source term verbatim (crisk.rnw:692)
+32 : echo keep.source term verbatim (crisk.rnw:696)
+33 : keep.source (crisk.rnw:701)
+34 : echo keep.source term verbatim (crisk.rnw:729)
+35 : echo keep.source term verbatim (crisk.rnw:734)
+36 : echo keep.source term verbatim pdf  (label = cR, crisk.rnw:754)
+37 : echo keep.source term verbatim pdf  (label = Sr1, crisk.rnw:776)
+38 : echo keep.source term verbatim pdf  (label = Sr2, crisk.rnw:796)
+39 : echo keep.source term verbatim (crisk.rnw:819)
+
+You can now run (pdf)latex on ‘crisk.tex’
+
+ ---------------------------------------------
+  Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
+   Ended: Friday 08. April 2022, 07:10:16
+ Elapsed: 00:01:50
+ ---------------------------------------------

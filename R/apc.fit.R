@@ -172,31 +172,37 @@ if (is.bin <- tolower(substr(dist, 1, 3)) %in% c("bin")) {
 }
 m.AP <- update(m.APC, . ~ . - MC)
 m.AC <- update(m.APC, . ~ . - MP)
-m.Ad <- update(m.AP, . ~ . - MP)
-m.A <- update(m.Ad, . ~ . - I(P - p0))
-m.0 <- update(m.A, . ~ . - MA)
-AOV <- anova(m.A, m.Ad, m.AC, m.APC, m.AP, m.Ad, test = "Chisq")
+m.Ad <- update(m.AP , . ~ . - MP)
+m.A  <- update(m.Ad , . ~ . - I(P - p0))
+m.0  <- update(m.A  , . ~ . - MA)
+AOV  <- anova(m.A, m.Ad, m.AC, m.APC, m.AP, m.Ad, test = "Chisq")
 colnames(AOV)[1:4] <- c("Mod. df.","Mod. dev.",
                         "Test df.","Test dev.")
 AOV <- abs(AOV)
-AOV <- cbind( Model = c("Age",
-                        "Age-drift",
-                        "Age-Cohort",
-                        "Age-Period-Cohort",
-                        "Age-Period",
-                        "Age-drift"),
-              AOV,
-      'Test dev/df' = AOV[,"Test dev."]/AOV[,"Test df."],
-      'H0      ' = c("","zero drift ",  
-                        "Coh eff|dr.",   
-                        "Per eff|Coh",  
-                        "Coh eff|Per",  
-                        "Per eff|dr.") )
-A.pt <- unique(A)
+AOV <- cbind(Model = c("Age",
+                       "Age-drift",
+                       "Age-Cohort",
+                       "Age-Period-Cohort",
+                       "Age-Period",
+                       "Age-drift"),
+               AIC = c(AIC(m.A),
+                       AIC(m.Ad),
+                       AIC(m.AC),
+                       AIC(m.APC),
+                       AIC(m.AP),
+                       AIC(m.Ad)), 
+               AOV,
+     'Test dev/df' = AOV[,"Test dev."]/AOV[,"Test df."],
+        'H0      ' = c("","zero drift ",  
+                          "Coh eff|dr.",   
+                          "Per eff|Coh",  
+                          "Coh eff|Per",  
+                          "Per eff|dr."))
+A.pt  <- unique(A)
 A.pos <- match(A.pt, A)
-P.pt <- unique(P)
+P.pt  <- unique(P)
 P.pos <- match(P.pt, P)
-C.pt <- unique(P - A)
+C.pt  <- unique(P - A)
 C.pos <- match(C.pt, P - A)
 MA <- cbind(1, MA)
 

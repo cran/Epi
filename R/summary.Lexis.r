@@ -37,21 +37,21 @@ tr    <- addmargins(tr)    # Sum omitting the diagonal
 trm   <- tr[,ncol(tr)]
 
 # Compute person-years in each Cst-state
-pyrs  <- with( object,
-               addmargins( tapply( lex.dur,lex.Cst,sum,na.rm=TRUE),
-                                   FUN=function(x) sum(x,na.rm=TRUE) ) )/scale
-pers  <- with( object,
-               c( tapply( lex.id, lex.Cst, function(x) length(unique(x)) ),
-                  length(unique(lex.id)) ) )
+pyrs  <- with(object,
+              addmargins(tapply(lex.dur, lex.Cst, sum, na.rm = TRUE),
+                         FUN = function(x) sum(x, na.rm=TRUE)))/scale
+# Enumarate persons in each Cst-state
+pers  <- with(object,
+              c(tapply(lex.id, lex.Cst, function(x) length(unique(x))),
+                length(unique(lex.id))))
 
-# Amend the table of records with column of events and person-years
-trans <- cbind( trans, trm, pyrs, pers )
+# Amend the table of records with columns of events, person-years and persons
+trans <- cbind(trans, trm, pyrs, pers)
 
 # Annotate the table nicely
-colnames( trans )[ncol(trans)-2:0] <-
-    c(" Events:","Risk time:"," Persons:" )
-colnames( trans )[ncol(tr)] <- " Records:"
-names( dimnames( trans ) ) <- c("From","\nTransitions:\n     To")
+colnames(trans)[ncol(trans) - 2:0] <- c(" Events:","Risk time:"," Persons:" )
+colnames(trans)[ncol(tr)] <- " Records:"
+names(dimnames(trans)) <- c("From", "\nTransitions:\n     To")
 
 # Make the rates and annotate the table nicely
 rates <- sweep( tr, 1, pyrs, "/" )

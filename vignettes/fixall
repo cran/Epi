@@ -1,33 +1,32 @@
-# Before this is run, do this:
-# 1) run rw on simLexis and yll with eval=TRUE in the lines with
-#    CHANGE1 in order to get a version with properly formatted
-#    code. 
-# 2) Move the .tex files to sL.tex and yl.tex, and compile.
-# 3) Swap TRUE and FALSE in the CHANGE1/2 lines in the rnw files.
-# Then we are ready for the following:
+rw flup
+rt flup
+bl flup
+mv flup.R   ../inst/doc
+mv flup.pdf ../inst/doc
 
 rt crisk
 rw crisk
 bl crisk
-cp crisk.R  ../inst/doc
-cp crisk.pdf ../inst/doc
+mv crisk.R   ../inst/doc
+mv crisk.pdf ../inst/doc
 
-rw flup
-rt flup
-bl flup
-cp flup.R ../inst/doc
-cp flup.pdf ../inst/doc
+rt addLexis
+rw addLexis
+bl addLexis
+mv addLexis.R   ../inst/doc
+mv addLexis.pdf ../inst/doc
 
 rt simLexis
 rw simLexis
 bl simLexis
-cp simLexis.R ../inst/doc/simLexis.R
-cp sL.pdf     ../inst/doc/simLexis.pdf
+mv simLexis.R   ../inst/doc
+mv simLexis.pdf ../inst/doc
 
 rt yll
 rw yll
 bl yll
-cp yll.R  ../inst/doc/yll.R
-cp yl.pdf ../inst/doc/yll.pdf
+mv yll.R   ../inst/doc
+mv yll.pdf ../inst/doc
 
 klean
+rm *.pdf

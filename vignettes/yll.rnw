@@ -1,6 +1,6 @@
 %\VignetteIndexEntry{Years of life lost (YLL)}
-\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
-\documentclass[a4paper,twoside,12pt]{report}
+\SweaveOpts{results=verbatim, keep.source=TRUE, include=FALSE, eps=FALSE}
+\documentclass[a4paper, twoside, 12pt]{report}
 
 \newcommand{\Title}{Years of Life Lost (YLL)
   to disease\\Diabetes in DK as example}
@@ -12,16 +12,16 @@
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center, Gentofte, Denmark\\
-  & {\small \& Department of Biostatistics,
+  & {\small \& Department of Biostatistics, 
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
   & \url{http://BendixCarstensen.com} \\[1em]
                       \end{tabular}}
 \input{topreport}
 <<echo=FALSE>>=
-options( width=90,
-         SweaveHooks=list( fig=function()
-         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
+options(width=90, 
+         SweaveHooks=list(fig=function()
+         par(mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, las=1, bty="n")))
 @ %
 \renewcommand{\rwpre}{./yll}
 
@@ -45,7 +45,7 @@ exercise requires that two survival curves that are deemed relevant be
 available.
 
 The years of life lost is therefore just the area between the survival
-curves for those ``Well'', $S_W(t)$, and for those ``Diseased'',
+curves for those ``Well'', $S_W(t)$, and for those ``Diseased'', 
 $S_D(t)$:
 \[
   \YLL = \int_0^\infty S_W(t) - S_D(t) \dif t
@@ -84,19 +84,23 @@ calculation of the survival curve for a person in the ``Well'' state.
 Calculation of the survival of a diseased person already in the ``DM''
 state is unaffected by assumptions about $\lambda$.
 
-<<states,fig=TRUE,height=5,width=5,echo=FALSE>>=
-library( Epi )
-TM <- matrix(NA,4,4)
+<<states, fig=TRUE, height=5, width=5, echo=FALSE>>=
+library(Epi)
+TM <- matrix(NA, 4, 4)
 rownames(TM) <-
-colnames(TM) <- c("Well","DM","Dead","Dead(DM)") 
-TM[1,2:3] <- TM[2,4] <- 1
-zz <- boxes( TM, boxpos=list(x=c(20,80,20,80),y=c(80,80,20,20)), wm=1.5, hm=4 )
+colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)") 
+TM[1, 2:3] <- TM[2, 4] <- 1
+zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80), 
+                              y = c(80, 80, 20, 20)), 
+                wm = 1.5, 
+                hm = 4)
 @ 
-<<states,fig=TRUE,height=4,width=5,echo=FALSE>>=
-zz$Arrowtext <- c( expression(lambda),   
-                   expression(mu[W]),    
-                   expression(mu[D][M]) )
-boxes( zz )
+We can edit the output from \texttt{boxes}
+<<states, fig=TRUE, height=4, width=5, echo=FALSE>>=
+zz$Arrowtext <- c(expression(lambda),   
+                  expression(mu[W]),    
+                  expression(mu[D][M]))
+boxes(zz)
 @ %
 \insfig{states}{0.7}{Illness-death model describing diabetes incidence
   and -mortality.}
@@ -123,7 +127,7 @@ any combination of age and duration, this could be taken into account.
 
 There are however severe limitations in this as we in principle would
 want to have duration effects as long as the age-effects --- in
-principle for all $(a,d)$ where $d\leq A$, where $A$ is the age at
+principle for all $(a, d)$ where $d\leq A$, where $A$ is the age at
 which we condition. So even if we were only to compute ERL from
 age, say, 40 we would still need duration effects up to 60 years
 (namely to age 100).
@@ -211,12 +215,12 @@ The probability of being alive with diabetes at age $a$, is computed given that
                 & \times \exp\left(\!-\int_s^a\!\!\mu_D(u) \dif u \right) \dif s
 \end{align*}
 Sometimes we will use a version where the mortality among diabetes
-patients depend both on age $a$ and duration of diabetes, $d$,
-$\mu_D(a,d)$, in which case we get:
+patients depend both on age $a$ and duration of diabetes, $d$, 
+$\mu_D(a, d)$, in which case we get:
 \begin{align*}
  \ptxt{DM}(a) = \int_0^a \! & \lambda(s) 
-                           \exp\left(-\int_0^s\!\mu_W(u)+\lambda(u) \dif u \right) \\
-                & \times \exp\left(-\int_s^a\!\mu_D(u,u-s) \dif u \right) \dif s
+                \exp\left(-\int_0^s\!\mu_W(u)+\lambda(u) \dif u \right) \\
+                & \times \exp\left(-\int_s^a\!\mu_D(u, u-s) \dif u \right) \dif s
 \end{align*}
 because the integration variable $u$ is the age-scale and the second
 integral refers to mortality among persons diagnosed at age $s$, that
@@ -241,16 +245,16 @@ limits:
 \ptxt{Well|Well at $A$}(a) &= \exp\left(-\int_A^a \! \mu_W(u)+\lambda(u) \right) \dif u \\
   \ptxt{DM|Well at $A$}(a) &= \int_A^a \! \lambda(s) 
                                \exp\left(-\int_A^s\!\mu_W(u)+\lambda(u) \dif u \right) \\
-                           & \qquad \times \exp\left(-\int_s^a\!\mu_D(u,u-s) \dif u \right) \dif s
+                           & \qquad \times \exp\left(-\int_s^a\!\mu_D(u, u-s) \dif u \right) \dif s
 \end{align*}
 The calculation of these conditional survival functions is implemented
 but not allowing for duration-dependence. Thus it is only implemented
-assuming $\mu_D(a,d)=\mu_D(a)$.
+assuming $\mu_D(a, d)=\mu_D(a)$.
 
 \chapter{Analyses for DM in Denmark}
 
 The rates we use as basis for the following calculations are derived
-from the NDR, where we have omitted the blood-glucose criteria,
+from the NDR, where we have omitted the blood-glucose criteria, 
 because there is compelling evidence that these have quite a low
 specificity (particularly in the younger ages among women), and do
 not substantially contribute to the sensitivity.
@@ -263,14 +267,14 @@ and without DM.
 
 We read in the dataset of DM and population mortality and incidence, \texttt{DMepi}:
 <<>>=
-data( DMepi )
+data(DMepi)
 @ % 
 The dataset \texttt{DMepi} contains diabetes events, deaths and
 person-years for persons without diabetes and deaths and person-years
 for persons with diabetes:
 <<>>=
-str( DMepi )
-head( DMepi )
+str(DMepi)
+head(DMepi)
 @ %
 For each combination of sex, age, period and date of birth in 1 year
 age groups, we have the person-years in the ``Well'' (\texttt{Y.nD})
@@ -291,42 +295,42 @@ total number of deaths and amount of risk time, as we are going to
 model the total mortality as well. Finally we restrict the dataset to
 ages over 30 only:
 <<>>=
-DMepi <- transform( subset( DMepi, A>30 ),
+DMepi <- transform(subset(DMepi, A>30), 
                     D.T = D.nD + D.DM, 
-                    Y.T = Y.nD + Y.DM )
+                    Y.T = Y.nD + Y.DM)
 head(DMepi)
 @ %
 With the correct age and period coding in the Lexis triangles, we fit
 models for the mortalities and incidences. Note that we for
-comparative purposes also fit a model for the \emph{total} mortality,
+comparative purposes also fit a model for the \emph{total} mortality, 
 ignoring the 
 <<>>=
 # Knots used in all models
-( a.kn <- seq(40,95,,6) )
-( p.kn <- seq(1997,2015,,4) )
-( c.kn <- seq(1910,1976,,6) )
+(a.kn <- seq(40, 95, , 6))
+(p.kn <- seq(1997, 2015, , 4))
+(c.kn <- seq(1910, 1976, , 6))
 # Check the number of events between knots
-ae <- xtabs( cbind(D.nD,D.DM,X) ~ cut(A,c(30,a.kn,Inf)) + sex, data=DMepi )
-ftable( addmargins(ae,1), col.vars=3:2 )
-pe <- xtabs( cbind(D.nD,D.DM,X) ~ cut(P,c(1990,p.kn,Inf)) + sex, data=DMepi )
-ftable( addmargins(pe,1), col.vars=3:2 )
-ce <- xtabs( cbind(D.nD,D.DM,X) ~ cut(P-A,c(-Inf,c.kn,Inf)) + sex, data=DMepi )
-ftable( addmargins(ce,1), col.vars=3:2 )
+ae <- xtabs(cbind(D.nD, D.DM, X) ~ cut(A, c(30, a.kn, Inf)) + sex, data=DMepi)
+ftable(addmargins(ae, 1), col.vars=3:2)
+pe <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P, c(1990, p.kn, Inf)) + sex, data=DMepi)
+ftable(addmargins(pe, 1), col.vars=3:2)
+ce <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P-A, c(-Inf, c.kn, Inf)) + sex, data=DMepi)
+ftable(addmargins(ce, 1), col.vars=3:2)
 # Fit an APC-model for all transitions, seperately for men and women
-mW.m <- glm( D.nD ~ -1 + Ns(A  ,knots=a.kn,int=TRUE) +
-                         Ns(  P,knots=p.kn,ref=2005) +
-                         Ns(P-A,knots=c.kn,ref=1950), 
-           offset = log(Y.nD),
-           family = poisson,
-             data = subset( DMepi, sex=="M" ) )
-mD.m <- update( mW.m,  D.DM ~ . , offset=log(Y.DM) )
-mT.m <- update( mW.m,  D.T  ~ . , offset=log(Y.T ) )
-lW.m <- update( mW.m,  X ~ . )
+mW.m <- glm(D.nD ~ -1 + Ns(A  , knots=a.kn, int=TRUE) +
+                         Ns( P, knots=p.kn, ref=2005) +
+                         Ns(P-A, knots=c.kn, ref=1950), 
+           offset = log(Y.nD), 
+           family = poisson, 
+             data = subset(DMepi, sex=="M"))
+mD.m <- update(mW.m,  D.DM ~ . , offset=log(Y.DM))
+mT.m <- update(mW.m,  D.T  ~ . , offset=log(Y.T))
+lW.m <- update(mW.m,  X ~ .)
 # Model for women
-mW.f <- update( mW.m, data = subset( DMepi, sex=="F" ) )
-mD.f <- update( mD.m, data = subset( DMepi, sex=="F" ) )
-mT.f <- update( mT.m, data = subset( DMepi, sex=="F" ) )
-lW.f <- update( lW.m, data = subset( DMepi, sex=="F" ) )
+mW.f <- update(mW.m, data = subset(DMepi, sex=="F"))
+mD.f <- update(mD.m, data = subset(DMepi, sex=="F"))
+mT.f <- update(mT.m, data = subset(DMepi, sex=="F"))
+lW.f <- update(lW.m, data = subset(DMepi, sex=="F"))
 @ % 
 
 \section{Residual life time and years lost to DM}
@@ -336,73 +340,73 @@ We now collect the estimated years of life lost classified by method
 <<>>=
 a.ref <- 30:90
 p.ref <- 1996:2016
-aYLL <- NArray( list( type = c("Imm","Tot","Sus"),
-                       sex = levels( DMepi$sex ),
-                       age = a.ref,
-                      date = p.ref ) )
-str( aYLL )
+aYLL <- NArray(list(type = c("Imm", "Tot", "Sus"), 
+                       sex = levels(DMepi$sex), 
+                       age = a.ref, 
+                      date = p.ref))
+str(aYLL)
 system.time(
-for( ip in p.ref )
+for(ip in p.ref)
    {
-   nd <- data.frame( A = seq(30,90,0.2)+0.1,
-                     P = ip,
-                  Y.nD = 1,
-                  Y.DM = 1,
-                  Y.T  = 1 )
-   muW.m <- ci.pred( mW.m, nd )[,1]
-   muD.m <- ci.pred( mD.m, nd )[,1]
-   muT.m <- ci.pred( mT.m, nd )[,1]
-   lam.m <- ci.pred( lW.m, nd )[,1]
-   muW.f <- ci.pred( mW.f, nd )[,1]
-   muD.f <- ci.pred( mD.f, nd )[,1]
-   muT.f <- ci.pred( mT.f, nd )[,1]
-   lam.f <- ci.pred( lW.f, nd )[,1]
-   aYLL["Imm","M",,paste(ip)] <- yll( int=0.2, muW.m, muD.m, lam=NULL, 
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   aYLL["Imm","F",,paste(ip)] <- yll( int=0.2, muW.f, muD.f, lam=NULL,  
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   aYLL["Tot","M",,paste(ip)] <- yll( int=0.2, muT.m, muD.m, lam=NULL,  
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   aYLL["Tot","F",,paste(ip)] <- yll( int=0.2, muT.f, muD.f, lam=NULL,  
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   aYLL["Sus","M",,paste(ip)] <- yll( int=0.2, muW.m, muD.m, lam=lam.m, 
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   aYLL["Sus","F",,paste(ip)] <- yll( int=0.2, muW.f, muD.f, lam=lam.f, 
-                                      A=a.ref, age.in=30, note=FALSE )[-1]
-   } )
-round( ftable( aYLL[,,seq(1,61,10),], col.vars=c(3,2) ), 1 )
+   nd <- data.frame(A = seq(30, 90, 0.2)+0.1, 
+                     P = ip, 
+                  Y.nD = 1, 
+                  Y.DM = 1, 
+                  Y.T  = 1)
+   muW.m <- ci.pred(mW.m, nd)[, 1]
+   muD.m <- ci.pred(mD.m, nd)[, 1]
+   muT.m <- ci.pred(mT.m, nd)[, 1]
+   lam.m <- ci.pred(lW.m, nd)[, 1]
+   muW.f <- ci.pred(mW.f, nd)[, 1]
+   muD.f <- ci.pred(mD.f, nd)[, 1]
+   muT.f <- ci.pred(mT.f, nd)[, 1]
+   lam.f <- ci.pred(lW.f, nd)[, 1]
+   aYLL["Imm", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=NULL, 
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   aYLL["Imm", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=NULL,  
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   aYLL["Tot", "M", , paste(ip)] <- yll(int=0.2, muT.m, muD.m, lam=NULL,  
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   aYLL["Tot", "F", , paste(ip)] <- yll(int=0.2, muT.f, muD.f, lam=NULL,  
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   aYLL["Sus", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=lam.m, 
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   aYLL["Sus", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=lam.f, 
+                                      A=a.ref, age.in=30, note=FALSE)[-1]
+   })
+round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 @ %
 We now have the relevant points for the graph showing YLL to diabetes
 for men and women by age, and calendar year, both under the immunity
 and susceptibility models for the calculation of YLL.
-<<imm,fig=TRUE,width=8,height=5>>=
+<<imm, fig=TRUE, width=8, height=5>>=
 plyll <- function(wh){
-par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, bty="n", las=1 )
+par(mfrow=c(1, 2), mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, bty="n", las=1)
 
-matplot( a.ref, aYLL[wh,"M",,],
-         type="l", lty=1, col="blue", lwd=1:2,
-         ylim=c(0,12), xlab="Age",
-         ylab="Years lost to DM", yaxs="i" )
-abline(v=50,h=1:10,col=gray(0.7))
-text( 90, 11, "Men", col="blue", adj=1 )
-text( 40, aYLL[wh,"M","40","1996"], "1996", adj=c(0,0), col="blue" )
-text( 43, aYLL[wh,"M","44","2016"], "2016", adj=c(1,1), col="blue" )
+matplot(a.ref, aYLL[wh, "M", , ], 
+         type="l", lty=1, col="blue", lwd=1:2, 
+         ylim=c(0, 12), xlab="Age", 
+         ylab="Years lost to DM", yaxs="i")
+abline(v=50, h=1:10, col=gray(0.7))
+text(90, 11, "Men", col="blue", adj=1)
+text(40, aYLL[wh, "M", "40", "1996"], "1996", adj=c(0, 0), col="blue")
+text(43, aYLL[wh, "M", "44", "2016"], "2016", adj=c(1, 1), col="blue")
 
-matplot( a.ref, aYLL[wh,"F",,],
-         type="l", lty=1, col="red", lwd=1:2,
-         ylim=c(0,12), xlab="Age",
-         ylab="Years lost to DM", yaxs="i" )
-abline(v=50,h=1:10,col=gray(0.7))
-text( 90, 11, "Women", col="red", adj=1 )
-text( 40, aYLL[wh,"F","40","1996"], "1996", adj=c(0,0), col="red" )
-text( 43, aYLL[wh,"F","44","2016"], "2016", adj=c(1,1), col="red" )
+matplot(a.ref, aYLL[wh, "F", , ], 
+         type="l", lty=1, col="red", lwd=1:2, 
+         ylim=c(0, 12), xlab="Age", 
+         ylab="Years lost to DM", yaxs="i")
+abline(v=50, h=1:10, col=gray(0.7))
+text(90, 11, "Women", col="red", adj=1)
+text(40, aYLL[wh, "F", "40", "1996"], "1996", adj=c(0, 0), col="red")
+text(43, aYLL[wh, "F", "44", "2016"], "2016", adj=c(1, 1), col="red")
 }
 plyll("Imm")
 @ %
-<<tot,fig=TRUE,width=8,height=5>>=
+<<tot, fig=TRUE, width=8, height=5>>=
 plyll("Tot")
 @ %
-<<sus,fig=TRUE,width=8,height=5>>=
+<<sus, fig=TRUE, width=8, height=5>>=
 plyll("Sus")
 @ %
 \begin{figure}[h]
@@ -444,69 +448,8 @@ plyll("Sus")
 \end{figure}
 
 From figure \ref{fig:sus} we see that for men aged 50 the years lost to
-diabetes has decreased from a bit over 8 to a bit less than 6 years,
+diabetes has decreased from a bit over 8 to a bit less than 6 years, 
 and for women from 8.5 to 5 years; so a greater improvement for women.
-
-\chapter{Practical implementation}
-
-We have devised functions that wraps these formulae up for practical
-use.
-
-\section{Function definitions}
-
-% The following code sources the originally formatted code in erl.R in
-% order to make it printable with all the formatting and comments in
-% it. However the sourcing does not work when compiling the vignettes
-% in R CMD build. So when checking the code we comment this out by
-% putting eval=FALSE. So depending on whether we actually construct
-% the pdf for the inst/doc folder or test (upload) the package, one of
-% the following two chunks are run with eval=FALSE and the other with
-% eval=TRUE.
-<<CHANGE1,echo=FALSE,results=hide,eval=FALSE>>=
-source( "../R/erl.R", keep.source=TRUE )
-@ %
-% When checking the package
-<<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
-surv1 <- Epi::surv1
-surv2 <- Epi::surv2
-erl1 <- Epi::erl1
-erl <- Epi::erl
-yll <- Epi::yll
-@ %
-When using the functions it is assumed that the functions $\mu_W$,
-$\mu_D$ and $\lambda$ are given as vectors corresponding to
-equidistantly (usually tightly) spaced ages from 0 to $K$ where K is
-the age where everyone can safely be assumed dead.
-
-\texttt{surv1} is a simple function that computes the survival
-function from a vector of mortality rates, and optionally the
-conditional survival given being alive at prespecified ages:
-<<>>=
-surv1
-@ %
-\texttt{erl1} basically just expands the result of \texttt{surv1} with
-a column of expected residual life times:
-<<>>=
-erl1
-@ %
-We also define a function, \texttt{surv2}, that computes the survival
-function for a non-diseased person that may become diseased with rate
-\texttt{lam} and after that die at a rate of \texttt{muD}
-(corresponding to the formulae above). This is the sane way of
-handling years of life lost to a particular illness:
-<<>>=
-surv2
-@ %
-Finally we devised a function using these to compute the expected
-residual lifetime at select ages:
-<<>>=
-erl
-@ %
-\ldots and a wrapper for this if we only want the years of life lost
-returned:
-<<>>=
-yll
-@ %
 
 \bibliographystyle{plain}
 
@@ -519,7 +462,7 @@ B~Carstensen.
 
 \bibitem{Carstensen.2008c}
 B~Carstensen, JK~Kristensen, P~Ottosen, and K~Borch-Johnsen.
-\newblock The {D}anish {N}ational {D}iabetes {R}egister: {T}rends in incidence,
+\newblock The {D}anish {N}ational {D}iabetes {R}egister: {T}rends in incidence, 
   prevalence and mortality.
 \newblock {\em Diabetologia}, 51:2187--2196, 2008.
 

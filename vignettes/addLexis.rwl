@@ -1,0 +1,42 @@
+R version 3.6.3 (2020-02-29) 
+ ---------------------------------------------
+  Folder:  /home/bendix/stat/R/lib.src/Epi/pkg/vignettes 
+ Started:  Friday 08. April 2022, 07:10:18 
+ ---------------------------------------------
+Writing to file addLexis.tex
+Processing code chunks with options ...
+ 1 : keep.source term verbatim (addLexis.rnw:20)
+ 2 : echo keep.source term verbatim (addLexis.rnw:92)
+ 3 : echo keep.source term verbatim (addLexis.rnw:111)
+ 4 : echo keep.source term verbatim (addLexis.rnw:135)
+ 5 : echo keep.source term verbatim (addLexis.rnw:146)
+ 6 : echo keep.source term verbatim (addLexis.rnw:169)
+ 7 : echo keep.source term verbatim (addLexis.rnw:184)
+ 8 : echo keep.source term verbatim (addLexis.rnw:193)
+ 9 : echo keep.source term verbatim (addLexis.rnw:214)
+10 : echo keep.source term verbatim (addLexis.rnw:220)
+11 : echo keep.source term verbatim (addLexis.rnw:249)
+12 : echo keep.source term verbatim (addLexis.rnw:262)
+13 : echo keep.source term verbatim (addLexis.rnw:338)
+14 : echo keep.source term verbatim (addLexis.rnw:360)
+15 : echo keep.source term verbatim (addLexis.rnw:381)
+16 : echo keep.source term verbatim (addLexis.rnw:393)
+17 : echo keep.source term verbatim (addLexis.rnw:415)
+18 : echo keep.source term verbatim (addLexis.rnw:428)
+19 : echo keep.source term verbatim (addLexis.rnw:438)
+20 : echo keep.source term verbatim (addLexis.rnw:494)
+21 : echo keep.source term verbatim (addLexis.rnw:504)
+22 : echo keep.source term verbatim (addLexis.rnw:518)
+23 : echo keep.source term verbatim (addLexis.rnw:541)
+24 : echo keep.source term verbatim (addLexis.rnw:556)
+25 : echo keep.source term verbatim (addLexis.rnw:574)
+26 : echo keep.source term verbatim (addLexis.rnw:590)
+27 : echo keep.source term verbatim (addLexis.rnw:605)
+
+You can now run (pdf)latex on ‘addLexis.tex’
+
+ ---------------------------------------------
+  Folder: /home/bendix/stat/R/lib.src/Epi/pkg/vignettes
+   Ended: Friday 08. April 2022, 07:11:45
+ Elapsed: 00:01:27
+ ---------------------------------------------

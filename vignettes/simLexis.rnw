@@ -5,7 +5,7 @@
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
   timescales:\\ \texttt{simLexis} in the \texttt{Epi} package}
 \newcommand{\Tit}{Multistate models with multiple timescales}
-\newcommand{\Version}{Version 2.5}
+\newcommand{\Version}{Version 2.6}
 \newcommand{\Dates}{\today}
 \newcommand{\Where}{SDCC}
 \newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi/simLexis.pdf}}
@@ -920,185 +920,14 @@ follows:
     0). Hence the conditional probabilities \emph{given a transition
       time} in $(t,t+\dif t)$ is:
     \[
-    \frac{\lambda_i(t)\dif t}{\lambda_1(t)\dif t+\lambda_2(t)\dif t+\lambda_3(t)\dif t}=
+    \frac{\lambda_i(t)\dif t}{\lambda_1(t)\dif t+
+                              \lambda_2(t)\dif t+
+                              \lambda_3(t)\dif t}=
     \frac{\lambda_i(t)}{\lambda_1(t)+\lambda_2(t)+\lambda_3(t)}
     \]
     --- exactly as above.
   \end{enumerate}
 \end{enumerate}
-
-\section{Components of \texttt{simLexis}}
-
-This section explains the actually existing code for
-\texttt{simLexis}, as it is in the current version of \texttt{Epi}.
-
-% The following code sources the originally formatted code in
-% simLexis.R in order to make it printable with all the formatting and
-% comments in it. However the sourcing does not work when compiling
-% the vignettes in R CMD build. So when checking the code we comment
-% this out by putting eval=FALSE, and moreover, because it is only
-% simLexis that is exported, we also need to bring the functions simX,
-% sim1, lint, get.next and chop.lex into the workspace. So depending
-% on whether we actually construct the pdf for the inst/doc folder or
-% test (upload) the package, one of the following to chunks are run
-% with eval=FALSE and the other with eval=TRUE
-
-% When compiling the published vignette
-<<CHANGE1,echo=FALSE,results=hide,eval=FALSE>>=
-source( "../R/simLexis.R", keep.source=TRUE )
-@ %
-% When checking the package
-<<CHANGE2,echo=FALSE,results=hide,eval=TRUE>>=
-simX <- Epi:::simX
-sim1 <- Epi:::sim1
-lint <- Epi:::lint
-get.next <- Epi:::get.next
-chop.lex <- Epi:::chop.lex
-@ %
-The function \texttt{simLexis} takes a \texttt{Lexis} object as
-input. This defines the initial state(s) and times of the start for a
-number of persons. Since the purpose is to simulate a history through
-the estimated multistate model, the input values of the outcome
-variables \texttt{lex.Xst} and \texttt{lex.dur} are ignored --- the
-aim is to simulate values for them.
-
-Note however that the attribute \texttt{time.since} must be present in the
-object. This is used for initializing timescales defined as time since
-entry into a particular state, it is a character vector of the same
-length as the \texttt{time.scales} attribute, with value equal to a
-state name if the corresponding time scale is defined as time since
-entry into that state. In this example the 4th timescale is time since
-entry into the \texttt{Ins} state, and hence:
-<<>>=
-cbind(
-attr( ini, "time.scales" ),
-attr( ini, "time.since" ) )
-@ %
-\texttt{Lexis} objects will have this attribute set for time scales created
-using \texttt{cutLexis}.
-
-The other necessary argument is a transition object \texttt{Tr}, which
-is a list of lists. The elements of the lists should be \texttt{glm}
-objects derived by fitting Poisson models to a \texttt{Lexis} object
-representing follow-up data in a multistate model.  It is assumed (but
-not checked) that timescales enter in the model via the timescales of
-the \texttt{Lexis} object. Formally, there are no assumptions about
-how \texttt{lex.dur} enters in the model.
-
-Optional arguments are \texttt{t.range}, \texttt{n.int} or
-\texttt{time.pts}, specifying the times after entry at which the
-cumulative rates will be computed (the maximum of which will be taken
-as the censoring time), and \texttt{N} a scalar or numerical vector of
-the number of persons with a given initial state each record of the
-\texttt{init} object should represent.
-
-The central part of the functions uses a \texttt{do.call} /
-\texttt{lapply} / \texttt{split} construction to do simulations for
-different initial states. This is the construction in the middle that
-calls \texttt{simX}. \texttt{simLexis} also calls \texttt{get.next}
-which is further detailed below.
-<<>>=
-simLexis
-@ %
-
-\subsection{\texttt{simX}}
-
-\texttt{simX} is called by \texttt{simLexis} and simulates
-transition-times and -types for a set of patients assumed to be in the
-same state. It is called from \texttt{simLexis} with a data frame as
-argument, uses the state in \texttt{lex.Cst} to select the relevant
-component of \texttt{Tr} and compute predicted cumulative intensities
-for all states reachable from this state.
-
-Note that it is here the switch between \texttt{glm}, \texttt{coxph}
-and objects of class \texttt{function} is made.
-
-The dataset on which this prediction is done has
-\texttt{length(time.pts)} rows per person.
-<<>>=
-simX
-@ %
-As we see, \texttt{simX} calls \texttt{sim1} which simulates the
-transition for one person.
-
-\subsection{\texttt{sim1}}
-
-The predicted cumulative intensities are fed, person by person, to
-\texttt{sim1} --- again via a \texttt{do.call} / \texttt{lapply} /
-\texttt{split} construction --- and the resulting time and state is
-appended to the \texttt{nd} data frame. This way we have simulated
-\emph{one} transition (time and state) for each person:
-<<>>=
-sim1
-@ %
-The \texttt{sim1} function uses \texttt{lint} to do linear interpolation.
-
-\subsection{\texttt{lint}}
-
-We do not use \texttt{approx} to do the linear interpolation, because
-this function does not do the right thing if the cumulative incidences
-(\texttt{ci}) are constant across a number of times. Therefore we have
-a custom made linear interpolator that does the interpolation
-exploiting the fact the the \texttt{ci} is non-decreasing and
-\texttt{tt} is strictly monotonously increasing:
-<<>>=
-lint
-@
-
-\subsection{\texttt{get.next}}
-
-We must repeat the simulation operation on those that have a simulated
-entry to a transient state, and also make sure that any time scales
-defined as time since entry to one of these states be initialized to 0
-before a call to \texttt{simX} is made for these persons. This
-accomplished by the function \texttt{get.next}:
-<<>>=
-get.next
-@
-
-\subsection{\texttt{chop.lex}}
-
-The operation so far has censored individuals \texttt{max(time.pts)}
-after \emph{each} new entry to a transient state. In order to groom
-the output data we use \texttt{chop.lex} to censor all persons at the
-same designated time after \emph{initial} entry.
-<<>>=
-chop.lex
-@
-
-\section{Probabilities from simulated \texttt{Lexis} objects}
-
-Once we have simulated a Lexis object we will of course want to use it
-for estimating probabilities, so basically we will want to enumerate
-the number of persons in each state at a pre-specified set of time
-points.
-
-\subsection{\texttt{nState}}
-
-Since we are dealing with multistate model with potentially multiple
-time scales, it is necessary to define the timescale
-(\texttt{time.scale}), the starting point on this timescale
-(\texttt{from}) and the points after this where we compute the number
-of occupants in each state, (\texttt{at}).
-<<>>=
-nState
-@ %
-
-\subsection{\texttt{pState}, \texttt{plot.pState} and \texttt{lines.pState}}
-
-In order to plot probabilities of state-occupancy it is useful to
-compute cumulative probabilities across states in any given order;
-this is done by the function \texttt{pState}, which returns a matrix
-of class \texttt{pState}:
-<<>>=
-pState
-@ %
-There is also a \texttt{plot} and \texttt{lines} method for the
-resulting \texttt{pState} objects:
-<<>>=
-plot.pState
-lines.pState
-@ %
 
 \bibliographystyle{plain}
 \begin{thebibliography}{1}

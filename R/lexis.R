@@ -42,7 +42,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     if( is.logical( exit.status ) )
         {
         entry.status <- FALSE
-        if( notes ) cat("NOTE: entry.status has been set to FALSE for all.\n" )
+        if( notes ) cat("NOTE: entry.status has been set to FALSE for all.\n")
         }
     if( is.character( exit.status ) )
         {
@@ -60,8 +60,8 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
         }
     if( is.numeric( exit.status ) )
         {
-        if( notes ) entry.status <- rep( 0, length( exit.status ) )
-        cat("NOTE: entry.status has been set to 0 for all.\n" )
+        entry.status <- rep( 0, length( exit.status ) )
+        if( notes ) cat("NOTE: entry.status has been set to 0 for all.\n")
         }
     }
 
@@ -510,12 +510,37 @@ points.Lexis <- function(x, time.scale=options()[["Lexis.time.scale"]], ...)
     points.Lexis.2D(x, time.scale=time.scale, ...)
 }
 
+print.Lexis <-
+function(x, ..., td = 2, nd = 3, rnam = FALSE, org = FALSE)
+    {
+    # "intersect" is to allow subsets of variables to be printed
+    # result is ordered as the first argument to intersect()
+    # The time-scale variables
+    tsl <- intersect(c(timeScales(x), "lex.dur"), names(x))
+    # The Lexis variables
+    whL <- intersect(c("lex.id", tsl, "lex.Cst", "lex.Xst"), names(x))
+    # non-Lexis variables"
+    oth <- setdiff(names(x), whL)
+    # non-Lexis numerical variables
+    nuv <- setdiff(names(which(sapply(x, is.numeric))), whL)
+    # round the time-scale variables
+    x[,tsl] <- round(x[,tsl], td)
+    # round the non-Lexis numerical variables
+    x[,nuv] <- round(x[,nuv], nd)
+    if (org) print.data.frame(x, row.names = rnam, ...)
+        else print.data.frame(x[,c(whL, oth)],
+                                 row.names = rnam, ...)
+    # return the printed ordering of variables 
+    invisible(c(whL, oth))
+    }
+
 PY.ann <- function (x, ...) UseMethod("PY.ann")
 PY.ann.Lexis <-
 function( x, time.scale=options()[["Lexis.time.scale"]], digits=1, ... )
 {
-  if( !inherits(x,"Lexis") )
-    stop( "Only meaningful for Lexis objects not for objects of class ", class(x) )
+  if (!inherits(x,"Lexis"))
+    stop("Only meaningful for Lexis objects not for objects of class ",
+         class(x))
   wh.x <- x[,time.scale[1]] + x[,"lex.dur"]/2
   if( two.scales <- length(time.scale)==2 )
      wh.y <- x[,time.scale[2]] + x[,"lex.dur"]/2
@@ -720,25 +745,27 @@ setdiff( names( tc[tc>0] ), transient(x) )
 }    
 
 updn <-
-function( x, tt, states )
+function(x, tt, states)
 {
-if( any(is.na(match(states,levels(x)))) )
-  stop( "'states' must be among states: ", paste(levels(x),sep=',') )
-tt <- tt[,states,drop=FALSE]
-setdiff( rownames( tt[apply(tt,1,sum)>0,,drop=FALSE] ), states )
+if (any(is.na(match(states,levels(x)))))
+  stop("'states' must be one of states: ", paste(levels(x), sep=','))
+tt <- tt[, states, drop=FALSE]
+cc <- intersect(rownames(tt), colnames(tt))
+tt[cbind(cc,cc)] <- 0
+rownames(tt[apply(tt, 1, sum) > 0, , drop = FALSE])
 }
-before <- preceding <- function( x, states ) updn( x, table(x$lex.Cst,x$lex.Xst), states )
-after <- succeeding <- function( x, states ) updn( x, table(x$lex.Xst,x$lex.Cst), states )
+before <- preceding <- function( x, states ) updn( x, table(x$lex.Cst, x$lex.Xst), states)
+after <- succeeding <- function( x, states ) updn( x, table(x$lex.Xst, x$lex.Cst), states)
 
 timeScales <- function(x)
 {
-  return (attr(x,"time.scales"))
+  return(attr(x, "time.scales"))
 }
 
 timeSince <- function(x)
 {
-        tt  <- attr(x,"time.since")
-  names(tt) <- attr(x,"time.scales")
+        tt  <- attr(x, "time.since")
+  names(tt) <- attr(x, "time.scales")
   return( tt )
 }
 
@@ -798,19 +825,16 @@ transform.Lexis <- function(`_data`, ... )
 
 # Two utility functions used to sort a Lexis object by (lex.id,time)    
 order.Lexis <-
- orderLexis <- function( x )
-               {
-               # Some time scales may contain missing values
-               # So find one with minimal NAs so we can sort on it
-            if (!inherits(x, "Lexis"))
-               stop("Argument must be a Lexis object\n")
-               # Fixing things if a data.table
-                attr(x, "class") <- c("Lexis", "data.frame") 
-        nNA <- apply(x[, timeScales(x), drop=FALSE],
-                     2,
-                     function(x) sum(is.na(x)))
-       a.ts <- timeScales(x)[which( nNA == min(nNA))[1]]
-               order(x$lex.id, x[,a.ts], na.last = FALSE)
-               }
+ orderLexis <-
+function( x )
+   {
+   # Some time scales may not be proper from addCov.Lexis
+   # So find one which is ("X" in timeSince(x) is improper)
+   if (!inherits(x, "Lexis")) stop("Argument must be a Lexis object\n")
+   # Fixing things if a data.table
+   attr(x, "class") <- c("Lexis", "data.frame")
+   a.ts <- timeScales(x)[which(timeSince(x) != "X")[1]] 
+   order(x$lex.id, x[,a.ts], na.last = FALSE)
+   }
 
-  sortLexis <- function( x ) x[orderLexis(x),]
+sortLexis <- function( x ) x[orderLexis(x),]

@@ -1,3 +1,50 @@
+Changes in 2.45/2.46
+
+o A bug in preceding / succeeding was fixed.
+
+o a print method for Lexis objects added. It rounds timescales and
+  lex.dur to the same number of decimals. Default 2. Other numerical
+  variables are rounded too, default 3. .lex columnas an time scales
+  are printed first. The new order of variables is returned invisibly.  
+
+o an AaJ.Lexis method has been added which gives the Aaalen-Johansen
+  estimator of state probabilities. Wrapper for survfit for a
+  multistate setup.
+
+o glitch in Lexis when assigning entry.status when exit.status is
+  numeric. Only worked if notes = TRUE (the default).
+
+o cal.yr returned an object of class c("cal.yr","numeric"), now changed
+  to  c("cal.yr","double"). 'numeric' seems not to be a useful class
+  designation when 'double' is meant  .
+
+o COEF.polr was wrongly defined, caused a crash of ci.lin() on a polr
+  object. Fixed. 
+
+o Using a factor as response in a binomial glm/gam model caused df2ctr
+  called from ci.lin to crash. Fixed.
+
+o Update of the utility df2ctr where gam models with factors
+  crashed. Now levels of factors in models are now properly extracted
+  from gam objects.
+
+o A column with AIC is now added to the Anova entry of an apc object
+  returned by apc.fit.
+
+o Grooming of code and vignette for ci.Crisk. ci.Crisk now also
+  accepts a list with one element to compute cumulative risk and
+  expected life time with simulation c.i.
+
+o coxph.Lexis did not allow states to be referred to by number in the
+  from= and to= arguments. Fixed.
+
+o Cleanup of the code for addDrug.Lexis. prefix argument has a
+  different meaning, suffix argument dropped as a consequence, and in
+  order to comply with nomencalure of gen.exp() the dosage argument is
+  now called dpt.
+
+o addCov.Lexis gave funny results if lex.id was a factor. Fixed.
+
 Changes in 2.44
 
 o addCov.Lexis now always return a data.frame

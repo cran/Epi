@@ -52,19 +52,26 @@
     constructed.
     }
   \item{tfc}{      
-    Character (\code{t}ime \code{f}rom \code{c}linical visit). Name of the
-    variable in the result which will contain the time since the most
-    recent covariate date. If the argument is omitted a variable called
-    \code{tfc} will be constructed. If \code{addScales} is \code{TRUE}
-    this is included among the time scales, even it is not formally a
-    time scale.
+    Character (\code{t}ime \code{f}rom last \code{c}linical visit). Name
+    of the variable in the result which will contain the time since the
+    most recent covariate date. It will be included among the timescales
+    of the resulting Lexis object.
+
+    If the argument is omitted a variable called \code{tfc} will be
+    constructed. 
     }
 }
 \value{
     A \code{Lexis} object representing the same follow-up as \code{Lx}, 
     with cuts added at the times of examination, and covariate
     measurements added for all records representing follow-up after the
-    most recent time of measurement. 
+    most recent time of measurement.
+
+    Also \code{tfc} is added as a time scale, it is however not a proper
+    timescale since it is reset at every clinical examination. Therefor
+    the value of the \code{timeSince} attribute is set to "X" in order
+    to distinguish it from other proper time scales that either have an
+    empty string or the name of a state.
 }
 \author{
   Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
@@ -100,16 +107,21 @@ str( Lcoh )
 Lx <- Lcoh[,1:7]
 
 # Data frame with clinical examination data, date of examination in per
-clin <- data.frame( lex.id = c(1,1,3,2),
-                       per = c(1977.3,1971.7,1996.2,1990.6),
-                        bp = c(120,140,160,157),
-                      chol = c(5,7,8,9),
-                      xnam = c("X2","X1","X1","X2") )
+clin <- data.frame(lex.id = c(1,1,3,2),
+                      per = cal.yr(c("1977-4-7",
+                                     "1971-7-1",
+                                     "1996-2-15",
+                                     "1990-7-3")),
+                       bp = c(120,140,160,157),
+                     chol = c(5,7,8,9),
+                     xnam = c("X2","X1","X1","X2") )
 Lx
-clin 
+clin
+str(Lx)
+str(clin)
 
-# Different behavours using exnam and addScales
-addCov.Lexis( Lx, clin )
+# Different behavours when using exnam explicitly
+addCov.Lexis( Lx, clin[,-5] )
 addCov.Lexis( Lx, clin, exnam="xnam" )
 
 # Works with time split BEFORE

@@ -9,9 +9,9 @@
   (\code{lex.Cst} and \code{lex.Xst}), as well the risk time in each state.
   }
 \usage{
-  \method{summary}{Lexis}( object, simplify=TRUE, scale=1, by=NULL,
-                           Rates=FALSE, timeScales=FALSE, ... )
-  \method{print}{summary.Lexis}( x, ..., digits=2 )
+  \method{summary}{Lexis}(object, simplify = TRUE, scale = 1, by = NULL,
+                          Rates = FALSE, timeScales = FALSE, ...)
+  \method{print}{summary.Lexis}(x, ..., digits = 2)
   }
 \arguments{
   \item{object}{A Lexis object.}
@@ -24,14 +24,15 @@
     variables is used to stratify the summary. It is also possible to
     supply a vector of length \code{nrow(object)}, and the distinct
     values of this will be used to stratify the summary.}
-\item{Rates}{Should a component with transition rates be returned (and
-  printed) too?}
-\item{timeScales}{Should the names of the timescales and the indication
-  of since which entry also be given?}
-  \item{x}{A \code{summary.Lexis} object.}
-  \item{digits}{How many digits should be used for printing?}
-  \item{ ... }{Other parameters - ignored}
-}
+  \item{Rates}{Should a component with transition rates be returned (and
+    printed) too?}
+  \item{timeScales}{Should the names of the timescales and the indication
+    of since which entry also be given?}
+  \item{x}{A \code{Lexis} or \code{summary.Lexis} object.}
+  \item{digits}{Number of digits after the decimal separator used when
+    printing the summary.}
+  \item{...}{Ignored.}
+  }
 \value{
   An object of class \code{summary.Lexis}, a list with two components,
   \code{Transitions} and \code{Rates}, each one a matrix with rows
@@ -51,15 +52,15 @@
 \examples{
 data( nickel )
 # Lung cancer deaths and other deaths are coded 1 and 2
-nic <- Lexis( data=nickel,
-             entry=list(age=agein),
-              exit=list(age=ageout,cal=ageout+dob,tfh=ageout-age1st),
-       exit.status=factor( (icd > 0) + (icd \%in\% c(162,163)),
-                           labels=c("Alive","Other","Lung") ) )
+nic <- Lexis( data = nickel,
+             entry = list(age = agein),
+              exit = list(age = ageout,cal = ageout+dob,tfh = ageout-age1st),
+       exit.status = factor( (icd > 0) + (icd \%in\% c(162,163)),
+                           labels = c("Alive","Other","Lung") ) )
 str( nic )
 head( nic )
 summary( nic )
 # More detailed summary, by exposure level
-summary( nic, by=nic$exposure>5, Rates=TRUE, scale=100 )
+summary( nic, by = nic$exposure>5, Rates = TRUE, scale = 100 )
 }
 \keyword{survival}

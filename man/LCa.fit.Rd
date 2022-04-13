@@ -14,9 +14,7 @@
   log(rate(x,t)) = a(x) + b(x)k(t), using one parameter per age(x) and
   period(t). This function uses natural splines for a(), b() and k(),
   placing knots for each effect such that the number of events is the
-  same between knots. Also fits the continuous time counterparts of all
-  models supported by the  \code{\link[ilc]{lca.rh}} function from the
-  \code{ilc} package (see details). 
+  same between knots. 
 }
 \usage{
 LCa.fit( data, A, P, D, Y,
@@ -256,7 +254,6 @@ LCa.fit( data, A, P, D, Y,
 \seealso{
  \code{\link{apc.fit}},
  \code{\link{apc.LCa}},
- \code{\link[ilc]{lca.rh}},
  \code{\link[demography]{lca}} }
 \examples{
 library( Epi )
