@@ -79,7 +79,7 @@ function of \eqn{x} is \code{test}\eqn{\geq x}{>=x} as a predictor of
 construction of the ROC curve}
   0, 1 or 2 plots are produced according to the setting of \code{plot}.
 }
-\author{Bendix Carstensen, Steno Diabetes Center \& University of
+\author{Bendix Carstensen, Steno Diabetes Center & University of
   Copenhagen,
   \url{http://bendixcarstensen.com} }
 \examples{

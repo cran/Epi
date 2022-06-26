@@ -46,7 +46,7 @@
   \code{as.Date.cal.yr} returns a \code{\link{Date}} object.
 }
 \author{
-  Bendix Carstensen, Steno Diabetes Center \& Dept. of Biostatistics,
+  Bendix Carstensen, Steno Diabetes Center & Dept. of Biostatistics,
   University of Copenhagen, \email{b@bxc.dk},
   \url{http://bendixcarstensen.com}
 }

@@ -1,19 +1,21 @@
 # The coef() methods in nlme and lme4 do something different,
 # other objects do not even have coef or vcov methods defined,
 # so we make a workaround by specifying our own generic methods:
-COEF          <- function( x, ... ) UseMethod("COEF")
-COEF.default  <- function( x, ... ) coef( x, ... )
-VCOV          <- function( x, ... ) UseMethod("VCOV")
-VCOV.default  <- function( x, ... ) vcov( x, complete=TRUE, ... )
+COEF          <- function(x, ...) UseMethod("COEF")
+COEF.default  <- function(x, ...) coef(x, ...)
+VCOV          <- function(x, ...) UseMethod("VCOV")
+VCOV.default  <- function(x, ...) vcov(x, complete=TRUE, ...)
 
 # Then we can get from these methods what we want from lme, mer etc.
-COEF.lme      <- function( x, ... ) nlme::fixed.effects( x )
-COEF.mer      <- function( x, ... ) lme4::fixef( x )
-COEF.lmerMod  <- function( x, ... ) lme4::fixef( x )
+COEF.lme      <- function(x, ...) nlme::fixed.effects(x)
+COEF.mer      <- function(x, ...) lme4::fixef(x)
+COEF.lmerMod  <- function(x, ...) lme4::fixef(x)
+COEF.glmerMod <- function(x, ...) lme4::fixef(x)
 # The vcov returns a matrix with the wrong class so we strip that:
-VCOV.lme      <- function( x, ... ) as.matrix(vcov( x ))
-VCOV.mer      <- function( x, ... ) as.matrix(vcov( x ))
-VCOV.lmerMod  <- function( x, ... ) as.matrix(vcov( x ))
+VCOV.lme      <- function(x, ...) as.matrix(vcov(x))
+VCOV.mer      <- function(x, ...) as.matrix(vcov(x))
+VCOV.lmerMod  <- function(x, ...) as.matrix(vcov(x))
+VCOV.glmerMod <- function(x, ...) as.matrix(vcov(x))
 
 # For the rest of the non-conforming classes we then just need the
 # methods not defined 
@@ -75,8 +77,8 @@ function( obj, ndx, ndr,
         sample = FALSE )
 {
 if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
-if( (    ( nrow(ndx) !=  nrow(ndr)) ) |
-    ( any(names(ndx) != names(ndr)) ) )
+if(         ( nrow(ndx)  !=       nrow(ndr)) |
+    any(sort(names(ndx)) != sort(names(ndr))) )
     stop("\nThe two prediction frames must have same dimensions",
          "and column names, but dimensions are (",
          paste(dim(ndx), collapse=","), ") and (",

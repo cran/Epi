@@ -201,11 +201,11 @@ NOTE: 15 records with tied events times resolved (adding 0.01 random uniform),
 Transitions:
      To
 From        DM Dead  OAD  Ins Ins+OAD  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2957  689       0      7532     4702   22920.23      7532
-  OAD        0  992 3327    0    1005      5324     1997   22965.25      5324
-  Ins        0  152    0  462     172       786      324    3883.08       786
-  Ins+OAD    0  299    0    0     878      1177      299    4504.70      1177
-  Sum     2830 2499 6284 1151    2055     14819     7322   54273.27      9996
+  DM      2830 1056 2958  688       0      7532     4702   22920.31      7532
+  OAD        0  992 3327    0    1006      5325     1998   22965.27      5325
+  Ins        0  152    0  462     171       785      323    3883.09       785
+  Ins+OAD    0  299    0    0     878      1177      299    4504.61      1177
+  Sum     2830 2499 6285 1150    2055     14819     7322   54273.27      9996
 \end{Soutput}
 \end{Schunk}
 We initially split the FU before drug inception in intervals of
@@ -221,7 +221,7 @@ situation with three possible event types:
 Transitions:
      To
 From     DM Dead  OAD Ins  Records:  Events: Risk time:  Persons:
-  DM 274263 1056 2957 689    278965     4702   22920.23      7532
+  DM 274263 1056 2958 688    278965     4702   22920.31      7532
 \end{Soutput}
 \end{Schunk}
 We can illustrate the follow-up in the full data set and in the restricted
@@ -269,21 +269,24 @@ argument because there is only one possible \texttt{from} for each
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition: DM->Dead
+Rates for the transition:
+DM->Dead
 \end{Soutput}
 \begin{Sinput}
 > mO <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition: DM->OAD
+Rates for the transition:
+DM->OAD
 \end{Soutput}
 \begin{Sinput}
 > mI <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition: DM->Ins
+Rates for the transition:
+DM->Ins
 \end{Soutput}
 \end{Schunk}
 With these models fitted we can compute the rates, cumulative rates
@@ -392,11 +395,11 @@ point the sum of the 3 cumulative risks and the survival should be 1:
 \begin{Soutput}
                          [,1]
 Min.    1.0000000000000000000
-1st Qu. 1.0000010097677372034
-Median  1.0000010156538594597
-Mean    1.0000009965453851013
-3rd Qu. 1.0000010318537722043
-Max.    1.0000010387989581861
+1st Qu. 1.0000010095238796026
+Median  1.0000010154015281927
+Mean    1.0000009963083391629
+3rd Qu. 1.0000010316473213479
+Max.    1.0000010385727973183
 \end{Soutput}
 \begin{Sinput}
 > options(oo)
@@ -441,8 +444,8 @@ times would be straight-forward as integrals from 0 to 10:
 > c(Sj, sum(Sj))
 \end{Sinput}
 \begin{Soutput}
-       sjA        sjD        sjI        sjO            
- 4.3247304  1.2034161  0.8366654  3.6451981 10.0100100 
+      sjA       sjD       sjI       sjO           
+ 4.324743  1.203420  0.835057  3.646790 10.010010 
 \end{Soutput}
 \end{Schunk}
 We see that there is a small rounding error in the calculations; the
@@ -495,12 +498,12 @@ getting predicted values of the cause-specific rates:
 \end{Sinput}
 \begin{Soutput}
       Estimate      2.5%     97.5% exp(Est.)      2.5%     97.5%
-0    0.3414532 0.3101397 0.3759285 0.3414532 0.3101397 0.3759285
-0.01 0.3297314 0.2999844 0.3624281 0.3297314 0.2999844 0.3624281
-0.02 0.3184119 0.2901471 0.3494301 0.3184119 0.2901471 0.3494301
-0.03 0.3074812 0.2806177 0.3369162 0.3074812 0.2806177 0.3369162
-0.04 0.2969257 0.2713863 0.3248687 0.2969257 0.2713863 0.3248687
-0.05 0.2867328 0.2624433 0.3132703 0.2867328 0.2624433 0.3132703
+0    0.3409275 0.3096304 0.3753879 0.3409275 0.3096304 0.3753879
+0.01 0.3292000 0.2994711 0.3618801 0.3292000 0.2994711 0.3618801
+0.02 0.3178759 0.2896305 0.3488759 0.3178759 0.2896305 0.3488759
+0.03 0.3069415 0.2800985 0.3363570 0.3069415 0.2800985 0.3363570
+0.04 0.2963833 0.2708652 0.3243055 0.2963833 0.2708652 0.3243055
+0.05 0.2861885 0.2619210 0.3127043 0.2861885 0.2619210 0.3127043
 \end{Soutput}
 \end{Schunk}
 Here is an illustration of the prediction with model based confidence
@@ -511,7 +514,7 @@ the posterior distribution of the parameters in the model:
 > str(ci.lin(mI, nd, sample = 4))
 \end{Sinput}
 \begin{Soutput}
- num [1:1001, 1:4] -0.974 -1.01 -1.047 -1.083 -1.12 ...
+ num [1:1001, 1:4] -1.13 -1.17 -1.2 -1.23 -1.27 ...
  - attr(*, "dimnames")=List of 2
   ..$ : chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   ..$ : NULL
@@ -521,12 +524,12 @@ the posterior distribution of the parameters in the model:
 \end{Sinput}
 \begin{Soutput}
       Estimate      2.5%     97.5%                                        
-0    0.3414532 0.3101397 0.3759285 0.3268298 0.3198543 0.3616931 0.3683466
-0.01 0.3297314 0.2999844 0.3624281 0.3163192 0.3089949 0.3487697 0.3542071
-0.02 0.3184119 0.2901471 0.3494301 0.3061466 0.2985042 0.3363080 0.3406105
-0.03 0.3074812 0.2806177 0.3369162 0.2963013 0.2883698 0.3242917 0.3275359
-0.04 0.2969257 0.2713863 0.3248687 0.2867726 0.2785795 0.3127049 0.3149633
-0.05 0.2867328 0.2624433 0.3132703 0.2775505 0.2691217 0.3015322 0.3028735
+0    0.3409275 0.3096304 0.3753879 0.3521896 0.3384079 0.3283384 0.3644192
+0.01 0.3292000 0.2994711 0.3618801 0.3393026 0.3265558 0.3178307 0.3512927
+0.02 0.3178759 0.2896305 0.3488759 0.3268873 0.3151189 0.3076593 0.3386392
+0.03 0.3069415 0.2800985 0.3363570 0.3149264 0.3040825 0.2978135 0.3264415
+0.04 0.2963833 0.2708652 0.3243055 0.3034032 0.2934328 0.2882829 0.3146832
+0.05 0.2861885 0.2619210 0.3127043 0.2923019 0.2831563 0.2790574 0.3033487
 \end{Soutput}
 \end{Schunk}
 The simulation is taking place at the parameter level and the
@@ -578,7 +581,7 @@ here we use intervals of length 1/100 years, approximately 4 days:
 \begin{Soutput}
 NOTE: Times are assumed to be in the column tfd at equal distances of 0.01 
    user  system elapsed 
- 20.984   0.547  21.028 
+ 20.229   0.507  20.263 
 \end{Soutput}
 \begin{Sinput}
 > str(res)
@@ -590,7 +593,7 @@ List of 4
   .. ..$ tfd  : chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   .. ..$ cause: chr [1:4] "Surv" "OAD" "Ins" "Dead"
   .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ Srisk: num [1:1001, 1:3, 1:3] 0 0.000696 0.001385 0.002065 0.002738 ...
+ $ Srisk: num [1:1001, 1:3, 1:3] 0 0.000698 0.001387 0.00207 0.002743 ...
   ..- attr(*, "dimnames")=List of 3
   .. ..$ tfd  : chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   .. ..$ cause: chr [1:3] "Dead" "Dead+Ins" "Dead+Ins+OAD"
@@ -648,13 +651,13 @@ argument \texttt{sim.res = 'rates'} (defaults to \texttt{'none'}):
 \begin{Soutput}
 NOTE: Times are assumed to be in the column tfd at equal distances of 0.01 
    user  system elapsed 
-  0.201   0.212   0.111 
+  0.168   0.254   0.113 
 \end{Soutput}
 \begin{Sinput}
 > str(rsm) 
 \end{Sinput}
 \begin{Soutput}
- num [1:1001, 1:3, 1:500] 0.459 0.454 0.45 0.446 0.441 ...
+ num [1:1001, 1:3, 1:500] 0.475 0.47 0.465 0.46 0.456 ...
  - attr(*, "dimnames")=List of 3
   ..$ time: chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   ..$ mod : chr [1:3] "OAD" "Ins" "Dead"
@@ -681,7 +684,7 @@ by setting \texttt{sim.res = 'crisk'}:
 \begin{Soutput}
 NOTE: Times are assumed to be in the column tfd at equal distances of 0.01 
    user  system elapsed 
-  4.085   0.342   4.006 
+  3.904   0.374   3.850 
 \end{Soutput}
 \begin{Sinput}
 > str(csm) 
@@ -716,7 +719,7 @@ the simulated values.
 > str(Brates)
 \end{Sinput}
 \begin{Soutput}
- num [1:1001, 1:3, 1:3] 0.461 0.457 0.452 0.448 0.443 ...
+ num [1:1001, 1:3, 1:3] 0.46 0.456 0.451 0.447 0.443 ...
  - attr(*, "dimnames")=List of 3
   ..$ time: chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   ..$ mod : chr [1:3] "OAD" "Ins" "Dead"
@@ -802,7 +805,7 @@ relevant sums, they are in the \texttt{Srisk} component of \texttt{res}.
 > str(res$Srisk)
 \end{Sinput}
 \begin{Soutput}
- num [1:1001, 1:3, 1:3] 0 0.000696 0.001385 0.002065 0.002738 ...
+ num [1:1001, 1:3, 1:3] 0 0.000698 0.001387 0.00207 0.002743 ...
  - attr(*, "dimnames")=List of 3
   ..$ tfd  : chr [1:1001] "0" "0.01" "0.02" "0.03" ...
   ..$ cause: chr [1:3] "Dead" "Dead+Ins" "Dead+Ins+OAD"
@@ -867,14 +870,14 @@ We extract the 5 and 10 years components:
 \begin{Soutput}
               50% 2.5% 97.5%
 tfd   cause                 
- 5 yr Surv   2.77 2.72  2.82
-      OAD    1.45 1.39  1.49
-      Ins    0.40 0.37  0.43
-      Dead   0.39 0.36  0.42
-10 yr Surv   4.31 4.22  4.41
-      OAD    3.64 3.53  3.75
+ 5 yr Surv   2.77 2.72  2.81
+      OAD    1.45 1.40  1.50
+      Ins    0.40 0.37  0.42
+      Dead   0.39 0.37  0.42
+10 yr Surv   4.32 4.21  4.42
+      OAD    3.64 3.54  3.75
       Ins    0.84 0.78  0.90
-      Dead   1.20 1.13  1.28
+      Dead   1.20 1.14  1.28
 \end{Soutput}
 \end{Schunk}
 So we see that the expected life lived without pharmaceutical treatment
@@ -1003,21 +1006,24 @@ From    Alive CVD Can  Oth  Records:  Events: Risk time:  Persons:
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition: Alive->CVD
+Rates for the transition:
+Alive->CVD
 \end{Soutput}
 \begin{Sinput}
 > mCan <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Can")
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition: Alive->Can
+Rates for the transition:
+Alive->Can
 \end{Soutput}
 \begin{Sinput}
 > mOth <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Oth")
 \end{Sinput}
 \begin{Soutput}
 mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition: Alive->Oth
+Rates for the transition:
+Alive->Oth
 \end{Soutput}
 \end{Schunk}
 %% We can show how rates vary along the timescale for men and women

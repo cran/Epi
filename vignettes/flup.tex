@@ -22,7 +22,7 @@ Bendix Carstensen
 \begin{Schunk}
 \begin{Soutput}
              Package              LibPath              Version 
-               "Epi" "/usr/lib/R/library"               "2.46" 
+               "Epi" "/usr/lib/R/library"               "2.47" 
 \end{Soutput}
 \end{Schunk}
 
@@ -151,7 +151,7 @@ attached base packages:
 [1] utils     datasets  graphics  grDevices stats     methods   base     
 
 other attached packages:
-[1] Epi_2.46
+[1] Epi_2.47
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.3        magrittr_1.5      MASS_7.3-53       splines_3.6.3    
@@ -460,9 +460,10 @@ package:
 \begin{Sinput}
 > if (require(popEpi, quietly=TRUE)) {
 +   options("popEpi.datatable" = FALSE)
-+   dmM <- splitMulti(dmL, age = seq(0,100,5),
++   dmM <- splitMulti(dmL, 
++                     age = seq(0,100,5),
 +                     tfD = c(0,1,2,5,10,20,30,40),
-+                     drop = FALSE )
++                    drop = FALSE)
 +   summary(dmS2)
 +   summary(dmM)
 + }
@@ -1085,7 +1086,8 @@ called \texttt{glm.Lexis} it is \emph{not} an S3 method for
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition: DM->Dead
+Rates for the transition:
+DM->Dead
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{glm} object but with an extra attribute, \texttt{Lexis}:
@@ -1102,7 +1104,7 @@ $trans
 
 $formula
 ~Ns(age, knots = a.kn)
-<environment: 0xf311db8>
+<environment: 0x1028f3f8>
 
 $scale
 [1] 1
@@ -1121,7 +1123,9 @@ modeled:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \end{Schunk}
 We can check if the four models fitted are the same:
@@ -1242,7 +1246,9 @@ modeling all transitions \emph{into} the absorbing state
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > c( deviance(Pm), deviance(pm) )
@@ -1336,7 +1342,9 @@ l.h.s. side for the \texttt{formula=} argument:
 \end{Sinput}
 \begin{Soutput}
 survival::coxph analysis of Lexis object tsNA20(dmCs):
-Rates for transitions DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 Baseline timescale: age
 \end{Soutput}
 \begin{Sinput}
@@ -1499,7 +1507,9 @@ At first glance we might think of doing:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \end{Schunk}
 But this will fit a model with a rate-ratio between persons with and
@@ -1520,7 +1530,9 @@ conceptually alike but mathematically different:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > im <- glm.Lexis( tsNA20(dmCs), 
@@ -1531,7 +1543,9 @@ Rates for transitions: DM->Dead, Ins->Dead
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \end{Schunk}
 The first model (\texttt{Im}) has a common age-effect (\texttt{Ns(age,...}) for
@@ -1655,7 +1669,9 @@ the prediction code is the same:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object tsNA20(dmCs) with log link:
-Rates for transitions: DM->Dead, Ins->Dead
+Rates for transitions:
+DM->Dead
+Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > pgi <- ci.pred( gm, ndI )
@@ -1724,7 +1740,8 @@ have been more sensible to model the two transitions separately:
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition: DM->Dead
+Rates for the transition:
+DM->Dead
 \end{Soutput}
 \begin{Sinput}
 > ind <- glm.Lexis( dmCs,
@@ -1736,7 +1753,8 @@ Rates for the transition: DM->Dead
 \end{Sinput}
 \begin{Soutput}
 stats::glm Poisson analysis of Lexis object dmCs with log link:
-Rates for the transition: Ins->Dead
+Rates for the transition:
+Ins->Dead
 \end{Soutput}
 \begin{Sinput}
 > ini <- ci.pred( ind, ndI )
@@ -1863,11 +1881,11 @@ NOTE: 15 records with tied events times resolved (adding 0.01 random uniform),
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD-Ins Ins-OAD  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2957  689       0       0      7532     4702   22920.19      7532
-  OAD        0  992 3327    0    1005       0      5324     1997   22965.31      5324
-  Ins        0  152    0  462       0     172       786      324    3883.15       786
-  OAD-Ins    0  266    0    0     739       0      1005      266    3770.53      1005
-  Ins-OAD    0   33    0    0       0     139       172       33     734.09       172
+  DM      2830 1056 2957  689       0       0      7532     4702   22920.12      7532
+  OAD        0  992 3327    0    1005       0      5324     1997   22965.24      5324
+  Ins        0  152    0  462       0     172       786      324    3883.07       786
+  OAD-Ins    0  266    0    0     739       0      1005      266    3770.63      1005
+  Ins-OAD    0   33    0    0       0     139       172       33     734.20       172
   Sum     2830 2499 6284 1151    1744     311     14819     7322   54273.27      9996
 
 Timescales:
@@ -1893,8 +1911,8 @@ states.
      25 2005.57 62.22 1.88   NA 0.00    3.07     OAD OAD-Ins   F 1943.347
      25 2008.64 65.29 4.95 0.00 3.07    1.36 OAD-Ins OAD-Ins   F 1943.347
      20 2009.25 53.22 0.00   NA   NA    0.03      DM     Ins   F 1956.029
-     20 2009.28 53.25 0.03 0.00   NA    0.01     Ins Ins-OAD   F 1956.029
-     20 2009.29 53.26 0.04 0.01 0.00    0.71 Ins-OAD Ins-OAD   F 1956.029
+     20 2009.27 53.24 0.03 0.00   NA    0.00     Ins Ins-OAD   F 1956.029
+     20 2009.27 53.25 0.03 0.00 0.00    0.72 Ins-OAD Ins-OAD   F 1956.029
      38 2008.37 63.93 0.00   NA   NA    0.09      DM     Ins   M 1944.434
      38 2008.46 64.02 0.09 0.00   NA    0.21     Ins Ins-OAD   M 1944.434
      38 2008.67 64.24 0.31 0.21 0.00    1.33 Ins-OAD    Dead   M 1944.434
@@ -1905,9 +1923,9 @@ states.
  2003.689       NA 2005.570 2008.639 2009.997
  2003.689       NA 2005.570 2008.639 2009.997
  2003.689       NA 2005.570 2008.639 2009.997
- 2009.247       NA 2009.289 2009.277 2009.997
- 2009.247       NA 2009.289 2009.277 2009.997
- 2009.247       NA 2009.289 2009.277 2009.997
+ 2009.247       NA 2009.275 2009.273 2009.997
+ 2009.247       NA 2009.275 2009.273 2009.997
+ 2009.247       NA 2009.275 2009.273 2009.997
  2008.366 2009.997 2008.672 2008.459 2009.997
  2008.366 2009.997 2008.672 2008.459 2009.997
  2008.366 2009.997 2008.672 2008.459 2009.997
@@ -1938,10 +1956,10 @@ with both insulin and OAD to one, regardless of order (figure
 Transitions:
      To
 From        DM Dead  OAD  Ins OAD+Ins  Records:  Events: Risk time:  Persons:
-  DM      2830 1056 2957  689       0      7532     4702   22920.19      7532
-  OAD        0  992 3327    0    1005      5324     1997   22965.31      5324
-  Ins        0  152    0  462     172       786      324    3883.15       786
-  OAD+Ins    0  299    0    0     878      1177      299    4504.62      1177
+  DM      2830 1056 2957  689       0      7532     4702   22920.12      7532
+  OAD        0  992 3327    0    1005      5324     1997   22965.24      5324
+  Ins        0  152    0  462     172       786      324    3883.07       786
+  OAD+Ins    0  299    0    0     878      1177      299    4504.84      1177
   Sum     2830 2499 6284 1151    2055     14819     7322   54273.27      9996
 \end{Soutput}
 \begin{Sinput}

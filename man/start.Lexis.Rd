@@ -15,16 +15,16 @@
   \code{Lexis} object. Classify states.
 }
 \usage{
-     entry( x, time.scale = NULL, by.id=FALSE )
-      exit( x, time.scale = NULL, by.id=FALSE )
-    status( x, at="exit"        , by.id=FALSE )
-       dur( x,                    by.id=FALSE )
- transient( x )
- absorbing( x )
- preceding( x, states )
-    before( x, states )
-succeeding( x, states )
-     after( x, states )
+     entry(x, time.scale = NULL, by.id=FALSE)
+      exit(x, time.scale = NULL, by.id=FALSE)
+    status(x, at="exit"        , by.id=FALSE)
+       dur(x,                    by.id=FALSE)
+ transient(x)
+ absorbing(x)
+ preceding(x, states)
+    before(x, states)
+succeeding(x, states)
+     after(x, states)
 }
 \arguments{
   \item{x}{an object of class \code{Lexis}.}
@@ -41,7 +41,7 @@ succeeding( x, states )
 \value{
   The \code{entry} and \code{exit} functions return a vector of
   entry times and exit times, respectively, on the requested time
-  scale.  If multiple time scales are requested, a matrix is
+  scale. If multiple time scales are requested, a matrix is
   returned.
 
   The \code{status} function returns a vector giving the status at

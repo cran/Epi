@@ -71,9 +71,10 @@ ci.ratio( r1, r2,
     If it is a list, it must contain two or four data frames that are
     (possibly partial) prediction frames for \code{obj}, see argument
     \code{xvars} and details.}
-  \item{xvars}{Character vector. If quantitative variables in the model are omitted
-    from data frames supplied in a list to \code{ctr.mat}, they should
-    be listed here. Omitted factors need not be mentioned here.}
+  \item{xvars}{Character vector. If quantitative variables in the model
+    are omitted from data frames supplied in a list to \code{ctr.mat},
+    they should be listed here. Omitted factors need not be mentioned
+    here.}  
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat
@@ -160,11 +161,14 @@ ci.ratio( r1, r2,
   hessian.
 
   If \code{ctr.mat} is a list of two data frames, the difference of the
-  predictions from using the first versus the last as newdata arguments
-  to predict is computed. Columns that would be identical in the two
-  data frames can be omitted (see below), but names of numerical
-  variables omitted must be supplied in a character vector
-  \code{xvars}. Factors omitted need not be named.
+  predictions from using the first versus the last (on the linear
+  predictor scale) as newdata arguments to \code{predict.glm} is
+  computed. Columns that would be identical in the two data frames can
+  be omitted (see below), but names of numerical variables omitted must
+  be supplied in a character vector \code{xvars}. Factors omitted need
+  not be named.  If categorical variables are entered in the model as
+  character and not factors, the model will work, but the calculation of
+  the differences in predictions may crash.
 
   If the second data frame has only one row, this is replicated to match
   the number of rows in the first. This facility is primarily aimed at

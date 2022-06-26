@@ -129,16 +129,16 @@ else
      # the cut date a bit earlier in time
      # first, exact mathes are put in wh
      wh <- merge(cut,
-                 data[,c("lex.id", ts)],
-                 by.x = c("lex.id","cut"),
-                 by.y = c("lex.id",ts),
+                 data[, c("lex.id", ts)],
+                 by.x = c("lex.id", "cut"),
+                 by.y = c("lex.id", ts),
                   all = FALSE) # ask for an inner join (the default)
      if(nrow(wh) > 0) cut[cut$lex.id %in% wh$lex.id, "cut"] <-
                       cut[cut$lex.id %in% wh$lex.id, "cut"] -
                       min(data$lex.dur) / 100
      # end added stuff
      zz <- merge(data[, "lex.id", drop=FALSE], cut, all.x=TRUE )
-     if (is.factor( data$lex.Cst))
+     if (is.factor(data$lex.Cst))
         zz$new.state <- as.character(zz$new.state)
      if (is.numeric(data$lex.Cst))
         zz$new.state <- as.numeric(zz$new.state)
@@ -159,12 +159,11 @@ cutLexis <- function(data,
 {
     if (!inherits(data, "Lexis"))
       stop("data must be a Lexis object")
-    data <- sortLexis(data)
-    
+
     if( count )
       return( countLexis( data=data, cut=cut, timescale=timescale ) )
 
-    if( inherits( cut, "data.frame" ) ){
+    if (inherits(cut, "data.frame")){
     # Added April 2021, BxC
       zz <- match.cut(data,
                       cut,
@@ -280,7 +279,7 @@ cutLexis <- function(data,
       attr( lx, "breaks" )      <- attr( data, "breaks" )
       attr( lx, "class" )       <- attr( data, "class" )
       }
-    lx
+    sortLexis(lx)
 }
 
 countLexis <- function(data, cut, timescale = 1)

@@ -1,10 +1,33 @@
+Changes in 2.47
+
+o cutLexis had a bug introduced in 2.46 that gave invalid results if
+  argument cut= was a vector of cut times and the Lexis object was not
+  sorted as by sortLexis.
+
+o ci.lin now also works of class glmerMod, thanks to Antonio Gasparrini
+
+o ci.lin help page updated with details on requirements for models
+  where differences between predictions are wanted.
+
+o a function, Lexis2msm added, converts a exis object to a data frame
+  suitable for input til msm::msm 
+
+o in functions modLexis, and thus glm.Lexis and gam.Lexis the warning
+  about several transions out of the state is changed to a cat() so it
+  appears in the log.
+
+o id = lex.id added as default in coxph.Lexis 
+
+o glm. gam. and coxph.Lexis now print the list of transitions modeled
+  differently 
+
 Changes in 2.45/2.46
 
 o A bug in preceding / succeeding was fixed.
 
 o a print method for Lexis objects added. It rounds timescales and
   lex.dur to the same number of decimals. Default 2. Other numerical
-  variables are rounded too, default 3. .lex columnas an time scales
+  variables are rounded too, default 3. .lex columns and time scales
   are printed first. The new order of variables is returned invisibly.  
 
 o an AaJ.Lexis method has been added which gives the Aaalen-Johansen
