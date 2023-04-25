@@ -7,7 +7,7 @@ function(Lx,
        clin,
   timescale = 1,
       exnam,
-        tfc = "tfc")
+        tfc = "tfc", ...)
 {
 # Function to add clinically measured covariates to a Lexis object
 

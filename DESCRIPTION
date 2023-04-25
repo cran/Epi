@@ -1,5 +1,5 @@
 Package: Epi
-Version: 2.47
+Version: 2.47.1
 Date: 2022-06-25
 Title: Statistical Analysis in Epidemiology
 Authors@R: c(person("Bendix", "Carstensen", role = c("aut", "cre"),
@@ -24,11 +24,11 @@ Description: Functions for demographic and epidemiological analysis in
 License: GPL-2
 URL: http://bendixcarstensen.com/Epi/
 NeedsCompilation: yes
-Packaged: 2022-06-25 14:24:18 UTC; bendix
+Packaged: 2023-04-25 05:45:38 UTC; hornik
 Author: Bendix Carstensen [aut, cre],
   Martyn Plummer [aut],
   Esa Laara [ctb],
   Michael Hills [ctb]
 Maintainer: Bendix Carstensen <b@bxc.dk>
 Repository: CRAN
-Date/Publication: 2022-06-26 21:20:13 UTC
+Date/Publication: 2023-04-25 06:21:00 UTC

@@ -17,7 +17,7 @@
                      clin,
                 timescale = 1,
                     exnam,
-                      tfc = "tfc")
+                      tfc = "tfc", \dots)
 }
 \arguments{
   \item{Lx}{
@@ -51,6 +51,7 @@
     \code{exnam} with values \code{ex1}, \code{ex2} etc. will be
     constructed.
     }
+  \item{\dots}{arguments passed to or from other methods.}
   \item{tfc}{      
     Character (\code{t}ime \code{f}rom last \code{c}linical visit). Name
     of the variable in the result which will contain the time since the

@@ -21,7 +21,7 @@ AaJ.default <-
 AaJ.Lexis <-
 function(Lx,
          formula   = ~ 1,
-         timeScale = 1)
+         timeScale = 1, ...)
 {
 lex.id  <- NULL
 lex.Cst <- NULL

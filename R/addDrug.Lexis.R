@@ -139,7 +139,7 @@ function(Lx, # Lexis object, should be timesplit
        tnam = setdiff(names(pdat[[1]]), c("lex.id", amt))[1],
      prefix = TRUE,  # character vector, if FALSE use suffix
      sepfix = ".",   # separator for pre- and suf-fixes
-    verbose = TRUE
+    verbose = TRUE, ...
         )
 {
 # utility functions

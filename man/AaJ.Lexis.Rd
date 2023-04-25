@@ -11,7 +11,7 @@ function is merely a wrapper for the \code{\link[survival]{survfit}}.
 \usage{
 \method{AaJ}{Lexis}(Lx,
                formula = ~ 1,
-             timeScale = 1)
+             timeScale = 1, \dots)
 }
 \arguments{
   \item{Lx}{A \code{Lexis} object. The starting state must be the first
@@ -22,6 +22,7 @@ function is merely a wrapper for the \code{\link[survival]{survfit}}.
   \item{timeScale}{Chararter or integer, selecting one of the timescales
     of the \code{Lexis} object.
 }
+  \item{\dots}{arguments passed to or from other methods.}
 }
 \value{An object of class \code{survfitms} --- see
   \code{\link[survival]{survfit}}. 

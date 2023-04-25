@@ -1,5 +1,4 @@
-### R code from vignette source 'yll'
-### Encoding: UTF-8
+### R code from vignette source 'yll.rnw'
 
 ###################################################
 ### code chunk number 1: yll.rnw:21-24
@@ -12,6 +11,7 @@ options(width=90,
 ###################################################
 ### code chunk number 2: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 library(Epi)
 TM <- matrix(NA, 4, 4)
 rownames(TM) <-
@@ -26,6 +26,7 @@ zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
 ###################################################
 ### code chunk number 3: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c(expression(lambda),   
                   expression(mu[W]),    
                   expression(mu[D][M]))
@@ -130,6 +131,7 @@ round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 ###################################################
 ### code chunk number 9: imm
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh){
 par(mfrow=c(1, 2), mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, bty="n", las=1)
 
@@ -157,12 +159,14 @@ plyll("Imm")
 ###################################################
 ### code chunk number 10: tot
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Tot")
 
 
 ###################################################
 ### code chunk number 11: sus
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Sus")
 
 

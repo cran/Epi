@@ -1,5 +1,4 @@
-### R code from vignette source 'addLexis'
-### Encoding: UTF-8
+### R code from vignette source 'addLexis.rnw'
 
 ###################################################
 ### code chunk number 1: addLexis.rnw:20-25

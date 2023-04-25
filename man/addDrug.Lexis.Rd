@@ -35,7 +35,7 @@ addDrug.Lexis(Lx,  # Lexis object
                           # name of the time variable from Lx
           prefix = TRUE,  # should drug names prefix variable names 
           sepfix = ".",   # what should the separator be when forming prefix/suffix
-         verbose = TRUE)
+         verbose = TRUE, \dots)
 coarse.Lexis(Lx, lim, keep = FALSE)
 }
 
@@ -77,6 +77,7 @@ coarse.Lexis(Lx, lim, keep = FALSE)
   \item{verbose}{Logical. Should the function tell you about the choices
   you made?
 }
+ \item{\dots}{arguments passed to or from other methods.}
  \item{lim}{Numeric vector of length 2. Consecutive follow-up intervals
   are combined if the first has \code{lex.dur} < \code{lim[1]}, and the
   sum of \code{lex.dur} in the two intervals is smaller than
