@@ -45,8 +45,9 @@ lines.apc,
   print.floated,
   gen.exp,
   mat2pol,
-  Icens,
-  print.Icens,
+          Icens,
+    print.Icens,
+  summary.Icens,
   plotevent,
   fit.add,
   fit.mult,
@@ -67,6 +68,7 @@ lines.apc,
   Lexis.lines,
    Life.lines,
                 Lexis,
+              unLexis,
           merge.Lexis,
            plot.Lexis,
          points.Lexis,
@@ -141,7 +143,8 @@ lines.apc,
   nState,
   pState,
   msdata,
-  mh,
+        mh,
+  print.mh,
   ncut,
   nice,
   NArray,
@@ -203,11 +206,12 @@ importFrom("stats", ".getXlevels", "AIC", "addmargins", "anova", "approx",
            "model.response", "nlm", "pchisq", "pnorm", "poisson",
            "predict", "predict.lm", "qnorm", "qt", "quantile",
            "rpois", "runif", "termplot", "update", "vcov",
-           "weighted.mean", "xtabs") 
+           "weighted.mean", "xtabs")
 importFrom("utils", "flush.console", "str")
 
 # register S3 methods
 S3method(     print, Icens)
+S3method(   summary, Icens)
 S3method(     print, floated)
 S3method(      plot, apc)
 S3method(     lines, apc)
@@ -235,6 +239,7 @@ S3method(   Relevel, Lexis)
 S3method(   Relevel, factor)
 S3method(   Relevel, default)
 S3method( factorize, Lexis)
+S3method( factorize, default)
 S3method(    addCov, Lexis)
 S3method(   addDrug, Lexis)
 S3method(     stack, Lexis)
@@ -244,10 +249,8 @@ S3method(     boxes, matrix)
 S3method(     boxes, MS)
 S3method(    msdata, Lexis)
 S3method(       etm, Lexis)
-S3method(       glm, Lexis)
-S3method(       gam, Lexis)
-S3method(     coxph, Lexis)
 S3method(       AaJ, Lexis)
+S3method(     print, mh)
 S3method(     print, LCa)
 S3method(   summary, LCa)
 S3method(   predict, LCa)

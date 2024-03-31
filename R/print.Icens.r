@@ -1,5 +1,5 @@
 print.Icens <-
-function( x, digits=4, scale=1, ... )
+function( x, scale = 1, digits = 4, ... )
 {
 emat <- summary.Icens( x, scale=scale )
 print( round( emat, digits ) )

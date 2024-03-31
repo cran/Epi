@@ -7,11 +7,13 @@
 \usepackage[english]{babel}
 \usepackage[font=it,labelfont=normalfont]{caption}
 \usepackage[colorlinks,urlcolor=blue,linkcolor=red,citecolor=Maroon]{hyperref}
-\usepackage[ae,hyper]{Rd}
 \usepackage[dvipsnames]{xcolor}
 \usepackage[super]{nth}
 % \usepackage[retainorgcmds]{IEEEtrantools}
 \usepackage[noae]{Sweave}
+\usepackage[ae,hyper]{Rd}
+% \usepackage[noae]{C:/util/R/R-4.2.0/share/texmf/tex/latex/Sweave}
+% \usepackage{C:/util/R/R-4.2.0/share/texmf/tex/latex/Rd}
 \usepackage{makeidx,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
 \usepackage{ifthen,calc,eso-pic,everyshi}
 \usepackage{booktabs,longtable,rotating,graphicx,subfig}
@@ -22,7 +24,6 @@
 \renewcommand{\topfraction}{1.0}
 \renewcommand{\bottomfraction}{1.0}
 \renewcommand{\floatpagefraction}{0.9}
-% \usepackage{mslapa}
 \definecolor{blaa}{RGB}{99,99,255}
 \DeclareGraphicsExtensions{.png,.pdf,.jpg}
 % Make the Sweave output nicer (slightly mor compact)
@@ -106,7 +107,7 @@ from: \texttt{\currfileabspath}\\[1em]
 \vfill
 \Faculty
 % End of titlepage
-% \newpage
+\newpage
 
 %----------------------------------------------------------------------
 % Table of contents

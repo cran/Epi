@@ -27,10 +27,10 @@ clear()
   }
 \value{
 \code{lls} returns a data frame with four character variables:
-code{name},
-code{mode},
-code{class} and
-code{size} and one row per object in the workspace (if \code{pos=1}).
+\code{name},
+\code{mode},
+\code{class} and
+\code{size} and one row per object in the workspace (if \code{pos=1}).
 \code{size} is either the length or the dimension of the object.
 The data frame is by default printed with left-justified columns.
 }

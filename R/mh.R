@@ -1,7 +1,7 @@
 # Mantel-Haenszel estimate and test
 
-mh <- 
-function(cases, denom, compare = 1, levels = c(1, 2), by = NULL, 
+mh <-
+function(cases, denom, compare = 1, levels = c(1, 2), by = NULL,
 	cohort = !is.integer(denom), confidence = 0.9)
 {
 	ndim <- length(dim(cases))
@@ -100,41 +100,42 @@ function(cases, denom, compare = 1, levels = c(1, 2), by = NULL,
 	se <- sqrt(v/(q * r))
 	ch <- (u^2)/v
 	ef <- exp( - qnorm((1 - confidence)/2) * se)
-	if (cohort) 
+	if (cohort)
 		ty <- "Rate ratio"
 	else
 		ty <- "Odds ratio"
-	res <- list(groups = gtxt, control = ctxt, type=ty, 
+	res <- list(groups = gtxt, control = ctxt, type=ty,
 		q=q, r=r, u=u, v=v,
-		ratio = rr, se.log.ratio = se, cl.lower = rr/ef, 
+		ratio = rr, se.log.ratio = se, cl.lower = rr/ef,
 		cl.upper = rr * ef, chisq = ch, p.value = 1 - pchisq(
 		ch, 1))
 	class(res) <- "mh"
 	res
 }
 
-print.mh <- 
-function(m) {
+print.mh <-
+    function(x, ...)
+    {
 	cat("\n")
-	if (!is.null(m$control)) 
+	if (!is.null(x$control))
 		cat("\nMantel-Haenszel comparison for: ")
-	else 
+	else
 		cat("Comparison for: ")
-	cat(m$groups[1], " (", m$groups[2], "versus", m$groups[3], ")\n")
-	if (!is.null(m$control))
-		cat("controlled for:", m$control, "\n")
-	cols <- c(m$type, "CL (lower)", "CL (upper)", 
+	cat(x$groups[1], " (", x$groups[2], "versus", x$groups[3], ")\n")
+	if (!is.null(x$control))
+		cat("controlled for:", x$control, "\n")
+	cols <- c(x$type, "CL (lower)", "CL (upper)",
 		"Chisq (1 df)", "p-value")
-	nr <- length(m$ratio)
-	if (is.array(m$ratio)) {
-		dnt <- dimnames(m$ratio)
-		size <- dim(m$ratio)
+	nr <- length(x$ratio)
+	if (is.array(x$ratio)) {
+		dnt <- dimnames(x$ratio)
+		size <- dim(x$ratio)
 		nw <- length(dnt)
 	}
 	else {
-		rn <- names(m$ratio)
-		if (length(rn) > 1) 
-			dnt <- list(names(m$ratio))
+		rn <- names(x$ratio)
+		if (length(rn) > 1)
+			dnt <- list(names(x$ratio))
 		else
 			dnt <- list("")
 		size <- nr
@@ -149,23 +150,23 @@ function(m) {
 	if (nw > 1) for (i in 2:nw) {
 		dno[[i+1]] <- dnt[[i]]
 		so[i+1] <- size[i]
-	} 
+	}
 	s1 <- size[1]
-	tab <- cbind(m$ratio, m$cl.lower, m$cl.upper, m$chisq, m$p.value)
-#		as.matrix(m$ratio, nrow=s1), 
-#		as.matrix(m$cl.lower, nrow=s1), 
-#		as.matrix(m$cl.upper, nrow=s1), 
-#		as.matrix(m$chisq, nrow=s1), 
-#		as.matrix(m$p.value, nrow=s1) )
-                     
+	tab <- cbind(x$ratio, x$cl.lower, x$cl.upper, x$chisq, x$p.value)
+#		as.matrix(x$ratio, nrow=s1),
+#		as.matrix(x$cl.lower, nrow=s1),
+#		as.matrix(x$cl.upper, nrow=s1),
+#		as.matrix(x$chisq, nrow=s1),
+#		as.matrix(x$p.value, nrow=s1) )
+
 	print(array(tab, dim=so, dimnames=dno))
 	if (nr > 1) {
-		Q <- sum(m$q)
-		R <- sum(m$r)
-		cat("\nOverall Mantel-Haenszel estimate of", m$type, ":", 
-			format(Q/R)) 
-		h <- sum(((m$q*R-m$r*Q)^2)/m$v)/(Q*R)
-		df <- sum(m$v>0)-1
+		Q <- sum(x$q)
+		R <- sum(x$r)
+		cat("\nOverall Mantel-Haenszel estimate of", x$type, ":",
+			format(Q/R))
+		h <- sum(((x$q*R-x$r*Q)^2)/x$v)/(Q*R)
+		df <- sum(x$v>0)-1
 		cat("\nChi-squared test of heterogeneity:", format(h),
 			"(",df," df), p =", format(1-pchisq(h, df)), "\n")
 	}
@@ -178,4 +179,4 @@ mh.power <- function(mh, ratio, alpha=0.05) {
 	n.se <- log(ratio)/mh$se.log.ratio
 	pnorm(n.se - qnorm(1-alpha/2))
 }
-	
+

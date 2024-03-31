@@ -40,7 +40,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     ## A single vector
     index.labels <- deparse.name(index.sub)
   }
-  
+
   ## Coerce index to list of factors
   if (!is.list(index))
     index <- list(index)
@@ -48,10 +48,10 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
 
   ## Coerce contents to an expression representing a list of function calls
   contents <- substitute(contents)
-  if (!identical(deparse(contents[[1]]), "list")) {  
+  if (!identical(deparse(contents[[1]]), "list")) {
     contents <- call("list", contents)
   }
-  
+
   ## Check that functions in the contents list are valid
   valid.functions <- c("count","mean","weighted.mean","sum","quantile",
                        "median","IQR","max","min","ratio","percent","sd")
@@ -65,7 +65,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
     else
       table.fun[i-1] <- FUN
   }
-  
+
   ## Label the contents by default with the function call
   ## But if user has supplied a label use that instead.
   stat.labels <- sapply(contents, deparse)[-1]
@@ -78,7 +78,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
   }
 
   ##Define the allowed tabulation functions
-  
+
   count <- function(id){
       if (missing(id)) {
           id <- seq(along=index[[1]])
@@ -148,7 +148,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
       return(100*sweep(n, which(sweep.index), margin,"/"))
     }
   }
-  sd <- function (..., na.rm = TRUE) 
+  sd <- function (..., na.rm = TRUE)
   {
       tapply(..., INDEX=subindex, FUN = stats::sd, na.rm=na.rm)
   }
@@ -156,7 +156,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
   ##Calculate dimension of the main table, excluding margins
   n.dim <- length(index)
   tab.dim <- sapply(index, nlevels)
-               
+
   ##Sort out margins
   if (length(margins) == 1)
     margins <- rep(margins, n.dim)
@@ -193,7 +193,7 @@ stat.table <- function(index, contents=count(), data, margins=FALSE)
       ans[array.subset(ans.dim,c(j,llim),c(j,ulim))] <- subtable.list[[j]]
     }
   }
-  
+
   ans <- array(ans, dim=ans.dim)
   ans.dimnames <- lapply(index, levels)
   names(ans.dimnames) <- index.labels
@@ -236,18 +236,18 @@ array.subset <- function(dim,lower,upper)
         ans[i] <- FALSE
         break
       }
-      l <- l %/% dim[d] 
+      l <- l %/% dim[d]
     }
   }
   return(array(ans, dim))
 }
 
-split.to.width <- function(x,width)
+split2.width <- function(x,width)
 {
   ## Splits a string into a vector so that each element has at most width
   ## characters.  If width is smaller than the length of the shortest word
   ## then the latter is used instead
-  
+
   x.split <- strsplit(x,split=" ")[[1]]
   width <- max(c(width,nchar(x.split)))
   y <- character(0)
@@ -268,30 +268,30 @@ split.to.width <- function(x,width)
   return(y)
 }
 
-pretty.print.stattable.1d <- function(x, width, digits)
+prettyPrint.stattable.1d <- function(x, width, digits)
 {
   ##Pretty printing of 1-D stat.table
 
   if (length(dim(x)) != 2)
     stop("Cannot print stat.table")
   ncol <- nrow(x)
-  
+
   col.width <- numeric(ncol+1)
   col.header <- vector("list",ncol+1)
   n.header <- integer(ncol+1)
   print.list <- vector("list",ncol+1)
-  
+
   ##First column
-  col.header[[1]] <- split.to.width(names(dimnames(x))[2], width)
+  col.header[[1]] <- split2.width(names(dimnames(x))[2], width)
   n.header[1] <- length(col.header[[1]])
   col1 <- format(c(col.header[[1]],dimnames(x)[[2]]), justify="left")
   col.header[[1]] <- col1[1:n.header[1]]
   print.list[[1]] <- col1[-(1:n.header[1])]
   col.width[1] <- nchar(col.header[[1]][1])
-  
+
   ##Other columns
   for (i in 2:(ncol+1)) {
-    col.header[[i]] <- split.to.width(dimnames(x)[[1]][i-1], width)
+    col.header[[i]] <- split2.width(dimnames(x)[[1]][i-1], width)
     n.header[i] <- length(col.header[[i]])
     this.col  <- formatC(x[i-1,],width=width,
                          digits=digits[attr(x,"table.fun")[i-1]], "f")
@@ -300,7 +300,7 @@ pretty.print.stattable.1d <- function(x, width, digits)
     col.header[[i]] <- this.col[1:n.header[i]]
     print.list[[i]] <- this.col[-(1:n.header[i])]
   }
-    
+
   ##
   table.width <- sum(col.width) + ncol + 3
   max.n.header <- max(n.header)
@@ -345,7 +345,7 @@ pretty.print.stattable.1d <- function(x, width, digits)
   return(invisible(x))
 }
 
-pretty.print.stattable.2d <- function(x, width, digits)
+prettyPrint.stattable.2d <- function(x, width, digits)
 {
   ##Pretty printing of 2-Dimensional stat.table
 
@@ -354,14 +354,14 @@ pretty.print.stattable.2d <- function(x, width, digits)
   nstat <- dim(x)[1]
   ncol <- dim(x)[3]
   nrow <- dim(x)[2]
-  
+
   col.width <- numeric(ncol+1)
   col.header <- vector("list",ncol+1)
   n.header <- integer(ncol+1)
   print.list <- vector("list",ncol+1)
 
   ##First column
-  col.header[[1]] <- split.to.width(names(dimnames(x))[2], width)
+  col.header[[1]] <- split2.width(names(dimnames(x))[2], width)
   n.header[1] <- length(col.header[[1]])
   col1 <- format(c(col.header[[1]],dimnames(x)[[2]]), justify="left")
   col.header[[1]] <- col1[1:n.header[1]]
@@ -370,12 +370,12 @@ pretty.print.stattable.2d <- function(x, width, digits)
 
   ##Other columns
   for (i in 2:(ncol+1)) {
-    col.header[[i]] <- split.to.width(dimnames(x)[[3]][i-1], width)
+    col.header[[i]] <- split2.width(dimnames(x)[[3]][i-1], width)
     n.header[i] <- length(col.header[[i]])
     this.col <- matrix("", nrow=nstat,ncol=nrow)
     for (j in 1:nstat) {
       z <- x[j,,i-1]
-      this.col[j,]  <- formatC(z, width=width, format="f", 
+      this.col[j,]  <- formatC(z, width=width, format="f",
                                digits=digits[attr(x,"table.fun")[j]])
       ##      this.col[j,] <- formatC(z, width=width, digits=digits,
       ##                       format=ifelse(identical(round(z),z),"d","f"))
@@ -470,9 +470,9 @@ print.stat.table <- function(x, width=7,digits,...)
     }
   }
   if (length(dim(x)) == 2)
-    pretty.print.stattable.1d(x, width, fun.digits)
+    prettyPrint.stattable.1d(x, width, fun.digits)
   else if (length(dim(x)) == 3)
-    pretty.print.stattable.2d(x, width, fun.digits)
+    prettyPrint.stattable.2d(x, width, fun.digits)
   else
     NextMethod("print",...)
 }

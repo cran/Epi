@@ -137,12 +137,12 @@ else
                       cut[cut$lex.id %in% wh$lex.id, "cut"] -
                       min(data$lex.dur) / 100
      # end added stuff
-     zz <- merge(data[, "lex.id", drop=FALSE], cut, all.x=TRUE )
+     zz <- merge(data[, "lex.id", drop=FALSE], cut, all.x=TRUE)
      if (is.factor(data$lex.Cst))
         zz$new.state <- as.character(zz$new.state)
      if (is.numeric(data$lex.Cst))
         zz$new.state <- as.numeric(zz$new.state)
-     return( zz )
+     return(zz)
    }
 }
 # End of addition / change
@@ -163,8 +163,12 @@ cutLexis <- function(data,
     if( count )
       return( countLexis( data=data, cut=cut, timescale=timescale ) )
 
-    if (inherits(cut, "data.frame")){
     # Added April 2021, BxC
+    if (inherits(cut, "data.frame")){
+    # The merge in match.cut returns data frame ordered by id, so
+    # the input must be sorted too (added March 2024)
+      data <- sortLexis(data)
+
       zz <- match.cut(data,
                       cut,
                       check.time.scale(data, timescale))

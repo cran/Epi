@@ -76,7 +76,7 @@ be changed by permuting the levels as desired using function
 Tutorial in biostatistics: competing risks and multi-state models. 
 Statistics in Medicine, 26: 2389--2430.
 }
-\author{Esa L{\"a}{\"a}r{\"a}, \email{esa.laara@oulu.fi}
+\author{Esa Laara, \email{esa.laara@oulu.fi}
 }
 \note{
 Aalen-Johansen curves for competing events in several groups can also

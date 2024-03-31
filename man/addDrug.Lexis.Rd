@@ -18,12 +18,10 @@ variables.
 In some circumstances the result is a Lexis object with a very large
 number of very small follow-up intervals. The function
 \code{coarse.Lexis} combines consecutive follow-up intervals using the
-covariates from the first
-
+covariates from the first of the intervals.
 }
-
 \usage{
-addDrug.Lexis(Lx,  # Lexis object
+\method{addDrug}{Lexis}(Lx,  # Lexis object
             pdat,  # list of data frames with drug purchase information
              amt = "amt", # name of the variable with purchased amount
              dpt = "dpt", # name of the variable with amount consumed per time
@@ -35,7 +33,8 @@ addDrug.Lexis(Lx,  # Lexis object
                           # name of the time variable from Lx
           prefix = TRUE,  # should drug names prefix variable names 
           sepfix = ".",   # what should the separator be when forming prefix/suffix
-         verbose = TRUE, \dots)
+         verbose = TRUE,
+           \dots)
 coarse.Lexis(Lx, lim, keep = FALSE)
 }
 
@@ -77,7 +76,6 @@ coarse.Lexis(Lx, lim, keep = FALSE)
   \item{verbose}{Logical. Should the function tell you about the choices
   you made?
 }
- \item{\dots}{arguments passed to or from other methods.}
  \item{lim}{Numeric vector of length 2. Consecutive follow-up intervals
   are combined if the first has \code{lex.dur} < \code{lim[1]}, and the
   sum of \code{lex.dur} in the two intervals is smaller than
@@ -85,6 +83,8 @@ coarse.Lexis(Lx, lim, keep = FALSE)
 }
   \item{keep}{Logical of length 1 or \code{nrow(Lx)} that points to
   records that cannot be combined with preceding records.
+}
+  \item{\dots}{Arguments passed on. Ignored.
 }
 }
 

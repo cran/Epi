@@ -1,6 +1,7 @@
 \name{Icens}
 \alias{Icens}
 \alias{print.Icens}
+\alias{summary.Icens}
 \title{
   Fits a regression model to interval censored data.
   }
@@ -11,10 +12,12 @@
   an additive excess risk function.
   }
 \usage{
-  Icens( first.well, last.well, first.ill,
-         formula, model.type=c("MRR","AER"), breaks,
-         boot=FALSE, alpha=0.05, keep.sample=FALSE,
-         data )
+  Icens(first.well, last.well, first.ill,
+        formula, model.type = c("MRR", "AER"), breaks,
+        boot = FALSE, alpha = 0.05, keep.sample = FALSE,
+        data)
+\method{summary}{Icens}(object, scale = 1, ...)
+\method{print}{Icens}(x, scale = 1, digits = 4, ...)
   }
 \arguments{
   \item{first.well}{Time of entry to the study, i.e. the time first seen
@@ -32,7 +35,13 @@
   \item{alpha}{1 minus the confidence level.}
   \item{keep.sample}{Should the bootstrap sample of the parameter values
     be returned?} 
-  \item{data}{Data frame in which the times and formula are interpreted.}
+  \item{data}{Data frame in which the times and formula are
+    interpreted.}
+  \item{object}{an \code{Icens} object.}
+  \item{x}{an \code{Icens} object.}
+  \item{scale}{scaling factor for rates.}
+  \item{digits}{how many digits is used for printing results.}
+  \item{ ... }{Other parameters passed on.}  
   }
 \details{
   The model is fitted by calling either \code{\link{fit.mult}} or

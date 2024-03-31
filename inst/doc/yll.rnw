@@ -11,20 +11,25 @@
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
-  & Steno Diabetes Center, Gentofte, Denmark\\
-  & {\small \& Department of Biostatistics, 
+  & Steno Diabetes Center Copenhagen, Herlev, Denmark\\
+  & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
   & \url{http://BendixCarstensen.com} \\[1em]
                       \end{tabular}}
 \input{topreport}
 <<echo=FALSE>>=
-options(width=90, 
+options(width=90,
          SweaveHooks=list(fig=function()
-         par(mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, las=1, bty="n")))
+         par(mar = c(3, 3, 1, 1),
+             mgp = c(3, 1, 0) / 1.6,
+             las = 1,
+             bty = "n")))
 @ %
 \renewcommand{\rwpre}{./yll}
-
+<<echo = FALSE, results = hide, eval = FALSE>>=
+source("../r/boxes.MS.R")
+@
 \chapter{Theory and technicalities}
 
 This vignette for the \texttt{Epi} package describes the
@@ -45,7 +50,7 @@ exercise requires that two survival curves that are deemed relevant be
 available.
 
 The years of life lost is therefore just the area between the survival
-curves for those ``Well'', $S_W(t)$, and for those ``Diseased'', 
+curves for those ``Well'', $S_W(t)$, and for those ``Diseased'',
 $S_D(t)$:
 \[
   \YLL = \int_0^\infty S_W(t) - S_D(t) \dif t
@@ -53,7 +58,8 @@ $S_D(t)$:
 The time $t$ could of course be age, but it could also be ``time after
 age 50'' and the survival curves compared would then be survival
 curves \emph{conditional} on survival till age 50, and the YLL would
-be the years of life lost for a 50-year old person with diabetes.
+be the years of life lost for a 50 year old person with diabetes
+relative to a 50 year old person without diabetes.
 
 If we are referring to the expected lifetime we will more precisely use
 the label expected residual lifetime, ERL.
@@ -88,19 +94,19 @@ state is unaffected by assumptions about $\lambda$.
 library(Epi)
 TM <- matrix(NA, 4, 4)
 rownames(TM) <-
-colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)") 
+colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)")
 TM[1, 2:3] <- TM[2, 4] <- 1
-zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80), 
-                              y = c(80, 80, 20, 20)), 
-                wm = 1.5, 
+zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
+                              y = c(80, 80, 20, 20)),
+                wm = 1.5,
                 hm = 4)
-@ 
+@
 We can edit the output from \texttt{boxes}
 <<states, fig=TRUE, height=4, width=5, echo=FALSE>>=
-zz$Arrowtext <- c(expression(lambda),   
-                  expression(mu[W]),    
+zz$Arrowtext <- c(expression(lambda),
+                  expression(mu[W]),
                   expression(mu[D][M]))
-boxes(zz)
+boxes.MS(zz)
 @ %
 \insfig{states}{0.7}{Illness-death model describing diabetes incidence
   and -mortality.}
@@ -108,13 +114,13 @@ boxes(zz)
 \subsection{Total mortality --- a shortcut?}
 
 A practical crude shortcut could be to compare the ERL in the diabetic
-population to the ERL for the \emph{entire} population (that is use
+population to the ERL for the \emph{entire} population (that is using
 the total mortality ignoring diabetes status).
 
 Note however that this approach also counts the mortality of persons
 that acquired the disease earlier, thus making the comparison
 population on average more ill than the population we aim at, namely
-those well at a given time, which only then become more gradually ill. 
+those well at a given time, which only then become more gradually ill.
 
 How large these effects are can however be empirically explored, as we
 shall do later.
@@ -146,7 +152,7 @@ expression of the function, so its value may be computed at any time
 point --- this will be the case if we model rates by smooth parametric
 functions.
 
-Computing the (cumulative) integral of a function is done as follows: 
+Computing the (cumulative) integral of a function is done as follows:
 \begin{itemize}
 \item Compute the value of the function (mortality rate for example)
   at the midpoints of a sequence of narrow equidistant intervals ---
@@ -201,7 +207,7 @@ shown in figure \ref{fig:states}, which I shall repeat here:
 In terms of the rates, the probability of being in the ``Well'' box is
 simply the probability of escaping both death (at a rate of $\mu_W(a)$)
 and diabetes (at a rate of $\lambda(a)$):
-\[  
+\[
    \ptxt{Well}(a)  = \exp\left(\!-\int_0^a\!\!\mu_W(u)+\lambda(u) \right) \dif u
 \]
 The probability of being alive with diabetes at age $a$, is computed given that
@@ -210,15 +216,15 @@ The probability of being alive with diabetes at age $a$, is computed given that
 \begin{align*}
  \ptxt{DM}(a) = \int_0^a\!\! & \ptxt{survive to $s$, DM diagnosed at $s$} \\
                 & \times \ptxt{survive with DM from $s$ to $a$} \dif s \\
-              = \int_0^a\!\! & \lambda(s) 
+              = \int_0^a\!\! & \lambda(s)
                            \exp\left(\!-\int_0^s\!\!\mu_W(u)+\lambda(u) \dif u \right) \\
                 & \times \exp\left(\!-\int_s^a\!\!\mu_D(u) \dif u \right) \dif s
 \end{align*}
 Sometimes we will use a version where the mortality among diabetes
-patients depend both on age $a$ and duration of diabetes, $d$, 
+patients depend both on age $a$ and duration of diabetes, $d$,
 $\mu_D(a, d)$, in which case we get:
 \begin{align*}
- \ptxt{DM}(a) = \int_0^a \! & \lambda(s) 
+ \ptxt{DM}(a) = \int_0^a \! & \lambda(s)
                 \exp\left(-\int_0^s\!\mu_W(u)+\lambda(u) \dif u \right) \\
                 & \times \exp\left(-\int_s^a\!\mu_D(u, u-s) \dif u \right) \dif s
 \end{align*}
@@ -243,7 +249,7 @@ replicates of the unconditional, albeit with changes in integration
 limits:
 \begin{align*}
 \ptxt{Well|Well at $A$}(a) &= \exp\left(-\int_A^a \! \mu_W(u)+\lambda(u) \right) \dif u \\
-  \ptxt{DM|Well at $A$}(a) &= \int_A^a \! \lambda(s) 
+  \ptxt{DM|Well at $A$}(a) &= \int_A^a \! \lambda(s)
                                \exp\left(-\int_A^s\!\mu_W(u)+\lambda(u) \dif u \right) \\
                            & \qquad \times \exp\left(-\int_s^a\!\mu_D(u, u-s) \dif u \right) \dif s
 \end{align*}
@@ -254,7 +260,7 @@ assuming $\mu_D(a, d)=\mu_D(a)$.
 \chapter{Analyses for DM in Denmark}
 
 The rates we use as basis for the following calculations are derived
-from the NDR, where we have omitted the blood-glucose criteria, 
+from the NDR, where we have omitted the blood-glucose criteria,
 because there is compelling evidence that these have quite a low
 specificity (particularly in the younger ages among women), and do
 not substantially contribute to the sensitivity.
@@ -268,10 +274,11 @@ and without DM.
 We read in the dataset of DM and population mortality and incidence, \texttt{DMepi}:
 <<>>=
 data(DMepi)
-@ % 
+@ %
 The dataset \texttt{DMepi} contains diabetes events, deaths and
 person-years for persons without diabetes and deaths and person-years
-for persons with diabetes:
+for persons with diabetes, classified by age (\texttt{A}) and calendar
+year (\texttt{P}):
 <<>>=
 str(DMepi)
 head(DMepi)
@@ -295,15 +302,17 @@ total number of deaths and amount of risk time, as we are going to
 model the total mortality as well. Finally we restrict the dataset to
 ages over 30 only:
 <<>>=
-DMepi <- transform(subset(DMepi, A>30), 
-                    D.T = D.nD + D.DM, 
-                    Y.T = Y.nD + Y.DM)
+DMepi <- transform(subset(DMepi, A > 30),
+                   A = A + 0.5,
+                   P = P + 0.5,
+                 D.T = D.nD + D.DM,
+                 Y.T = Y.nD + Y.DM)
 head(DMepi)
 @ %
 With the correct age and period coding in the Lexis triangles, we fit
 models for the mortalities and incidences. Note that we for
-comparative purposes also fit a model for the \emph{total} mortality, 
-ignoring the 
+comparative purposes also fit a model for the \emph{total} mortality,
+ignoring the
 <<>>=
 # Knots used in all models
 (a.kn <- seq(40, 95, , 6))
@@ -316,42 +325,41 @@ pe <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P, c(1990, p.kn, Inf)) + sex, data=DMepi)
 ftable(addmargins(pe, 1), col.vars=3:2)
 ce <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P-A, c(-Inf, c.kn, Inf)) + sex, data=DMepi)
 ftable(addmargins(ce, 1), col.vars=3:2)
-# Fit an APC-model for all transitions, seperately for men and women
-mW.m <- glm(D.nD ~ -1 + Ns(A  , knots=a.kn, int=TRUE) +
-                         Ns( P, knots=p.kn, ref=2005) +
-                         Ns(P-A, knots=c.kn, ref=1950), 
-           offset = log(Y.nD), 
-           family = poisson, 
-             data = subset(DMepi, sex=="M"))
-mD.m <- update(mW.m,  D.DM ~ . , offset=log(Y.DM))
-mT.m <- update(mW.m,  D.T  ~ . , offset=log(Y.T))
-lW.m <- update(mW.m,  X ~ .)
+# Fit an APC-model for all transitions, separately for men and women
+mW.m <- glm(cbind(D.nD, Y.nD) ~ -1 + Ns(    A, knots=a.kn, int=TRUE) +
+                                     Ns(P    , knots=p.kn, ref=2005) +
+                                     Ns(P - A, knots=c.kn, ref=1950),
+            family = poisreg,
+              data = subset(DMepi, sex=="M"))
+mD.m <- update(mW.m, cbind(D.DM, Y.DM) ~ .)
+mT.m <- update(mW.m, cbind(D.T , Y.T ) ~ .)
+lW.m <- update(mW.m, cbind(X   , Y.nD) ~ .)
 # Model for women
-mW.f <- update(mW.m, data = subset(DMepi, sex=="F"))
-mD.f <- update(mD.m, data = subset(DMepi, sex=="F"))
-mT.f <- update(mT.m, data = subset(DMepi, sex=="F"))
-lW.f <- update(lW.m, data = subset(DMepi, sex=="F"))
-@ % 
+mW.f <- update(mW.m, data = subset(DMepi, sex == "F"))
+mD.f <- update(mD.m, data = subset(DMepi, sex == "F"))
+mT.f <- update(mT.m, data = subset(DMepi, sex == "F"))
+lW.f <- update(lW.m, data = subset(DMepi, sex == "F"))
+@ %
 
 \section{Residual life time and years lost to DM}
 
 We now collect the estimated years of life lost classified by method
-(immune assumption or not), sex, age and calendar time:
+(immunity assumption or not), sex, age and calendar time:
 <<>>=
 a.ref <- 30:90
 p.ref <- 1996:2016
-aYLL <- NArray(list(type = c("Imm", "Tot", "Sus"), 
-                       sex = levels(DMepi$sex), 
-                       age = a.ref, 
+aYLL <- NArray(list(type = c("Imm", "Tot", "Sus"),
+                       sex = levels(DMepi$sex),
+                       age = a.ref,
                       date = p.ref))
 str(aYLL)
 system.time(
 for(ip in p.ref)
    {
-   nd <- data.frame(A = seq(30, 90, 0.2)+0.1, 
-                     P = ip, 
-                  Y.nD = 1, 
-                  Y.DM = 1, 
+   nd <- data.frame(A = seq(30, 90, 0.2)+0.1,
+                     P = ip,
+                  Y.nD = 1,
+                  Y.DM = 1,
                   Y.T  = 1)
    muW.m <- ci.pred(mW.m, nd)[, 1]
    muD.m <- ci.pred(mD.m, nd)[, 1]
@@ -361,17 +369,17 @@ for(ip in p.ref)
    muD.f <- ci.pred(mD.f, nd)[, 1]
    muT.f <- ci.pred(mT.f, nd)[, 1]
    lam.f <- ci.pred(lW.f, nd)[, 1]
-   aYLL["Imm", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=NULL, 
+   aYLL["Imm", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Imm", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=NULL,  
+   aYLL["Imm", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Tot", "M", , paste(ip)] <- yll(int=0.2, muT.m, muD.m, lam=NULL,  
+   aYLL["Tot", "M", , paste(ip)] <- yll(int=0.2, muT.m, muD.m, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Tot", "F", , paste(ip)] <- yll(int=0.2, muT.f, muD.f, lam=NULL,  
+   aYLL["Tot", "F", , paste(ip)] <- yll(int=0.2, muT.f, muD.f, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Sus", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=lam.m, 
+   aYLL["Sus", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=lam.m,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Sus", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=lam.f, 
+   aYLL["Sus", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=lam.f,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
    })
 round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
@@ -380,34 +388,39 @@ We now have the relevant points for the graph showing YLL to diabetes
 for men and women by age, and calendar year, both under the immunity
 and susceptibility models for the calculation of YLL.
 <<imm, fig=TRUE, width=8, height=5>>=
-plyll <- function(wh){
-par(mfrow=c(1, 2), mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, bty="n", las=1)
-
-matplot(a.ref, aYLL[wh, "M", , ], 
-         type="l", lty=1, col="blue", lwd=1:2, 
-         ylim=c(0, 12), xlab="Age", 
-         ylab="Years lost to DM", yaxs="i")
-abline(v=50, h=1:10, col=gray(0.7))
-text(90, 11, "Men", col="blue", adj=1)
+plyll <- function(wh, xtxt){
+par(mfrow = c(1, 2),
+      mar = c(3, 3, 1, 1),
+      mgp = c(3, 1, 0) / 1.6,
+      bty = "n",
+      las = 1)
+matplot(a.ref, aYLL[wh, "M", , ],
+         type="l", lty=1, col="blue", lwd=1:2,
+         ylim=c(0, 12), xlab="Age",
+         ylab=paste0("Years lost to DM", xtxt),
+         yaxs="i")
+abline(v=50, h=1:11, col=gray(0.7))
+text(90, 11.5, "Men", col="blue", adj=1)
 text(40, aYLL[wh, "M", "40", "1996"], "1996", adj=c(0, 0), col="blue")
 text(43, aYLL[wh, "M", "44", "2016"], "2016", adj=c(1, 1), col="blue")
 
-matplot(a.ref, aYLL[wh, "F", , ], 
-         type="l", lty=1, col="red", lwd=1:2, 
-         ylim=c(0, 12), xlab="Age", 
-         ylab="Years lost to DM", yaxs="i")
-abline(v=50, h=1:10, col=gray(0.7))
-text(90, 11, "Women", col="red", adj=1)
+matplot(a.ref, aYLL[wh, "F", , ],
+         type="l", lty=1, col="red", lwd=1:2,
+         ylim=c(0, 12), xlab="Age",
+         ylab=paste0("Years lost to DM", xtxt),
+         yaxs="i")
+abline(v=50, h=1:11, col=gray(0.7))
+text(90, 11.5, "Women", col="red", adj=1)
 text(40, aYLL[wh, "F", "40", "1996"], "1996", adj=c(0, 0), col="red")
 text(43, aYLL[wh, "F", "44", "2016"], "2016", adj=c(1, 1), col="red")
 }
-plyll("Imm")
+plyll("Imm", " - immunity assumption")
 @ %
 <<tot, fig=TRUE, width=8, height=5>>=
-plyll("Tot")
+plyll("Tot", " - total mortality refernce")
 @ %
 <<sus, fig=TRUE, width=8, height=5>>=
-plyll("Sus")
+plyll("Sus", " - susceptibility assumed")
 @ %
 \begin{figure}[h]
   \centering
@@ -417,7 +430,7 @@ plyll("Sus")
     without diabetes, assuming the persons without diabetes at a given
     age remain free from diabetes (immunity assumption --- not
     reasonable). The lines refer to date of evaluation; the top lines
-    refer to 1.1.1996 the bottom ones to 1.1.2016. Blue curves are
+    refer to 1996-1-1 the bottom ones to 2016-1-1. Blue curves are
     men, red women.}
   \label{fig:imm}
 \end{figure}
@@ -428,9 +441,10 @@ plyll("Sus")
   \caption{Years of life lost to DM: the difference in expected
     residual life time at different ages between persons with and
     without diabetes, allowing the persons without diabetes at a given
-    to contract diabetes and thus be subject to higher mortality. The
-    lines refer to date of evaluation; the top lines refer to 1.1.1996
-    the bottom ones to 1.1.2016. Blue curves are men, red women.}
+    age to contract diabetes and thus be subject to higher
+    mortality. The lines refer to date of evaluation; the top lines
+    refer to 1996-1-1 the bottom ones to 2016-1-1. Blue curves are
+    men, red women.}
   \label{fig:sus}
 \end{figure}
 
@@ -442,13 +456,13 @@ plyll("Sus")
     without diabetes. Allowance for susceptibility is approximated by
     using the total population mortality instead of non-DM
     mortality. The lines refer to date of evaluation; the top lines
-    refer to 1.1.1996 the bottom ones to 1.1.2016. Blue curves are
+    refer to 1996-1-1 the bottom ones to 2016-1-1. Blue curves are
     men, red women.}
   \label{fig:tot}
 \end{figure}
 
 From figure \ref{fig:sus} we see that for men aged 50 the years lost to
-diabetes has decreased from a bit over 8 to a bit less than 6 years, 
+diabetes has decreased from a bit over 8 to a bit less than 6 years,
 and for women from 8.5 to 5 years; so a greater improvement for women.
 
 \bibliographystyle{plain}
@@ -462,7 +476,7 @@ B~Carstensen.
 
 \bibitem{Carstensen.2008c}
 B~Carstensen, JK~Kristensen, P~Ottosen, and K~Borch-Johnsen.
-\newblock The {D}anish {N}ational {D}iabetes {R}egister: {T}rends in incidence, 
+\newblock The {D}anish {N}ational {D}iabetes {R}egister: {T}rends in incidence,
   prevalence and mortality.
 \newblock {\em Diabetologia}, 51:2187--2196, 2008.
 

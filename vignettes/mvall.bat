@@ -1,0 +1,10 @@
+move flup.R   ..\inst\doc
+move flup.pdf ..\inst\doc
+move crisk.R   ..\inst\doc
+move crisk.pdf ..\inst\doc
+move addLexis.R   ..\inst\doc
+move addLexis.pdf ..\inst\doc
+move simLexis.R   ..\inst\doc
+move simLexis.pdf ..\inst\doc
+move yll.R   ..\inst\doc
+move yll.pdf ..\inst\doc

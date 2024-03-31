@@ -1,30 +1,30 @@
 summary.Icens <-
-function( x, scale=1, ... )
+function( object, scale=1, ... )
 {
-  if( attr( x, "model" ) == "MRR" )
+  if( attr( object, "model" ) == "MRR" )
     {
-      if( is.null( x$rates ) )
+      if( is.null( object$rates ) )
         {
-          class( x ) <- "glm"
-          emat <- ci.lin( x )
+          class( object ) <- "glm"
+          emat <- ci.lin( object )
         }
       else
         {
-          rate.est <- ci.lin( x$rates )
+          rate.est <- ci.lin( object$rates )
           rate.est[,-(3:4)] <- rate.est[,-(3:4)] * scale
           emat <- rbind( cbind( rate.est, RR=NA )[,c(1:4,7,5:6)],
-                        ci.lin( x$cov, Exp=T ) )
+                        ci.lin( object$cov, Exp=T ) )
         }
     }
-  if( attr( x, "model" ) == "AER" )
+  if( attr( object, "model" ) == "AER" )
     {
-      rate.est <- ci.lin( x$rates )
+      rate.est <- ci.lin( object$rates )
       rate.est[,-(3:4)] <- rate.est[,-(3:4)] * scale
       emat <- rate.est
     }
-  if( length( x ) == 4 )
+  if( length( object ) == 4 )
     {
-      b.est <- x[["boot.ci"]]
+      b.est <- object[["boot.ci"]]
       colnames( b.est ) <- c( "Boot-med", "lo", "hi" )
       emat <- cbind( emat, b.est )
     }

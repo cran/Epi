@@ -19,10 +19,11 @@ function is merely a wrapper for the \code{\link[survival]{survfit}}.
 }
   \item{formula}{A one-sided formula passed on to \code{survfit}.
 }
-  \item{timeScale}{Chararter or integer, selecting one of the timescales
+  \item{timeScale}{Character or integer, selecting one of the timescales
     of the \code{Lexis} object.
 }
-  \item{\dots}{arguments passed to or from other methods.}
+  \item{\dots}{Arguments passed on. Ignored
+}
 }
 \value{An object of class \code{survfitms} --- see
   \code{\link[survival]{survfit}}. 

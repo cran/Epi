@@ -57,28 +57,32 @@ xcoh <- data.frame( id = c("A", "B", "C"),
                   exit = c("1997-06-27", "1995-05-23", "1998-07-24"),
                   fail = c(1, 0, 1),
                    sex = c("M","F","M") )
+
 # Convert to calendar years
 for( i in 2:4 ) xcoh[,i] <- cal.yr(xcoh[,i])
-xcoh
-Lcoh <- Lexis( entry = list( per=entry ),
-                exit = list( per=exit, age=exit-birth ),
-         exit.status = fail,
-                data = xcoh )
-Lx <- Lcoh[sample(1:3,10,replace=TRUE),]
-Lx$per <- Lx$per + runif(10,0,10)
-Lx$lex.id <- 1:10
-Lx <- splitLexis( Lx, breaks=0:10*10, "age" )
+xcoh <- xcoh[sample(1:3, 10, replace = TRUE),]
+xcoh$entry <- xcoh$entry + runif(10, 0, 10)
+xcoh$exit  <- xcoh$entry + runif(10, 0, 10)
+
+Lcoh <- Lexis(entry = list(per = entry),
+               exit = list(per = exit,
+                           age = exit - birth),
+        exit.status = fail,
+               data = xcoh)
+Lcoh
+
+Lx <- splitLexis(Lcoh, breaks = 0:10 * 10, "age")
 Lx
-nid( Lx )
-nid( Lx, by="sex" )
-Lb <- bootLexis( Lx )
-head( Lb )
-nid( bootLexis( Lx, size=7 ) )
-Li <- bootLexis( Lx, by="id" ) # superfluous
-summary( Lx )
-summary( Li )
-L2 <- bootLexis( Lx, by="sex", size=c(2,5) )
-nid( L2, by="sex" )
-summary( L2 )
+nid(Lx)
+nid(Lx, by="sex")
+Lb <- bootLexis(Lx)
+head(Lb)
+nid(bootLexis(Lx, size = 7))
+Li <- bootLexis(Lx, by = "id") # superfluous
+summary(Lx)
+summary(Li)
+L2 <- bootLexis(Lx, by = "sex", size = c(2, 5))
+nid(L2, by = "sex")
+summary(L2, by = "sex")
 }
 \keyword{manip}

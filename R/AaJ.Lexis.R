@@ -32,18 +32,18 @@ if( length(formula) != 2 )
 
 rhs <- as.character(formula[length(formula)]) # right hand side of formula
 Lx <- mkcens.Lexis(Lx)
-    
+
 ts <- check.time.scale(Lx, timeScale)
 Lx$zeit <- Lx[,ts]
-cat("NOTE: Timescale is ", ts, 
-#   "; initial level assumed to be ", levels(Lx)[2], 
+cat("NOTE: Timescale is ", ts,
+#   "; initial level assumed to be ", levels(Lx)[2],
     "\n", sep = "")
 
 form <- Surv(Lx$zeit,
              Lx$zeit + Lx$lex.dur,
              Lx$lex.Xst) ~ 1
 form[3] <- formula[2]
-survfit(form, 
+survfit(form,
         id = lex.id,
     istate = lex.Cst,
       data = Lx)

@@ -51,7 +51,6 @@
     \code{exnam} with values \code{ex1}, \code{ex2} etc. will be
     constructed.
     }
-  \item{\dots}{arguments passed to or from other methods.}
   \item{tfc}{      
     Character (\code{t}ime \code{f}rom last \code{c}linical visit). Name
     of the variable in the result which will contain the time since the
@@ -61,6 +60,8 @@
     If the argument is omitted a variable called \code{tfc} will be
     constructed. 
     }
+  \item{\dots}{Arguments passed on. Ignored
+}
 }
 \value{
     A \code{Lexis} object representing the same follow-up as \code{Lx}, 

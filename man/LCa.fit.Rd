@@ -148,7 +148,7 @@ LCa.fit( data, A, P, D, Y,
   \code{a} refers to \eqn{f(a)}{f(a)},
   \code{p} refers to \eqn{k_p(p)}{k_p(p)},
   \code{c} refers to \eqn{k_c(p-a)}{k_c(p-a)},
-  \code{pi} (\code{p}eriod code{i}nteraction) refers to \eqn{b_p(a)}{b_p(a)}
+  \code{pi} (\code{p}eriod \code{i}nteraction) refers to \eqn{b_p(a)}{b_p(a)}
   and
   \code{ci} (\code{c}ohort \code{i}nteraction) refers to \eqn{b_c(p-a)}{b_c(p-a)}.
 

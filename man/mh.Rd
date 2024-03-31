@@ -1,5 +1,6 @@
 \name{mh}
 \alias{mh}
+\alias{print.mh}
 \title{
 Mantel-Haenszel analyses of cohort and case-control studies
 }
@@ -10,6 +11,7 @@ derived from both cohort and case-control studies.
 \usage{
 mh(cases, denom, compare=1, levels=c(1, 2), by=NULL,
      cohort=!is.integer(denom), confidence=0.9)
+\method{print}{mh}(x, ...)
 }
 \arguments{
 \item{cases}{
@@ -42,13 +44,18 @@ study is assumed.
 \item{confidence}{
 the approximate coverage probability for the confidence intervals to be 
 computed.
+}
+\item{x}{a \code{mh} object
+}
+\item{...}{arguments passed on to \code{print}
 }}
 \value{
-A list giving tables of rate (odds) ratio estimates, their standard errors 
-(on a log scale), lower and upper confidence limits, chi-squared tests 
-(1 degree of freedom) and the corresponding p-values. The result list also 
-includes numerator and denominator of the Mantel-Haenszel estimates (q, r), 
-and score test statistics and score variance (u, v).
+A list of class \code{mh} giving tables of rate (odds) ratio estimates,
+their standard errors (on a log scale), lower and upper confidence
+limits, chi-squared tests (1 degree of freedom) and the corresponding
+p-values. The result list also includes numerator and denominator of the
+Mantel-Haenszel estimates (q, r), and score test statistics and score
+variance (u, v).
 }
 \section{Side Effects}{
 None

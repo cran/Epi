@@ -1,7 +1,7 @@
 \name{fit.add}
 \alias{fit.add}
 \title{
-  Fit an addive excess risk model to interval censored data.
+  Fit an additive excess risk model to interval censored data.
   }
 \description{
   Utility function.

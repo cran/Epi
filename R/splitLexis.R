@@ -1,4 +1,4 @@
-split.lexis.1D <-
+splitLexis.1D <-
 function(lex, breaks, time.scale, tol)
 {
     time.scale <- check.time.scale(lex, time.scale)
@@ -95,13 +95,13 @@ splitLexis <- function(lex, breaks, time.scale=1, tol= .Machine$double.eps^0.5)
     }
 
   ## Split the data
-  lex <- split.lexis.1D(lex, breaks, time.scale, tol)
+  lex <- splitLexis.1D(lex, breaks, time.scale, tol)
 
   ## Reinstitute the factor levels
   if( factor.states )
     {
-    lex$lex.Cst <- factor( lex$lex.Cst, levels=1:nstates, labels=state.levels )
-    lex$lex.Xst <- factor( lex$lex.Xst, levels=1:nstates, labels=state.levels )
+    lex$lex.Cst <- factor(lex$lex.Cst, levels = 1:nstates, labels = state.levels)
+    lex$lex.Xst <- factor(lex$lex.Xst, levels = 1:nstates, labels = state.levels)
     }
 
   ## Put the NA-rows back

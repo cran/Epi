@@ -1,20 +1,25 @@
+Changes in 2.48
+
+o tidying function calls (missing ...'s in metods) and Rd files
+  (missing method defs.)
+
+o bootLexis crashed if lex.id was non-numeric. Fixed now.
+
+o new functions: unLexis removes Lexis atttributes; legendbox explains
+  the contents of the plot from boxes.Lexis
+  
+o vignettes groomed
+
+o cutLexis would give erroneous results if the Lexis object was not
+  sorted by id and the cut= argument was a data frame
+
 Changes in 2.47
 
-o cutLexis had a bug introduced in 2.46 that gave invalid results if
-  argument cut= was a vector of cut times and the Lexis object was not
-  sorted as by sortLexis.
-
-o ci.lin now also works of class glmerMod, thanks to Antonio Gasparrini
-
-o ci.lin help page updated with details on requirements for models
-  where differences between predictions are wanted.
-
-o a function, Lexis2msm added, converts a exis object to a data frame
-  suitable for input til msm::msm 
+o a function, Lexis2msm added, converts a Lexis object to a data frame
+  suitable input to msm::msm 
 
 o in functions modLexis, and thus glm.Lexis and gam.Lexis the warning
-  about several transions out of the state is changed to a cat() so it
-  appears in the log.
+  about several transions out of the state is changed to a cat() 
 
 o id = lex.id added as default in coxph.Lexis 
 
@@ -28,18 +33,19 @@ o A bug in preceding / succeeding was fixed.
 o a print method for Lexis objects added. It rounds timescales and
   lex.dur to the same number of decimals. Default 2. Other numerical
   variables are rounded too, default 3. .lex columns and time scales
-  are printed first. The new order of variables is returned invisibly.  
+  are printed first. The printed order of variables is returned
+  invisibly.
 
-o an AaJ.Lexis method has been added which gives the Aaalen-Johansen
+o an AaJ.Lexis method has been added which gives the Aalen-Johansen
   estimator of state probabilities. Wrapper for survfit for a
-  multistate setup.
+  multistate setup in a Lexis object.
 
 o glitch in Lexis when assigning entry.status when exit.status is
   numeric. Only worked if notes = TRUE (the default).
 
 o cal.yr returned an object of class c("cal.yr","numeric"), now changed
   to  c("cal.yr","double"). 'numeric' seems not to be a useful class
-  designation when 'double' is meant  .
+  designation when 'double' is meant.
 
 o COEF.polr was wrongly defined, caused a crash of ci.lin() on a polr
   object. Fixed. 

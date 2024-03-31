@@ -25,8 +25,8 @@ lex.id  <- NULL
 
 if(!inherits(Lx  ,"Lexis")) stop("Lx must be a Lexis object.\n")
 if( inherits(clin,"Lexis")) stop("clin cannot be a Lexis object.\n")
-    
-# Is the timescale argument a timescale in Lx and is it a variable in clin? 
+
+# Is the timescale argument a timescale in Lx and is it a variable in clin?
 ts <- if(is.numeric(timescale)) timeScales(Lx)[timescale] else timescale
 if(!(ts %in% timeScales(Lx)))
     stop("timescale argument (", ts,
@@ -50,7 +50,7 @@ if(any(dd <- duplicated(clin[,c("lex.id",ts)])))
           clin.nam, " excluded.")
   clin <- clin[!dd,]
   }
-    
+
 # the variable holding the name of the examination
 if(missing(exnam)) exnam <- "exnam"
 # and if it is not there, construct it as ex1, ex2 etc.
@@ -70,13 +70,13 @@ if (length(common <- intersect(levels(Lx),
   stop("Levels of Lx and examination names in clin must be disjoint",
        "\nbut", paste(common, collapse=", "), "are in both")
 
-#...done checking 
-    
+#...done checking
+
 # variables to merge by
 mvar <- c("lex.id", ts)
-    
+
 # clinical variables to be merged in
-# --- note we take examination date and name as a clinical variable too 
+# --- note we take examination date and name as a clinical variable too
 cvar <- setdiff(names(clin), mvar)
 
 # A data frame of cutting times of the examinations
@@ -87,7 +87,7 @@ cfr <- data.frame(lex.id = clin$lex.id,
 # a copy of Lx with a saved copy of the state variables in org.
 Lc <- transform(Lx, org.Cst = lex.Cst,
                     org.Xst = lex.Xst)
-    
+
 # Now cut Lc at each new examination date, state variables will be
 # changed to examination names
 Lc <- rcutLexis(Lc,
@@ -102,9 +102,9 @@ Lc[,exnam] <- as.factor(ifelse(Lc$lex.Cst %in% levels(Lx),
                                NA,
                                as.character(Lc$lex.Cst)))
 mvar <- c("lex.id", exnam)
-    
+
 # timescale is present in both Lc and clin,
-# so rename in clin, it will be the date of clin 
+# so rename in clin, it will be the date of clin
 names(clin)[grep(ts, names(clin))] <- tfc
 
 # merge with clinical measurements keeping the attributes
@@ -112,7 +112,7 @@ att.Lc <- attributes(Lc)
 Lc <- left_join(Lc, clin, by = mvar)
 att.Lc$names <- attributes(Lc)$names
 # attributes(Lc) <- att.Lc
-    
+
 # compute time since last examination
 Lc[,tfc] <- Lc[,ts] - Lc[,tfc]
 
@@ -127,15 +127,15 @@ Lc <- select(Lc, -lex.Cst,
                  -lex.Xst) %>%
       rename(lex.Cst = org.Cst,
              lex.Xst = org.Xst)
-    
+
 # Add tfc as a time.scale, time.since and breaks:
-attr(Lc, "time.scales") <- c(attr(Lx, "time.scales"), tfc) 
+attr(Lc, "time.scales") <- c(attr(Lx, "time.scales"), tfc)
 attr(Lc, "time.since" ) <- c(attr(Lx, "time.since" ), "X")
 brt <- list(x = NULL)
 names(brt) <- tfc
-attr(Lc, "breaks") <- c(attr(Lx, "breaks"), brt) 
+attr(Lc, "breaks") <- c(attr(Lx, "breaks"), brt)
 attr(Lc, "class")  <- c("Lexis","data.frame")
-    
+
 # Done! - well order first
 sortLexis(Lc)
 }

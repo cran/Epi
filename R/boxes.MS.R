@@ -27,6 +27,31 @@ segments( c(x     , x-ch/3),
 invisible( c( x, y, wd, ht ) )
 }
 
+legendbox <-
+function(x, y,
+      state = "State",
+         py = "Person-time",
+      begin = "no. begin",
+        end = "no. end",
+      trans = "Transitions",
+      rates = "\n(Rate)",
+       font = 1,
+        ...)
+{
+btxt <- paste0(state, "\n",
+                  py, "\n",
+               begin, "          ", end)
+ww <- strwidth (btxt) * 1.2
+hh <- strheight(btxt) * 1.3
+zz <- tbox(btxt,
+           x = x, y = y,
+           wd = ww,
+           ht = hh,
+         font = font,
+           ...)
+text(x + ww / 1.8, y, paste0(trans, rates), adj = 0)
+}
+
 fillarr <-
 function( x1, y1, x2, y2, gap=2, fr=0.8,
           angle=17, lwd=2, length=par("pin")[1]/30, ... )
@@ -86,7 +111,7 @@ invisible( list( x = bx1*(1-pos)+bx2*pos,
 }
 
 wh.no <-
-function( tt, i, j )
+function(tt, i, j)
 {
 ## Utility to count the number of non-NA off diagonal elements with
 ## row<i or ( col=i & col<=j )
@@ -416,14 +441,14 @@ for( i in 1:n.st ) b[[i]] <- with( obj$Boxes,
                             col.bg=col.bg[i] ) )
 
 # and the arrows
-for( i in 1:n.st ) for( j in 1:n.st )
-   {
-  if( !is.na(obj$Tmat[i,j]) & i!=j )
+for (i in 1:n.st ) for( j in 1:n.st )
+    {
+ if (!is.na(obj$Tmat[i,j]) & i!=j )
     {
     a <- wh.no( obj$Tmat, i, j )
     arr <- with( obj$Arrows,
            boxarr( b[[i]], b[[j]],
-                   offset=(!is.na(obj$Tmat[j,i]))*offset.arr,
+                   offset=(!is.na(obj$Tmat[i,j]))*offset.arr[a],
                    lwd=lwd.arr[a],
                    col=col.arr[a],
                    pos=pos.arr[a], ... ) )

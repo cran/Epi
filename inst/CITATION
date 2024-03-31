@@ -5,12 +5,12 @@ if(!exists("meta") || is.null(meta)) meta <- packageDescription("Epi")
 year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
 
-citEntry(entry = "Manual",
+bibentry(bibtype = "Manual",
          title = "{Epi}: A Package for Statistical Analysis in Epidemiology",
-         author = personList(as.person("Bendix Carstensen"),
-	                     as.person("Martyn Plummer"),
-                             as.person("Esa Laara"),
-			     as.person("Michael Hills")),
+         author = c(as.person("Bendix Carstensen"),
+	            as.person("Martyn Plummer"),
+                    as.person("Esa Laara"),
+		    as.person("Michael Hills")),
          year = year,
          note = note,
          url = "https://CRAN.R-project.org/package=Epi",
@@ -23,9 +23,9 @@ citEntry(entry = "Manual",
                "URL https://CRAN.R-project.org/package=Epi")
 )
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "{Lexis}: An {R} Class for Epidemiological Studies with Long-Term Follow-Up",
-  author       = personList(as.person("Martyn Plummer"),
+  author       = c(as.person("Martyn Plummer"),
                    as.person("Bendix Carstensen")),
   journal      = "Journal of Statistical Software",
   year         = "2011",
@@ -43,9 +43,9 @@ citEntry(entry = "Article",
   header = "If you use Lexis objects/diagrams, please also cite:"
 )
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
   title        = "Using {Lexis} Objects for Multi-State Models in {R}",
-  author       = personList(as.person("Bendix Carstensen"),
+  author       = c(as.person("Bendix Carstensen"),
                    as.person("Martyn Plummer")),
   journal      = "Journal of Statistical Software",
   year         = "2011",

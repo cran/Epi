@@ -51,8 +51,8 @@ countLexis( data, cut, timescale = 1 )
   the cutpoint is split in two: one before and one after the
   cutpoint. Any record representing follow up after the cutpoint has its
   value of \code{lex.Cst} updated to the new state. An extra time-scale
-  is added; the time since the event at \code{cut}. This time scake will
-  be\code{NA} for any follow-up prior to the intermediate event.
+  is added; the time since the event at \code{cut}. This time scale will
+  be \code{NA} for any follow-up prior to the intermediate event.
 
   The function \code{tsNA20} will replace all missing values in
   timescales with 0. This is commonly meeded when timescales defined as

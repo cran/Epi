@@ -4,31 +4,30 @@
 COEF          <- function(x, ...) UseMethod("COEF")
 COEF.default  <- function(x, ...) coef(x, ...)
 VCOV          <- function(x, ...) UseMethod("VCOV")
-VCOV.default  <- function(x, ...) vcov(x, complete=TRUE, ...)
+VCOV.default  <- function(x, ...) vcov(x, complete = TRUE, ...)
 
 # Then we can get from these methods what we want from lme, mer etc.
 COEF.lme      <- function(x, ...) nlme::fixed.effects(x)
 COEF.mer      <- function(x, ...) lme4::fixef(x)
 COEF.lmerMod  <- function(x, ...) lme4::fixef(x)
-COEF.glmerMod <- function(x, ...) lme4::fixef(x)
+
 # The vcov returns a matrix with the wrong class so we strip that:
 VCOV.lme      <- function(x, ...) as.matrix(vcov(x))
 VCOV.mer      <- function(x, ...) as.matrix(vcov(x))
 VCOV.lmerMod  <- function(x, ...) as.matrix(vcov(x))
-VCOV.glmerMod <- function(x, ...) as.matrix(vcov(x))
 
 # For the rest of the non-conforming classes we then just need the
-# methods not defined 
-# VCOV.coxph    <- function(object, ...)
-#                  survival::vcov.coxph(object, complete=FALSE, ...) 
-COEF.crr      <- function( object, ... ) object$coef
-VCOV.crr      <- function( object, ... ) object$var
-COEF.MIresult <- function( object, ... ) object$coefficients
-VCOV.MIresult <- function( object, ... ) object$variance
-COEF.mipo     <- function( object, ... ) object$qbar
-VCOV.mipo     <- function( object, ... ) object$t
-VCOV.gnlm     <- function( object, ... ) object$cov
-VCOV.rq       <- function( object, ... ) summary(object, cov=TRUE)$cov
+# methods not defined
+# VCOV.coxph    <- function(x, ...)
+#                  survival::vcov.coxph(x, complete=FALSE, ...)
+COEF.crr      <- function(x, ...) x$coef
+VCOV.crr      <- function(x, ...) x$var
+COEF.MIresult <- function(x, ...) x$coefficients
+VCOV.MIresult <- function(x, ...) x$variance
+COEF.mipo     <- function(x, ...) x$qbar
+VCOV.mipo     <- function(x, ...) x$t
+VCOV.gnlm     <- function(x, ...) x$cov
+VCOV.rq       <- function(x, ...) summary(x, cov=TRUE)$cov
 
 df2ctr <-
 function(obj, nd)
@@ -82,7 +81,7 @@ if(         ( nrow(ndx)  !=       nrow(ndr)) |
     stop("\nThe two prediction frames must have same dimensions",
          "and column names, but dimensions are (",
          paste(dim(ndx), collapse=","), ") and (",
-         paste(dim(ndr), collapse=","), ")\n", 
+         paste(dim(ndr), collapse=","), ")\n",
          "and the column names are:\n",
          "exp: ", paste(names(ndx), collapse=", "), "\n",
          "ref: ", paste(names(ndr), collapse=", "), "\n")
@@ -92,13 +91,13 @@ if(         ( nrow(ndx)  !=       nrow(ndr)) |
 # Supplied variable names:
  cols <- names( ndx )
 # Factors in model; which are supplied; derive names of omitted
-# factors (called ofacs) 
+# factors (called ofacs)
  facs <- names( obj$xlevels )
 ofacs <- setdiff( facs, cols )
 # omitted *variables* must be supplied
 ovars <- setdiff( xvars, facs )
 # Construct the extra columns with bogus data (their contribution will
-# be null) 
+# be null)
 xcols <- ndx[,NULL]
 if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
 if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
@@ -137,7 +136,7 @@ if( ( nrow(nd2) !=  nrow(nd1)) |
          paste( dim(nd1),collapse=","), ") and (",
          paste( dim(nd2),collapse=","), ") and (",
          paste( dim(nd3),collapse=","), ") and (",
-         paste( dim(nd4),collapse=","), ")\n", 
+         paste( dim(nd4),collapse=","), ")\n",
          "and column names are:\n",
          "1: ", paste( names(nd1), collapse=", " ), "\n",
          "2: ", paste( names(nd2), collapse=", " ), "\n",
@@ -148,22 +147,22 @@ if( ( nrow(nd2) !=  nrow(nd1)) |
 # Supplied variable names:
  cols <- names( nd1 )
 # Factors in model; which are supplied; derive names of omitted
-# factors (ofacs) 
+# factors (ofacs)
  facs <- names( obj$xlevels )
 ofacs <- setdiff( facs, cols )
 # omitted *variables* must be supplied
 ovars <- setdiff( xvars, facs )
 # Construct the extra columns with bogus data (their contribution will
-# be null) 
+# be null)
 xcols <- nd1[,NULL]
 if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
 if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
 if( dim(xcols)[2]>0 )
   {
   nd1 <- cbind( nd1, xcols )
-  nd2 <- cbind( nd2, xcols ) 
+  nd2 <- cbind( nd2, xcols )
   nd3 <- cbind( nd3, xcols )
-  nd4 <- cbind( nd4, xcols ) 
+  nd4 <- cbind( nd4, xcols )
   }
 ci.lin( obj,
     ctr.mat = df2ctr( obj, nd1 )
@@ -190,14 +189,14 @@ function( obj,
           Exp = FALSE,
        sample = FALSE )
 {
-# If ctr.mat is a data frame, call df2ctr 
+# If ctr.mat is a data frame, call df2ctr
 if( inherits( ctr.mat, "data.frame" ) ) ctr.mat <- df2ctr( obj, ctr.mat )
 
 # If ctr.mat is a list of two dataframes then call ci.dfr
 if( inherits( ctr.mat, "list" ) )
   {
   if( length(ctr.mat)==2 )
-    {  
+    {
   if( !inherits( ctr.mat[[1]], "data.frame" ) |
       !inherits( ctr.mat[[2]], "data.frame" ) )
       stop("If ctr.mat is a list it must be a list of data frames")
@@ -211,7 +210,7 @@ if( inherits( ctr.mat, "list" ) )
 # If ctr.mat is a list of two dataframes then call ci.dfr2 for 2nd
 # order differences
   if( length(ctr.mat)==4 )
-    {  
+    {
   if( !inherits( ctr.mat[[1]], "data.frame" ) |
       !inherits( ctr.mat[[2]], "data.frame" ) |
       !inherits( ctr.mat[[3]], "data.frame" ) |
@@ -272,7 +271,7 @@ cm[cbind(1:nr,ctr[,2])] <- -1
 rownames( cm ) <- rn
 cm
 }
-# end of the function all.dif for all differences 
+# end of the function all.dif for all differences
 
 # Were all differences requested?
 if( diffs )
@@ -342,10 +341,10 @@ if( !diffs )
   if( sample )
     {
     # mvrnorm() returns a vector if sample=1, otherwise a sample by
-    # length(cf) matrix - hence the rbind so we always get a row 
+    # length(cf) matrix - hence the rbind so we always get a row
     # matrix and res then becomes an nrow(ctr.mat) by sample matrix
-    res <- ctr.mat %*% t( rbind(mvrnorm( sample, cf, vcv )) )   
-    }  
+    res <- ctr.mat %*% t( rbind(mvrnorm( sample, cf, vcv )) )
+    }
   else
     {
     ct <- ctr.mat %*% cf
@@ -379,7 +378,7 @@ if( vcov ) invisible( list( coef=ct[,1], vcov=vc ) ) else res
 ci.exp <-
 function( ..., Exp=TRUE, pval=FALSE )
 {
-res <- if( Exp ) 
+res <- if( Exp )
          {
 ci.lin( ..., Exp=TRUE  )[,if(pval) c(5:7,4)   else 5:7     ,drop=FALSE]
          } else {
@@ -405,7 +404,7 @@ zz <- predict( obj, newdata=newdata, se.fit=TRUE, type="link" )
 zz <- cbind( zz$fit, zz$se.fit ) %*% ci.mat( alpha=alpha )
 # transform as requested
 if( missing(Exp) ) {   return( obj$family$linkinv(zz) )
-} else {  if(  Exp ) { return(                exp(zz) ) 
+} else {  if(  Exp ) { return(                exp(zz) )
    } else if( !Exp )   return(                    zz  )
        }
      }
@@ -433,17 +432,17 @@ if( is.matrix(r2) ) if( ncol(r2)==1 ) r2 <- as.vector( r2 )
 
 # move to log scale
 if( !log.tr ) {
-  r1 <- log( r1 ) 
-  r2 <- log( r2 ) 
+  r1 <- log( r1 )
+  r2 <- log( r2 )
   }
 
-# how wide are the condidence intervals    
+# how wide are the condidence intervals
 if( is.matrix(r1) ) if( ncol(r1)>1 ) rg1 <- t( apply(r1,1,range) )
 if( is.matrix(r2) ) if( ncol(r2)>1 ) rg2 <- t( apply(r2,1,range) )
 
 # get the estimates on the log-scale
-R1 <- if( is.matrix(r1) ) apply( rg1, 1, mean ) else r1 
-R2 <- if( is.matrix(r2) ) apply( rg2, 1, mean ) else r2 
+R1 <- if( is.matrix(r1) ) apply( rg1, 1, mean ) else r1
+R2 <- if( is.matrix(r2) ) apply( rg2, 1, mean ) else r2
 if( is.null(se1) ) se1 <- apply( rg1, 1, diff ) / (2*qnorm(1-alpha/2))
 if( is.null(se2) ) se2 <- apply( rg2, 1, diff ) / (2*qnorm(1-alpha/2))
 
@@ -453,5 +452,5 @@ slrr <- sqrt( se1^2 + se2^2 )
   rr <- cbind(lrr,slrr) %*% ci.mat(alpha=alpha)
 if( !log.tr ) rr <- exp( rr )
 if( pval ) return( cbind( rr, 1-pchisq( (lrr/slrr)^2, 1 ) ) )
-      else return(        rr                                )    
+      else return(        rr                                )
 }

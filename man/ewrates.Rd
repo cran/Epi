@@ -5,7 +5,7 @@
 \description{
 England and Wales mortality rates from lung cancer, nasal cancer,
 and all causes 1936 - 1980. The 1936 rates are repeated as 1931 rates in
-order to accomodate follow up for the \code{\link{nickel}} study.
+order to accommodate follow up for the \code{\link{nickel}} study.
 }
 \usage{data(ewrates)}
 \format{

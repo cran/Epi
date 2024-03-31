@@ -1,62 +1,73 @@
 ### R code from vignette source 'yll.rnw'
 
 ###################################################
-### code chunk number 1: yll.rnw:21-24
+### code chunk number 1: yll.rnw:21-27
 ###################################################
-options(width=90, 
+options(width=90,
          SweaveHooks=list(fig=function()
-         par(mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, las=1, bty="n")))
+         par(mar = c(3, 3, 1, 1),
+             mgp = c(3, 1, 0) / 1.6,
+             las = 1,
+             bty = "n")))
 
 
 ###################################################
-### code chunk number 2: states
+### code chunk number 2: yll.rnw:30-31 (eval = FALSE)
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
-library(Epi)
-TM <- matrix(NA, 4, 4)
-rownames(TM) <-
-colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)") 
-TM[1, 2:3] <- TM[2, 4] <- 1
-zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80), 
-                              y = c(80, 80, 20, 20)), 
-                wm = 1.5, 
-                hm = 4)
+## source("../r/boxes.MS.R")
 
 
 ###################################################
 ### code chunk number 3: states
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-zz$Arrowtext <- c(expression(lambda),   
-                  expression(mu[W]),    
-                  expression(mu[D][M]))
-boxes(zz)
+library(Epi)
+TM <- matrix(NA, 4, 4)
+rownames(TM) <-
+colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)")
+TM[1, 2:3] <- TM[2, 4] <- 1
+zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
+                              y = c(80, 80, 20, 20)),
+                wm = 1.5,
+                hm = 4)
 
 
 ###################################################
-### code chunk number 4: yll.rnw:269-270
+### code chunk number 4: states
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+zz$Arrowtext <- c(expression(lambda),
+                  expression(mu[W]),
+                  expression(mu[D][M]))
+boxes.MS(zz)
+
+
+###################################################
+### code chunk number 5: yll.rnw:275-276
 ###################################################
 data(DMepi)
 
 
 ###################################################
-### code chunk number 5: yll.rnw:275-277
+### code chunk number 6: yll.rnw:282-284
 ###################################################
 str(DMepi)
 head(DMepi)
 
 
 ###################################################
-### code chunk number 6: yll.rnw:297-301
+### code chunk number 7: yll.rnw:304-310
 ###################################################
-DMepi <- transform(subset(DMepi, A>30), 
-                    D.T = D.nD + D.DM, 
-                    Y.T = Y.nD + Y.DM)
+DMepi <- transform(subset(DMepi, A > 30),
+                   A = A + 0.5,
+                   P = P + 0.5,
+                 D.T = D.nD + D.DM,
+                 Y.T = Y.nD + Y.DM)
 head(DMepi)
 
 
 ###################################################
-### code chunk number 7: yll.rnw:307-333
+### code chunk number 8: yll.rnw:316-341
 ###################################################
 # Knots used in all models
 (a.kn <- seq(40, 95, , 6))
@@ -69,40 +80,39 @@ pe <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P, c(1990, p.kn, Inf)) + sex, data=DMepi)
 ftable(addmargins(pe, 1), col.vars=3:2)
 ce <- xtabs(cbind(D.nD, D.DM, X) ~ cut(P-A, c(-Inf, c.kn, Inf)) + sex, data=DMepi)
 ftable(addmargins(ce, 1), col.vars=3:2)
-# Fit an APC-model for all transitions, seperately for men and women
-mW.m <- glm(D.nD ~ -1 + Ns(A  , knots=a.kn, int=TRUE) +
-                         Ns( P, knots=p.kn, ref=2005) +
-                         Ns(P-A, knots=c.kn, ref=1950), 
-           offset = log(Y.nD), 
-           family = poisson, 
-             data = subset(DMepi, sex=="M"))
-mD.m <- update(mW.m,  D.DM ~ . , offset=log(Y.DM))
-mT.m <- update(mW.m,  D.T  ~ . , offset=log(Y.T))
-lW.m <- update(mW.m,  X ~ .)
+# Fit an APC-model for all transitions, separately for men and women
+mW.m <- glm(cbind(D.nD, Y.nD) ~ -1 + Ns(    A, knots=a.kn, int=TRUE) +
+                                     Ns(P    , knots=p.kn, ref=2005) +
+                                     Ns(P - A, knots=c.kn, ref=1950),
+            family = poisreg,
+              data = subset(DMepi, sex=="M"))
+mD.m <- update(mW.m, cbind(D.DM, Y.DM) ~ .)
+mT.m <- update(mW.m, cbind(D.T , Y.T ) ~ .)
+lW.m <- update(mW.m, cbind(X   , Y.nD) ~ .)
 # Model for women
-mW.f <- update(mW.m, data = subset(DMepi, sex=="F"))
-mD.f <- update(mD.m, data = subset(DMepi, sex=="F"))
-mT.f <- update(mT.m, data = subset(DMepi, sex=="F"))
-lW.f <- update(lW.m, data = subset(DMepi, sex=="F"))
+mW.f <- update(mW.m, data = subset(DMepi, sex == "F"))
+mD.f <- update(mD.m, data = subset(DMepi, sex == "F"))
+mT.f <- update(mT.m, data = subset(DMepi, sex == "F"))
+lW.f <- update(lW.m, data = subset(DMepi, sex == "F"))
 
 
 ###################################################
-### code chunk number 8: yll.rnw:340-377
+### code chunk number 9: yll.rnw:348-385
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
-aYLL <- NArray(list(type = c("Imm", "Tot", "Sus"), 
-                       sex = levels(DMepi$sex), 
-                       age = a.ref, 
+aYLL <- NArray(list(type = c("Imm", "Tot", "Sus"),
+                       sex = levels(DMepi$sex),
+                       age = a.ref,
                       date = p.ref))
 str(aYLL)
 system.time(
 for(ip in p.ref)
    {
-   nd <- data.frame(A = seq(30, 90, 0.2)+0.1, 
-                     P = ip, 
-                  Y.nD = 1, 
-                  Y.DM = 1, 
+   nd <- data.frame(A = seq(30, 90, 0.2)+0.1,
+                     P = ip,
+                  Y.nD = 1,
+                  Y.DM = 1,
                   Y.T  = 1)
    muW.m <- ci.pred(mW.m, nd)[, 1]
    muD.m <- ci.pred(mD.m, nd)[, 1]
@@ -112,61 +122,66 @@ for(ip in p.ref)
    muD.f <- ci.pred(mD.f, nd)[, 1]
    muT.f <- ci.pred(mT.f, nd)[, 1]
    lam.f <- ci.pred(lW.f, nd)[, 1]
-   aYLL["Imm", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=NULL, 
+   aYLL["Imm", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Imm", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=NULL,  
+   aYLL["Imm", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Tot", "M", , paste(ip)] <- yll(int=0.2, muT.m, muD.m, lam=NULL,  
+   aYLL["Tot", "M", , paste(ip)] <- yll(int=0.2, muT.m, muD.m, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Tot", "F", , paste(ip)] <- yll(int=0.2, muT.f, muD.f, lam=NULL,  
+   aYLL["Tot", "F", , paste(ip)] <- yll(int=0.2, muT.f, muD.f, lam=NULL,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Sus", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=lam.m, 
+   aYLL["Sus", "M", , paste(ip)] <- yll(int=0.2, muW.m, muD.m, lam=lam.m,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
-   aYLL["Sus", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=lam.f, 
+   aYLL["Sus", "F", , paste(ip)] <- yll(int=0.2, muW.f, muD.f, lam=lam.f,
                                       A=a.ref, age.in=30, note=FALSE)[-1]
    })
 round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 
 
 ###################################################
-### code chunk number 9: imm
+### code chunk number 10: imm
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plyll <- function(wh){
-par(mfrow=c(1, 2), mar=c(3, 3, 1, 1), mgp=c(3, 1, 0)/1.6, bty="n", las=1)
-
-matplot(a.ref, aYLL[wh, "M", , ], 
-         type="l", lty=1, col="blue", lwd=1:2, 
-         ylim=c(0, 12), xlab="Age", 
-         ylab="Years lost to DM", yaxs="i")
-abline(v=50, h=1:10, col=gray(0.7))
-text(90, 11, "Men", col="blue", adj=1)
+plyll <- function(wh, xtxt){
+par(mfrow = c(1, 2),
+      mar = c(3, 3, 1, 1),
+      mgp = c(3, 1, 0) / 1.6,
+      bty = "n",
+      las = 1)
+matplot(a.ref, aYLL[wh, "M", , ],
+         type="l", lty=1, col="blue", lwd=1:2,
+         ylim=c(0, 12), xlab="Age",
+         ylab=paste0("Years lost to DM", xtxt),
+         yaxs="i")
+abline(v=50, h=1:11, col=gray(0.7))
+text(90, 11.5, "Men", col="blue", adj=1)
 text(40, aYLL[wh, "M", "40", "1996"], "1996", adj=c(0, 0), col="blue")
 text(43, aYLL[wh, "M", "44", "2016"], "2016", adj=c(1, 1), col="blue")
 
-matplot(a.ref, aYLL[wh, "F", , ], 
-         type="l", lty=1, col="red", lwd=1:2, 
-         ylim=c(0, 12), xlab="Age", 
-         ylab="Years lost to DM", yaxs="i")
-abline(v=50, h=1:10, col=gray(0.7))
-text(90, 11, "Women", col="red", adj=1)
+matplot(a.ref, aYLL[wh, "F", , ],
+         type="l", lty=1, col="red", lwd=1:2,
+         ylim=c(0, 12), xlab="Age",
+         ylab=paste0("Years lost to DM", xtxt),
+         yaxs="i")
+abline(v=50, h=1:11, col=gray(0.7))
+text(90, 11.5, "Women", col="red", adj=1)
 text(40, aYLL[wh, "F", "40", "1996"], "1996", adj=c(0, 0), col="red")
 text(43, aYLL[wh, "F", "44", "2016"], "2016", adj=c(1, 1), col="red")
 }
-plyll("Imm")
+plyll("Imm", " - immunity assumption")
 
 
 ###################################################
-### code chunk number 10: tot
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-plyll("Tot")
-
-
-###################################################
-### code chunk number 11: sus
+### code chunk number 11: tot
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-plyll("Sus")
+plyll("Tot", " - total mortality refernce")
+
+
+###################################################
+### code chunk number 12: sus
+###################################################
+getOption("SweaveHooks")[["fig"]]()
+plyll("Sus", " - susceptibility assumed")
 
 
