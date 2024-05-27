@@ -15,7 +15,10 @@ legendbox(x, y,
            end = "no. end",
          trans = "Transitions",
          rates = "\n(Rate)",
-          font = 1, ...)
+          font = 1,
+         right = !left,
+          left = !right,
+           ...)
 }
 \arguments{
   \item{x}{
@@ -45,11 +48,23 @@ Text describing the rates
   \item{font}{
 Font to use for the text 
 }
+  \item{right}{
+Should a text describing arrow texts be on the r.h.s. of the box?
+Defaults to TRUE.
+}
+  \item{left}{
+Should a text describing arrow texts be on the l.h.s. of the box?
+}
   \item{\dots}{
-Argumants passed on to \code{tbox}
+Arguments passed on to \code{tbox}
 }
 }
 \value{None.
+}
+\details{The function is called for its side effect of adding an
+  explanatory box to the plot. If \code{right} is true, an explanation
+  of events and rates are added to the right of the box. Similarly for
+  \code{left}. It is admissible that \code{left == right}.
 }
 \author{
 Bendix Carstensen, \url{http://bendixcarstensen.com}

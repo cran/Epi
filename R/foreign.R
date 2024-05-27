@@ -2,33 +2,40 @@
 msdata <- function (obj, ...) UseMethod("msdata")
 
 msdata.Lexis <-
-function( obj,
-   time.scale = timeScales(obj)[1], ... )
+function(obj, time.scale = timeScales(obj)[1], ...)
 {
 tr.mat <- tmat(obj)
 # Essentially a msdata object is a stacked Lexis object with
-# other variable names
+# other variable names and a few attributes
 tmp <- stack.Lexis(factorize.Lexis(obj))
-lv  <- c(match(timeScales(obj), names(tmp)),
-                 grep("lex\\.", names(tmp)))
+lexvars <- c(match(timeScales(obj), names(tmp)),
+             grep("lex\\.", names(tmp)))
 # The transitions that we refer to are extracted from lex.Tr:
 ss <- strsplit(as.character(tmp$lex.Tr), "->")
+st <- levels(obj)
 # The resulting dataframe is created by renaming columns in the
-# stacked Lexis object
-data.frame( id = tmp$lex.id,
-          from = sapply( ss, FUN=function(x) x[1] ),
-            to = sapply( ss, FUN=function(x) x[2] ),
-         trans = as.integer( tmp$lex.Tr ),
-        Tstart = tmp[,time.scale],
-         Tstop = tmp[,time.scale] + tmp$lex.dur,
-          time = tmp$lex.dur,
-        status = as.integer(tmp$lex.Fail),
-                 tmp[,-lv] )
+# stacked Lexis object and naming states by integers(!).
+msd <- data.frame(id = tmp$lex.id,
+                from = factor(sapply(ss, FUN = function(x) x[1]),
+                              levels = st,
+                              labels = 1:length(st)),
+                  to = factor(sapply(ss, FUN = function(x) x[2]),
+                              levels = st,
+                              labels = 1:length(st)),
+               trans = as.integer(tmp$lex.Tr),
+              Tstart = tmp[,time.scale],
+               Tstop = tmp[,time.scale] + tmp$lex.dur,
+                time = tmp$lex.dur,
+              status = as.integer(tmp$lex.Fail),
+                       tmp[,-lexvars])
+class(msd) <- c("msdata", "data.frame")
+attr(msd, "trans") <- tr.mat
+msd
 }
 
 # The etm method
 etm <- function (data, ...) UseMethod("etm")
- 
+
 etm.Lexis <-
 function( data,
     time.scale = timeScales(data)[1],

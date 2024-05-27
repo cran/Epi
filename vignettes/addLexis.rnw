@@ -32,6 +32,11 @@ library(tidyr)
 @ %
 \renewcommand{\rwpre}{./addLexis}
 
+<<echo = FALSE>>=
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+@ %
+
 \chapter{Overview and rationale}
 
 This note describes the functions \texttt{addCov.Lexis}, designed to
@@ -416,8 +421,8 @@ print(fix, nd = 2)
 
 \subsection{Follow-up data: \texttt{DMlate}}
 
-As example data we use the \texttt{DMlate} example data from the
-\texttt{Epi} package:
+As example data we use rows from the \texttt{DMlate} example data from
+the \texttt{Epi} package:
 <<>>=
 data(DMlate) ; str(DMlate)
 Lx <- Lexis(entry = list(per = dodm,
@@ -426,7 +431,7 @@ Lx <- Lexis(entry = list(per = dodm,
              exit = list(per = dox),
       exit.status = factor(!is.na(dodth),
                            labels = c("DM", "Dead")),
-             data = DMlate)
+             data = DMlate[sample(1:nrow(DMlate), 1000),])
 summary(Lx)
 @ %
 We split the data along the age-scale (omitting the variables we shall
@@ -494,12 +499,12 @@ We now have three artificial drug purchase datasets so we can see how
 
 \subsection{Using \texttt{addDrug}}
 
-\subsubsection{1000 and 500 persons}
+\subsubsection{100 and 500 persons}
 
 We start out with a small sample and a three month grace period to limit
 the number of gaps:
 <<>>=
-Sx1 <- subset(Sx, lex.id < 1000)
+Sx1 <- subset(Sx, lex.id < 100)
 pur <- list(A = subset(purA, lex.id < 1000),
             B = subset(purB, lex.id < 1000),
             C = subset(purC, lex.id < 1000))
@@ -524,9 +529,9 @@ summary(ad2)
 
 We can try to cut the number of purchases in half:
 <<>>=
-pur <- list(A = subset(purA, lex.id < 1000 & runif(nrow(purA)) < 0.5),
-            B = subset(purB, lex.id < 1000 & runif(nrow(purB)) < 0.5),
-            C = subset(purC, lex.id < 1000 & runif(nrow(purC)) < 0.5))
+pur <- list(A = subset(purA, lex.id < 100 & runif(nrow(purA)) < 0.5),
+            B = subset(purB, lex.id < 100 & runif(nrow(purB)) < 0.5),
+            C = subset(purC, lex.id < 100 & runif(nrow(purC)) < 0.5))
 sapply(pur, nrow)
 system.time(ad3 <- addDrug.Lexis(Sx1, pur, tnam = "per", grace = 1/6))
 summary(Sx1)
@@ -547,8 +552,8 @@ crash.
 Finally we try to cut the number of drugs, to assess how this
 influences the run time:
 <<>>=
-pur <- list(B = subset(purB, lex.id < 1000),
-            C = subset(purC, lex.id < 1000))
+pur <- list(B = subset(purB, lex.id < 100),
+            C = subset(purC, lex.id < 100))
 sapply(pur, nrow)
 system.time(ad4 <- addDrug.Lexis(Sx1, pur, tnam = "per", grace = 1/6))
 summary(Sx1)
@@ -624,26 +629,33 @@ gives the possibility to keep selected records, or more precisely
 beginnings. \texttt{keep} prevents a record to be collapsed with a
 previous one, but not with a subsequent one.
 
-\subsection{The entire example dataset}
+%% \subsection{The entire example dataset}
 
-The entire amount of example data consist of some 10,000 persons and
-some 200,000 prescriptions:
-<<eval=FALSE>>=
-dim(Sx)
-pur <- list(A = purA,
-            B = purB,
-            C = purC)
-sapply(pur, nrow)
-system.time(adx <- addDrug.Lexis(Sx, pur, tnam = "per", grace = 1/6))
-system.time(adc <- coarse.Lexis(adx, lim = c(1/6, 1/2)))
-summary(Sx)
-summary(adx)
-summary(adc)
-@
-We see hat the number of records is quite large because we have cut at
-all purchase dates and integer ages. For practical purposes we might
-therefore want to merge successive records with a total duration
-\texttt{lex.dur} less than some limit.
+%% The entire amount of example data consist of some 10,000 persons and
+%% some 200,000 prescriptions:
+%% <<eval=FALSE>>=
+%% dim(Sx)
+%% pur <- list(A = purA,
+%%             B = purB,
+%%             C = purC)
+%% sapply(pur, nrow)
+%% system.time(adx <- addDrug.Lexis(Sx, pur, tnam = "per", grace = 1/6))
+%% system.time(adc <- coarse.Lexis(adx, lim = c(1/6, 1/2)))
+%% summary(Sx)
+%% summary(adx)
+%% summary(adc)
+%% @ %
+%% We see hat the number of records is quite large because we have cut at
+%% all purchase dates and integer ages. For practical purposes we might
+%% therefore want to merge successive records with a total duration
+%% \texttt{lex.dur} less than some limit.
+
+<<echo = FALSE>>=
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+@ %
 
 \bibliographystyle{plain}
 

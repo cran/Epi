@@ -333,7 +333,7 @@ MSobj$Arrows[1:2,"col.arr"] <- "red"
 boxes( MSobj )
     }
 \seealso{
-   \code{\link{tmat.Lexis}}
+   \code{\link{tmat.Lexis}}, \code{\link{legendbox}}
    }
 \keyword{survival}
 \keyword{hplot}

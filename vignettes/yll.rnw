@@ -27,9 +27,12 @@ options(width=90,
              bty = "n")))
 @ %
 \renewcommand{\rwpre}{./yll}
-<<echo = FALSE, results = hide, eval = FALSE>>=
-source("../r/boxes.MS.R")
-@
+
+<<echo = FALSE>>=
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+@ %
+
 \chapter{Theory and technicalities}
 
 This vignette for the \texttt{Epi} package describes the
@@ -464,6 +467,13 @@ plyll("Sus", " - susceptibility assumed")
 From figure \ref{fig:sus} we see that for men aged 50 the years lost to
 diabetes has decreased from a bit over 8 to a bit less than 6 years,
 and for women from 8.5 to 5 years; so a greater improvement for women.
+
+<<echo = FALSE>>=
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+@ %
 
 \bibliographystyle{plain}
 

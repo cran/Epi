@@ -26,6 +26,11 @@ options( width=90,
          par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
 @ %
 
+<<echo = FALSE>>=
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+@ %
+
 \chapter{Using \texttt{simLexis}}
 
 \section{Introduction}
@@ -36,11 +41,11 @@ histories through multistate models implemented in
 to depend on multiple time scales, including timescales defined as
 time since entry to a particular state (duration). This therefore also
 covers the case where time \emph{at} entry into a state is an
-explanatory variable for the rates, since time at entry is merely time
-minus duration. Thus, the set-up here goes beyond Markov- and
-semi-Markov-models, and brings simulation based estimation of
-state-occupancy probabilities into the realm of realistic multistate
-models.
+explanatory variable for the rates, since time at entry is merely
+(current) time minus duration. Thus, the set-up here goes beyond
+Markov- and semi-Markov-models, and brings simulation based estimation
+of state-occupancy probabilities into the realm of realistic
+multistate models.
 
 The basic idea is to simulate a new \texttt{Lexis} object
 \cite{Plummer.2011,Carstensen.2011a} as defined in the \texttt{Epi}
@@ -99,7 +104,7 @@ particular state. Hence, starting conditions should be represented as
 a \texttt{Lexis} object (where \texttt{lex.dur} and \texttt{lex.Xst}
 are ignored, since there is no follow-up yet), where the time scale
 information is in the attributes \texttt{time.scales} and
-\texttt{time.since} respectively. 
+\texttt{time.since} respectively.
 
 Note that \texttt{time.scales} attribute is a vector of names of
 variables in the \texttt{Lexis} object, so all of these variables
@@ -263,7 +268,7 @@ Note that when we tease out the event records for transition to
 \verb|lex.Xst=="Ins"|), we should add \verb|lex.Cst!=lex.Xst|, to
 include only transition records and avoiding including records of
 sojourn time in the transient state.
- 
+
 We then fit Poisson models to transition rates, using the wrapper
 \texttt{Ns} from the \texttt{Epi} package to simplify the
 specification of the rates:
@@ -276,7 +281,7 @@ DM.Ins <- glm( (lex.Xst=="Ins") ~ Ns( Age  , knots=ai.kn ) +
                data = subset(Si,lex.Cst=="DM") )
 ci.exp( DM.Ins )
 class( DM.Ins )
-@ % 
+@ %
 We can also fit this model with a slightly simpler syntax using the
 \texttt{glm.Lexis} function:
 <<>>=
@@ -324,7 +329,7 @@ However, there is nothing that prevents us from testing this
 assumption; we can just fit a model for the mortality rates in the
 entire data frame \texttt{Si}, and compare the deviance from this with
 the sum of the deviances from the separate models using the \texttt{glm.Lexis}
-function:  
+function:
 <<prop-haz>>=
 All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
                       formula = ~ Ns( Age  , knots=ad.kn ) +
@@ -567,8 +572,8 @@ models for the transitions. It is not a parameter that can be easily
 determined from the \texttt{TR} object, hence it must be supplied by
 the user.
 <<simL>>=
-set.seed( 52381764 )
-Nsim <- 5000
+set.seed(52381764)
+Nsim <- 500
 system.time( simL <- simLexis( Tr,
                               ini,
                           t.range = 12,
@@ -662,7 +667,7 @@ nSt <- nState( subset(simL,sex=="M"),
                at=seq(0,11,0.2), from=1995, time.scale="Per" ) )
 nSt[1:10,]
 @ %
-We see that as time goes by, the 5000 men slowly move away from the
+We see that as time goes by, the 500 men slowly move away from the
 starting state (\texttt{DM}).
 
 Based on this table (\texttt{nSt} is a table) we can now compute the
@@ -928,6 +933,13 @@ follows:
     --- exactly as above.
   \end{enumerate}
 \end{enumerate}
+
+<<echo = FALSE>>=
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+@ %
 
 \bibliographystyle{plain}
 \begin{thebibliography}{1}

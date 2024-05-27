@@ -30,6 +30,11 @@ options(width = 90,
 library(Epi)
 @ %
 
+<<echo = FALSE>>=
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+@ %
+
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
@@ -1313,6 +1318,7 @@ daily use.
 \item[Boxes and plots]\ \\
 \begin{description}
 \item[\texttt{boxes.Lexis}] draw a diagram of states and transitions
+\item[\texttt{legendbox}] draw a box explaining the numbers output by \texttt{boxes.Lexis} 
 \item[\texttt{plot.Lexis}] draw a standard Lexis diagram
 \item[\texttt{points.Lexis}] add points to a Lexis diagram
 \item[\texttt{lines.Lexis}] add lines to a Lexis diagram
@@ -1396,6 +1402,13 @@ daily use.
 \end{description}
 
 \end{description}
+
+<<echo = FALSE>>=
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+@ %
 
 \renewcommand{\bibname}{References}
 

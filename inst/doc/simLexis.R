@@ -9,7 +9,14 @@ options( width=90,
 
 
 ###################################################
-### code chunk number 2: start
+### code chunk number 2: simLexis.rnw:29-31
+###################################################
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+
+
+###################################################
+### code chunk number 3: start
 ###################################################
 options( width=90 )
 library( Epi )
@@ -17,7 +24,7 @@ print( sessionInfo(), l=F )
 
 
 ###################################################
-### code chunk number 3: Lexis
+### code chunk number 4: Lexis
 ###################################################
 data(DMlate)
 dml <- Lexis( entry = list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
@@ -27,7 +34,7 @@ dml <- Lexis( entry = list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
 
 
 ###################################################
-### code chunk number 4: cut
+### code chunk number 5: cut
 ###################################################
 dmi <- cutLexis( dml, cut = dml$doins,
                       pre = "DM",
@@ -38,16 +45,15 @@ summary( dmi, timeScales=T )
 
 
 ###################################################
-### code chunk number 5: boxes
+### code chunk number 6: boxes
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 boxes( dmi, boxpos = list(x=c(20,20,80,80),
                         y=c(80,20,80,20)),
             scale.R = 1000, show.BE = TRUE )
 
 
 ###################################################
-### code chunk number 6: split
+### code chunk number 7: split
 ###################################################
 Si <- splitLexis( dmi, seq(0,20,1/4), "DMdur" )
 summary( Si )
@@ -55,7 +61,7 @@ print( subset( Si, lex.id==97 )[,1:10], digits=6 )
 
 
 ###################################################
-### code chunk number 7: knots
+### code chunk number 8: knots
 ###################################################
 nk <- 5
 ( ai.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
@@ -71,7 +77,7 @@ nk <- 5
 
 
 ###################################################
-### code chunk number 8: Poisson
+### code chunk number 9: Poisson
 ###################################################
 library( splines )
 DM.Ins <- glm( (lex.Xst=="Ins") ~ Ns( Age  , knots=ai.kn ) +
@@ -84,7 +90,7 @@ class( DM.Ins )
 
 
 ###################################################
-### code chunk number 9: simLexis.rnw:282-288
+### code chunk number 10: simLexis.rnw:287-293
 ###################################################
 DM.Ins <- glm.Lexis( Si, from = "DM", to = "Ins",
                       formula = ~ Ns( Age  , knots=ai.kn ) +
@@ -95,7 +101,7 @@ class( DM.Ins )
 
 
 ###################################################
-### code chunk number 10: simLexis.rnw:293-302
+### code chunk number 11: simLexis.rnw:298-307
 ###################################################
 DM.Dead <- glm.Lexis( Si, from = "DM", to = "Dead",
                        formula = ~ Ns( Age  , knots=ad.kn ) +
@@ -109,7 +115,7 @@ Ins.Dead <- glm.Lexis( Si, from = "Ins",
 
 
 ###################################################
-### code chunk number 11: prop-haz
+### code chunk number 12: prop-haz
 ###################################################
 All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
                       formula = ~ Ns( Age  , knots=ad.kn ) +
@@ -120,7 +126,7 @@ round( ci.exp( All.Dead ), 3 )
 
 
 ###################################################
-### code chunk number 12: get-dev
+### code chunk number 13: get-dev
 ###################################################
 what <- c("null.deviance","df.null","deviance","df.residual")
 ( rD <- unlist(  DM.Dead[what] ) )
@@ -130,7 +136,7 @@ round( c( dd <- rA-(rI+rD), "pVal"=1-pchisq(dd[3],dd[4]+1) ), 3 )
 
 
 ###################################################
-### code chunk number 13: pr-array
+### code chunk number 14: pr-array
 ###################################################
 pr.rates <- NArray( list( DMdur = seq(0,12,0.1),
                           DMage = 4:7*10,
@@ -141,7 +147,7 @@ str( pr.rates )
 
 
 ###################################################
-### code chunk number 14: mknd
+### code chunk number 15: mknd
 ###################################################
 nd <- data.frame( DMdur = as.numeric( dimnames(pr.rates)[[1]] ),
                 lex.Cst = factor( 1, levels=1:4,
@@ -150,7 +156,7 @@ nd <- data.frame( DMdur = as.numeric( dimnames(pr.rates)[[1]] ),
 
 
 ###################################################
-### code chunk number 15: make-pred
+### code chunk number 16: make-pred
 ###################################################
 for( ia in dimnames(pr.rates)[[2]] )
    {
@@ -171,9 +177,8 @@ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
 
 
 ###################################################
-### code chunk number 16: mort-int
+### code chunk number 17: mort-int
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
 plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
       log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
@@ -187,7 +192,7 @@ for( aa in 4:7*10 ) for( ii in 1:4 )
 
 
 ###################################################
-### code chunk number 17: Tr
+### code chunk number 18: Tr
 ###################################################
 Tr <- list( "DM" = list( "Ins"       = DM.Ins,
                          "Dead"      = DM.Dead  ),
@@ -195,13 +200,13 @@ Tr <- list( "DM" = list( "Ins"       = DM.Ins,
 
 
 ###################################################
-### code chunk number 18: make-ini
+### code chunk number 19: make-ini
 ###################################################
 str( ini <- Si[NULL,1:9] )
 
 
 ###################################################
-### code chunk number 19: ini-fill
+### code chunk number 20: ini-fill
 ###################################################
 ini[1:2,"lex.id"] <- 1:2
 ini[1:2,"lex.Cst"] <- "DM"
@@ -213,10 +218,10 @@ ini
 
 
 ###################################################
-### code chunk number 20: simL
+### code chunk number 21: simL
 ###################################################
-set.seed( 52381764 )
-Nsim <- 5000
+set.seed(52381764)
+Nsim <- 500
 system.time( simL <- simLexis( Tr,
                               ini,
                           t.range = 12,
@@ -224,13 +229,13 @@ system.time( simL <- simLexis( Tr,
 
 
 ###################################################
-### code chunk number 21: sum-simL
+### code chunk number 22: sum-simL
 ###################################################
 summary( simL, by="sex" )
 
 
 ###################################################
-### code chunk number 22: Tr.p-simP
+### code chunk number 23: Tr.p-simP
 ###################################################
 Tr.p <- list( "DM" = list( "Ins"       = DM.Ins,
                            "Dead"      = All.Dead  ),
@@ -243,7 +248,7 @@ summary( simP, by="sex" )
 
 
 ###################################################
-### code chunk number 23: Cox-dur
+### code chunk number 24: Cox-dur
 ###################################################
 library( survival )
 Cox.Dead <- coxph( Surv( DMdur, DMdur+lex.dur,
@@ -256,7 +261,7 @@ round( ci.exp( Cox.Dead ), 3 )
 
 
 ###################################################
-### code chunk number 24: TR.c
+### code chunk number 25: TR.c
 ###################################################
 Tr.c <- list( "DM" = list( "Ins"       = Tr$DM$Ins,
                            "Dead"      = Cox.Dead  ),
@@ -269,7 +274,7 @@ summary( simC, by="sex" )
 
 
 ###################################################
-### code chunk number 25: nState
+### code chunk number 26: nState
 ###################################################
 system.time(
 nSt <- nState( subset(simL,sex=="M"),
@@ -278,9 +283,8 @@ nSt[1:10,]
 
 
 ###################################################
-### code chunk number 26: pstate0
+### code chunk number 27: pstate0
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
@@ -294,9 +298,8 @@ box()
 
 
 ###################################################
-### code chunk number 27: pstatex
+### code chunk number 28: pstatex
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 clr <- c("limegreen","orange")
 # expand with a lighter version of the two chosen colors
 clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
@@ -329,9 +332,8 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 
 
 ###################################################
-### code chunk number 28: pstatey
+### code chunk number 29: pstatey
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
 # Men
 pM <- pState( nState( subset(simL,sex=="M"),
@@ -368,9 +370,8 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 
 
 ###################################################
-### code chunk number 29: comp-0
+### code chunk number 30: comp-0
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 PrM  <- pState( nState( subset(simP,sex=="M"),
                         at=seq(0,11,0.2),
                         from=60,
@@ -404,5 +405,14 @@ lines(  PrF, border="blue" , col="transparent", lwd=3 )
 lines( CoxF, border="red"  , col="transparent", lwd=3 )
 text( 60.5, 0.05, "F" )
 box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
+
+
+###################################################
+### code chunk number 31: simLexis.rnw:937-941
+###################################################
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 
 
