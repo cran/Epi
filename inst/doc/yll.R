@@ -21,6 +21,7 @@ cat("Start time:", format(anfang, "%F, %T"), "\n")
 ###################################################
 ### code chunk number 3: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 library(Epi)
 TM <- matrix(NA, 4, 4)
 rownames(TM) <-
@@ -35,6 +36,7 @@ zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
 ###################################################
 ### code chunk number 4: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c(expression(lambda),
                   expression(mu[W]),
                   expression(mu[D][M]))
@@ -140,6 +142,7 @@ round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 ###################################################
 ### code chunk number 10: imm
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh, xtxt){
 par(mfrow = c(1, 2),
       mar = c(3, 3, 1, 1),
@@ -172,12 +175,14 @@ plyll("Imm", " - immunity assumption")
 ###################################################
 ### code chunk number 11: tot
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Tot", " - total mortality refernce")
 
 
 ###################################################
 ### code chunk number 12: sus
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Sus", " - susceptibility assumed")
 
 

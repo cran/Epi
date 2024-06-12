@@ -316,7 +316,7 @@ The points where we compute the predicted rates are midpoints of
 intervals of length 1/100 year. These points are unrelated to the
 follow-up intervals in which we split the data for analysis---they
 were 1 month intervals, here we use 1/10 year (about 1 month, in real
-life a small interval should be used, say 1/50 year):
+life a smaller interval should be used, say 1/50 year):
 <<>>=
 nd <- data.frame(tfd = seq(0, 10, 1/10))
 rownames(nd) <- nd$tfd
@@ -327,7 +327,7 @@ With this we can show the rates as a function of the time since entry
 <<rates, fig = TRUE, width = 8>>=
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
-                       ci.pred(mO, nd))*1000,
+                       ci.pred(mO, nd)) * 1000,
          col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE,
          xlab = "Time since DM diagnosis (years)",
          ylab = "Rates per 1000 PY", ylim = c(0.05,500), yaxt = "n")
@@ -384,7 +384,7 @@ etc:
 # values in a vector
 mp <- function(x) x[-1] - diff(x) / 2
 #
-int <- 1/50
+int <- 1/10
 # rates at midpoints of intervals
 lD <- mp(ci.pred(mD, nd)[,1])
 lI <- mp(ci.pred(mI, nd)[,1])
@@ -453,7 +453,7 @@ Sj <- c(sjA = sum(Sv * int),
         sjO = sum(rO * int))
 c(Sj, sum(Sj))
 @ %
-We see that there is a small rounding error in the calculations; the
+We see that there is a some rounding error in the calculations; the
 sum should really be exactly 10.
 
 This was a demonstration on how to compute the rates, cumulative risks

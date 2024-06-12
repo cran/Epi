@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{Competing risks with Lexis, parametric rates and simulation based confidence intervals}
-
+\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
 
 % ----------------------------------------------------------------------
@@ -22,11 +22,19 @@ Bendix Carstensen
 
 \input{topreport}
 \renewcommand{\rwpre}{./crisk}
-\begin{Schunk}
-\begin{Soutput}
-Start time: 2024-05-27, 17:07:14 
-\end{Soutput}
-\end{Schunk}
+<<echo=FALSE>>=
+options(width = 90,
+        SweaveHooks = list(fig = function()
+        par(mar = c(3,3,1,1),
+            mgp = c(3,1,0)/1.6,
+            las = 1,
+            bty = "n",
+           lend = "butt")))
+@ %
+<<echo = FALSE>>=
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
+@ %
 
 \chapter{Competing risks}
 
@@ -225,101 +233,52 @@ above. Therefore the subdistribution is not included in this vignette.
 As an illustrative data example we use the (fake) diabetes register
 data; we set up the Lexis object, an then cut the follow-up time at
 dates of OAD and Ins:
-\begin{Schunk}
-\begin{Sinput}
-> library(Epi)
-> data(DMlate)
-> Ldm <- Lexis(entry = list(per = dodm,
-+                           age = dodm-dobth,
-+                           tfd = 0),
-+               exit = list(per = dox),
-+        exit.status = factor(!is.na(dodth), labels = c("DM", "Dead")),
-+               data = DMlate[sample(1:nrow(DMlate), 1000),])
-\end{Sinput}
-\begin{Soutput}
-NOTE: entry.status has been set to "DM" for all.
-NOTE: Dropping  1  rows with duration of follow up < tol
-\end{Soutput}
-\begin{Sinput}
-> summary(Ldm, t = T)
-\end{Sinput}
-\begin{Soutput}
-Transitions:
-     To
-From  DM Dead  Records:  Events: Risk time:  Persons:
-  DM 754  245       999      245    5442.22       999
-
-Timescales:
-per age tfd 
- ""  ""  "" 
-\end{Soutput}
-\begin{Sinput}
-> set.seed(1952)
-> Mdm <- mcutLexis(Ldm,
-+                   wh = c('dooad','doins'),
-+           new.states = c('OAD','Ins'),
-+           seq.states = FALSE,
-+                 ties = TRUE)
-\end{Sinput}
-\begin{Soutput}
-NOTE: Precursor states set to DM 
-NOTE: 4 records with tied events times resolved (adding 0.01 random uniform),
-      so results are only reproducible if the random number seed was set.
-\end{Soutput}
-\begin{Sinput}
-> summary(Mdm)
-\end{Sinput}
-\begin{Soutput}
-Transitions:
-     To
-From       DM Dead OAD Ins+OAD Ins  Records:  Events: Risk time:  Persons:
-  DM      299   97 282       0  72       750      451    2301.57       750
-  OAD       0   94 311     109   0       514      203    2191.61       514
-  Ins+OAD   0   38   0      96   0       134       38     567.19       134
-  Ins       0   16   0      21  48        85       37     381.85        85
-  Sum     299  245 593     226 120      1483      729    5442.22       999
-\end{Soutput}
-\end{Schunk}
+<<>>=
+library(Epi)
+data(DMlate)
+Ldm <- Lexis(entry = list(per = dodm,
+                          age = dodm-dobth,
+                          tfd = 0),
+              exit = list(per = dox),
+       exit.status = factor(!is.na(dodth), labels = c("DM", "Dead")),
+              data = DMlate[sample(1:nrow(DMlate), 1000),])
+summary(Ldm, t = T)
+set.seed(1952)
+Mdm <- mcutLexis(Ldm,
+                  wh = c('dooad','doins'),
+          new.states = c('OAD','Ins'),
+          seq.states = FALSE,
+                ties = TRUE)
+summary(Mdm)
+@
 We initially split the FU before drug inception in intervals of
 1/12 year, creating a \texttt{Lexis} object for a competing risks
 situation with three possible event types:
-\begin{Schunk}
-\begin{Sinput}
-> Sdm <- splitLexis(factorize(subset(Mdm,
-+                                    lex.Cst == "DM")),
-+                   time.scale = "tfd",
-+                       breaks = seq(0, 20, 1/12))
-> summary(Sdm)
-\end{Sinput}
-\begin{Soutput}
-Transitions:
-     To
-From    DM Dead OAD Ins  Records:  Events: Risk time:  Persons:
-  DM 27562   97 282  72     28013      451    2301.57       750
-\end{Soutput}
-\end{Schunk}
+<<>>=
+Sdm <- splitLexis(factorize(subset(Mdm,
+                                   lex.Cst == "DM")),
+                  time.scale = "tfd",
+                      breaks = seq(0, 20, 1/12))
+summary(Sdm)
+@ %
 We can illustrate the follow-up in the full data frame and in the
 restricted data frame
-\begin{Schunk}
-\begin{Sinput}
-> boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
-+                          y = c(85, 50, 15, 85, 15)),
-+           scale.R = 100,
-+           show.BE = TRUE)
-\end{Sinput}
-\end{Schunk}
+<<boxes5, fig = TRUE, width = 8>>=
+boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
+                         y = c(85, 50, 15, 85, 15)),
+          scale.R = 100,
+          show.BE = TRUE)
+@ %
 \insfig{boxes5}{0.8}{The transitions in the multistate model, where
     follow-up is extended also after beginning of first drug
     exposure. Rates in brackets are per 100 PY.}%
-\begin{Schunk}
-\begin{Sinput}
-> boxes(Relevel(Sdm, c(1, 4, 2, 3)),
-+       boxpos  = list(x = c(15, 85, 75, 15),
-+                      y = c(85, 85, 30, 15)),
-+       scale.R = 100,
-+       show.BE = TRUE )
-\end{Sinput}
-\end{Schunk}
+<<boxes4, fig = TRUE, width = 8>>=
+boxes(Relevel(Sdm, c(1, 4, 2, 3)),
+      boxpos  = list(x = c(15, 85, 75, 15),
+                     y = c(85, 85, 30, 15)),
+      scale.R = 100,
+      show.BE = TRUE )
+@ %
 \insfig{boxes4}{0.8}{The transitions in the competing risks model,
   where follow-up is stopped at drug exposure. By that token only the
   \texttt{DM} state has person-years; a characteristic of a competing risks
@@ -338,32 +297,11 @@ wrapper \texttt{gam.Lexis} to model rates a smooth functions of time
 argument because there is only one possible \texttt{from} for each
 \texttt{to} (incidentally the same for all \texttt{to} states, namely
 \texttt{DM}):
-\begin{Schunk}
-\begin{Sinput}
-> mD <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition:
-DM->Dead
-\end{Soutput}
-\begin{Sinput}
-> mO <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition:
-DM->OAD
-\end{Soutput}
-\begin{Sinput}
-> mI <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object Sdm with log link:
-Rates for the transition:
-DM->Ins
-\end{Soutput}
-\end{Schunk}
+<<>>=
+mD <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
+mO <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
+mI <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
+@ %
 We see that \texttt{gam.Lexis} (just like \texttt{glm.Lexis} would)
 tells us what transitions are modeled.
 
@@ -378,37 +316,29 @@ The points where we compute the predicted rates are midpoints of
 intervals of length 1/100 year. These points are unrelated to the
 follow-up intervals in which we split the data for analysis---they
 were 1 month intervals, here we use 1/10 year (about 1 month, in real
-life a small interval should be used, say 1/50 year):
-\begin{Schunk}
-\begin{Sinput}
-> nd <- data.frame(tfd = seq(0, 10, 1/10))
-> rownames(nd) <- nd$tfd
-> str(nd)
-\end{Sinput}
-\begin{Soutput}
-'data.frame':	101 obs. of  1 variable:
- $ tfd: num  0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 ...
-\end{Soutput}
-\end{Schunk}
+life a smaller interval should be used, say 1/50 year):
+<<>>=
+nd <- data.frame(tfd = seq(0, 10, 1/10))
+rownames(nd) <- nd$tfd
+str(nd)
+@ %
 With this we can show the rates as a function of the time since entry
 (diagnosis of diabetes):
-\begin{Schunk}
-\begin{Sinput}
-> matshade(nd$tfd, cbind(ci.pred(mD, nd),
-+                        ci.pred(mI, nd),
-+                        ci.pred(mO, nd))*1000,
-+          col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE,
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Rates per 1000 PY", ylim = c(0.05,500), yaxt = "n")
-> axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-+                labels = formatC(ll,digits = 4), las = 1)
-> axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
-+                labels = NA, tcl = -0.3)
-> text(0, 0.5*0.6^c(1,2,0),
-+      c("Dead","Ins","OAD"),
-+      col = c("black","red","blue"), adj = 0)
-\end{Sinput}
-\end{Schunk}
+<<rates, fig = TRUE, width = 8>>=
+matshade(nd$tfd, cbind(ci.pred(mD, nd),
+                       ci.pred(mI, nd),
+                       ci.pred(mO, nd)) * 1000,
+         col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE,
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Rates per 1000 PY", ylim = c(0.05,500), yaxt = "n")
+axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
+               labels = formatC(ll,digits = 4), las = 1)
+axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+               labels = NA, tcl = -0.3)
+text(0, 0.5*0.6^c(1,2,0),
+     c("Dead","Ins","OAD"),
+     col = c("black","red","blue"), adj = 0)
+@ %
 \insfig{rates}{0.8}{Estimated rates from the \textrm{\tt DM} state,
   estimates are from \textrm{\tt gam} models fitted to data split in 1
   month intervals (1/12 year, that is). Rates of \textrm{\tt OAD} is
@@ -426,19 +356,17 @@ hard to get at.
 Since we will be integrating the rates, it would be relevant to show
 the rates on a linear scale instead, de-emphasizing the very small
 fluctuations of the \texttt{Ins} rates:
-\begin{Schunk}
-\begin{Sinput}
-> matshade(nd$tfd, cbind(ci.pred(mD, nd),
-+                        ci.pred(mI, nd),
-+                        ci.pred(mO, nd))*1000,
-+          col = c("black", "red", "blue"), lwd = 3, plot = TRUE,
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Rates per 1000 PY", ylim = c(0,500), yaxs = "i")
-> text(8, 500 - c(2, 3, 1) * 20,
-+      c("Dead","Ins","OAD"),
-+      col = c("black","red","blue"), adj = 0)
-\end{Sinput}
-\end{Schunk}
+<<rates-l, fig = TRUE, width = 8>>=
+matshade(nd$tfd, cbind(ci.pred(mD, nd),
+                       ci.pred(mI, nd),
+                       ci.pred(mO, nd))*1000,
+         col = c("black", "red", "blue"), lwd = 3, plot = TRUE,
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Rates per 1000 PY", ylim = c(0,500), yaxs = "i")
+text(8, 500 - c(2, 3, 1) * 20,
+     c("Dead","Ins","OAD"),
+     col = c("black","red","blue"), adj = 0)
+@ %
 \insfig{rates-l}{0.8}{Estimated rates from the \textrm{\tt DM} state,
   estimates are from \textrm{\tt gam} models fitted to data split in 1
   month intervals (1/12 year, that is). Rates of \textrm{\tt OAD} is
@@ -451,77 +379,54 @@ we need just the estimated rates (without CIs). The formulae
 \ref{eq:Sv} and \ref{eq:R} on page \pageref{eq:R} are transformed to
 \R-code; starting with the rates, $\lambda_\text{D}$ as \texttt{lD}
 etc:
-\begin{Schunk}
-\begin{Sinput}
-> # utility function that calculates the midpoints between sucessive
-> # values in a vector
-> mp <- function(x) x[-1] - diff(x) / 2
-> #
-> int <- 1/50
-> # rates at midpoints of intervals
-> lD <- mp(ci.pred(mD, nd)[,1])
-> lI <- mp(ci.pred(mI, nd)[,1])
-> lO <- mp(ci.pred(mO, nd)[,1])
-> #
-> # cumulative rates and survival function at right border of the intervals
-> LD <- cumsum(lD) * int
-> LI <- cumsum(lI) * int
-> LO <- cumsum(lO) * int
-> # survival function, formula (1.1)
-> Sv <- exp(- LD - LI - LO )
-> #
-> # when integrating to get the cumulative *risks* we use the average
-> # of the survival function at the two endpoints
-> # (adding 1 as the first), formula (1.2)
-> Sv <- c(1, Sv)
-> rD <- c(0, cumsum(lD * mp(Sv)) * int)
-> rI <- c(0, cumsum(lI * mp(Sv)) * int)
-> rO <- c(0, cumsum(lO * mp(Sv)) * int)
-\end{Sinput}
-\end{Schunk}
+<<>>=
+# utility function that calculates the midpoints between sucessive
+# values in a vector
+mp <- function(x) x[-1] - diff(x) / 2
+#
+int <- 1/10
+# rates at midpoints of intervals
+lD <- mp(ci.pred(mD, nd)[,1])
+lI <- mp(ci.pred(mI, nd)[,1])
+lO <- mp(ci.pred(mO, nd)[,1])
+#
+# cumulative rates and survival function at right border of the intervals
+LD <- cumsum(lD) * int
+LI <- cumsum(lI) * int
+LO <- cumsum(lO) * int
+# survival function, formula (1.1)
+Sv <- exp(- LD - LI - LO )
+#
+# when integrating to get the cumulative *risks* we use the average
+# of the survival function at the two endpoints
+# (adding 1 as the first), formula (1.2)
+Sv <- c(1, Sv)
+rD <- c(0, cumsum(lD * mp(Sv)) * int)
+rI <- c(0, cumsum(lI * mp(Sv)) * int)
+rO <- c(0, cumsum(lO * mp(Sv)) * int)
+@ %
 Now we have the cumulative risks for the three causes and the
 survival, computed at the end of each of the intervals. At any time
 point the sum of the 3 cumulative risks and the survival should be 1:
-\begin{Schunk}
-\begin{Sinput}
-> summary(rD + rI + rO + Sv)
-\end{Sinput}
-\begin{Soutput}
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-      1       1       1       1       1       1 
-\end{Soutput}
-\begin{Sinput}
-> oo <- options(digits = 20)
-> cbind(summary(Sv + rD + rI + rO))
-\end{Sinput}
-\begin{Soutput}
-                         [,1]
-Min.    1.0000000000000000000
-1st Qu. 1.0000009859559546577
-Median  1.0000009935937645977
-Mean    1.0000009758790886494
-3rd Qu. 1.0000010245785568852
-Max.    1.0000010298306076795
-\end{Soutput}
-\begin{Sinput}
-> options(oo)
-\end{Sinput}
-\end{Schunk}
+<<>>=
+summary(rD + rI + rO + Sv)
+oo <- options(digits = 20)
+cbind(summary(Sv + rD + rI + rO))
+options(oo)
+@ %
 \ldots and bar a rounding error, they are.
 
 We can then plot the 3 cumulative risk functions stacked together
 using \texttt{mat2pol} (\texttt{mat}rix to \texttt{pol}ygons):
-\begin{Schunk}
-\begin{Sinput}
-> zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd,
-+               xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
-+               xlab = "Time since DM diagnosis (years)",
-+               ylab = "Probability",
-+                col =  c("black","red","blue","forestgreen"))
-> text(9, mp(zz["9", ]), c("Dead", "Ins", "OAD"," DM"), col = "white")
-> box(col = "white", lwd = 3)
-\end{Sinput}
-\end{Schunk}
+<<stack, fig = TRUE, width = 8>>=
+zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd,
+              xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
+              xlab = "Time since DM diagnosis (years)",
+              ylab = "Probability",
+               col =  c("black","red","blue","forestgreen"))
+text(9, mp(zz["9", ]), c("Dead", "Ins", "OAD"," DM"), col = "white")
+box(col = "white", lwd = 3)
+@ % $
 \insfig{stack}{0.9}{Probabilities of being in the 4 different states
   as a function of time since diagnosis. Note that \textrm{\tt OAD} means
   that OAD was initiated first, and similarly for \textrm{\tt Ins}. We are
@@ -541,20 +446,14 @@ points, such as 5 or 10 years. Calculation of the 10 year sojourn
 times would be straight-forward as integrals from 0 to 10---these
 calculations rely on the predicted rates from \texttt{nd} being for
 the first 10 years:
-\begin{Schunk}
-\begin{Sinput}
-> Sj <- c(sjA = sum(Sv * int),
-+         sjD = sum(rD * int),
-+         sjI = sum(rI * int),
-+         sjO = sum(rO * int))
-> c(Sj, sum(Sj))
-\end{Sinput}
-\begin{Soutput}
-       sjA        sjD        sjI        sjO            
-1.70245723 0.07359893 0.04017001 0.20377580 2.02000197 
-\end{Soutput}
-\end{Schunk}
-We see that there is a small rounding error in the calculations; the
+<<>>=
+Sj <- c(sjA = sum(Sv * int),
+        sjD = sum(rD * int),
+        sjI = sum(rI * int),
+        sjO = sum(rO * int))
+c(Sj, sum(Sj))
+@ %
+We see that there is a some rounding error in the calculations; the
 sum should really be exactly 10.
 
 This was a demonstration on how to compute the rates, cumulative risks
@@ -602,47 +501,17 @@ Precisely this approach is implemented in \texttt{ci.lin} via the
 prediction data frame just as from \texttt{ci.pred}
 resp. \texttt{ci.exp}; here is shown two different ways of getting
 predicted values of the cause-specific rates:
-\begin{Schunk}
-\begin{Sinput}
-> head(cbind(ci.pred(mI, nd),
-+            ci.exp (mI, nd)))
-\end{Sinput}
-\begin{Soutput}
-      Estimate       2.5%      97.5%  exp(Est.)       2.5%      97.5%
-0   0.40782899 0.30398423 0.54714840 0.40782899 0.30398423 0.54714840
-0.1 0.26910618 0.21025047 0.34443745 0.26910618 0.21025047 0.34443745
-0.2 0.17760478 0.14026119 0.22489086 0.17760478 0.14026119 0.22489086
-0.3 0.11727860 0.08989248 0.15300801 0.11727860 0.08989248 0.15300801
-0.4 0.07752280 0.05600128 0.10731513 0.07752280 0.05600128 0.10731513
-0.5 0.05132842 0.03438464 0.07662162 0.05132842 0.03438464 0.07662162
-\end{Soutput}
-\end{Schunk}
+<<>>=
+head(cbind(ci.pred(mI, nd),
+           ci.exp (mI, nd)))
+@ %
 And here is an illustration of the prediction with model based confidence
 intervals for the rates, alongside predictions based on samples from
 the posterior distribution of the parameters in the model:
-\begin{Schunk}
-\begin{Sinput}
-> str(ci.lin(mI, nd, sample = 4))
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:4] -0.975 -1.368 -1.76 -2.153 -2.544 ...
- - attr(*, "dimnames")=List of 2
-  ..$ : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ : NULL
-\end{Soutput}
-\begin{Sinput}
-> head(cbind(ci.pred(mI,nd), exp(ci.lin(mI, nd, sample = 4))))
-\end{Sinput}
-\begin{Soutput}
-      Estimate       2.5%      97.5%                                            
-0   0.40782899 0.30398423 0.54714840 0.41749677 0.40359586 0.37733324 0.34479786
-0.1 0.26910618 0.21025047 0.34443745 0.27488921 0.27759080 0.25198988 0.23621790
-0.2 0.17760478 0.14026119 0.22489086 0.18102264 0.19094724 0.16831839 0.16184884
-0.3 0.11727860 0.08989248 0.15300801 0.11926171 0.13138900 0.11249336 0.11092763
-0.4 0.07752280 0.05600128 0.10731513 0.07863921 0.09046274 0.07526532 0.07607244
-0.5 0.05132842 0.03438464 0.07662162 0.05192454 0.06234625 0.05044554 0.05221941
-\end{Soutput}
-\end{Schunk}
+<<>>=
+str(ci.lin(mI, nd, sample = 4))
+head(cbind(ci.pred(mI,nd), exp(ci.lin(mI, nd, sample = 4))))
+@ %
 Note that we use \texttt{exp(ci.lin(...}---this is because the
 \texttt{sample=} argument does not work with \texttt{ci.exp}.
 
@@ -685,45 +554,16 @@ for the rates. The time points in the frame must be so closely spaced
 that it makes sense to assume the rates constant in each interval;
 here we use intervals of length 1/10 years, approximately 1
 month---too large for real applications:
-\begin{Schunk}
-\begin{Sinput}
-> system.time(
-+ res <- ci.Crisk(list(OAD = mO,
-+                      Ins = mI,
-+                     Dead = mD),
-+                             nd = data.frame(tfd = seq(0, 10, 1/10)),
-+                             nB = 100,
-+                           perm = 4:1))
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfd at equal distances of 0.1 
-  bruger   system forløbet 
-    0.39     0.02     0.40 
-\end{Soutput}
-\begin{Sinput}
-> str(res)
-\end{Sinput}
-\begin{Soutput}
-List of 4
- $ Crisk: num [1:101, 1:4, 1:3] 1 0.917 0.856 0.807 0.768 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:4] "Surv" "OAD" "Ins" "Dead"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ Srisk: num [1:101, 1:3, 1:3] 0 0.0068 0.0129 0.0184 0.0234 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:3] "Dead" "Dead+Ins" "Dead+Ins+OAD"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ Stime: num [1:101, 1:4, 1:3] 0 0.0959 0.1845 0.2676 0.3464 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:4] "Surv" "OAD" "Ins" "Dead"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ time : num [1:101] 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 ...
- - attr(*, "int")= num 0.1
-\end{Soutput}
-\end{Schunk}
+<<>>=
+system.time(
+res <- ci.Crisk(list(OAD = mO,
+                     Ins = mI,
+                    Dead = mD),
+                            nd = data.frame(tfd = seq(0, 10, 1/10)),
+                            nB = 100,
+                          perm = 4:1))
+str(res)
+@ %
 As we see, the returned object (\texttt{res}) is a list of length 4,
 the first 3 components are 3-way arrays, and the last the vector of
 times of the first dimension of the arrays. The latter is mainly for
@@ -758,66 +598,31 @@ the survival.
 If we want the bootstrap samples to make other calculations we can ask
 the function to return the bootstrap samples of the rates by using the
 argument \texttt{sim.res = 'rates'} (defaults to \texttt{'none'}):
-\begin{Schunk}
-\begin{Sinput}
-> system.time(
-+ rsm <- ci.Crisk(list(OAD = mO,
-+                      Ins = mI,
-+                     Dead = mD),
-+                             nd = data.frame(tfd = seq(0, 10, 1/10)),
-+                             nB = 100,
-+                        sim.res = 'rates'))
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfd at equal distances of 0.1 
-  bruger   system forløbet 
-    0.02     0.00     0.02 
-\end{Soutput}
-\begin{Sinput}
-> str(rsm)
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:3, 1:100] 0.53 0.472 0.421 0.375 0.335 ...
- - attr(*, "dimnames")=List of 3
-  ..$ time: chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ mod : chr [1:3] "OAD" "Ins" "Dead"
-  ..$ sim : chr [1:100] "1" "2" "3" "4" ...
- - attr(*, "int")= num 0.1
- - attr(*, "time")= num [1:101] 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 ...
-\end{Soutput}
-\end{Schunk}
+<<>>=
+system.time(
+rsm <- ci.Crisk(list(OAD = mO,
+                     Ins = mI,
+                    Dead = mD),
+                            nd = data.frame(tfd = seq(0, 10, 1/10)),
+                            nB = 100,
+                       sim.res = 'rates'))
+str(rsm)
+@ %
 This is 100 bootstrap samples of the rates evaluated at the 501
 endpoints of the intervals.
 
 Alternatively we can get the bootstrap samples of the cumulative risks
 by setting \texttt{sim.res = 'crisk'}:
-\begin{Schunk}
-\begin{Sinput}
-> system.time(
-+ csm <- ci.Crisk(list(OAD = mO,
-+                      Ins = mI,
-+                     Dead = mD),
-+                             nd = data.frame(tfd = seq(0, 10, 1/10)),
-+                             nB = 100,
-+                        sim.res = 'crisk'))
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfd at equal distances of 0.1 
-  bruger   system forløbet 
-    0.14     0.00     0.14 
-\end{Soutput}
-\begin{Sinput}
-> str(csm)
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:4, 1:100] 1 0.915 0.851 0.801 0.761 ...
- - attr(*, "dimnames")=List of 3
-  ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ cause: chr [1:4] "Surv" "OAD" "Ins" "Dead"
-  ..$ sim  : chr [1:100] "1" "2" "3" "4" ...
- - attr(*, "int")= num 0.1
-\end{Soutput}
-\end{Schunk}
+<<>>=
+system.time(
+csm <- ci.Crisk(list(OAD = mO,
+                     Ins = mI,
+                    Dead = mD),
+                            nd = data.frame(tfd = seq(0, 10, 1/10)),
+                            nB = 100,
+                       sim.res = 'crisk'))
+str(csm)
+@ %
 These are 100 simulated samples of the cumulative risks evaluated at
 the 501 endpoints of the intervals, and also includes the survival
 probability in the first slot of the \nth{2} dimension of
@@ -829,23 +634,14 @@ In figure \ref{fig:rates} we showed the rates with confidence
 intervals from the model. But in \texttt{rsm} we have 100
 parametric bootstrap samples of the occurrence rates, so we can
 derive the bootstrap medians and the bootstrap c.i.s:
-\begin{Schunk}
-\begin{Sinput}
-> Brates <- aperm(apply(rsm,
-+                       1:2,
-+                       quantile,
-+                       probs = c(.5, .025, .975)),
-+                 c(2, 3, 1))
-> str(Brates)
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:3, 1:3] 0.477 0.429 0.385 0.347 0.312 ...
- - attr(*, "dimnames")=List of 3
-  ..$ time: chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ mod : chr [1:3] "OAD" "Ins" "Dead"
-  ..$     : chr [1:3] "50%" "2.5%" "97.5%"
-\end{Soutput}
-\end{Schunk}
+<<>>=
+Brates <- aperm(apply(rsm,
+                      1:2,
+                      quantile,
+                      probs = c(.5, .025, .975)),
+                c(2, 3, 1))
+str(Brates)
+@ %
 (\texttt{aperm} permutes the dimensions of the array).
 Then we can plot the bootstrap estimates on top of the estimates based
 on the normal approximation to distribution of the parameters. They
@@ -857,29 +653,27 @@ on an assumption of normality of the parameters on the log-rate scale:
   month intervals (1/12 year, that is). The white dotted curves are
   the bootstrap medians, black dotted curves are the bootstrap 95\%
   c.i.s.}
-\begin{Schunk}
-\begin{Sinput}
-> matshade(nd$tfd, cbind(ci.pred(mD, nd),
-+                        ci.pred(mI, nd),
-+                        ci.pred(mO, nd)) * 1000,
-+          ylim = c(0.1,500), yaxt = "n",
-+          ylab = "Rates per 1000 PY",
-+          xlab = "Time since DM diagnosis (years)",
-+          col = c("black","red","blue"), log = "y", lwd = 3, plot = TRUE)
-> matlines(nd$tfd,
-+          cbind(Brates[,"Dead",],
-+                Brates[,"Ins" ,],
-+                Brates[,"OAD" ,]) * 1000,
-+          col = c("white", "black", "black"), lty = 3, lwd = c(3,1,1))
-> axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-+                labels = formatC(ll,digits = 4), las = 1)
-> axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
-+                labels = NA, tcl = -0.3)
-> text(0, 0.5*0.6^c(1,2,0),
-+      c("Dead", "Ins", "OAD"),
-+      col = c("black", "red", "blue"), adj = 0)
-\end{Sinput}
-\end{Schunk}
+<<rates-ci, fig = TRUE, width = 8>>=
+matshade(nd$tfd, cbind(ci.pred(mD, nd),
+                       ci.pred(mI, nd),
+                       ci.pred(mO, nd)) * 1000,
+         ylim = c(0.1,500), yaxt = "n",
+         ylab = "Rates per 1000 PY",
+         xlab = "Time since DM diagnosis (years)",
+         col = c("black","red","blue"), log = "y", lwd = 3, plot = TRUE)
+matlines(nd$tfd,
+         cbind(Brates[,"Dead",],
+               Brates[,"Ins" ,],
+               Brates[,"OAD" ,]) * 1000,
+         col = c("white", "black", "black"), lty = 3, lwd = c(3,1,1))
+axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
+               labels = formatC(ll,digits = 4), las = 1)
+axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+               labels = NA, tcl = -0.3)
+text(0, 0.5*0.6^c(1,2,0),
+     c("Dead", "Ins", "OAD"),
+     col = c("black", "red", "blue"), adj = 0)
+@ %
 
 \section{Confidence intervals for cumulative risks}
 
@@ -889,21 +683,19 @@ intervals, so we can easily plot the three cumulative risks:
 
 \insfig{crates}{0.9}{Cumulative risks for the three types of events,
   with 95\% bootstrap-based confidence intervals as shades.}
-\begin{Schunk}
-\begin{Sinput}
-> matshade(res$time,
-+          cbind(res$Crisk[,"Dead",],
-+                res$Crisk[,"Ins" ,],
-+                res$Crisk[,"OAD" ,]), plot = TRUE,
-+          xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Cumulative probability",
-+           col = c("black","red","blue"))
-> text(8, 0.3 + c(1, 0, 2) / 25,
-+      c("Dead", "Ins", "OAD"),
-+      col = c("black", "red", "blue"), adj = 0)
-\end{Sinput}
-\end{Schunk}
+<<crates, fig = TRUE, width = 8>>=
+matshade(res$time,
+         cbind(res$Crisk[,"Dead",],
+               res$Crisk[,"Ins" ,],
+               res$Crisk[,"OAD" ,]), plot = TRUE,
+         xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Cumulative probability",
+          col = c("black","red","blue"))
+text(8, 0.3 + c(1, 0, 2) / 25,
+     c("Dead", "Ins", "OAD"),
+     col = c("black", "red", "blue"), adj = 0)
+@ %
 
 \section{Confidence intervals for stacked cumulative risks}
 
@@ -911,28 +703,10 @@ Unlike the single cumulative risks where we have a confidence
 interval for each cumulative risk, when we want to show the stacked
 probabilities we must deliver the confidence intervals for the
 relevant sums, they are in the \texttt{Srisk} component of \texttt{res}.
-\begin{Schunk}
-\begin{Sinput}
-> str(res$Crisk)
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:4, 1:3] 1 0.917 0.856 0.807 0.768 ...
- - attr(*, "dimnames")=List of 3
-  ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ cause: chr [1:4] "Surv" "OAD" "Ins" "Dead"
-  ..$      : chr [1:3] "50%" "2.5%" "97.5%"
-\end{Soutput}
-\begin{Sinput}
-> str(res$Srisk)
-\end{Sinput}
-\begin{Soutput}
- num [1:101, 1:3, 1:3] 0 0.0068 0.0129 0.0184 0.0234 ...
- - attr(*, "dimnames")=List of 3
-  ..$ tfd  : chr [1:101] "0" "0.1" "0.2" "0.3" ...
-  ..$ cause: chr [1:3] "Dead" "Dead+Ins" "Dead+Ins+OAD"
-  ..$      : chr [1:3] "50%" "2.5%" "97.5%"
-\end{Soutput}
-\end{Schunk}
+<<>>=
+str(res$Crisk)
+str(res$Srisk)
+@ %
 But we start out by plotting the stacked probabilities using
 \texttt{mat2pol} (\texttt{mat}rix to \texttt{pol}ygon), the input
 required is the single components from the \texttt{Crisk}
@@ -948,22 +722,20 @@ component. Then we add the confidence intervals as white shades (using
   areas represent the 95\% confidence intervals for the (sum of)
   probabilities.}
 
-\begin{Schunk}
-\begin{Sinput}
-> zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
-+               x = res$time,
-+            xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
-+            xlab = "Time since DM diagnosis (years)",
-+            ylab = "Probability",
-+             col =  c("black","red","blue","forestgreen") )
-> text(9, mp(zz["9",]), c("Dead", "Ins", "OAD", "DM"), col = "white" )
-> matshade(res$time,
-+          cbind(res$Srisk[,1,],
-+                res$Srisk[,2,],
-+                res$Srisk[,3,]),
-+          col = 'transparent', col.shade = "white", alpha = 0.4)
-\end{Sinput}
-\end{Schunk}
+<<stack-ci, fig = TRUE, width = 8>>=
+zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
+              x = res$time,
+           xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
+           xlab = "Time since DM diagnosis (years)",
+           ylab = "Probability",
+            col =  c("black","red","blue","forestgreen") )
+text(9, mp(zz["9",]), c("Dead", "Ins", "OAD", "DM"), col = "white" )
+matshade(res$time,
+         cbind(res$Srisk[,1,],
+               res$Srisk[,2,],
+               res$Srisk[,3,]),
+         col = 'transparent', col.shade = "white", alpha = 0.4)
+@ % $
 
 \section{Sojourn times}
 
@@ -973,25 +745,11 @@ the estimated time spent in each state during the first, say, 5 or 10 years:
 When referring to the times, we use \emph{character} values---5 and 10
 years are not necessarily at the \nth{5} and \nth{10} positions of the
 first dimension of the \texttt{Stime} array:
-\begin{Schunk}
-\begin{Sinput}
-> s510 <- res$Stime[c("5", "10"),,]
-> dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
-> round(ftable(s510, row.vars=1:2), 2)
-\end{Sinput}
-\begin{Soutput}
-              50% 2.5% 97.5%
-tfd   cause                 
- 5 yr Surv   2.80 2.67  2.95
-      OAD    1.40 1.27  1.55
-      Ins    0.42 0.33  0.51
-      Dead   0.37 0.30  0.46
-10 yr Surv   4.39 4.12  4.70
-      OAD    3.56 3.29  3.94
-      Ins    0.90 0.70  1.12
-      Dead   1.14 0.94  1.34
-\end{Soutput}
-\end{Schunk}
+<<>>=
+s510 <- res$Stime[c("5", "10"),,]
+dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
+round(ftable(s510, row.vars=1:2), 2)
+@ % $
 So we see that the expected life lived without pharmaceutical treatment
 during the first 10 years after DM diagnosis is 4.31 years with a 95\%
 CI of (4.21;4.42), and during the first 5 years 2.77 (2.72;2.82).
@@ -1006,112 +764,48 @@ The following is a terse cook-book illustration of how to use the
 For illustration we simulate some causes of death in the
 \texttt{DMlate} data set; first we sample numbers 1, 2, 3 representing
 3 different causes of death in \texttt{DMlate}:
-\begin{Schunk}
-\begin{Sinput}
-> data(DMlate)
-> set.seed(7465)
-> wh <- sample(1:3, nrow(DMlate), r=T, prob = c(4, 2, 6))
-\end{Sinput}
-\end{Schunk}
+<<>>=
+data(DMlate)
+set.seed(7465)
+wh <- sample(1:3, nrow(DMlate), r=T, prob = c(4, 2, 6))
+@ %
 Those not dead are changed to 0:
-\begin{Schunk}
-\begin{Sinput}
-> wh[is.na(DMlate$dodth)] <- 0
-\end{Sinput}
-\end{Schunk}
+<<>>=
+wh[is.na(DMlate$dodth)] <- 0
+@ %
 Define a factor in DMlate defining exit status as either alive or one
 of the three causes of death, and check by a \texttt{table} that all
 dead have a cause:
-\begin{Schunk}
-\begin{Sinput}
-> DMlate$codth <- factor(wh, labels = c("Alive", "CVD", "Can", "Oth"))
-> with(DMlate, table(codth, isDead = !is.na(dodth)))
-\end{Sinput}
-\begin{Soutput}
-       isDead
-codth   FALSE TRUE
-  Alive  7497    0
-  CVD       0  815
-  Can       0  401
-  Oth       0 1287
-\end{Soutput}
-\end{Schunk}
+<<>>=
+DMlate$codth <- factor(wh, labels = c("Alive", "CVD", "Can", "Oth"))
+with(DMlate, table(codth, isDead = !is.na(dodth)))
+@ %
 \texttt{DMlate} now looks like a typical data set with cause of death
 in a separate variable; in this case we also added a state, \texttt{Alive},
 for those without a recorded death:
-\begin{Schunk}
-\begin{Sinput}
-> str(DMlate)
-\end{Sinput}
-\begin{Soutput}
-'data.frame':	10000 obs. of  8 variables:
- $ sex  : Factor w/ 2 levels "M","F": 2 1 2 2 1 2 1 1 2 1 ...
- $ dobth: num  1940 1939 1918 1965 1933 ...
- $ dodm : num  1999 2003 2005 2009 2009 ...
- $ dodth: num  NA NA NA NA NA ...
- $ dooad: num  NA 2007 NA NA NA ...
- $ doins: num  NA NA NA NA NA NA NA NA NA NA ...
- $ dox  : num  2010 2010 2010 2010 2010 ...
- $ codth: Factor w/ 4 levels "Alive","CVD",..: 1 1 1 1 1 4 1 1 4 1 ...
-\end{Soutput}
-\begin{Sinput}
-> head(DMlate, 12)
-\end{Sinput}
-\begin{Soutput}
-       sex    dobth     dodm    dodth    dooad doins      dox codth
-50185    F 1940.256 1998.917       NA       NA    NA 2009.997 Alive
-307563   M 1939.218 2003.309       NA 2007.446    NA 2009.997 Alive
-294104   F 1918.301 2004.552       NA       NA    NA 2009.997 Alive
-336439   F 1965.225 2009.261       NA       NA    NA 2009.997 Alive
-245651   M 1932.877 2008.653       NA       NA    NA 2009.997 Alive
-216824   F 1927.870 2007.886 2009.923       NA    NA 2009.923   Oth
-24969    M 1946.498 2007.216       NA 2007.248    NA 2009.997 Alive
-325465   M 1940.475 2006.674       NA 2006.674    NA 2009.997 Alive
-430048   F 1937.083 1998.956 2008.464       NA    NA 2008.464   Oth
-362980   M 1933.154 2009.784       NA       NA    NA 2009.997 Alive
-279976   F 1928.300 2000.949       NA       NA    NA 2009.997 Alive
-279271   M 1951.213 2008.114       NA 2009.743    NA 2009.997 Alive
-\end{Soutput}
-\end{Schunk}
+<<>>=
+str(DMlate)
+head(DMlate, 12)
+@ %
 
 \section{A \texttt{Lexis} object with 3 causes of death}
 
 With cause of death in a separate variable it is easy to set up a
 \texttt{Lexis} object:
-\begin{Schunk}
-\begin{Sinput}
-> dmL <- Lexis(entry = list(per = dodm,
-+                           age = dodm - dobth,
-+                           tfD = 0),
-+               exit = list(per = dox),
-+        exit.status = codth,
-+               data = DMlate)
-\end{Sinput}
-\begin{Soutput}
-NOTE: entry.status has been set to "Alive" for all.
-NOTE: Dropping  4  rows with duration of follow up < tol
-\end{Soutput}
-\begin{Sinput}
-> summary(dmL, t = T)
-\end{Sinput}
-\begin{Soutput}
-Transitions:
-     To
-From    Alive CVD Can  Oth  Records:  Events: Risk time:  Persons:
-  Alive  7497 814 400 1285      9996     2499   54273.27      9996
-
-Timescales:
-per age tfD 
- ""  ""  "" 
-\end{Soutput}
-\end{Schunk}
+<<>>=
+dmL <- Lexis(entry = list(per = dodm,
+                          age = dodm - dobth,
+                          tfD = 0),
+              exit = list(per = dox),
+       exit.status = codth,
+              data = DMlate)
+summary(dmL, t = T)
+@ %
 We can show the overall rates (the default \texttt{boxes} is
 \emph{very} primitive):
-\begin{Schunk}
-\begin{Sinput}
-> boxes(dmL, boxpos = TRUE)
-\end{Sinput}
-\end{Schunk}
+<<boxes, fig = TRUE, height = 4>>=
+boxes(dmL, boxpos = TRUE)
+@ %
 \insfig{boxes}{0.8}{Transitions from live to different causes of
   death. You probably want to explore the other arguments to
   \textrm{\tt boxes}.}
@@ -1120,44 +814,20 @@ We can show the overall rates (the default \texttt{boxes} is
 
 In order to model the cause-specific mortality rates by sex and time from
 diagnosis (\texttt{tfD}), we first split the data in 6-month intervals
-\begin{Schunk}
-\begin{Sinput}
-> sL <- splitLexis(dmL, time.scale="age", breaks = seq(0, 120, 1/2))
-> summary(sL)
-\end{Sinput}
-\begin{Soutput}
-Transitions:
-     To
-From     Alive CVD Can  Oth  Records:  Events: Risk time:  Persons:
-  Alive 115974 814 400 1285    118473     2499   54273.27      9996
-\end{Soutput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> mCVD <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "CVD")
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition:
-Alive->CVD
-\end{Soutput}
-\begin{Sinput}
-> mCan <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Can")
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition:
-Alive->Can
-\end{Soutput}
-\begin{Sinput}
-> mOth <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Oth")
-\end{Sinput}
-\begin{Soutput}
-mgcv::gam Poisson analysis of Lexis object sL with log link:
-Rates for the transition:
-Alive->Oth
-\end{Soutput}
-\end{Schunk}
+<<>>=
+sL <- splitLexis(dmL, time.scale="age", breaks = seq(0, 120, 1/2))
+summary(sL)
+@
+<<>>=
+mCVD <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "CVD")
+mCan <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Can")
+mOth <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Oth")
+@ %
+<<eval=FALSE, echo=FALSE>>=
+mCVD <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
+mCa  <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
+mOth <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
+@ %
 
 \section{Derived measures}
 
@@ -1165,48 +835,19 @@ With these three models for the occurrence rates we can compute the
 cumulative risks of dying from each of the causes. We need a
 prediction data frame that gives the rates at closely spaced times, in
 this case for men. For women the code would be practically the same:
-\begin{Schunk}
-\begin{Sinput}
-> nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
-\end{Sinput}
-\end{Schunk}
+<<>>=
+nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
+@ %
 Note that we can rename the states as we please by naming the entries
 in the list of models we supply to \texttt{ci.Crisk}:
-\begin{Schunk}
-\begin{Sinput}
-> cR <- ci.Crisk(list(CVD = mCVD,
-+                     Can = mCan,
-+                   Other = mOth),
-+                nB = 100,
-+                nd = nm)
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfD at equal distances of 0.1 
-\end{Soutput}
-\begin{Sinput}
-> str(cR)
-\end{Sinput}
-\begin{Soutput}
-List of 4
- $ Crisk: num [1:151, 1:4, 1:3] 1 0.993 0.987 0.981 0.975 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfD  : chr [1:151] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:4] "Surv" "CVD" "Can" "Other"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ Srisk: num [1:151, 1:3, 1:3] 0 0.00351 0.00684 0.00997 0.01297 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfD  : chr [1:151] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:3] "Other" "Other+Can" "Other+Can+CVD"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ Stime: num [1:151, 1:4, 1:3] 0 0.0997 0.1987 0.2971 0.3949 ...
-  ..- attr(*, "dimnames")=List of 3
-  .. ..$ tfD  : chr [1:151] "0" "0.1" "0.2" "0.3" ...
-  .. ..$ cause: chr [1:4] "Surv" "CVD" "Can" "Other"
-  .. ..$      : chr [1:3] "50%" "2.5%" "97.5%"
- $ time : num [1:151] 0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 ...
- - attr(*, "int")= num 0.1
-\end{Soutput}
-\end{Schunk}
+<<>>=
+cR <- ci.Crisk(list(CVD = mCVD,
+                    Can = mCan,
+                  Other = mOth),
+               nB = 100,
+               nd = nm)
+str(cR)
+@ %$
 Note that we get three arrays: \texttt{Crisk}, the cumulative risks;
 \texttt{Srisk}, the stacked risks and \texttt{Stime}, the sojourn
 times in each state. Finally, for convenience we also have the
@@ -1220,18 +861,16 @@ is easier.
 We can plot the cumulative risks for death from each of the three
 causes, note we use the colors from last. Note that the time points
 are in the \texttt{time} component of the \texttt{Crisk} object:
-\begin{Schunk}
-\begin{Sinput}
-> clr <- c("black", "orange", "limegreen")
-> matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
-+                         cR$Crisk[, "Can"  , ],
-+                         cR$Crisk[, "Other", ]),
-+          col = clr, lty = 1, lwd = 2,
-+          plot = TRUE, ylim = c(0, 1/3), yaxs = "i")
-> text(0, 1/3 - 1:3/30, c("CVD", "Can", "Oth"),
-+      col = clr, adj = 0)
-\end{Sinput}
-\end{Schunk}
+<<cR, fig=TRUE, width=8>>=
+clr <- c("black", "orange", "limegreen")
+matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
+                        cR$Crisk[, "Can"  , ],
+                        cR$Crisk[, "Other", ]),
+         col = clr, lty = 1, lwd = 2,
+         plot = TRUE, ylim = c(0, 1/3), yaxs = "i")
+text(0, 1/3 - 1:3/30, c("CVD", "Can", "Oth"),
+     col = clr, adj = 0)
+@ %
 \insfig{cR}{0.9}{Cumulative risks of each cause of death based on
 \textrm{\tt gam} models for the cause-specific rates.}
 
@@ -1245,18 +884,16 @@ models, so that if we plot these we get the probabilities of being
 dead from each cause as the \emph{difference} between the curves. And
 the confidence intervals are confidence intervals for the cumulative
 sums of probabilities.
-\begin{Schunk}
-\begin{Sinput}
-> matshade(cR$time, cbind(cR$Srisk[,1,],
-+                         cR$Srisk[,2,],
-+                         cR$Srisk[,3,]),
-+          col = "black", lty = 1, lwd = 2,
-+          plot = TRUE, ylim = c(0,1), xaxs = "i", yaxs = "i")
-> text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
-+      rev(c(dimnames(cR$Crisk)[[2]])))
-> box(bty = "o")
-\end{Sinput}
-\end{Schunk}
+<<Sr1, fig = TRUE, width = 8>>=
+matshade(cR$time, cbind(cR$Srisk[,1,],
+                        cR$Srisk[,2,],
+                        cR$Srisk[,3,]),
+         col = "black", lty = 1, lwd = 2,
+         plot = TRUE, ylim = c(0,1), xaxs = "i", yaxs = "i")
+text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
+     rev(c(dimnames(cR$Crisk)[[2]])))
+box(bty = "o")
+@ %
 \insfig{Sr1}{0.9}{Stacked cumulative risks.}
 It is not a good idea to color the curves, they do not refer to
 the causes of death, it is the areas \emph{between} the curves that
@@ -1267,22 +904,20 @@ curves. which can be done by \texttt{mat2pol} (\texttt{mat}rix to
 \texttt{pol}ygons) using the \texttt{Crisk} component. We can then
 superpose the confidence intervals for the sum of the state
 probabilities using \texttt{matshade} by adding white shades:
-\begin{Schunk}
-\begin{Sinput}
-> zz <- mat2pol(cR$Crisk[, c("Other", "Can", "CVD", "Surv"), "50%"],
-+               x = cR$time,
-+            xlim = c(0,15), xaxs = "i", yaxs = "i", las = 1,
-+            xlab = "Time since DM diagnosis (years)",
-+            ylab = "Probability",
-+             col =  c("gray", "red", "blue", "limegreen") )
-> matshade(cR$time, cbind(cR$Srisk[,1,],
-+                         cR$Srisk[,2,],
-+                         cR$Srisk[,3,]),
-+          col = "transparent", col.shade = "white", alpha = 0.4)
-> text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
-+      rev(c(dimnames(cR$Crisk)[[2]])), col = "white")
-\end{Sinput}
-\end{Schunk}
+<<Sr2, fig = TRUE, width = 8>>=
+zz <- mat2pol(cR$Crisk[, c("Other", "Can", "CVD", "Surv"), "50%"],
+              x = cR$time,
+           xlim = c(0,15), xaxs = "i", yaxs = "i", las = 1,
+           xlab = "Time since DM diagnosis (years)",
+           ylab = "Probability",
+            col =  c("gray", "red", "blue", "limegreen") )
+matshade(cR$time, cbind(cR$Srisk[,1,],
+                        cR$Srisk[,2,],
+                        cR$Srisk[,3,]),
+         col = "transparent", col.shade = "white", alpha = 0.4)
+text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
+     rev(c(dimnames(cR$Crisk)[[2]])), col = "white")
+@ %
 \insfig{Sr2}{0.9}{Stacked cumulative risks with coloring of states and
 overlaid with confidence intervals for the probabilities shown; that
 is the relevant sums.}
@@ -1292,21 +927,9 @@ is the relevant sums.}
 The third component of the result, \texttt{Stime} is an array of
 sojourn times over intervals starting at 0 and ending at the time
 indicated by the first dimension:
-\begin{Schunk}
-\begin{Sinput}
-> ftable(round(cR$Stime[paste(1:5 * 3), , ], 1), row.vars = 1)
-\end{Sinput}
-\begin{Soutput}
-    cause Surv             CVD             Can            Other           
-           50% 2.5% 97.5%  50% 2.5% 97.5%  50% 2.5% 97.5%   50% 2.5% 97.5%
-tfD                                                                       
-3          2.8  2.8   2.8  0.1  0.1   0.1  0.0  0.0   0.0   0.1  0.1   0.1
-6          5.3  5.2   5.3  0.2  0.2   0.3  0.1  0.1   0.1   0.4  0.4   0.4
-9          7.4  7.4   7.5  0.5  0.5   0.5  0.3  0.2   0.3   0.8  0.8   0.9
-12         9.3  9.2   9.4  0.9  0.8   0.9  0.4  0.4   0.5   1.4  1.3   1.5
-15        10.9 10.7  11.0  1.3  1.3   1.4  0.7  0.6   0.8   2.1  2.0   2.2
-\end{Soutput}
-\end{Schunk}
+<<>>=
+ftable(round(cR$Stime[paste(1:5 * 3), , ], 1), row.vars = 1)
+@ %
 The sojourn times in the three dead states can be taken as the years
 of life lost to each of the causes, the sum of the medians for the
 three causes equals the time frame (5, 10, 15) minus the \texttt{Surv}
@@ -1328,83 +951,51 @@ normal. This can be obtained by explicitly setting the seed for the
 random number generator to the same value before calling
 \texttt{ci.Crisk} with each of the two different prediction frames as
 \texttt{nd} argument:
-\begin{Schunk}
-\begin{Sinput}
-> nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
-> nw <- data.frame(tfD = seq(0, 15, 0.1), sex = "F")
-> set.seed(1952)
-> mR <- ci.Crisk(list(CVD = mCVD,
-+                     Can = mCan,
-+                   Other = mOth),
-+                nd = nm,
-+                nB = 100,
-+           sim.res = "crisk" )
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfD at equal distances of 0.1 
-\end{Soutput}
-\begin{Sinput}
-> set.seed(1952)
-> wR <- ci.Crisk(list(CVD = mCVD,
-+                     Can = mCan,
-+                   Other = mOth),
-+                nd = nw,
-+                nB = 100,
-+           sim.res = "crisk" )
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfD at equal distances of 0.1 
-\end{Soutput}
-\begin{Sinput}
-> str(wR)
-\end{Sinput}
-\begin{Soutput}
- num [1:151, 1:4, 1:100] 1 0.994 0.989 0.983 0.978 ...
- - attr(*, "dimnames")=List of 3
-  ..$ tfD  : chr [1:151] "0" "0.1" "0.2" "0.3" ...
-  ..$ cause: chr [1:4] "Surv" "CVD" "Can" "Other"
-  ..$ sim  : chr [1:100] "1" "2" "3" "4" ...
- - attr(*, "int")= num 0.1
-\end{Soutput}
-\end{Schunk}
+<<>>=
+nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
+nw <- data.frame(tfD = seq(0, 15, 0.1), sex = "F")
+set.seed(1952)
+mR <- ci.Crisk(list(CVD = mCVD,
+                    Can = mCan,
+                  Other = mOth),
+               nd = nm,
+               nB = 100,
+          sim.res = "crisk" )
+set.seed(1952)
+wR <- ci.Crisk(list(CVD = mCVD,
+                    Can = mCan,
+                  Other = mOth),
+               nd = nw,
+               nB = 100,
+          sim.res = "crisk" )
+str(wR)
+@ %$
 The two samples are now from identical streams of random numbers, so
 we can get differences and ratios of the survival curves between men
 and women:
-\begin{Schunk}
-\begin{Sinput}
-> dS <- mR[,"Surv",] - wR[,"Surv",]
-> dS <- apply(dS, 1, quantile, probs = c(.5, .025, .975)) * 100
-> str(dS)
-\end{Sinput}
-\begin{Soutput}
- num [1:3, 1:151] 0 0 0 -0.0681 -0.1771 ...
- - attr(*, "dimnames")=List of 2
-  ..$    : chr [1:3] "50%" "2.5%" "97.5%"
-  ..$ tfD: chr [1:151] "0" "0.1" "0.2" "0.3" ...
-\end{Soutput}
-\begin{Sinput}
-> rS <- mR[,"Surv",] / wR[,"Surv",]
-> rS <- apply(rS, 1, quantile, probs = c(.5, .025, .975))
-\end{Sinput}
-\end{Schunk}
+<<>>=
+dS <- mR[,"Surv",] - wR[,"Surv",]
+dS <- apply(dS, 1, quantile, probs = c(.5, .025, .975)) * 100
+str(dS)
+rS <- mR[,"Surv",] / wR[,"Surv",]
+rS <- apply(rS, 1, quantile, probs = c(.5, .025, .975))
+@ %
 We can then plot the differences and the ratios of the
 probabilities---note that the dimension of the function
 \texttt{apply}ed becomes the first dimension of the result:
-\begin{Schunk}
-\begin{Sinput}
-> par(mfrow = c(1,2))
-> matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
-+          lwd = 3, ylim = c(-5, 5),
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Men - Women survival difference (%)")
-> abline(h = 0)
-> matshade(as.numeric(colnames(rS)), t(rS), plot = TRUE,
-+          lwd = 3, ylim = c(1/1.2, 1.2), log ="y",
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Men - Women survival ratio")
-> abline(h = 1)
-\end{Sinput}
-\end{Schunk}
+<<difrat, fig = TRUE, width = 9>>=
+par(mfrow = c(1,2))
+matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
+         lwd = 3, ylim = c(-5, 5),
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Men - Women survival difference (%)")
+abline(h = 0)
+matshade(as.numeric(colnames(rS)), t(rS), plot = TRUE,
+         lwd = 3, ylim = c(1/1.2, 1.2), log ="y",
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Men - Women survival ratio")
+abline(h = 1)
+@ %
 \insfig{difrat}{1.0}{Differences and ratios of survival between men
   and women, derived from the same set of bootstrap samples from the
   parameter vector.}
@@ -1413,57 +1004,44 @@ To illustrate the effect of \texttt{not} pairing the random samples we
 can generate a fresh sample for women from a different stream and do
 the calculations to illustrate the excess we get from not aligning
 samples.
-\begin{Schunk}
-\begin{Sinput}
-> fR <- ci.Crisk(list(CVD = mCVD,
-+                     Can = mCan,
-+                   Other = mOth),
-+                nd = nw,
-+                nB = 100,
-+           sim.res = "crisk" )
-\end{Sinput}
-\begin{Soutput}
-NOTE: Times are assumed to be in the column tfD at equal distances of 0.1 
-\end{Soutput}
-\begin{Sinput}
-> dxS <- mR[,"Surv",] - fR[,"Surv",]
-> dxS <- apply(dxS, 1, quantile, probs = c(.5, .025, .975)) * 100
-> rxS <- mR[,"Surv",] / fR[,"Surv",]
-> rxS <- apply(rxS, 1, quantile, probs = c(.5, .025, .975))
-\end{Sinput}
-\end{Schunk}
-\begin{Schunk}
-\begin{Sinput}
-> par(mfrow = c(1,2))
-> matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
-+          lwd = 3, ylim = c(-5, 5),
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Men - Women survival difference (%)")
-> matshade(as.numeric(colnames(dxS)), t(dxS), lty = 3, col = "forestgreen")
-> abline(h = 0)
-> matshade(as.numeric(colnames(rS)), t(rS), plot = TRUE,
-+          lwd = 3, ylim = c(1/1.2, 1.2), log ="y",
-+          xlab = "Time since DM diagnosis (years)",
-+          ylab = "Men - Women survival ratio")
-> matshade(as.numeric(colnames(rxS)), t(rxS), lty = 3, col = "forestgreen")
-> abline(h = 1)
-\end{Sinput}
-\end{Schunk}
+<<>>=
+fR <- ci.Crisk(list(CVD = mCVD,
+                    Can = mCan,
+                  Other = mOth),
+               nd = nw,
+               nB = 100,
+          sim.res = "crisk" )
+dxS <- mR[,"Surv",] - fR[,"Surv",]
+dxS <- apply(dxS, 1, quantile, probs = c(.5, .025, .975)) * 100
+rxS <- mR[,"Surv",] / fR[,"Surv",]
+rxS <- apply(rxS, 1, quantile, probs = c(.5, .025, .975))
+@ %
+<<difratx, fig = TRUE, width = 9>>=
+par(mfrow = c(1,2))
+matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
+         lwd = 3, ylim = c(-5, 5),
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Men - Women survival difference (%)")
+matshade(as.numeric(colnames(dxS)), t(dxS), lty = 3, col = "forestgreen")
+abline(h = 0)
+
+matshade(as.numeric(colnames(rS)), t(rS), plot = TRUE,
+         lwd = 3, ylim = c(1/1.2, 1.2), log ="y",
+         xlab = "Time since DM diagnosis (years)",
+         ylab = "Men - Women survival ratio")
+matshade(as.numeric(colnames(rxS)), t(rxS), lty = 3, col = "forestgreen")
+abline(h = 1)
+@ %
 \insfig{difratx}{1.0}{Differences and ratios of survival between men
   and women, derived from separate bootstrap samples. The outer
   confidence bands are from bootstrap samples not properly paired
   between men end women.}
 
-\begin{Schunk}
-\begin{Soutput}
-  Start time: 2024-05-27, 17:07:14 
-\end{Soutput}
-\begin{Soutput}
-    End time: 2024-05-27, 17:07:58 
-\end{Soutput}
-\begin{Soutput}
-Elapsed time: 0.74 minutes
-\end{Soutput}
-\end{Schunk}
+<<echo = FALSE>>=
+ende <- Sys.time()
+cat("  Start time:", format(anfang, "%F, %T"), "\n")
+cat("    End time:", format(  ende, "%F, %T"), "\n")
+cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+@ %
 
 \end{document}

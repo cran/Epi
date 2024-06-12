@@ -47,6 +47,7 @@ summary( dmi, timeScales=T )
 ###################################################
 ### code chunk number 6: boxes
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes( dmi, boxpos = list(x=c(20,20,80,80),
                         y=c(80,20,80,20)),
             scale.R = 1000, show.BE = TRUE )
@@ -179,6 +180,7 @@ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
 ###################################################
 ### code chunk number 17: mort-int
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
 plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
       log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
@@ -285,6 +287,7 @@ nSt[1:10,]
 ###################################################
 ### code chunk number 27: pstate0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
@@ -300,6 +303,7 @@ box()
 ###################################################
 ### code chunk number 28: pstatex
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 clr <- c("limegreen","orange")
 # expand with a lighter version of the two chosen colors
 clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
@@ -334,6 +338,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 29: pstatey
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
 # Men
 pM <- pState( nState( subset(simL,sex=="M"),
@@ -372,6 +377,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 30: comp-0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 PrM  <- pState( nState( subset(simP,sex=="M"),
                         at=seq(0,11,0.2),
                         from=60,
