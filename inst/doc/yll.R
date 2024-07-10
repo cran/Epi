@@ -27,6 +27,7 @@ TM <- matrix(NA, 4, 4)
 rownames(TM) <-
 colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)")
 TM[1, 2:3] <- TM[2, 4] <- 1
+TM
 zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
                               y = c(80, 80, 20, 20)),
                 wm = 1.5,
@@ -37,27 +38,27 @@ zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
 ### code chunk number 4: states
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-zz$Arrowtext <- c(expression(lambda),
-                  expression(mu[W]),
-                  expression(mu[D][M]))
+zz$Arrowtext <- c(expression(lambda(a)),
+                  expression(mu[W](a)),
+                  expression(mu[D][M](a,d)))
 boxes.MS(zz)
 
 
 ###################################################
-### code chunk number 5: yll.rnw:278-279
+### code chunk number 5: yll.rnw:280-281
 ###################################################
 data(DMepi)
 
 
 ###################################################
-### code chunk number 6: yll.rnw:285-287
+### code chunk number 6: yll.rnw:287-289
 ###################################################
 str(DMepi)
 head(DMepi)
 
 
 ###################################################
-### code chunk number 7: yll.rnw:307-313
+### code chunk number 7: yll.rnw:309-315
 ###################################################
 DMepi <- transform(subset(DMepi, A > 30),
                    A = A + 0.5,
@@ -68,7 +69,7 @@ head(DMepi)
 
 
 ###################################################
-### code chunk number 8: yll.rnw:319-344
+### code chunk number 8: yll.rnw:321-346
 ###################################################
 # Knots used in all models
 (a.kn <- seq(40, 95, , 6))
@@ -98,7 +99,7 @@ lW.f <- update(lW.m, data = subset(DMepi, sex == "F"))
 
 
 ###################################################
-### code chunk number 9: yll.rnw:351-388
+### code chunk number 9: yll.rnw:353-390
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
@@ -187,7 +188,7 @@ plyll("Sus", " - susceptibility assumed")
 
 
 ###################################################
-### code chunk number 13: yll.rnw:471-475
+### code chunk number 13: yll.rnw:473-477
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"), "\n")

@@ -51,6 +51,7 @@ ci.ratio( r1, r2,
     \code{lme},
     \code{mer},
     \code{lmerMod},
+    \code{glmerMod},
     \code{gls},
     \code{nls},
     \code{gnlm},
@@ -71,9 +72,10 @@ ci.ratio( r1, r2,
     If it is a list, it must contain two or four data frames that are
     (possibly partial) prediction frames for \code{obj}, see argument
     \code{xvars} and details.}
-  \item{xvars}{Character vector. If quantitative variables in the model are omitted
-    from data frames supplied in a list to \code{ctr.mat}, they should
-    be listed here. Omitted factors need not be mentioned here.}
+  \item{xvars}{Character vector. If quantitative variables in the model
+    are omitted from data frames supplied in a list to \code{ctr.mat},
+    they should be listed here. Omitted factors need not be mentioned
+    here.} 
   \item{subset}{The subset of the parameters to be used. If given as a
     character vector, the elements are in turn matched against the
     parameter names (using \code{grep}) to find the subset. Repeat

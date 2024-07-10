@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Time dependent covariates in Lexis objects: addCov & addDrug}
+%\VignetteIndexEntry{04: Time dependent covariates in Lexis objects: addCov & addDrug}
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,twoside,12pt]{report}
 

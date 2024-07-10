@@ -1,12 +1,12 @@
-%\VignetteIndexEntry{Years of life lost (YLL)}
+%\VignetteIndexEntry{02: Years of life lost (YLL)}
 \SweaveOpts{results=verbatim, keep.source=TRUE, include=FALSE, eps=FALSE}
 \documentclass[a4paper, twoside, 12pt]{report}
 
 \newcommand{\Title}{Years of Life Lost (YLL)
-  to disease\\Diabetes in DK as example}
+  to disease:\\Diabetes in DK as example}
 \newcommand{\Tit}{YLL}
-\newcommand{\Version}{February 1.2}
-\newcommand{\Dates}{November 2017}
+\newcommand{\Version}{2}
+\newcommand{\Dates}{June 2024}
 \newcommand{\Where}{SDC}
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
@@ -35,11 +35,10 @@ cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 \chapter{Theory and technicalities}
 
-This vignette for the \texttt{Epi} package describes the
-probabilistic and demographic background for and technical implementation
-of the \texttt{erl} and \texttt{yll} functions that computes the
-expected residual life time and years of life lost in an illness-death
-model.
+This vignette for the \texttt{Epi} package describes the probabilistic
+and demographic background for and technical implementation of the
+\texttt{erl} and \texttt{yll} functions that computes the expected
+residual life time and years of life lost in an illness-death model.
 
 \section{Years of life lost (YLL)}
 
@@ -93,26 +92,29 @@ calculation of the survival curve for a person in the ``Well'' state.
 Calculation of the survival of a diseased person already in the ``DM''
 state is unaffected by assumptions about $\lambda$.
 
-<<states, fig=TRUE, height=5, width=5, echo=FALSE>>=
+We can illustrate the states and transitions using \texttt{boxes}:
+<<states, fig=TRUE, echo=TRUE>>=
 library(Epi)
 TM <- matrix(NA, 4, 4)
 rownames(TM) <-
 colnames(TM) <- c("Well", "DM", "Dead", "Dead(DM)")
 TM[1, 2:3] <- TM[2, 4] <- 1
+TM
 zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
                               y = c(80, 80, 20, 20)),
                 wm = 1.5,
                 hm = 4)
-@
-We can edit the output from \texttt{boxes}
-<<states, fig=TRUE, height=4, width=5, echo=FALSE>>=
-zz$Arrowtext <- c(expression(lambda),
-                  expression(mu[W]),
-                  expression(mu[D][M]))
+@ %
+We can edit the output from \texttt{boxes} to get the proper
+annotation of the transition rates:
+<<states, fig=TRUE, height=4, width=7, echo=TRUE>>=
+zz$Arrowtext <- c(expression(lambda(a)),
+                  expression(mu[W](a)),
+                  expression(mu[D][M](a,d)))
 boxes.MS(zz)
 @ %
 \insfig{states}{0.7}{Illness-death model describing diabetes incidence
-  and -mortality.}
+  and -mortality and functions of age and duration}
 
 \subsection{Total mortality --- a shortcut?}
 
@@ -465,8 +467,8 @@ plyll("Sus", " - susceptibility assumed")
 \end{figure}
 
 From figure \ref{fig:sus} we see that for men aged 50 the years lost to
-diabetes has decreased from a bit over 8 to a bit less than 6 years,
-and for women from 8.5 to 5 years; so a greater improvement for women.
+diabetes has decreased from 6.5 to 4.5 years
+and for women from 4 to 4 years; so a greater improvement for women.
 
 <<echo = FALSE>>=
 ende <- Sys.time()

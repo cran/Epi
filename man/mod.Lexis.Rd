@@ -8,8 +8,8 @@
 Modeling intensities based on Lexis objects, exploiting the structure of the
 Lexis objects where the events and risk time have predefined
 representations. This allows a simpler syntax than the
-traditional explicit modeling using \code{\link{glm}}, \code{\link{gam}}
-and \code{\link{coxph}}. Requires that \code{lex.Cst} and \code{lex.Xst}
+traditional explicit modeling using \code{\link{glm}}, \code{\link[mgcv]{gam}}
+and \code{\link[survival]{coxph}}. Requires that \code{lex.Cst} and \code{lex.Xst}
 are defined as factors.
 
 But it is just a set of wrappers fro

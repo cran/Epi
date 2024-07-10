@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Analysis of follow-up data using the Lexis functions in Epi}
+%\VignetteIndexEntry{01: Analysis of follow-up data using the Lexis functions in Epi}
 \SweaveOpts{results=verbatim, keep.source=TRUE, include=FALSE, eps=FALSE}
 \documentclass[a4paper, dvipsnames, twoside, 12pt]{report}
 \newcommand{\Title}{Analysis of follow-up data\\ using the \texttt{Lexis} functions in
@@ -19,7 +19,12 @@ Bendix Carstensen
 
 \input{topreport}
 \renewcommand{\rwpre}{./flup}
-First set some graphics parameters and load the packages needed:
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+\section{Teachnicalities}
+First we set some graphics parameters and load the packages needed:
 <<>>=
 options(width = 90,
         SweaveHooks=list(fig=function()
@@ -33,7 +38,8 @@ library(popEpi)
 library(survival)
 clear()
 @
-<<echo = FALSE>>=
+% must be after clear() because 'anfang' is used at the end
+<<echo = FALSE, results = hide>>=
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
@@ -42,12 +48,10 @@ installed.packages()[c("Epi", "popEpi"),
                      c("Version", "Built"), drop = FALSE]
 @ %
 
-\chapter*{Introduction}
-\addcontentsline{toc}{chapter}{Introduction}
-
-This is an introduction to the \texttt{Lexis} machinery in the
-\texttt{Epi} package. The machinery is intended for representation and
-manipulation of follow-up data (event history data) from studies where
+\section{About this vignette}
+This vignette is an introduction to the \texttt{Lexis} machinery in the
+\texttt{Epi} package, intended for representation and
+manipulation of follow-up data (``event history data'') from studies where
 exact dates of events are known. It accommodates follow-up through
 multiple states and on multiple time scales.
 
@@ -193,20 +197,20 @@ str(dmL)
 head(dmL)[, 1:10]
 @ %
 The \texttt{Lexis} object \texttt{dmL} has a variable for each time
-scale, the value of which is the entry point on this time scale. The
-length of the follow-up time is in the variable \texttt{lex.dur}
-(\texttt{dur}ation).  Note that the exit status is in the variable
-\texttt{lex.Xst} (e\texttt{X}it \texttt{st}ate). The variable
-\texttt{lex.Cst} is the state where the follow-up takes place
+scale, the value of which is the entry for each person on this time
+scale. The length of the follow-up time is in the variable
+\texttt{lex.dur} (\texttt{dur}ation).  Note that the exit status is in
+the variable \texttt{lex.Xst} (e\texttt{X}it \texttt{st}ate). The
+variable \texttt{lex.Cst} is the state where the follow-up takes place
 (\texttt{C}urrent \texttt{st}ate), in this case \texttt{DM} (alive
-with diabetes) for all persons. This implies that \emph{censored}
-observations are characterized by having
-$\mathtt{lex.Cst} = \mathtt{lex.Xst}$.
+with diabetes) for all persons. This implies that observations
+\emph{censored} in state \texttt{Zst}, say, are characterized by
+having $\mathtt{lex.Cst} = \mathtt{lex.Xst} = \mathtt{Zst}$.
 
 There is a \texttt{summary} function for \texttt{Lexis} objects that
-lists the number of transitions and records as well as the total amount
-of follow-up time; it also (optionally) prints information about the names of the
-variables that constitute the time scales:
+lists the number of transitions and records as well as the total
+amount of follow-up time; it also (optionally) prints information
+about the names of the variables that constitute the time scales:
 <<>>=
 summary(dmL, timeScales = TRUE)
 @ %
@@ -248,7 +252,7 @@ The results of these two plotting commands are in figure
 \includegraphics[width = 0.35\textwidth]{flup-dmL1}
 \includegraphics[width = 0.63\textwidth]{flup-dmL2}
 \caption{\it Lexis diagram of the \textrm{\tt DMlate} dataset; left
-  panel is the default version, right panel: plot with some bells and
+  panel is the default version, right panel is with some bells and
   whistles. The red lines are for women, blue for men, crosses
   indicate deaths.}
 \label{fig:Lexis-diagram}
@@ -1419,9 +1423,9 @@ daily use.
 
 <<echo = FALSE>>=
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"))
-cat("    End time:", format(  ende, "%F, %T"))
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 @ %
 
 \renewcommand{\bibname}{References}

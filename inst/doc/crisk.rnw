@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{Competing risks with Lexis, parametric rates and simulation based confidence intervals}
+%\VignetteIndexEntry{03: Competing risks with Lexis, parametric rates and simulation based confidence intervals}
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
 
@@ -33,7 +33,6 @@ options(width = 90,
 @ %
 <<echo = FALSE>>=
 anfang <- Sys.time()
-cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
 
 \chapter{Competing risks}
