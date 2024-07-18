@@ -1,3 +1,9 @@
+Changes in to 2.53
+
+o Bug in examaple of plotCIF corrected (Esa Laara)
+
+o name.check argument added to ci.eta, and now exported (!)
+
 Changes up to 2.52
 
 o a rather primitive function for linear predictors, ci.eta() added

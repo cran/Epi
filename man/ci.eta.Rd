@@ -10,6 +10,7 @@
 }
 \usage{
 ci.eta(form, cf, vcv, newdata,
+       name.check = TRUE,
        alpha = 0.05, df = Inf, raw = FALSE)
 }
 \arguments{
@@ -24,6 +25,9 @@ ci.eta(form, cf, vcv, newdata,
     \code{formula}. Can also be a list of 2 or 4 prediction frames, for
     details see \code{\link{ci.lin}}.
 }
+  \item{name.check}{Logical. Check if the column names of the genereated
+    model matrix are identical to the names of the supplied \code{coef} vector.
+}
   \item{alpha}{Significance level for calculation of c.i.
 }
   \item{df}{Integer. Number of degrees of freedom in the t-distribution
@@ -34,23 +38,24 @@ ci.eta(form, cf, vcv, newdata,
     instead of predictions and confidence limits?
 }
 }
-\details{
+\details{  
   Does pretty much the same as \code{\link{ci.lin}}, but requires only a
-  formula and coefficients with vcov. Designed to avoid saving entire
-  (homongously large) model objects and still be able to compute
-  predictions. But only the linear predictor is returned, if there is a
-  link in your model function it is your own responsibility to
-  back-transform. If the model formula contains reference to vectors of
-  spline knots or similar these must be in the global environment.
+  formula and coefficients with vcov and not a full model
+  object. Designed to avoid saving entire (homongously large) model
+  objects and still be able to compute predictions. But only the linear
+  predictor is returned, if there is a link in your model function it is
+  your own responsibility to back-transform. If the model formula
+  contains reference to vectors of spline knots or similar these must be
+  in the global environment.
 
   There is no guarantee that this function works for models that do not
-  inherit from \code{lm}. But there is a guantee that it will not work
-  for \code{gam} objects.
+  inherit from \code{lm}. But there is a guarantee that it will not work
+  for \code{gam} objects with \code{s()} terms.
 }
 \value{
-The linear predictor for the \code{newdata} with a confidence interval
-as a 3 column matrix. If \code{raw=TRUE} the linear predictor and its
-variance-covariance matrix.
+  The linear predictor for the \code{newdata} with a confidence interval
+  as a \code{nrow(newdata)} by 3 matrix. If \code{raw=TRUE} the linear predictor and its
+  variance-covariance matrix.
 }
 \author{
   Bendix Carstensen, \url{http://bendixcarstensen.com}

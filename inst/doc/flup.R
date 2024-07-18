@@ -61,14 +61,12 @@ summary(dmL, timeScales = TRUE)
 ###################################################
 ### code chunk number 7: dmL1
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 plot(dmL)
 
 
 ###################################################
 ### code chunk number 8: dmL2
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0) / 1.6)
 plot(dmL, 1:2, lwd = 1, col = c("blue", "red")[dmL$sex],
      grid = TRUE, lty.grid = 1, col.grid = gray(0.7),
@@ -147,7 +145,6 @@ summary(dmS2C, timeScales = TRUE)
 ###################################################
 ### code chunk number 16: box1
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 boxes(dmC, boxpos = TRUE, scale.R = 1000, show.BE = TRUE)
 legendbox(70, 95)
 
@@ -243,7 +240,6 @@ c(deviance(ma), deviance(Ma), deviance(Xa), deviance(xa))
 ###################################################
 ### code chunk number 28: pr-a
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(age = 40:85, lex.dur = 1000)
 pr.0 <- ci.pred(ma, newdata = nd)      # mortality per 100 PY
 pr.a <- ci.pred(Ma, newdata = nd)*1000 # mortality per 100 PY
@@ -301,7 +297,6 @@ round(ci.exp(Pm, subset = "ex"), 3)
 ###################################################
 ### code chunk number 34: ins-time
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 ndI <- data.frame(expand.grid(tfI = c(NA, seq(0, 15, 0.1)),
                                ai = seq(40, 80, 10)),
                   sex = "M",
@@ -344,7 +339,6 @@ round(cbind(ci.exp(Pm),
 ###################################################
 ### code chunk number 38: Ieff
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(tfI = seq(0, 15, , 151), lex.Cst = "Ins", sex = "M")
 nr <- data.frame(tfI =     2            , lex.Cst = "Ins", sex = "M")
 # We need to put in xvars="age" because age is in the model but not
@@ -361,7 +355,6 @@ abline(h = 1, lty = 3)
 ###################################################
 ### code chunk number 39: IeffR
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(tfI = seq(0, 15, , 151), lex.Cst = "Ins", sex = "M")
 nr <- data.frame(tfI =     0            , lex.Cst = "DM" , sex = "M")
 ppr <- ci.exp(pm, list(nd, nr), xvars = "age")
@@ -409,7 +402,6 @@ anova(imx, Im, im, test = 'Chisq')
 ###################################################
 ### code chunk number 43: dur-int
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 pxi <- ci.pred(imx, ndI)
 pxa <- ci.pred(imx, ndA)
 pIi <- ci.pred(Im , ndI)
@@ -427,7 +419,6 @@ matshade(ndA$age, cbind(pxa, pIa, pia)*1000,
 ###################################################
 ### code chunk number 44: dur-int-RR
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 ndR <- transform(ndI, tfI = 0, lex.Cst = "DM")
 cbind(head(ndI), head(ndR))
 Rxi <- ci.exp(imx, list(ndI, ndR))
@@ -444,7 +435,6 @@ abline(h = ci.exp(imx, subset = "lex.Cst")[, 1], lty = "25", col = "blue")
 ###################################################
 ### code chunk number 45: splint
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 gm <- glm.Lexis(tsNA20(dmCs),
                 formula = ~ Ns(age, knots = a.kn)
                           + Ns(tfI, knots = i.kn)
@@ -465,7 +455,6 @@ matshade(ndA$age, cbind(pga, pia)*1000,
 ###################################################
 ### code chunk number 46: RR-int
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 ndR <- transform(ndI, lex.Cst = "DM", tfI = 0)
 iRR <- ci.exp(im, ctr.mat = list(ndI, ndR))
 gRR <- ci.exp(gm, ctr.mat = list(ndI, ndR))
@@ -497,7 +486,6 @@ dma <- ci.pred(dmd, ndA)
 ###################################################
 ### code chunk number 48: sep-mort
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
 matshade(ndI$age, ini * 1000, plot = TRUE, log = "y",
          xlab = "Age (years)", ylab = "Mortality rates per 1000 PY",
@@ -509,7 +497,6 @@ matshade(ndA$age, dma*1000,
 ###################################################
 ### code chunk number 49: sep-HR
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
 matshade(ndI$age, ci.ratio(ini, dmi), plot = TRUE, log = "y",
          xlab = "Age (years)", ylab = "RR insulin vs. no insulin",
@@ -532,7 +519,6 @@ summary(dmCs)
 ###################################################
 ### code chunk number 51: box4
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 boxes(dmCs, boxpos = list(x = c(15, 15, 85, 85),
                           y = c(85, 15, 85, 15)),
       scale.R = 1000, show.BE = TRUE)
@@ -562,7 +548,6 @@ subset(dmM, lex.id %in% wh)
 ###################################################
 ### code chunk number 54: mbox
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 boxes(dmM, boxpos = list(x = c(15, 80, 40, 40, 85, 85),
                          y = c(50, 50, 90, 10, 90, 10)),
            scale.R = 1000, show.BE = TRUE)
@@ -571,7 +556,6 @@ boxes(dmM, boxpos = list(x = c(15, 80, 40, 40, 85, 85),
 ###################################################
 ### code chunk number 55: mboxr
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
 summary(dmMr <- Relevel(dmM, list('OAD+Ins' = 5:6), first = FALSE))
 boxes(dmMr, boxpos = list(x = c(15, 50, 15, 85, 85),
                           y = c(85, 50, 15, 85, 15)),

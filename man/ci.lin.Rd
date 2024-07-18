@@ -86,7 +86,7 @@ ci.ratio( r1, r2,
     select a subset of parameters and only the \code{int}ersection
     of these is returned.}
   \item{diffs}{If TRUE, all differences between parameters
-    in the subset are computed, and the \code{subset} argumnt is
+    in the subset are computed, and the \code{subset} argument is
     required. The argument \code{ctr.mat} is ignored. If \code{obj}
     inherits from \code{lm}, and \code{subset} is given as a string
     \code{subset} is used to search among the factors in the model and
@@ -124,7 +124,7 @@ ci.ratio( r1, r2,
   \item{newdata}{Data frame of covariates where prediction is made.}
   \item{r1,r2}{Estimates of rates in two independent groups, with
     confidence limits. Can be either 3-column matrices or data frames
-    with estimates and confindece intervals or 2 two column structures
+    with estimates and confidence intervals or 2 two column structures
     with confidence limits. Only the confidence limits}
   \item{se1,se2}{Standard errors of log-rates in the two groups. If
     given, it is assumed that \code{r1} and \code{r2} represent
@@ -232,12 +232,14 @@ ci.ratio( r1, r2,
   \url{http://bendixcarstensen.com} & Michael Hills
 }
 
-\seealso{See also \code{\link{ci.cum}} for a function computing
-  cumulative sums of (functions of) parameter estimates, and
-  \code{\link{ci.surv}} for a function computing confidence intervals
-  for survival functions based on smoothed rates. The example code for
-  \code{\link{matshade}} has an application of predicting a rate-ratio
-  using a list of two prediction frame in the \code{ctr.mat} argument.}
+\seealso{See \code{\link{ci.eta}} for a simple version only needing
+  coefficients and variance-covariance. See also \code{\link{ci.cum}}
+  for a function computing cumulative sums of (functions of) parameter
+  estimates, and \code{\link{ci.surv}} for a function computing
+  confidence intervals for survival functions based on smoothed
+  rates. The example code for \code{\link{matshade}} has an application
+  of predicting a rate-ratio using a list of two prediction frame in the
+  \code{ctr.mat} argument.}
 
 \examples{
 # Bogus data:

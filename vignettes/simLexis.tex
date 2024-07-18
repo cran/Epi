@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{05: Simulation of multistate models with multiple timescales: simLexis}
-\SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
+
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
 
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
@@ -20,16 +20,12 @@ Bendix Carstensen
 
 \input{topreport}
 \renewcommand{\rwpre}{./simLexis}
-<<echo=FALSE>>=
-options( width=90,
-         SweaveHooks=list( fig=function()
-         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
-@ %
 
-<<echo = FALSE>>=
-anfang <- Sys.time()
-cat("Start time:", format(anfang, "%F, %T"), "\n")
-@ %
+\begin{Schunk}
+\begin{Soutput}
+Start time: 2024-07-18, 15:26:45 
+\end{Soutput}
+\end{Schunk}
 
 \chapter{Using \texttt{simLexis}}
 
@@ -165,34 +161,80 @@ As an example we will use the \texttt{DMlate} dataset from the
 sample of 10,000 patients from the Danish National Diabetes Register.
 
 We start by loading the \texttt{Epi} package:
-<<start>>=
-options( width=90 )
-library( Epi )
-print( sessionInfo(), l=F )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> options( width=90 )
+> library( Epi )
+> print( sessionInfo(), l=F )
+\end{Sinput}
+\begin{Soutput}
+R version 4.4.1 (2024-06-14 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] Epi_2.52
+
+loaded via a namespace (and not attached):
+ [1] etm_1.1.1           vctrs_0.6.5         nlme_3.1-165        cli_3.6.3          
+ [5] rlang_1.1.4         cmprsk_2.2-12       generics_0.1.3      data.table_1.15.4  
+ [9] zoo_1.8-12          glue_1.7.0          plyr_1.8.9          fansi_1.0.6        
+[13] grid_4.4.1          tibble_3.2.1        MASS_7.3-61         numDeriv_2016.8-1.1
+[17] lifecycle_1.0.4     compiler_4.4.1      dplyr_1.1.4         Rcpp_1.0.12        
+[21] pkgconfig_2.0.3     mgcv_1.9-1          lattice_0.22-6      R6_2.5.1           
+[25] tidyselect_1.2.1    utf8_1.2.4          pillar_1.9.0        parallel_4.4.1     
+[29] splines_4.4.1       magrittr_2.0.3      Matrix_1.7-0        survival_3.7-0     
+\end{Soutput}
+\end{Schunk}
 First we load the diabetes data and set up a simple illness-death
 model:
-<<Lexis>>=
-data(DMlate)
-dml <- Lexis( entry = list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
-               exit = list(Per=dox),
-        exit.status = factor(!is.na(dodth),labels=c("DM","Dead")),
-               data = DMlate )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> data(DMlate)
+> dml <- Lexis( entry = list(Per=dodm, Age=dodm-dobth, DMdur=0 ),
++                exit = list(Per=dox),
++         exit.status = factor(!is.na(dodth),labels=c("DM","Dead")),
++                data = DMlate )
+\end{Sinput}
+\begin{Soutput}
+NOTE: entry.status has been set to "DM" for all.
+NOTE: Dropping  4  rows with duration of follow up < tol
+\end{Soutput}
+\end{Schunk}
 This is just data for a simple survival model with states \texttt{DM} and
 \texttt{Dead}. Now we cut the follow-up at insulin start, which for the
 majority of patients (T2D) is a clinical indicator of deterioration of
 disease regulation. We therefore also introduce a new timescale, and
 split the non-precursor states, so that we can address the question of
 ever having been on insulin:
-<<cut>>=
-dmi <- cutLexis( dml, cut = dml$doins,
-                      pre = "DM",
-                new.state = "Ins",
-                new.scale = "t.Ins",
-             split.states = TRUE )
-summary( dmi, timeScales=T )
-@ % $
+\begin{Schunk}
+\begin{Sinput}
+> dmi <- cutLexis( dml, cut = dml$doins,
++                       pre = "DM",
++                 new.state = "Ins",
++                 new.scale = "t.Ins",
++              split.states = TRUE )
+> summary( dmi, timeScales=T )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From    DM  Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  6157 1694 2048         0      9899     3742   45885.49      9899
+  Ins    0 1340    0       451      1791      451    8387.77      1791
+  Sum 6157 3034 2048       451     11690     4193   54273.27      9996
+
+Timescales:
+  Per   Age DMdur t.Ins 
+   ""    ""    "" "Ins" 
+\end{Soutput}
+\end{Schunk}
 Note that we show the time scales in the \texttt{Lexis} object, and
 that it is indicated that the time scale \texttt{t.Ins} is defined as
 time since entry into stat state \texttt{Ins.}
@@ -201,11 +243,13 @@ We can show how many person-years we have and show the number of
 transitions and transition rates (per 1000), using the
 \texttt{boxes.Lexis} function to display the states and the number of
 transitions between them:
-<<boxes,fig=TRUE,height=5,width=7>>=
-boxes( dmi, boxpos = list(x=c(20,20,80,80),
-                        y=c(80,20,80,20)),
-            scale.R = 1000, show.BE = TRUE )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> boxes( dmi, boxpos = list(x=c(20,20,80,80),
++                         y=c(80,20,80,20)),
++             scale.R = 1000, show.BE = TRUE )
+\end{Sinput}
+\end{Schunk}
 \insfig{boxes}{0.8}{Data overview for the \textrm{\tt dmi}
   dataset. Numbers in the boxes are person-years and the number of
   persons who begin, resp. end their follow-up in each state, and
@@ -222,11 +266,40 @@ time both without and with insulin have two records.
 In order to be able to fit Poisson models with occurrence rates varying
 by the different time-scales, we split the follow-up in 3-month intervals
 for modeling:
-<<split>>=
-Si <- splitLexis( dmi, seq(0,20,1/4), "DMdur" )
-summary( Si )
-print( subset( Si, lex.id==97 )[,1:10], digits=6 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> Si <- splitLexis( dmi, seq(0,20,1/4), "DMdur" )
+> summary( Si )
+\end{Sinput}
+\begin{Soutput}
+Transitions:
+     To
+From      DM   Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  184986  1694 2048         0    188728     3742   45885.49      9899
+  Ins      0 34707    0       451     35158      451    8387.77      1791
+  Sum 184986 36401 2048       451    223886     4193   54273.27      9996
+\end{Soutput}
+\begin{Sinput}
+> print( subset( Si, lex.id==97 )[,1:10], digits=6 )
+\end{Sinput}
+\begin{Soutput}
+ lex.id     Per   Age DMdur t.Ins lex.dur lex.Cst   lex.Xst sex   dobth
+     97 1997.55 58.93  0.00    NA    0.25      DM        DM   F 1938.62
+     97 1997.80 59.18  0.25    NA    0.25      DM        DM   F 1938.62
+     97 1998.05 59.43  0.50    NA    0.25      DM        DM   F 1938.62
+     97 1998.30 59.68  0.75    NA    0.25      DM        DM   F 1938.62
+     97 1998.55 59.93  1.00    NA    0.25      DM        DM   F 1938.62
+     97 1998.80 60.18  1.25    NA    0.25      DM        DM   F 1938.62
+     97 1999.05 60.43  1.50    NA    0.25      DM        DM   F 1938.62
+     97 1999.30 60.68  1.75    NA    0.25      DM        DM   F 1938.62
+     97 1999.55 60.93  2.00    NA    0.18      DM       Ins   F 1938.62
+     97 1999.72 61.11  2.18  0.00    0.07     Ins       Ins   F 1938.62
+     97 1999.80 61.18  2.25  0.07    0.25     Ins       Ins   F 1938.62
+     97 2000.05 61.43  2.50  0.32    0.25     Ins       Ins   F 1938.62
+     97 2000.30 61.68  2.75  0.57    0.25     Ins       Ins   F 1938.62
+     97 2000.55 61.93  3.00  0.82    0.01     Ins Dead(Ins)   F 1938.62
+\end{Soutput}
+\end{Schunk}
 Note that when we split the follow-up, each person's follow up now
 consists of many records, each with the \emph{current} values of the
 timescales at the start of the interval represented by the record. In
@@ -250,19 +323,49 @@ knots, whereas for the timescales \texttt{DMdur} and \texttt{tIns}
 where we have observation from a well-defined 0, we put knots at 0 and
 place the remaining knots so that the number of events is the same
 between each pair of knots as well as outside the boundary knots.
-<<knots>>=
-nk <- 5
-( ai.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
-                 quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
-( ad.kn <- with( subset(Si,lex.Xst=="Dead"),
-                 quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
-( di.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
-                 c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
-( dd.kn <- with( subset(Si,lex.Xst=="Dead"),
-                 c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
-( ti.kn <- with( subset(Si,lex.Xst=="Dead(Ins)"),
-                 c(0,quantile( t.Ins+lex.dur, probs=(1:(nk-1))/nk ) )) )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> nk <- 5
+> ( ai.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
++                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
+\end{Sinput}
+\begin{Soutput}
+     10%      30%      50%      70%      90% 
+23.23751 48.82218 58.63244 67.79028 78.88542 
+\end{Soutput}
+\begin{Sinput}
+> ( ad.kn <- with( subset(Si,lex.Xst=="Dead"),
++                  quantile( Age+lex.dur  , probs=(1:nk-0.5)/nk ) ) )
+\end{Sinput}
+\begin{Soutput}
+     10%      30%      50%      70%      90% 
+61.91951 72.52731 78.43121 83.32348 90.15195 
+\end{Soutput}
+\begin{Sinput}
+> ( di.kn <- with( subset(Si,lex.Xst=="Ins" & lex.Cst!=lex.Xst ),
++                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
+\end{Sinput}
+\begin{Soutput}
+                  20%        40%        60%        80% 
+0.00000000 0.06570842 0.45448323 3.28761123 6.63764545 
+\end{Soutput}
+\begin{Sinput}
+> ( dd.kn <- with( subset(Si,lex.Xst=="Dead"),
++                  c(0,quantile( DMdur+lex.dur, probs=(1:(nk-1))/nk ) )) )
+\end{Sinput}
+\begin{Soutput}
+                20%       40%       60%       80% 
+0.0000000 0.7687885 2.1327858 4.0465435 6.5232033 
+\end{Soutput}
+\begin{Sinput}
+> ( ti.kn <- with( subset(Si,lex.Xst=="Dead(Ins)"),
++                  c(0,quantile( t.Ins+lex.dur, probs=(1:(nk-1))/nk ) )) )
+\end{Sinput}
+\begin{Soutput}
+                20%       40%       60%       80% 
+0.0000000 0.3093771 1.1307324 2.5489391 4.9117043 
+\end{Soutput}
+\end{Schunk}
 Note that when we tease out the event records for transition to
 \emph{transient} states (in this case \texttt{Ins}, that is
 \verb|lex.Xst=="Ins"|), we should add \verb|lex.Cst!=lex.Xst|, to
@@ -272,40 +375,103 @@ sojourn time in the transient state.
 We then fit Poisson models to transition rates, using the wrapper
 \texttt{Ns} from the \texttt{Epi} package to simplify the
 specification of the rates:
-<<Poisson>>=
-library( splines )
-DM.Ins <- glm( (lex.Xst=="Ins") ~ Ns( Age  , knots=ai.kn ) +
-                                  Ns( DMdur, knots=di.kn ) +
-                                  I(Per-2000) + sex,
-               family=poisson, offset=log(lex.dur),
-               data = subset(Si,lex.Cst=="DM") )
-ci.exp( DM.Ins )
-class( DM.Ins )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> library( splines )
+> DM.Ins <- glm( (lex.Xst=="Ins") ~ Ns( Age  , knots=ai.kn ) +
++                                   Ns( DMdur, knots=di.kn ) +
++                                   I(Per-2000) + sex,
++                family=poisson, offset=log(lex.dur),
++                data = subset(Si,lex.Cst=="DM") )
+> ci.exp( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+                           exp(Est.)       2.5%      97.5%
+(Intercept)               1.37516629 1.21414923 1.55753699
+Ns(Age, knots = ai.kn)1   0.23411761 0.19185266 0.28569349
+Ns(Age, knots = ai.kn)2   0.23166177 0.19576557 0.27414000
+Ns(Age, knots = ai.kn)3   0.02835009 0.02284379 0.03518363
+Ns(Age, knots = ai.kn)4   0.38067392 0.32945713 0.43985278
+Ns(DMdur, knots = di.kn)1 0.04462626 0.03373451 0.05903459
+Ns(DMdur, knots = di.kn)2 0.22388988 0.19028663 0.26342723
+Ns(DMdur, knots = di.kn)3 0.03379141 0.02574708 0.04434907
+Ns(DMdur, knots = di.kn)4 0.47100646 0.40783317 0.54396529
+I(Per - 2000)             0.97381513 0.96082049 0.98698552
+sexF                      0.73757407 0.66886782 0.81333785
+\end{Soutput}
+\begin{Sinput}
+> class( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+[1] "glm" "lm" 
+\end{Soutput}
+\end{Schunk}
 We can also fit this model with a slightly simpler syntax using the
 \texttt{glm.Lexis} function:
-<<>>=
-DM.Ins <- glm.Lexis( Si, from = "DM", to = "Ins",
-                      formula = ~ Ns( Age  , knots=ai.kn ) +
-                                  Ns( DMdur, knots=di.kn ) +
-                                  I(Per-2000) + sex )
-ci.exp( DM.Ins )
-class( DM.Ins )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> DM.Ins <- glm.Lexis( Si, from = "DM", to = "Ins",
++                       formula = ~ Ns( Age  , knots=ai.kn ) +
++                                   Ns( DMdur, knots=di.kn ) +
++                                   I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition:
+DM->Ins
+\end{Soutput}
+\begin{Sinput}
+> ci.exp( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+                           exp(Est.)       2.5%      97.5%
+(Intercept)               1.37516630 1.21415038 1.55753552
+Ns(Age, knots = ai.kn)1   0.23411761 0.19185214 0.28569426
+Ns(Age, knots = ai.kn)2   0.23166177 0.19576473 0.27414118
+Ns(Age, knots = ai.kn)3   0.02835009 0.02284374 0.03518371
+Ns(Age, knots = ai.kn)4   0.38067392 0.32945601 0.43985427
+Ns(DMdur, knots = di.kn)1 0.04462625 0.03373347 0.05903639
+Ns(DMdur, knots = di.kn)2 0.22388988 0.19028599 0.26342813
+Ns(DMdur, knots = di.kn)3 0.03379141 0.02574705 0.04434912
+Ns(DMdur, knots = di.kn)4 0.47100646 0.40783201 0.54396683
+I(Per - 2000)             0.97381513 0.96082027 0.98698574
+sexF                      0.73757407 0.66886641 0.81333956
+\end{Soutput}
+\begin{Sinput}
+> class( DM.Ins )
+\end{Sinput}
+\begin{Soutput}
+[1] "glm.lex" "glm"     "lm"     
+\end{Soutput}
+\end{Schunk}
 So we have a slightly simpler syntax, and we get an informative
 message of which transition(s) we are modeling. However we do not have
 \texttt{update} method for these objects.
-<<>>=
-DM.Dead <- glm.Lexis( Si, from = "DM", to = "Dead",
-                       formula = ~ Ns( Age  , knots=ad.kn ) +
-                                   Ns( DMdur, knots=dd.kn ) +
-                                   I(Per-2000) + sex )
-Ins.Dead <- glm.Lexis( Si, from = "Ins",
-                        formula = ~ Ns( Age  , knots=ad.kn ) +
-                                    Ns( DMdur, knots=dd.kn ) +
-                                    Ns( t.Ins, knots=ti.kn ) +
-                                    I(Per-2000) + sex )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> DM.Dead <- glm.Lexis( Si, from = "DM", to = "Dead",
++                        formula = ~ Ns( Age  , knots=ad.kn ) +
++                                    Ns( DMdur, knots=dd.kn ) +
++                                    I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition:
+DM->Dead
+\end{Soutput}
+\begin{Sinput}
+> Ins.Dead <- glm.Lexis( Si, from = "Ins",
++                         formula = ~ Ns( Age  , knots=ad.kn ) +
++                                     Ns( DMdur, knots=dd.kn ) +
++                                     Ns( t.Ins, knots=ti.kn ) +
++                                     I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for the transition:
+Ins->Dead(Ins)
+\end{Soutput}
+\end{Schunk}
 Note the similarity of the code used to fit the three models, is is
 mainly redefining the response variable (\texttt{to} state) and the subset
 of the data used (\texttt{from} state). Also note that the last model need
@@ -330,14 +496,39 @@ assumption; we can just fit a model for the mortality rates in the
 entire data frame \texttt{Si}, and compare the deviance from this with
 the sum of the deviances from the separate models using the \texttt{glm.Lexis}
 function:
-<<prop-haz>>=
-All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
-                      formula = ~ Ns( Age  , knots=ad.kn ) +
-                                  Ns( DMdur, knots=dd.kn ) +
-                                  lex.Cst +
-                                  I(Per-2000) + sex )
-round( ci.exp( All.Dead ), 3 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> All.Dead <- glm.Lexis( Si, to = c("Dead(Ins)","Dead"),
++                       formula = ~ Ns( Age  , knots=ad.kn ) +
++                                   Ns( DMdur, knots=dd.kn ) +
++                                   lex.Cst +
++                                   I(Per-2000) + sex )
+\end{Sinput}
+\begin{Soutput}
+stats::glm Poisson analysis of Lexis object Si with log link:
+Rates for transitions:
+Ins->Dead(Ins)
+DM->Dead
+\end{Soutput}
+\begin{Sinput}
+> round( ci.exp( All.Dead ), 3 )
+\end{Sinput}
+\begin{Soutput}
+                          exp(Est.)   2.5%  97.5%
+(Intercept)                   0.057  0.049  0.065
+Ns(Age, knots = ad.kn)1       4.101  3.462  4.858
+Ns(Age, knots = ad.kn)2       4.661  4.064  5.346
+Ns(Age, knots = ad.kn)3      15.434 13.548 17.583
+Ns(Age, knots = ad.kn)4       7.509  6.695  8.421
+Ns(DMdur, knots = dd.kn)1     0.466  0.384  0.565
+Ns(DMdur, knots = dd.kn)2     0.642  0.563  0.731
+Ns(DMdur, knots = dd.kn)3     0.229  0.165  0.318
+Ns(DMdur, knots = dd.kn)4     0.796  0.713  0.888
+lex.CstIns                    2.168  1.947  2.415
+I(Per - 2000)                 0.965  0.954  0.977
+sexF                          0.665  0.614  0.721
+\end{Soutput}
+\end{Schunk}
 Incidentally we could have dispensed with the \texttt{to=} argument
 too, because the default is to take \texttt{to} to be all absorbing
 states in the model.
@@ -359,13 +550,37 @@ $k=5$ above).
 We can compare the fit of the simple proportional hazards model with
 the fit of the separate models for the two mortality rates, by adding
 up the deviances and d.f. from these:
-<<get-dev>>=
-what <- c("null.deviance","df.null","deviance","df.residual")
-( rD <- unlist(  DM.Dead[what] ) )
-( rI <- unlist( Ins.Dead[what] ) )
-( rA <- unlist( All.Dead[what] ) )
-round( c( dd <- rA-(rI+rD), "pVal"=1-pchisq(dd[3],dd[4]+1) ), 3 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> what <- c("null.deviance","df.null","deviance","df.residual")
+> ( rD <- unlist(  DM.Dead[what] ) )
+\end{Sinput}
+\begin{Soutput}
+null.deviance       df.null      deviance   df.residual 
+     22535.77     188727.00      20412.81     188717.00 
+\end{Soutput}
+\begin{Sinput}
+> ( rI <- unlist( Ins.Dead[what] ) )
+\end{Sinput}
+\begin{Soutput}
+null.deviance       df.null      deviance   df.residual 
+     4867.127     35157.000      4211.735     35143.000 
+\end{Soutput}
+\begin{Sinput}
+> ( rA <- unlist( All.Dead[what] ) )
+\end{Sinput}
+\begin{Soutput}
+null.deviance       df.null      deviance   df.residual 
+     27415.21     223885.00      24705.70     223874.00 
+\end{Soutput}
+\begin{Sinput}
+> round( c( dd <- rA-(rI+rD), "pVal"=1-pchisq(dd[3],dd[4]+1) ), 3 )
+\end{Sinput}
+\begin{Soutput}
+null.deviance       df.null      deviance   df.residual pVal.deviance 
+       12.314         1.000        81.154        14.000         0.000 
+\end{Soutput}
+\end{Schunk}
 Thus we see there is a substantial non-proportionality of mortality
 rates from the two states; but a test provides no clue whatsoever to
 the particular \emph{shape} of the non-proportionality.
@@ -403,14 +618,25 @@ for persons starting insulin at different times after DM. The
 mortality curves start at the age where the person gets diabetes and
 continues 12 years; for persons on insulin they start at the age when
 they initiate insulin.
-<<pr-array>>=
-pr.rates <- NArray( list( DMdur = seq(0,12,0.1),
-                          DMage = 4:7*10,
-                          r.Ins = c(NA,0,2,5),
-                          model = c("DM/Ins","All"),
-                           what = c("rate","lo","hi") ) )
-str( pr.rates )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> pr.rates <- NArray( list( DMdur = seq(0,12,0.1),
++                           DMage = 4:7*10,
++                           r.Ins = c(NA,0,2,5),
++                           model = c("DM/Ins","All"),
++                            what = c("rate","lo","hi") ) )
+> str( pr.rates )
+\end{Sinput}
+\begin{Soutput}
+ logi [1:121, 1:4, 1:4, 1:2, 1:3] NA NA NA NA NA NA ...
+ - attr(*, "dimnames")=List of 5
+  ..$ DMdur: chr [1:121] "0" "0.1" "0.2" "0.3" ...
+  ..$ DMage: chr [1:4] "40" "50" "60" "70"
+  ..$ r.Ins: chr [1:4] NA "0" "2" "5"
+  ..$ model: chr [1:2] "DM/Ins" "All"
+  ..$ what : chr [1:3] "rate" "lo" "hi"
+\end{Soutput}
+\end{Schunk}
 For convenience the \texttt{Epi} package contains a function that computes
 predicted (log-)rates with c.i. --- it is merely a wrapper for
 \texttt{predict.glm}.
@@ -418,12 +644,14 @@ predicted (log-)rates with c.i. --- it is merely a wrapper for
 So we set up the prediction data frame and modify it in loops over
 ages at onset and insulin onset in order to collect the predicted
 rates in different scenarios:
-<<mknd>>=
-nd <- data.frame( DMdur = as.numeric( dimnames(pr.rates)[[1]] ),
-                lex.Cst = factor( 1, levels=1:4,
-                                  labels=levels(Si$lex.Cst) ),
-                    sex = factor( 1, levels=1:2, labels=c("M","F")) )
-@ % $
+\begin{Schunk}
+\begin{Sinput}
+> nd <- data.frame( DMdur = as.numeric( dimnames(pr.rates)[[1]] ),
++                 lex.Cst = factor( 1, levels=1:4,
++                                   labels=levels(Si$lex.Cst) ),
++                     sex = factor( 1, levels=1:2, labels=c("M","F")) )
+\end{Sinput}
+\end{Schunk}
 Note that we did \emph{not} insert \texttt{lex.dur} as covariate in
 the prediction frame. This would be required if we used the
 \texttt{poisson} family with the \texttt{glm}, but the wrapper
@@ -431,41 +659,45 @@ the prediction frame. This would be required if we used the
 \texttt{lex.dur} is ignored and predictions always comes in the
 (inverse) units of \texttt{lex.dur}. So we get rates per 1 person-year
 in the predictions.
-<<make-pred>>=
-for( ia in dimnames(pr.rates)[[2]] )
-   {
-dnew <- transform( nd, Age = as.numeric(ia)+DMdur,
-                       Per = 1998+DMdur )
-pr.rates[,ia,1,"DM/Ins",] <- ci.pred(  DM.Dead, newdata = dnew )
-pr.rates[,ia,1,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
-for( ii in dimnames(pr.rates)[[3]][-1] )
-   {
-dnew = transform( dnew, lex.Cst = factor( 2, levels=1:4,
-                                          labels=levels(Si$lex.Cst) ),
-                          t.Ins = ifelse( (DMdur-as.numeric(ii)) >= 0,
-                                           DMdur-as.numeric(ii), NA ) )
-pr.rates[,ia, ii ,"DM/Ins",] <- ci.pred( Ins.Dead, newdata = dnew )
-pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
-    }
-    }
-@ % $
+\begin{Schunk}
+\begin{Sinput}
+> for( ia in dimnames(pr.rates)[[2]] )
++    {
++ dnew <- transform( nd, Age = as.numeric(ia)+DMdur,
++                        Per = 1998+DMdur )
++ pr.rates[,ia,1,"DM/Ins",] <- ci.pred(  DM.Dead, newdata = dnew )
++ pr.rates[,ia,1,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
++ for( ii in dimnames(pr.rates)[[3]][-1] )
++    {
++ dnew = transform( dnew, lex.Cst = factor( 2, levels=1:4,
++                                           labels=levels(Si$lex.Cst) ),
++                           t.Ins = ifelse( (DMdur-as.numeric(ii)) >= 0,
++                                            DMdur-as.numeric(ii), NA ) )
++ pr.rates[,ia, ii ,"DM/Ins",] <- ci.pred( Ins.Dead, newdata = dnew )
++ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
++     }
++     }
+\end{Sinput}
+\end{Schunk}
 So for each age at DM onset we make a plot of the mortality as
 function of current age both for those with no insulin treatment and
 those that start insulin treatment 0, 2 and 5 years after diabetes
 diagnosis, thus 4 curves (with c.i.). These curves are replicated with
 a different color for the simplified model.
-<<mort-int,fig=TRUE,width=8>>=
-par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
-plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
-      log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
-abline( v=seq(40,80,5), h=outer(1:9,10^(0:2),"*"), col=gray(0.8) )
-for( aa in 4:7*10 ) for( ii in 1:4 )
-   matshade( aa+as.numeric(dimnames(pr.rates)[[1]]),
-             cbind( pr.rates[,paste(aa),ii,"DM/Ins",],
-                    pr.rates[,paste(aa),ii,"All"   ,] )*1000,
-             type="l", lty=1, lwd=2,
-             col=c("red","limegreen") )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
+> plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
++       log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
+> abline( v=seq(40,80,5), h=outer(1:9,10^(0:2),"*"), col=gray(0.8) )
+> for( aa in 4:7*10 ) for( ii in 1:4 )
++    matshade( aa+as.numeric(dimnames(pr.rates)[[1]]),
++              cbind( pr.rates[,paste(aa),ii,"DM/Ins",],
++                     pr.rates[,paste(aa),ii,"All"   ,] )*1000,
++              type="l", lty=1, lwd=2,
++              col=c("red","limegreen") )
+\end{Sinput}
+\end{Schunk}
 \insfig{mort-int}{0.9}{Estimated mortality rates for male diabetes
   patients with no insulin (lower sets of curves) and insulin (upper
   curves), with DM onset in age 40, 50, 60 and 70. The red curves are
@@ -520,11 +752,13 @@ model \emph{as well as} the initial cohort status to
 We first put the models into an object representing the transitions;
 note this is a list of lists, the latter having \texttt{glm} objects
 as elements:
-<<Tr>>=
-Tr <- list( "DM" = list( "Ins"       = DM.Ins,
-                         "Dead"      = DM.Dead  ),
-           "Ins" = list( "Dead(Ins)" = Ins.Dead ) )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> Tr <- list( "DM" = list( "Ins"       = DM.Ins,
++                          "Dead"      = DM.Dead  ),
++            "Ins" = list( "Dead(Ins)" = Ins.Dead ) )
+\end{Sinput}
+\end{Schunk}
 Now we have the description of the rates and of the structure of the
 model. The \texttt{Tr} object defines the states and models for all
 transitions between them; the object \verb|Tr$A$B| is the model
@@ -538,23 +772,51 @@ relevant covariates defined. Note that we use \texttt{NULL} as row
 indicator in the \texttt{Lexis} object we used for modeling; this
 conserves the \texttt{time.scale} and \texttt{time.since} attributes
 which are needed for the simulation:
-<<make-ini>>=
-str( ini <- Si[NULL,1:9] )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> str( ini <- Si[NULL,1:9] )
+\end{Sinput}
+\begin{Soutput}
+Classes 'Lexis' and 'data.frame':	0 obs. of  9 variables:
+ $ lex.id : int 
+ $ Per    : num 
+ $ Age    : num 
+ $ DMdur  : num 
+ $ t.Ins  : num 
+ $ lex.dur: num 
+ $ lex.Cst: Factor w/ 4 levels "DM","Ins","Dead",..: 
+ $ lex.Xst: Factor w/ 4 levels "DM","Ins","Dead",..: 
+ $ sex    : Factor w/ 2 levels "M","F": 
+ - attr(*, "time.scales")= chr [1:4] "Per" "Age" "DMdur" "t.Ins"
+ - attr(*, "time.since")= chr [1:4] "" "" "" "Ins"
+ - attr(*, "breaks")=List of 4
+  ..$ Per  : NULL
+  ..$ Age  : NULL
+  ..$ DMdur: num [1:81] 0 0.25 0.5 0.75 1 1.25 1.5 1.75 2 2.25 ...
+  ..$ t.Ins: NULL
+\end{Soutput}
+\end{Schunk}
 We now have an empty \texttt{Lexis} object with attributes reflecting
 the timescales in the multistate model we want to simulate from. But
 we must enter some data to represent the initial state of the persons
 whose follow-up we want to simulate through the model; so fill in data
 for one man and one woman:
-<<ini-fill>>=
-ini[1:2,"lex.id"] <- 1:2
-ini[1:2,"lex.Cst"] <- "DM"
-ini[1:2,"Per"] <- 1995
-ini[1:2,"Age"] <- 60
-ini[1:2,"DMdur"] <- 5
-ini[1:2,"sex"] <- c("M","F")
-ini
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> ini[1:2,"lex.id"] <- 1:2
+> ini[1:2,"lex.Cst"] <- "DM"
+> ini[1:2,"Per"] <- 1995
+> ini[1:2,"Age"] <- 60
+> ini[1:2,"DMdur"] <- 5
+> ini[1:2,"sex"] <- c("M","F")
+> ini
+\end{Sinput}
+\begin{Soutput}
+ lex.id  Per Age DMdur t.Ins lex.dur lex.Cst lex.Xst sex
+      1 1995  60     5    NA      NA      DM    <NA>   M
+      2 1995  60     5    NA      NA      DM    <NA>   F
+\end{Soutput}
+\end{Schunk}
 So the persons starts in age 60 in 1995 with 5 years of diabetes
 duration. Note that the \texttt{t.Ins} is \texttt{NA}, because this is
 a timescale that first comes alive if a transtion to \texttt{Ins} is
@@ -571,21 +833,48 @@ transition times. Note that this must be given in the same units as
 models for the transitions. It is not a parameter that can be easily
 determined from the \texttt{TR} object, hence it must be supplied by
 the user.
-<<simL>>=
-set.seed(52381764)
-Nsim <- 500
-system.time( simL <- simLexis( Tr,
-                              ini,
-                          t.range = 12,
-                                N = Nsim ) )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> set.seed(52381764)
+> Nsim <- 500
+> system.time( simL <- simLexis( Tr,
++                               ini,
++                           t.range = 12,
++                                 N = Nsim ) )
+\end{Sinput}
+\begin{Soutput}
+  bruger   system forløbet 
+    1.22     0.31     1.53 
+\end{Soutput}
+\end{Schunk}
 The result is a \texttt{Lexis} object --- a data frame representing
-the simulated follow-up of \Sexpr{2*Nsim} persons (\Sexpr{Nsim}
-identical men and \Sexpr{Nsim} identical women) according to the rates
+the simulated follow-up of 1000 persons (500
+identical men and 500 identical women) according to the rates
 we estimated from the original dataset.
-<<sum-simL>>=
-summary( simL, by="sex" )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> summary( simL, by="sex" )
+\end{Sinput}
+\begin{Soutput}
+$M
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  148 185  167         0       500      352    3697.59       500
+  Ins   0 136    0        49       185       49    1023.96       185
+  Sum 148 321  167        49       685      401    4721.55       500
+
+$F
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  214 183  103         0       500      286    4223.33       500
+  Ins   0 144    0        39       183       39    1020.36       183
+  Sum 214 327  103        39       683      325    5243.69       500
+\end{Soutput}
+\end{Schunk}
 
 \subsection{Using other models for simulation}
 
@@ -600,16 +889,43 @@ model via the term \texttt{lex.Cst}, which is updated during the simulation.
 
 Simulation using this instead just requires that we supply a different
 transition object:
-<<Tr.p-simP>>=
-Tr.p <- list( "DM" = list( "Ins"       = DM.Ins,
-                           "Dead"      = All.Dead  ),
-             "Ins" = list( "Dead(Ins)" = All.Dead ) )
-system.time( simP <- simLexis( Tr.p,
-                                ini,
-                            t.range = 12,
-                                  N = Nsim ) )
-summary( simP, by="sex" )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> Tr.p <- list( "DM" = list( "Ins"       = DM.Ins,
++                            "Dead"      = All.Dead  ),
++              "Ins" = list( "Dead(Ins)" = All.Dead ) )
+> system.time( simP <- simLexis( Tr.p,
++                                 ini,
++                             t.range = 12,
++                                   N = Nsim ) )
+\end{Sinput}
+\begin{Soutput}
+  bruger   system forløbet 
+    1.33     0.10     1.41 
+\end{Soutput}
+\begin{Sinput}
+> summary( simP, by="sex" )
+\end{Sinput}
+\begin{Soutput}
+$M
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  148 222  130         0       500      352    3703.19       500
+  Ins   0 127    0        95       222       95    1049.95       222
+  Sum 148 349  130        95       722      447    4753.14       500
+
+$F
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  224 171  105         0       500      276    4323.34       500
+  Ins   0 118    0        53       171       53     861.93       171
+  Sum 224 289  105        53       671      329    5185.27       500
+\end{Soutput}
+\end{Schunk}
 
 \subsubsection{Proportional hazards Cox model}
 
@@ -617,16 +933,28 @@ A third possibility would be to replace the two-time scale
 proportional mortality model by a one-time-scale Cox-model, using
 diabetes duration as time scale, and age at diagnosis of DM as (fixed)
 covariate:
-<<Cox-dur>>=
-library( survival )
-Cox.Dead <- coxph( Surv( DMdur, DMdur+lex.dur,
-                         lex.Xst %in% c("Dead(Ins)","Dead")) ~
-                   Ns( Age-DMdur, knots=ad.kn ) +
-                   I(lex.Cst=="Ins") +
-                   I(Per-2000) + sex,
-               data = Si )
-round( ci.exp( Cox.Dead ), 3 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> library( survival )
+> Cox.Dead <- coxph( Surv( DMdur, DMdur+lex.dur,
++                          lex.Xst %in% c("Dead(Ins)","Dead")) ~
++                    Ns( Age-DMdur, knots=ad.kn ) +
++                    I(lex.Cst=="Ins") +
++                    I(Per-2000) + sex,
++                data = Si )
+> round( ci.exp( Cox.Dead ), 3 )
+\end{Sinput}
+\begin{Soutput}
+                                exp(Est.)   2.5%  97.5%
+Ns(Age - DMdur, knots = ad.kn)1     4.172  3.535  4.923
+Ns(Age - DMdur, knots = ad.kn)2     4.502  3.824  5.301
+Ns(Age - DMdur, knots = ad.kn)3    16.077 14.087 18.348
+Ns(Age - DMdur, knots = ad.kn)4     7.479  6.501  8.605
+I(lex.Cst == "Ins")TRUE             2.170  1.948  2.418
+I(Per - 2000)                       0.965  0.954  0.977
+sexF                                0.667  0.616  0.723
+\end{Soutput}
+\end{Schunk}
 Note that in order for this model to be usable for simulation, it is
 necessary that we use the components of the \texttt{Lexis} object to
 specify the survival. Each record in the data frame \texttt{Si}
@@ -644,16 +972,43 @@ We see that the effect of insulin and the other covariates are pretty
 much the same as in the two-time-scale model. We can simulate from this
 model too; there is no restrictions on what type of model can be used
 for different transitions
-<<TR.c>>=
-Tr.c <- list( "DM" = list( "Ins"       = Tr$DM$Ins,
-                           "Dead"      = Cox.Dead  ),
-             "Ins" = list( "Dead(Ins)" = Cox.Dead ) )
-system.time( simC <- simLexis( Tr.c,
-                                ini,
-                            t.range = 12,
-                                  N = Nsim ) )
-summary( simC, by="sex" )
-@
+\begin{Schunk}
+\begin{Sinput}
+> Tr.c <- list( "DM" = list( "Ins"       = Tr$DM$Ins,
++                            "Dead"      = Cox.Dead  ),
++              "Ins" = list( "Dead(Ins)" = Cox.Dead ) )
+> system.time( simC <- simLexis( Tr.c,
++                                 ini,
++                             t.range = 12,
++                                   N = Nsim ) )
+\end{Sinput}
+\begin{Soutput}
+  bruger   system forløbet 
+    2.46     0.34     2.81 
+\end{Soutput}
+\begin{Sinput}
+> summary( simC, by="sex" )
+\end{Sinput}
+\begin{Soutput}
+$M
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  171 192  137         0       500      329    3645.74       500
+  Ins   0 123    0        69       192       69    1007.35       192
+  Sum 171 315  137        69       692      398    4653.09       500
+
+$F
+     
+Transitions:
+     To
+From   DM Ins Dead Dead(Ins)  Records:  Events: Risk time:  Persons:
+  DM  227 185   88         0       500      273    4332.82       500
+  Ins   0 138    0        47       185       47     821.79       185
+  Sum 227 323   88        47       685      320    5154.61       500
+\end{Soutput}
+\end{Schunk}
 
 \section{Reporting the simulation results}
 
@@ -661,12 +1016,34 @@ We can now tabulate the number of persons in each state at a
 predefined set of times on a given time scale. Note that in order for
 this to be sensible, the \texttt{from} argument would normally be
 equal to the starting time for the simulated individuals.
-<<nState>>=
-system.time(
-nSt <- nState( subset(simL,sex=="M"),
-               at=seq(0,11,0.2), from=1995, time.scale="Per" ) )
-nSt[1:10,]
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> system.time(
++ nSt <- nState( subset(simL,sex=="M"),
++                at=seq(0,11,0.2), from=1995, time.scale="Per" ) )
+\end{Sinput}
+\begin{Soutput}
+  bruger   system forløbet 
+    0.07     0.00     0.06 
+\end{Soutput}
+\begin{Sinput}
+> nSt[1:10,]
+\end{Sinput}
+\begin{Soutput}
+        State
+when      DM Ins Dead Dead(Ins)
+  1995   500   0    0         0
+  1995.2 497   2    1         0
+  1995.4 486   8    6         0
+  1995.6 477  13   10         0
+  1995.8 468  16   16         0
+  1996   459  20   21         0
+  1996.2 448  25   27         0
+  1996.4 442  29   28         1
+  1996.6 438  31   30         1
+  1996.8 429  37   33         1
+\end{Soutput}
+\end{Schunk}
 We see that as time goes by, the 500 men slowly move away from the
 starting state (\texttt{DM}).
 
@@ -675,55 +1052,71 @@ fractions in each state, or, rather more relevant, the cumulative fraction
 across the states in some specified order, so that a plot of the
 stacked probabilities can be made, using either the default rather
 colorful layout, or a more minimalist version (both in figure \ref{fig:pstate0}):
-<<pstate0,fig=TRUE,width=9>>=
-pM <- pState( nSt, perm=c(1,2,4,3) )
-head( pM )
-par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
-plot( pM )
-plot( pM, border="black", col="transparent", lwd=3 )
-text( rep(as.numeric(rownames(pM)[nrow(pM)-1]),ncol(pM)),
-      pM[nrow(pM),]-diff(c(0,pM[nrow(pM),]))/5,
-      colnames( pM ), adj=1 )
-box( col="white", lwd=3 )
-box()
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> pM <- pState( nSt, perm=c(1,2,4,3) )
+> head( pM )
+\end{Sinput}
+\begin{Soutput}
+        State
+when        DM   Ins Dead(Ins) Dead
+  1995   1.000 1.000     1.000    1
+  1995.2 0.994 0.998     0.998    1
+  1995.4 0.972 0.988     0.988    1
+  1995.6 0.954 0.980     0.980    1
+  1995.8 0.936 0.968     0.968    1
+  1996   0.918 0.958     0.958    1
+\end{Soutput}
+\begin{Sinput}
+> par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
+> plot( pM )
+> plot( pM, border="black", col="transparent", lwd=3 )
+> text( rep(as.numeric(rownames(pM)[nrow(pM)-1]),ncol(pM)),
++       pM[nrow(pM),]-diff(c(0,pM[nrow(pM),]))/5,
++       colnames( pM ), adj=1 )
+> box( col="white", lwd=3 )
+> box()
+\end{Sinput}
+\end{Schunk}
 \insfig{pstate0}{1.0}{Default layout of the \textrm{\tt plot.pState}
   graph (left), and a version with the state probabilities as lines and
   annotation of states.}
 
 A more useful set-up of the graph would include a more through
 annotation and sensible choice of colors, as seen in figure \ref{fig:pstatex}:
-<<pstatex,fig=TRUE,width=9>>=
-clr <- c("limegreen","orange")
-# expand with a lighter version of the two chosen colors
-clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
-par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
-# Men
-plot( pM, col=clx, xlab="Date of FU" )
-lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
-mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
-mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
-axis( side=4 )
-axis( side=4, at=1:19/20, labels=FALSE )
-axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
-# Women
-pF <- pState( nState( subset(simL,sex=="F"),
-                      at=seq(0,11,0.2),
-                      from=1995,
-                      time.scale="Per" ),
-              perm=c(1,2,4,3) )
-plot( pF, col=clx, xlab="Date of FU" )
-lines( as.numeric(rownames(pF)), pF[,2], lwd=3 )
-mtext( "60 year old female, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
-mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
-axis( side=4 )
-axis( side=4, at=1:19/20, labels=FALSE )
-axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> clr <- c("limegreen","orange")
+> # expand with a lighter version of the two chosen colors
+> clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
+> par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
+> # Men
+> plot( pM, col=clx, xlab="Date of FU" )
+> lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
+> mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
+> mtext( "Survival curve", side=3, line=1.5, adj=0 )
+> mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+> mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
+> axis( side=4 )
+> axis( side=4, at=1:19/20, labels=FALSE )
+> axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
+> # Women
+> pF <- pState( nState( subset(simL,sex=="F"),
++                       at=seq(0,11,0.2),
++                       from=1995,
++                       time.scale="Per" ),
++               perm=c(1,2,4,3) )
+> plot( pF, col=clx, xlab="Date of FU" )
+> lines( as.numeric(rownames(pF)), pF[,2], lwd=3 )
+> mtext( "60 year old female, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
+> mtext( "Survival curve", side=3, line=1.5, adj=0 )
+> mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+> mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
+> axis( side=4 )
+> axis( side=4, at=1:19/20, labels=FALSE )
+> axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
+\end{Sinput}
+\end{Schunk}
 \insfig{pstatex}{1.0}{\textrm{\tt plot.pState} graphs where persons
   ever on insulin are given in orange and persons never on insulin in
   green, and the overall survival (dead over the line) as a black line.}
@@ -731,41 +1124,43 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 If we instead wanted to show the results on the age-scale, we would
 use age as timescale when constructing the probabilities; otherwise the
 code is pretty much the same as before (Figure \ref{fig:pstatey}):
-<<pstatey,fig=TRUE,width=9>>=
-par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
-# Men
-pM <- pState( nState( subset(simL,sex=="M"),
-                      at=seq(0,11,0.2),
-                      from=60,
-                      time.scale="Age" ),
-              perm=c(1,2,4,3) )
-plot( pM, col=clx, xlab="Age" )
-lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
-mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
-mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
-axis( side=4 )
-axis( side=4, at=1:19/20, labels=FALSE )
-axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
-axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
-# Women
-pF <- pState( nState( subset(simL,sex=="F"),
-                      at=seq(0,11,0.2),
-                      from=60,
-                      time.scale="Age" ),
-              perm=c(1,2,4,3) )
-plot( pF, col=clx, xlab="Age" )
-lines( as.numeric(rownames(pF)), pF[,2], lwd=3 )
-mtext( "60 year old female, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
-mtext( "Survival curve", side=3, line=1.5, adj=0 )
-mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
-mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
-axis( side=4 )
-axis( side=4, at=1:9/10, labels=FALSE )
-axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
-axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
+> # Men
+> pM <- pState( nState( subset(simL,sex=="M"),
++                       at=seq(0,11,0.2),
++                       from=60,
++                       time.scale="Age" ),
++               perm=c(1,2,4,3) )
+> plot( pM, col=clx, xlab="Age" )
+> lines( as.numeric(rownames(pM)), pM[,2], lwd=3 )
+> mtext( "60 year old male, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
+> mtext( "Survival curve", side=3, line=1.5, adj=0 )
+> mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+> mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
+> axis( side=4 )
+> axis( side=4, at=1:19/20, labels=FALSE )
+> axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
+> axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
+> # Women
+> pF <- pState( nState( subset(simL,sex=="F"),
++                       at=seq(0,11,0.2),
++                       from=60,
++                       time.scale="Age" ),
++               perm=c(1,2,4,3) )
+> plot( pF, col=clx, xlab="Age" )
+> lines( as.numeric(rownames(pF)), pF[,2], lwd=3 )
+> mtext( "60 year old female, diagnosed 1990, aged 55", side=3, line=2.5, adj=0, col=gray(0.6) )
+> mtext( "Survival curve", side=3, line=1.5, adj=0 )
+> mtext( "DM, no insulin   DM, Insulin", side=3, line=0.5, adj=0, col=clr[2] )
+> mtext( "DM, no insulin", side=3, line=0.5, adj=0, col=clr[1] )
+> axis( side=4 )
+> axis( side=4, at=1:9/10, labels=FALSE )
+> axis( side=4, at=1:19/20, labels=FALSE, tcl=-0.4 )
+> axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
+\end{Sinput}
+\end{Schunk}
 Note the several statements with \texttt{axis(side=4,...}; they are
 necessary to get the fine tick-marks in the right hand side of the
 plots that you will need in order to read off the probabilities at
@@ -780,41 +1175,41 @@ plots that you will need in order to read off the probabilities at
 We have actually fitted different models for the transitions, and we
 have simulated Lexis objects from all three approaches, so we can plot
 these predictions on top of each other:
-<<comp-0,fig=TRUE,width=9>>=
-PrM  <- pState( nState( subset(simP,sex=="M"),
-                        at=seq(0,11,0.2),
-                        from=60,
-                        time.scale="Age" ),
-                perm=c(1,2,4,3) )
-PrF  <- pState( nState( subset(simP,sex=="F"),
-                        at=seq(0,11,0.2),
-                        from=60,
-                        time.scale="Age" ),
-                perm=c(1,2,4,3) )
-CoxM <- pState( nState( subset(simC,sex=="M"),
-                        at=seq(0,11,0.2),
-                        from=60,
-                        time.scale="Age" ),
-                perm=c(1,2,4,3) )
-CoxF <- pState( nState( subset(simC,sex=="F"),
-                        at=seq(0,11,0.2),
-                        from=60,
-                        time.scale="Age" ),
-                perm=c(1,2,4,3) )
-
-par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
- plot(   pM, border="black", col="transparent", lwd=3 )
-lines(  PrM, border="blue" , col="transparent", lwd=3 )
-lines( CoxM, border="red"  , col="transparent", lwd=3 )
-text( 60.5, 0.05, "M" )
-box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
-
- plot(   pF, border="black", col="transparent", lwd=3 )
-lines(  PrF, border="blue" , col="transparent", lwd=3 )
-lines( CoxF, border="red"  , col="transparent", lwd=3 )
-text( 60.5, 0.05, "F" )
-box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
-@ %
+\begin{Schunk}
+\begin{Sinput}
+> PrM  <- pState( nState( subset(simP,sex=="M"),
++                         at=seq(0,11,0.2),
++                         from=60,
++                         time.scale="Age" ),
++                 perm=c(1,2,4,3) )
+> PrF  <- pState( nState( subset(simP,sex=="F"),
++                         at=seq(0,11,0.2),
++                         from=60,
++                         time.scale="Age" ),
++                 perm=c(1,2,4,3) )
+> CoxM <- pState( nState( subset(simC,sex=="M"),
++                         at=seq(0,11,0.2),
++                         from=60,
++                         time.scale="Age" ),
++                 perm=c(1,2,4,3) )
+> CoxF <- pState( nState( subset(simC,sex=="F"),
++                         at=seq(0,11,0.2),
++                         from=60,
++                         time.scale="Age" ),
++                 perm=c(1,2,4,3) )
+> par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
+>  plot(   pM, border="black", col="transparent", lwd=3 )
+> lines(  PrM, border="blue" , col="transparent", lwd=3 )
+> lines( CoxM, border="red"  , col="transparent", lwd=3 )
+> text( 60.5, 0.05, "M" )
+> box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
+>  plot(   pF, border="black", col="transparent", lwd=3 )
+> lines(  PrF, border="blue" , col="transparent", lwd=3 )
+> lines( CoxF, border="red"  , col="transparent", lwd=3 )
+> text( 60.5, 0.05, "F" )
+> box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
+\end{Sinput}
+\end{Schunk}
 \insfig{comp-0}{1.0}{Comparison of the simulated state occupancy
   probabilities using separate Poisson models for the mortality rates
   with and without insulin (black) and using proportional hazards
@@ -934,12 +1329,17 @@ follows:
   \end{enumerate}
 \end{enumerate}
 
-<<echo = FALSE>>=
-ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
-@ %
+\begin{Schunk}
+\begin{Soutput}
+  Start time: 2024-07-18, 15:26:45 
+\end{Soutput}
+\begin{Soutput}
+    End time: 2024-07-18, 15:27:10 
+\end{Soutput}
+\begin{Soutput}
+Elapsed time: 0.41 minutes
+\end{Soutput}
+\end{Schunk}
 
 \bibliographystyle{plain}
 \begin{thebibliography}{1}

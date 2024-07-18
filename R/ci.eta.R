@@ -1,6 +1,6 @@
-ci.eta <- function(form,    # model formula
-                   cf, vcv, # coef and vcov from fitted model
-                   newdata, # prediction frame
+ci.eta <- function(form, cf, vcv, # model formula, coef and vcov from fitted model
+                         newdata, # prediction frame
+                      name.check = TRUE, # report if model matrix names as those of coef
                    alpha = 0.05, df = Inf, raw = FALSE)
 {
 # compute c.i. from formula and coefficients for a newdata
@@ -23,14 +23,17 @@ if (is.list(newdata))
    } else mm <- model.matrix(form, data = newdata)
 # check sanity of formula and coeffiets
 if (ncol(mm) != length(coef))
-   stop("mismatch of formula and coefficients:\n",
+   stop("mismatch of formula and no. coefficients:\n",
         "ncol(model matrix)=", ncol(mm),
-        "length(coef)=", length(coef))
-if (any(colnames(mm) != names(coef)))
+        "length(coef)=", length(coef), "\n")
+if (any(names(cf) != colnames(vcv)) |
+    any(names(cf) != rownames(vcv)))
+   stop("names of cf do not match row/col names of vcv\n")
+if ((any(colnames(mm) != names(coef))) & name.check)
    {
-   cat("NOTE: colnames and coefnames do not match:\n")
+   cat("NOTE: colnames(mm) and names(coef) do not match:\n")
    print(cbind(model = colnames(mm),
-               coef = names(coef)))
+                coef = names(coef)))
    }
 # predicted eta and its ci or vcov
 ct <- mm %*% cf

@@ -117,11 +117,11 @@ text( 38, 0.8, "Men", pos = 2)
 text( 38, 0.5, "Women", pos = 2)
 
 par(mfrow=c(1,2))
-stackedCIF(fitCI, group = 1, colour = c("gray80", "gray90"),
+stackedCIF(fitCI, group = 1, fill = c("gray80", "gray90"),
   main = "Women", xlab="Time (years)" )	
 text( 36, 0.15, "PCM", pos = 2)
 text( 36, 0.6, "Death", pos = 2)
-stackedCIF(fitCI, group = 2, colour = c("gray80", "gray90"), 
+stackedCIF(fitCI, group = 2, fill = c("gray80", "gray90"), 
   main = "Men", xlab="Time (years)" )
 text( 39, 0.10, "PCM", pos = 2)
 text( 39, 0.6, "Death", pos = 2)	
