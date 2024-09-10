@@ -233,12 +233,12 @@ ci.ratio( r1, r2,
 }
 
 \seealso{See \code{\link{ci.eta}} for a simple version only needing
-  coefficients and variance-covariance. See also \code{\link{ci.cum}}
+  coefficients and variance-covariance matrix. See also \code{\link{ci.cum}}
   for a function computing cumulative sums of (functions of) parameter
   estimates, and \code{\link{ci.surv}} for a function computing
   confidence intervals for survival functions based on smoothed
   rates. The example code for \code{\link{matshade}} has an application
-  of predicting a rate-ratio using a list of two prediction frame in the
+  of predicting a rate-ratio using a list of two prediction frames in the
   \code{ctr.mat} argument.}
 
 \examples{

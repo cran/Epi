@@ -119,24 +119,23 @@ invisible()
 }
 
 nice <-
-function( x,
-        log = F,
-       lpos = c(1,2,5), ... )
+function (x, log = FALSE, lpos = c(1, 2, 5), xmx = 4, ...)
 {
-# Function to produce nice labels also for log-axes.
-#
-if( log )
-  {
-  fc <- floor( log10( min( x ) ) ):ceiling( log10( max( x ) ) )
-  tick <- as.vector( outer( lpos, 10^fc, "*" ) )
-  ft <- max( tick[tick<min(x)] )
-  lt <- min( tick[tick>max(x)] )
-  tick <- tick[tick>=ft & tick<=lt]
-  if( length( tick ) < 4 & missing( lpos ) )
-    tick <- nice( x, log=T, lpos=c(1:9) )
-  if( length( tick ) > 10 & missing( lpos ) )
-    tick <- nice( x, log=T, lpos=1 )
-  tick
-  }
-else pretty( x, ... )
+if (log)
+   {
+   # not too extreme limits on log-scale
+   fc <- floor(max(log10(min(x)), .1^xmx)):
+       ceiling(min(log10(max(x)), 10^xmx))
+   tick <- as.vector(outer(lpos, 10^fc, "*"))
+   ft <- max(tick[tick < min(x)])
+   lt <- min(tick[tick > max(x)])
+   tick <- tick[tick >= ft & tick <= lt]
+   if (length(tick) < 4 & missing(lpos))
+      tick <- nice(x, log = T, lpos = c(1:9))
+   if (length(tick) > 10 & missing(lpos))
+      tick <- nice(x, log = T, lpos = 1)
+   tick
+   } else {
+pretty(x, ...)
+}
 }

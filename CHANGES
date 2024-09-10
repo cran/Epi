@@ -1,8 +1,20 @@
-Changes in to 2.53
+Changes in 2.55
 
-o Bug in examaple of plotCIF corrected (Esa Laara)
+o changes in clogistic.c to comply with new requirements for c code
 
-o name.check argument added to ci.eta, and now exported (!)
+o nice (defined in plotEst.R) no longer crashes for very large
+  ranges of log-axes 
+
+Changes in 2.54
+
+o ci.eta allows NAs in coefficients (singular model) and in rows
+  (transported to result using na.pass)
+
+Changes in 2.53
+
+o Bug in example of plotCIF corrected (Esa Laara)
+
+o name.check argument added to ci.eta, and function now exported(!)
 
 Changes up to 2.52
 

@@ -1,11 +1,17 @@
 ci.eta <- function(form, cf, vcv, # model formula, coef and vcov from fitted model
-                         newdata, # prediction frame
+                         newdata, # prediction frame (or list of frames)
                       name.check = TRUE, # report if model matrix names as those of coef
                    alpha = 0.05, df = Inf, raw = FALSE)
 {
 # compute c.i. from formula and coefficients for a newdata
+
+# allow rows of missing th the result
+org.op <- options(na.action = "na.pass")
+on.exit(options(org.op))
+
 # only one-sided formula to model.matrix
 if (length(form) == 3) form <- form[-2]
+
 # matrix to multiply to the parameter vector and vcov
 if (is.list(newdata))
    {
@@ -21,6 +27,7 @@ if (is.list(newdata))
       mm <- mm - (mmx - mmr)
       }
    } else mm <- model.matrix(form, data = newdata)
+
 # check sanity of formula and coeffiets
 if (ncol(mm) != length(coef))
    stop("mismatch of formula and no. coefficients:\n",
@@ -35,12 +42,21 @@ if ((any(colnames(mm) != names(coef))) & name.check)
    print(cbind(model = colnames(mm),
                 coef = names(coef)))
    }
-# predicted eta and its ci or vcov
+
+# singular models produce NAs so remove from coef and vcov
+out <- which(is.na(coef))
+cf  <-  cf[-out]
+vcv <- vcv[-out, -out]
+ mm <-      mm[, -out]
+
+# predicted eta and its vcov or ci
 ct <- mm %*% cf
 vc <- mm %*% vcv %*% t(mm)
-# confidence intervals
 se <- sqrt(diag(vc))
+
+# confidence intervals
 ci <- cbind(ct, se) %*% ci.mat(alpha = alpha, df = df)
+
 # return results
 if (raw) list(eta = ct,
               var = vc) else ci

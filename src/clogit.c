@@ -92,7 +92,7 @@ static void cloglik_stratum(double const *X, int const *y, double const *offset,
        This is used to improve the numerical stability of the score
        and information matrix.
     */
-    xmean = Calloc(m, double);
+    xmean = R_Calloc(m, double);
     for (i = 0; i < m; ++i) {
 	xmean[i] = 0;
 	for (t = 0; t < T; ++t) {
@@ -116,10 +116,10 @@ static void cloglik_stratum(double const *X, int const *y, double const *offset,
     /* Allocate and initialize workspace for recursive calculations */
 
     Kp = K + 1;
-    f = Calloc(Kp, double);
-    g = Calloc(m * Kp, double);
-    h = Calloc(m * m * Kp, double);
-    xt = Calloc(m, double);
+    f = R_Calloc(Kp, double);
+    g = R_Calloc(m * Kp, double);
+    h = R_Calloc(m * m * Kp, double);
+    xt = R_Calloc(m, double);
 
     for (k = 0; k < Kp; ++k) {
 	f[k] = 0;
@@ -183,11 +183,11 @@ static void cloglik_stratum(double const *X, int const *y, double const *offset,
 	}
     }
 
-    Free(f);
-    Free(g);
-    Free(h);
-    Free(xt);
-    Free(xmean);
+    R_Free(f);
+    R_Free(g);
+    R_Free(h);
+    R_Free(xt);
+    R_Free(xmean);
 }
 
 /*
@@ -267,8 +267,8 @@ static void clogit_fit(SEXP X, SEXP y, SEXP offset, int m,
 {
     int i, iter = 0;
     Rboolean halving = FALSE;
-    double *oldbeta = Calloc(m, double);
-    double **imat = Calloc(m, double*);
+    double *oldbeta = R_Calloc(m, double);
+    double **imat = R_Calloc(m, double*);
 
     /* 
        Set up ragged array representation of information matrix for
@@ -342,8 +342,8 @@ static void clogit_fit(SEXP X, SEXP y, SEXP offset, int m,
 	invert_info(imat, m);
     }
 
-    Free(oldbeta);
-    Free(imat);
+    R_Free(oldbeta);
+    R_Free(imat);
 }
 
 /* R interface */

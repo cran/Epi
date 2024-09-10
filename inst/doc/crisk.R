@@ -52,6 +52,7 @@ summary(Sdm)
 ###################################################
 ### code chunk number 5: boxes5
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
                          y = c(85, 50, 15, 85, 15)),
           scale.R = 100,
@@ -61,6 +62,7 @@ boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
 ###################################################
 ### code chunk number 6: boxes4
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(Relevel(Sdm, c(1, 4, 2, 3)),
       boxpos  = list(x = c(15, 85, 75, 15),
                      y = c(85, 85, 30, 15)),
@@ -87,6 +89,7 @@ str(nd)
 ###################################################
 ### code chunk number 9: rates
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd)) * 1000,
@@ -105,6 +108,7 @@ text(0, 0.5*0.6^c(1,2,0),
 ###################################################
 ### code chunk number 10: rates-l
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd))*1000,
@@ -157,6 +161,7 @@ options(oo)
 ###################################################
 ### code chunk number 13: stack
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd,
               xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
               xlab = "Time since DM diagnosis (years)",
@@ -243,6 +248,7 @@ str(Brates)
 ###################################################
 ### code chunk number 21: rates-ci
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd)) * 1000,
@@ -267,6 +273,7 @@ text(0, 0.5*0.6^c(1,2,0),
 ###################################################
 ### code chunk number 22: crates
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(res$time,
          cbind(res$Crisk[,"Dead",],
                res$Crisk[,"Ins" ,],
@@ -290,6 +297,7 @@ str(res$Srisk)
 ###################################################
 ### code chunk number 24: stack-ci
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
               x = res$time,
            xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
@@ -355,6 +363,7 @@ summary(dmL, t = T)
 ###################################################
 ### code chunk number 31: boxes
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(dmL, boxpos = TRUE)
 
 
@@ -401,6 +410,7 @@ str(cR)
 ###################################################
 ### code chunk number 37: cR
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 clr <- c("black", "orange", "limegreen")
 matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
                         cR$Crisk[, "Can"  , ],
@@ -414,6 +424,7 @@ text(0, 1/3 - 1:3/30, c("CVD", "Can", "Oth"),
 ###################################################
 ### code chunk number 38: Sr1
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(cR$time, cbind(cR$Srisk[,1,],
                         cR$Srisk[,2,],
                         cR$Srisk[,3,]),
@@ -427,6 +438,7 @@ box(bty = "o")
 ###################################################
 ### code chunk number 39: Sr2
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(cR$Crisk[, c("Other", "Can", "CVD", "Surv"), "50%"],
               x = cR$time,
            xlim = c(0,15), xaxs = "i", yaxs = "i", las = 1,
@@ -482,6 +494,7 @@ rS <- apply(rS, 1, quantile, probs = c(.5, .025, .975))
 ###################################################
 ### code chunk number 43: difrat
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par(mfrow = c(1,2))
 matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
          lwd = 3, ylim = c(-5, 5),
@@ -513,6 +526,7 @@ rxS <- apply(rxS, 1, quantile, probs = c(.5, .025, .975))
 ###################################################
 ### code chunk number 45: difratx
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par(mfrow = c(1,2))
 matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
          lwd = 3, ylim = c(-5, 5),
