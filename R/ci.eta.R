@@ -29,22 +29,22 @@ if (is.list(newdata))
    } else mm <- model.matrix(form, data = newdata)
 
 # check sanity of formula and coeffiets
-if (ncol(mm) != length(coef))
+if (ncol(mm) != length(cf))
    stop("mismatch of formula and no. coefficients:\n",
-        "ncol(model matrix)=", ncol(mm),
-        "length(coef)=", length(coef), "\n")
+        "ncol(model matrix) = ", ncol(mm),
+        " but length(cf) = ", length(cf), "\n")
 if (any(names(cf) != colnames(vcv)) |
     any(names(cf) != rownames(vcv)))
    stop("names of cf do not match row/col names of vcv\n")
-if ((any(colnames(mm) != names(coef))) & name.check)
+if ((any(colnames(mm) != names(cf))) & name.check)
    {
-   cat("NOTE: colnames(mm) and names(coef) do not match:\n")
+   cat("NOTE: colnames(mm) and names(cf) do not match:\n")
    print(cbind(model = colnames(mm),
-                coef = names(coef)))
+                  cf = names(cf)))
    }
 
-# singular models produce NAs so remove from coef and vcov
-out <- which(is.na(coef))
+# singular models produce NAs so remove from cf and vcov
+out <- which(is.na(cf))
 cf  <-  cf[-out]
 vcv <- vcv[-out, -out]
  mm <-      mm[, -out]

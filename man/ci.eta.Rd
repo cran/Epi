@@ -54,8 +54,8 @@ ci.eta(form, cf, vcv, newdata,
 }
 \value{
   The linear predictor for the \code{newdata} with a confidence interval
-  as a \code{nrow(newdata)} by 3 matrix. If \code{raw=TRUE} the linear predictor and its
-  variance-covariance matrix.
+  as a \code{nrow(newdata)} by 3 matrix. If \code{raw=TRUE}, a list the linear
+  predictor (\code{eta}) and its variance-covariance matrix (\code{var}).
 }
 \author{
   Bendix Carstensen, \url{http://bendixcarstensen.com}

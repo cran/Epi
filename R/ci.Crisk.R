@@ -1,5 +1,5 @@
 # convenience function to compute midpoints between points in a vector
-midpoint <- function(x) x[-1] - diff(x) / 2    
+midpoint <- function(x) x[-1] - diff(x) / 2
 
 #----------------------------------------------------------------------
 # Simulate rates from a list of models, 0th simulation is the rates
@@ -14,7 +14,7 @@ function(mods, # named list of models - one for each cause
 {
 # from a list of models (mods) for nC cause-specific rates and a
 # common prediction frame, nd, we generate nB samples of predicted
-# rates. It is assumed that the nd refer to endpoints of intervals 
+# rates. It is assumed that the nd refer to endpoints of intervals
 res <- NArray(list(time = nd[,tnam],
                     mod = names(mods),
                     sim = 1:nB))
@@ -27,40 +27,41 @@ res
 }
 
 #----------------------------------------------------------------------
-# Compute nC+1 cumulative risks from nC rates 
+# Compute nC+1 cumulative risks from nC rates
 mkprobs <-
 function(rtab, int)
 {
-# rtab is assumed to be a matrix with rates in (named) columns at int
-# equidistance assumed computed at times 0, int, 2*int, ...
-# is assumed nT x nC  
+# rtab is assumed to be a matrix with rates in nC (named) columns
+# at nT equidistantly placed times at 0, int, 2*int, ...
+# so of dimension nT x nC
 nT <- nrow(rtab)
 nC <- ncol(rtab)
 
-# intensities at interval midpoints
+# intensities at interval midpoints so (nT-1) x nC
 mtab <- (rtab[-1,,drop=FALSE] + rtab[-dim(rtab)[1],,drop=FALSE]) / 2
+
 # integrated intensities at interval boundaries, so nT x nC
 Rtab <- rbind(0, apply(mtab, 2, cumsum)) * int
 
-# state probabilities at interval endpoints so nT x (1+nC) 
+# state probabilities at interval endpoints so nT x (1+nC)
 Pr <- Rtab[,c(1,1:nC)] * NA
 colnames(Pr)[1] <- "Surv" # Survival prob in first column
-    
+
 # survival function (also the first column in Pr)
 Pr[,"Surv"] <- Sv <- exp(-apply(Rtab, 1, sum))
-    
+
 # convenience function to compute midpoints between points in a vector
 midpoint <- function(x) x[-1] - diff(x) / 2
 # cumulative risks - note we are using the midvalue of the Sv, length nT
-for( i in 1:nC ) Pr[,i+1] <- c(0, cumsum(mtab[,i] * midpoint(Sv)) * int) 
-Pr 
+for( i in 1:nC ) Pr[,i+1] <- c(0, cumsum(mtab[,i] * midpoint(Sv)) * int)
+Pr
 }
 
 #----------------------------------------------------------------------
 # return first, mean and median and ci from a simulated sample
-mnqt <- 
+mnqt <-
 function(x, alpha = 0.05)
-{    
+{
 # extracts the relevant quantiles across the
 # simulated samples
 c(quantile(x,
@@ -76,7 +77,7 @@ function(mods, # list of models
                # representing interval endpoints
          tnam = names(nd)[1],
            nB = 1000,   # no of parametic bootstrap samples
-         perm = length(mods):0 + 1, # order of cumulation of states 
+         perm = length(mods):0 + 1, # order of cumulation of states
         alpha = 0.05,   # 1 minus confidence level
       sim.res = 'none')
 #        seed = ) not implemented yet
@@ -86,7 +87,8 @@ if (length(table(round(diff(nd[,tnam]), 6))) > 1)
    stop("Time column column of nd must be equidistant times\n")
 cat("NOTE: Times are assumed to be in the column", tnam,
     "at equal distances of", int, "\n")
-# First generate the simulated probabilities T x (C+1) x nB
+
+# First generate the simulated probabilities T x (C+1) x nB; simrt
 # contains the estimates as the first entry in the simulation dimension
 simrt <- simrates(mods = mods,
                     nd = nd,
@@ -95,7 +97,7 @@ simrt <- simrates(mods = mods,
                    int = int)
 #                 seed = seed) not implemented yet
 
-# if we want the simulation results for further processing 
+# if we want the simulation results for further processing
 attr(simrt, "int") <- int # the interval length needed with simrt
 attr(simrt, "time") <- nd[,tnam]
 if(substr(tolower(sim.res), 1, 1) == 'r') return(invisible(simrt))
@@ -104,7 +106,7 @@ if(substr(tolower(sim.res), 1, 1) == 'r') return(invisible(simrt))
 probs <- NArray(list(time = nd[,tnam],
                     cause = c("Surv", dimnames(simrt)[["mod"]]),
                       sim = 1:nB))
-names(dimnames(probs))[1] <- tnam 
+names(dimnames(probs))[1] <- tnam
 # Compute the cumulative risks
   # a trick to avoid dropping dimension 2 if it has length 1
   x2 <- c(1, 1:dim(simrt)[2])
@@ -112,9 +114,9 @@ for(i in 1:nB) probs[,,i] <- mkprobs(simrt[,x2,i][,-1,drop=FALSE], int = int)
 attr(probs, "int") <- int # the interval length needed with probs
 
 if(substr(tolower(sim.res), 1, 1) == 'c') return(invisible(probs))
-        
-# otherwise we compute confidence intervals for selected statistics    
-  # 1. state (cumulative) probabilities    
+
+# otherwise we compute confidence intervals for selected statistics
+  # 1. state (cumulative) probabilities
   Crisk <- sim2ci.Crisk(probs, alpha = alpha)
   # 2. stacked (cumulative) probabilities
   Srisk <- sim2ci.Srisk(probs,  perm = perm,
@@ -129,7 +131,7 @@ rlist <- list(Crisk = Crisk,
                time = nd[,tnam])
 attr(rlist, "int") <- int # the interval length used
 return(invisible(rlist))
-}    
+}
 
 #----------------------------------------------------------------------
 # 1. cumulative probabilities
@@ -137,17 +139,17 @@ sim2ci.Crisk <-
 function(probs,
          alpha = 0.05)
 aperm(apply(probs, 1:2, mnqt, alpha), c(2,3,1))
-      
+
 #----------------------------------------------------------------------
 # 2. stacked (cumulative) probabilities
 sim2ci.Srisk <-
 function(probs,
           perm = 1:dim(probs)[2],
          alpha = 0.05)
-{    
-cprobs <- aperm(apply(probs[,perm,], 
-                      c(1, 3), 
-                      cumsum), 
+{
+cprobs <- aperm(apply(probs[,perm,],
+                      c(1, 3),
+                      cumsum),
                 c(2,1,3))
 cnam <- dimnames(cprobs)[["cause"]]
 for(i in 2:length(cnam))
@@ -164,8 +166,8 @@ function(probs,
            int = attr(probs, "int"),
          alpha = 0.05)
 {
-sojrn <- apply(probs, 
-                 2:3, 
+sojrn <- apply(probs,
+                 2:3,
                function(x) cumsum(midpoint(x))) * int
 res <- aperm(apply(sojrn, 1:2, mnqt, alpha), c(2,3,1))
 res <- res[c(1, 1:dim(res)[1]), , ]

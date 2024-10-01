@@ -138,7 +138,7 @@ LD <- cumsum(lD) * int
 LI <- cumsum(lI) * int
 LO <- cumsum(lO) * int
 # survival function, formula (1.1)
-Sv <- exp(- LD - LI - LO )
+Sv <- exp(- LD - LI - LO)
 #
 # when integrating to get the cumulative *risks* we use the average
 # of the survival function at the two endpoints

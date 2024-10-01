@@ -1,3 +1,7 @@
+Changes in 2.56
+
+o ci.eta was broken, fix provided 
+
 Changes in 2.55
 
 o changes in clogistic.c to comply with new requirements for c code
