@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{02: Years of life lost (YLL)}
+%\VignetteIndexEntry{Years of life lost (YLL)}
 \SweaveOpts{results=verbatim, keep.source=TRUE, include=FALSE, eps=FALSE}
 \documentclass[a4paper, twoside, 12pt]{report}
 

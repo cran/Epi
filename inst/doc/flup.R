@@ -1,10 +1,11 @@
 ### R code from vignette source 'flup.rnw'
 
 ###################################################
-### code chunk number 1: flup.rnw:28-39
+### code chunk number 1: flup.rnw:29-41
 ###################################################
 options(width = 90,
-        SweaveHooks=list(fig=function()
+        show.signif.stars = FALSE,
+        SweaveHooks=list(fig = function()
                          par(mar = c(3, 3, 1, 1),
                              mgp = c(3, 1, 0) / 1.6,
                              las = 1,
@@ -17,21 +18,28 @@ clear()
 
 
 ###################################################
-### code chunk number 2: flup.rnw:42-44
+### code chunk number 2: flup.rnw:44-49
 ###################################################
+glmLexis <- glm.Lexis
+gamLexis <- gam.Lexis
+coxphLexis <- coxph.Lexis
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: flup.rnw:46-48
+### code chunk number 3: flup.rnw:51-57
 ###################################################
-installed.packages()[c("Epi", "popEpi"),
-                     c("Version", "Built"), drop = FALSE]
+vers <-
+data.frame(R = substr(R.version.string, 11, 15),
+         Epi = as.character(packageVersion(   "Epi")),
+      popEpi = as.character(packageVersion("popEpi")))
+names(vers) <- paste(" ", names(vers))
+print(vers, row.names = FALSE)
 
 
 ###################################################
-### code chunk number 4: flup.rnw:162-172
+### code chunk number 4: flup.rnw:217-227
 ###################################################
 data(DMlate)
 head(DMlate)
@@ -46,14 +54,14 @@ timeScales(dmL)
 
 
 ###################################################
-### code chunk number 5: flup.rnw:195-197
+### code chunk number 5: flup.rnw:250-252
 ###################################################
 str(dmL)
-head(dmL)[, 1:10]
+head(dmL)[, 1:11]
 
 
 ###################################################
-### code chunk number 6: flup.rnw:214-215
+### code chunk number 6: flup.rnw:269-270
 ###################################################
 summary(dmL, timeScales = TRUE)
 
@@ -82,7 +90,7 @@ box(bty = 'o')
 
 
 ###################################################
-### code chunk number 9: flup.rnw:273-276
+### code chunk number 9: flup.rnw:328-331
 ###################################################
 dmS1 <- splitLexis(dmL, "age", breaks = seq(0, 100, 5))
 summary(dmL)
@@ -90,7 +98,7 @@ summary(dmS1)
 
 
 ###################################################
-### code chunk number 10: flup.rnw:286-289
+### code chunk number 10: flup.rnw:341-344
 ###################################################
 wh.id <- c(9, 27, 52, 484)
 subset(dmL , lex.id %in% wh.id)[, 1:10]
@@ -98,14 +106,14 @@ subset(dmS1, lex.id %in% wh.id)[, 1:10]
 
 
 ###################################################
-### code chunk number 11: flup.rnw:295-297
+### code chunk number 11: flup.rnw:352-354
 ###################################################
 dmS2 <- splitLexis(dmS1, "tfD", breaks = c(0, 1, 2, 5, 10, 20, 30, 40))
 subset(dmS2, lex.id %in% wh.id)[, 1:10]
 
 
 ###################################################
-### code chunk number 12: flup.rnw:302-308
+### code chunk number 12: flup.rnw:359-365
 ###################################################
 dmM <- splitMulti(dmL,
                   age = seq(0, 100, 5),
@@ -116,30 +124,30 @@ summary(dmM)
 
 
 ###################################################
-### code chunk number 13: flup.rnw:340-347
+### code chunk number 13: flup.rnw:397-404
 ###################################################
-subset(dmL, lex.id %in% wh.id)
+subset(dmL, lex.id %in% wh.id)[, 1:11]
 dmC <- cutLexis(data = dmL,
                  cut = dmL$doins,
            timescale = "per",
            new.state = "Ins",
            new.scale = "tfI")
-subset(dmC, lex.id %in% wh.id)[, 1:10]
+subset(dmC, lex.id %in% wh.id)[, 1:11]
 
 
 ###################################################
-### code chunk number 14: flup.rnw:362-368
+### code chunk number 14: flup.rnw:419-425
 ###################################################
 dmS2C <- cutLexis(data = dmS2,
                    cut = dmS2$doins,
              timescale = "per",
              new.state = "Ins",
              new.scale = "tfI")
-subset(dmS2C, lex.id %in% wh.id)
+subset(dmS2C, lex.id %in% wh.id)[, 1:11]
 
 
 ###################################################
-### code chunk number 15: flup.rnw:395-396
+### code chunk number 15: flup.rnw:443-444
 ###################################################
 summary(dmS2C, timeScales = TRUE)
 
@@ -153,7 +161,7 @@ legendbox(70, 95)
 
 
 ###################################################
-### code chunk number 17: flup.rnw:441-449
+### code chunk number 17: flup.rnw:489-497
 ###################################################
 timeBand(dmS2C, "age", "middle")[1:10]
 # For nice printing and column labelling we use the data.frame() function:
@@ -166,13 +174,13 @@ data.frame(dmS2C[, c("per", "age", "tfD", "lex.dur")],
 
 
 ###################################################
-### code chunk number 18: flup.rnw:485-486
+### code chunk number 18: flup.rnw:528-529
 ###################################################
 summary((dmS2$age - dmS2$tfD) - (dmS2$dodm - dmS2$dobth))
 
 
 ###################################################
-### code chunk number 19: flup.rnw:491-494
+### code chunk number 19: flup.rnw:535-538
 ###################################################
 summary(timeBand(dmS2, "age", "middle") -
         timeBand(dmS2, "tfD", "middle") -
@@ -180,24 +188,24 @@ summary(timeBand(dmS2, "age", "middle") -
 
 
 ###################################################
-### code chunk number 20: flup.rnw:599-601
+### code chunk number 20: flup.rnw:647-649
 ###################################################
 dmCs <- splitLexis(dmC, time.scale = "age", breaks = seq(0, 110, 1/4))
 summary(dmCs, t = T)
 
 
 ###################################################
-### code chunk number 21: flup.rnw:623-628
+### code chunk number 21: flup.rnw:671-676
 ###################################################
 (a.kn <- with(subset(dmCs, lex.Xst == "Dead"),
-              quantile(age+lex.dur, (1:5-0.5)/5)))
+              quantile(age+lex.dur, seq(5, 95, , 5)  /100)))
 (i.kn <- c(0,
            with(subset(dmCs, lex.Xst == "Dead" & lex.Cst == "Ins"),
-                quantile(tfI+lex.dur, (1:4)/5))))
+                quantile(tfI+lex.dur, seq(20, 95, , 4) / 100))))
 
 
 ###################################################
-### code chunk number 22: flup.rnw:644-649
+### code chunk number 22: flup.rnw:692-697
 ###################################################
 ma <- glm((lex.Xst == "Dead") ~ Ns(age, knots = a.kn),
            family = poisson,
@@ -207,7 +215,7 @@ summary(ma)
 
 
 ###################################################
-### code chunk number 23: flup.rnw:668-672
+### code chunk number 23: flup.rnw:716-720
 ###################################################
 Ma <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn),
           family = poisreg,
@@ -216,46 +224,57 @@ summary(Ma)
 
 
 ###################################################
-### code chunk number 24: flup.rnw:680-682
+### code chunk number 24: flup.rnw:726-728
 ###################################################
-Xa <- glm.Lexis(dmCs, from = "DM", to = "Dead",
-                formula = ~ Ns(age, knots = a.kn))
+Xa <- glmLexis(dmCs, formula = ~ Ns(age, knots = a.kn),
+                     from = "DM", to = "Dead",)
 
 
 ###################################################
-### code chunk number 25: flup.rnw:687-688
+### code chunk number 25: flup.rnw:733-734
 ###################################################
 attr(Xa, "Lexis")
 
 
 ###################################################
-### code chunk number 26: flup.rnw:697-698
+### code chunk number 26: flup.rnw:745-748
 ###################################################
-xa <- glm.Lexis(dmCs, formula = ~ Ns(age, knots = a.kn))
+transient(dmCs)
+absorbing(dmCs)
+preceding(dmCs, absorbing(dmCs))
 
 
 ###################################################
-### code chunk number 27: flup.rnw:701-702
+### code chunk number 27: flup.rnw:752-753
 ###################################################
-c(deviance(ma), deviance(Ma), deviance(Xa), deviance(xa))
+xa <- glmLexis(dmCs, formula = ~ Ns(age, knots = a.kn))
 
 
 ###################################################
-### code chunk number 28: pr-a
+### code chunk number 28: flup.rnw:756-760
+###################################################
+c(ma = deviance(ma),
+  Ma = deviance(Ma),
+  Xa = deviance(Xa),
+  xa = deviance(xa))
+
+
+###################################################
+### code chunk number 29: pr-a
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(age = 40:85, lex.dur = 1000)
-pr.0 <- ci.pred(ma, newdata = nd)      # mortality per 100 PY
-pr.a <- ci.pred(Ma, newdata = nd)*1000 # mortality per 100 PY
-summary(pr.0/pr.a)
+pr.0 <- ci.pred(ma, newdata = nd)      # mortality per 1000 PY
+pr.a <- ci.pred(Ma, newdata = nd)*1000 # mortality per 1000 PY
+summary(pr.0 / pr.a)
 matshade(nd$age, pr.a, plot = TRUE,
-          type = "l", lty = 1,
-          log = "y", xlab = "Age (years)",
-          ylab = "DM mortality per 1000 PY")
+         type = "l", lty = 1,
+         log = "y", xlab = "Age (years)",
+         ylab = "DM mortality per 1000 PY")
 
 
 ###################################################
-### code chunk number 29: flup.rnw:749-754
+### code chunk number 30: flup.rnw:807-812
 ###################################################
 pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
                                               + lex.Cst + sex,
@@ -265,14 +284,14 @@ round(ci.exp(pm), 3)
 
 
 ###################################################
-### code chunk number 30: flup.rnw:757-759
+### code chunk number 31: flup.rnw:815-817
 ###################################################
-pm <- glm.Lexis(dmCs, ~ Ns(age, knots = a.kn) + lex.Cst + sex)
+pm <- glmLexis(dmCs, ~ Ns(age, knots = a.kn) + lex.Cst + sex)
 round(ci.exp(pm), 3)
 
 
 ###################################################
-### code chunk number 31: flup.rnw:773-778
+### code chunk number 32: flup.rnw:834-839
 ###################################################
 pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
                                             + Ns(tfI, knots = i.kn)
@@ -282,59 +301,62 @@ pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
 
 
 ###################################################
-### code chunk number 32: flup.rnw:784-790
+### code chunk number 33: flup.rnw:845-851
 ###################################################
-Pm <- glm.Lexis(tsNA20(dmCs),
-                form = ~ Ns(age, knots = a.kn)
-                       + Ns(tfI, knots = i.kn)
-                       + lex.Cst + sex)
+Pm <- glmLexis(tsNA20(dmCs),
+               form = ~ Ns(age, knots = a.kn)
+                      + Ns(tfI, knots = i.kn)
+                      + lex.Cst + sex)
 c(deviance(Pm), deviance(pm))
 identical(model.matrix(Pm), model.matrix(pm))
 
 
 ###################################################
-### code chunk number 33: flup.rnw:796-797
+### code chunk number 34: flup.rnw:857-858
 ###################################################
 round(ci.exp(Pm, subset = "ex"), 3)
 
 
 ###################################################
-### code chunk number 34: ins-time
+### code chunk number 35: ins-time
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 ndI <- data.frame(expand.grid(tfI = c(NA, seq(0, 15, 0.1)),
                                ai = seq(40, 80, 10)),
-                  sex = "M",
-                  lex.Cst = "Ins")
-ndI <- transform(ndI, age = ai+tfI)
+                  lex.Cst = "Ins",
+                      sex = "M")
+ndI <- transform(ndI, age = ai + tfI)
 head(ndI)
-ndA <- data.frame(age = seq(40, 100, 0.1), tfI = 0,  lex.Cst = "DM", sex = "M")
-pri <- ci.pred(Pm, ndI) * 1000
-pra <- ci.pred(Pm, ndA) * 1000
-matshade(ndI$age, pri, plot = TRUE, las = 1,
-         xlab = "Age (years)", ylab = "DM mortality per 1000 PY",
-         log = "y", lty = 1, col = "blue")
+ndA <- data.frame(age = seq(40, 100, 0.1),
+                  tfI = 0,
+              lex.Cst = "DM",
+                  sex = "M")
+pri <- ci.pred(Pm, ndI) * 100
+pra <- ci.pred(Pm, ndA) * 100
+matshade(ndI$age, pri, plot = TRUE,
+         xlab = "Attained age (years)", ylab = "DM mortality per 100 PY",
+         las = 1, log = "y", lty = 1, col = "blue")
 matshade(ndA$age, pra)
 
 
 ###################################################
-### code chunk number 35: flup.rnw:835-838
+### code chunk number 36: flup.rnw:927-930
 ###################################################
-cm <- coxph(Surv(age, age+lex.dur, lex.Xst == "Dead") ~
+cm <- coxph(Surv(age, age + lex.dur, lex.Xst == "Dead") ~
             Ns(tfI, knots = i.kn) + lex.Cst + sex,
             data = tsNA20(dmCs))
 
 
 ###################################################
-### code chunk number 36: flup.rnw:842-845
+### code chunk number 37: flup.rnw:934-937
 ###################################################
-Cm <- coxph.Lexis(tsNA20(dmCs),
-                  form = age ~ Ns(tfI, knots = i.kn) + lex.Cst + sex)
+Cm <- coxphLexis(tsNA20(dmCs),
+                  formula = age ~ Ns(tfI, knots = i.kn) + lex.Cst + sex)
 round(cbind(ci.exp(cm), ci.exp(Cm)), 4)
 
 
 ###################################################
-### code chunk number 37: flup.rnw:860-863
+### code chunk number 38: flup.rnw:954-957
 ###################################################
 round(cbind(ci.exp(Pm),
        rbind(matrix(NA, 5, 3),
@@ -342,24 +364,25 @@ round(cbind(ci.exp(Pm),
 
 
 ###################################################
-### code chunk number 38: Ieff
+### code chunk number 39: Ieff
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(tfI = seq(0, 15, , 151), lex.Cst = "Ins", sex = "M")
 nr <- data.frame(tfI =     2            , lex.Cst = "Ins", sex = "M")
-# We need to put in xvars="age" because age is in the model but not
-# in the prediction frames
+# We need to use xvars="age" in ci.exp because age is in the model
+# but not in the prediction frames nd and nr
 ppr <- ci.exp(pm, list(nd, nr), xvars = "age")
 cpr <- ci.exp(cm, list(nd, nr))
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
 matshade(nd$tfI, cbind(ppr, cpr), plot = T,
-         lty = c(1, 2), log = "y",
-         xlab = "Time since insulin (years)", ylab = "Mortality rate ratio")
+         lty = c(1, 2), lwd = 3, log = "y",
+         xlab = "Time since insulin (years)",
+         ylab = "Mortality rate ratio")
 abline(h = 1, lty = 3)
 
 
 ###################################################
-### code chunk number 39: IeffR
+### code chunk number 40: IeffR
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 nd <- data.frame(tfI = seq(0, 15, , 151), lex.Cst = "Ins", sex = "M")
@@ -367,123 +390,75 @@ nr <- data.frame(tfI =     0            , lex.Cst = "DM" , sex = "M")
 ppr <- ci.exp(pm, list(nd, nr), xvars = "age")
 cpr <- ci.exp(cm, list(nd, nr))
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(nd$tfI, cbind(ppr, cpr), lwd = 2,
+matshade(nd$tfI, cbind(ppr, cpr), lwd = 3,
          xlab = "Time since insulin (years)",
          ylab = "Rate ratio relative to non-Insulin",
-         lty = c(1, 2), log = "y", plot = T)
+         lty = c(1, 2), log = "y", plot = TRUE)
+abline(h = 1, lty = 3)
 
 
 ###################################################
-### code chunk number 40: flup.rnw:977-982
+### code chunk number 41: flup.rnw:1079-1084
 ###################################################
-imx <- glm.Lexis(tsNA20(dmCs),
-                 formula = ~ Ns(age      , knots = a.kn)
-                           + Ns(      tfI, knots = i.kn)
-                           + Ns(age - tfI, knots = a.kn)
-                           + lex.Cst + sex)
-
-
-###################################################
-### code chunk number 41: flup.rnw:992-1004
-###################################################
-Im <- glm.Lexis(tsNA20(dmCs),
-                formula = ~ Ns( age      , knots = a.kn)
-                          + Ns(       tfI, knots = i.kn)
-                          + Ns((age - tfI) * (lex.Cst == "Ins"), knots = a.kn)
-                          + lex.Cst + sex)
-im <- glm.Lexis(tsNA20(dmCs),
+ii <- glmLexis(tsNA20(dmCs),
                 formula = ~ Ns(age      , knots = a.kn)
                           + Ns(      tfI, knots = i.kn)
-                  + lex.Cst:Ns(age - tfI, knots = a.kn)
+                          + Ns(age - tfI, knots = a.kn)
                           + lex.Cst + sex)
-ci.exp(Im)
+
+
+###################################################
+### code chunk number 42: flup.rnw:1093-1099
+###################################################
+im <- glmLexis(tsNA20(dmCs),
+                formula = ~ Ns(age      , knots = a.kn)
+                          + Ns(      tfI, knots = i.kn)
+                + lex.Cst : Ns(age - tfI, knots = a.kn)
+                          + lex.Cst + sex)
 ci.exp(im)
 
 
 ###################################################
-### code chunk number 42: flup.rnw:1019-1020
+### code chunk number 43: flup.rnw:1108-1109
 ###################################################
-anova(imx, Im, im, test = 'Chisq')
+anova(ii, im, test = 'Chisq')
 
 
 ###################################################
-### code chunk number 43: dur-int
+### code chunk number 44: dur-int
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-pxi <- ci.pred(imx, ndI)
-pxa <- ci.pred(imx, ndA)
-pIi <- ci.pred(Im , ndI)
-pIa <- ci.pred(Im , ndA)
-pii <- ci.pred(im , ndI)
-pia <- ci.pred(im , ndA)
-par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(ndI$age, cbind(pxi, pIi, pii)*1000, plot = T, log = "y",
+pii <- ci.pred(im, ndI)
+pia <- ci.pred(im, ndA)
+par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0) / 1.6, las = 1, bty = "n")
+matshade(ndI$age, pii * 1000, plot = T, log = "y",
          xlab = "Age", ylab = "Mortality per 1000 PY",
          lty = 1, lwd = 2, col = c("blue", "forestgreen", "red"), alpha = 0.1)
-matshade(ndA$age, cbind(pxa, pIa, pia)*1000,
-         lty = 1, lwd = 2, col = c("blue", "forestgreen", "red"), alpha = 0.1)
+matshade(ndA$age, pia * 1000)
 
 
 ###################################################
-### code chunk number 44: dur-int-RR
+### code chunk number 45: dur-int-RR
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 ndR <- transform(ndI, tfI = 0, lex.Cst = "DM")
 cbind(head(ndI), head(ndR))
-Rxi <- ci.exp(imx, list(ndI, ndR))
 Rii <- ci.exp(im , list(ndI, ndR))
-RIi <- ci.exp(Im , list(ndI, ndR))
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(ndI$age, cbind(Rxi, RIi, Rii), plot = T, log = "y",
+matshade(ndI$age, Rii, plot = T, log = "y",
          xlab = "Age (years)", ylab = "Rate ratio vs, non-Insulin",
          lty = 1, lwd = 2, col = c("blue", "forestgreen", "red"), alpha = 0.1)
 abline(h = 1)
-abline(h = ci.exp(imx, subset = "lex.Cst")[, 1], lty = "25", col = "blue")
 
 
 ###################################################
-### code chunk number 45: splint
+### code chunk number 46: flup.rnw:1154-1167
 ###################################################
-getOption("SweaveHooks")[["fig"]]()
-gm <- glm.Lexis(tsNA20(dmCs),
-                formula = ~ Ns(age, knots = a.kn)
-                          + Ns(tfI, knots = i.kn)
-                          + lex.Cst:Ns(age, knots = a.kn):Ns(tfI, knots = i.kn)
-                          + lex.Cst + sex)
-pgi <- ci.pred(gm, ndI)
-pga <- ci.pred(gm, ndA)
-par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(ndI$age, cbind(pgi, pii)*1000,  plot = T,
-         lty = c("solid", "21"), lend = "butt", lwd = 2, log = "y",
-         xlab = "Age (years)", ylab = "Mortality rates per 1000 PY",
-         alpha = c(0.2, 0.1), col = c("black", "red"))
-matshade(ndA$age, cbind(pga, pia)*1000,
-         lty = c("solid", "21"), lend = "butt", lwd = 2,
-         alpha = c(0.2, 0.1), col = c("black", "red"))
-
-
-###################################################
-### code chunk number 46: RR-int
-###################################################
-getOption("SweaveHooks")[["fig"]]()
-ndR <- transform(ndI, lex.Cst = "DM", tfI = 0)
-iRR <- ci.exp(im, ctr.mat = list(ndI, ndR))
-gRR <- ci.exp(gm, ctr.mat = list(ndI, ndR))
-par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(ndI$age, cbind(gRR, iRR), lty = 1, log = "y", plot = TRUE,
-         xlab = "Age (years)", ylab = "Rate ratio: Ins vs. non-Ins",
-         col = c("black", "red"), lwd = 2)
-abline(h = 1)
-
-
-###################################################
-### code chunk number 47: flup.rnw:1145-1158
-###################################################
-dmd <- glm.Lexis(dmCs,
+dmd <- glmLexis(dmCs,
                  from = "DM", to = "Dead",
                  formula = ~ Ns(age, knots = a.kn)
                            + sex)
-ind <- glm.Lexis(dmCs,
+ind <- glmLexis(dmCs,
                  from = "Ins", to = "Dead",
                  formula = ~ Ns(age      , knots = a.kn)
                            + Ns(      tfI, knots = i.kn)
@@ -495,19 +470,19 @@ dma <- ci.pred(dmd, ndA)
 
 
 ###################################################
-### code chunk number 48: sep-mort
+### code chunk number 47: sep-mort
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
-matshade(ndI$age, ini * 1000, plot = TRUE, log = "y",
-         xlab = "Age (years)", ylab = "Mortality rates per 1000 PY",
+matshade(ndI$age, ini * 100, plot = TRUE, log = "y",
+         xlab = "Age (years)", ylab = "Mortality rates per 100 PY",
          lwd = 2, col = "red")
-matshade(ndA$age, dma*1000,
+matshade(ndA$age, dma*100,
          lwd = 2, col = "black")
 
 
 ###################################################
-### code chunk number 49: sep-HR
+### code chunk number 48: sep-HR
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
@@ -518,7 +493,7 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 50: flup.rnw:1204-1211
+### code chunk number 49: flup.rnw:1216-1223
 ###################################################
 dmCs <- cutLexis(data = dmS2,
                   cut = dmS2$doins,
@@ -530,17 +505,17 @@ summary(dmCs)
 
 
 ###################################################
-### code chunk number 51: box4
+### code chunk number 50: box4
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 boxes(dmCs, boxpos = list(x = c(15, 15, 85, 85),
                           y = c(85, 15, 85, 15)),
       scale.R = 1000, show.BE = TRUE)
-legendbox(50, 50)
+legendbox(70, 50)
 
 
 ###################################################
-### code chunk number 52: flup.rnw:1242-1249
+### code chunk number 51: flup.rnw:1255-1261
 ###################################################
 dmM <- mcutLexis(dmL,
            timescale = "per",
@@ -548,38 +523,60 @@ dmM <- mcutLexis(dmL,
           new.states = c("Ins", "OAD"),
           new.scales = c("tfI", "tfO"),
         ties.resolve = TRUE)
+
+
+###################################################
+### code chunk number 52: flup.rnw:1265-1268
+###################################################
+levels(dmM)
+dmM <- Relevel(dmM,  c("DM", "OAD", "Ins", "OAD-Ins", "Ins-OAD", "Dead"))
 summary(dmM, t = T)
 
 
 ###################################################
-### code chunk number 53: flup.rnw:1253-1256
+### code chunk number 53: flup.rnw:1272-1275
 ###################################################
 wh <- c(subset(dmM, lex.Cst == "Ins-OAD")$lex.id[1:2],
         subset(dmM, lex.Cst == "OAD-Ins")$lex.id[1:2])
-subset(dmM, lex.id %in% wh)
+print(subset(dmM, lex.id %in% wh), nd = 2)
 
 
 ###################################################
 ### code chunk number 54: mbox
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-boxes(dmM, boxpos = list(x = c(15, 80, 40, 40, 85, 85),
-                         y = c(50, 50, 90, 10, 90, 10)),
+boxes(dmM, boxpos = list(x = c(15, 40, 40, 85, 85, 80),
+                         y = c(50, 90, 10, 90, 10, 50)),
            scale.R = 1000, show.BE = TRUE)
+legendbox(6, 95)
 
 
 ###################################################
 ### code chunk number 55: mboxr
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-summary(dmMr <- Relevel(dmM, list('OAD+Ins' = 5:6), first = FALSE))
-boxes(dmMr, boxpos = list(x = c(15, 50, 15, 85, 85),
-                          y = c(85, 50, 15, 85, 15)),
+summary(dmMr <- Relevel(dmM, list(1, 2, 3, 'OAD+Ins' = 4:5, 6)))
+boxes(dmMr, boxpos = list(x = c(15, 15, 85, 85, 50),
+                          y = c(85, 15, 85, 15, 50)),
             scale.R = 1000, show.BE = TRUE)
 
 
 ###################################################
-### code chunk number 56: flup.rnw:1424-1428
+### code chunk number 56: flup.rnw:1327-1336
+###################################################
+dmMs <- splitMulti(dmMr, age = 0:100)
+summary(dmMs)
+levels(dmMs)
+rateIns <- gamLexis(dmMr, ~ s(age) + lex.Cst, from = 1:2   , to = 3:4)
+rateOAD <- gamLexis(dmMr, ~ s(age) + lex.Cst, from = c(1,3), to = c(2, 4))
+rateDth <- gamLexis(dmMr, ~ s(age) + lex.Cst)
+ci.exp(rateIns, subset = "lex")
+ci.exp(rateOAD, subset = "lex")
+ci.exp(rateDth, subset = "lex")
+
+
+###################################################
+### code chunk number 57: flup.rnw:1481-1485
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),

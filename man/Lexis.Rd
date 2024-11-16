@@ -21,7 +21,7 @@ entry.status = 0,
 keep.dropped = FALSE)
 \method{print}{Lexis}(x, ...,
                       td = 2,
-                      nd = 3,
+                      nd = td,
                     rnam = FALSE,
                      org = FALSE)
 }

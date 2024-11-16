@@ -13,9 +13,9 @@
 \usepackage[noae]{Sweave}
 \usepackage[ae,hyper]{Rd}
 \usepackage{makeidx,floatflt,amsmath,amsfonts,amsbsy,enumitem,dcolumn,needspace}
-\usepackage{ifthen,calc,eso-pic,everyshi}
+\usepackage{ifthen,calc,eso-pic,everyshi,pdfcomment,framed}
 \usepackage{booktabs,longtable,rotating,graphicx,subfig}
-\usepackage{pdfpages,verbatim,fancyhdr,datetime,afterpage}
+\usepackage{pdfpages,verbatim,fancyhdr,datetime,afterpage,setspace}
 \usepackage[abspath]{currfile}
 % \usepackage{times}
 \renewcommand{\textfraction}{0.0}
@@ -73,6 +73,26 @@
 \afterpage{\hfill \ldots now input from \texttt{#1.tex}\\} 
 \fancyfoot[OR,EL]{\footnotesize \texttt{#1.tex}} 
 \input{#1}}
+
+%----------------------------------------------------------------------
+% modifying the leftbar
+\renewenvironment{leftbar}[2][\hsize]
+{ \def\FrameCommand
+    {
+        {\color{#2}\vrule width 1pt}
+        \hspace{-2pt}
+    }
+    \MakeFramed{\hsize#1\advance\hsize-\width\FrameRestore}
+}
+{\endMakeFramed}
+\newcommand\blob{\,\,\rule{1.2ex}{1.2ex}}
+% defining the expl environment with a leftbar
+\newenvironment{expl}{% 
+\vspace*{-1em}
+\begin{leftbar}{gray}%
+  \noindent\textcolor{gray}{\textsc{code explained:}\!\!} 
+}{%\blob
+\end{leftbar}\ \\[1ex]}
 
 %----------------------------------------------------------------------
 % Here is the document starting with the titlepage

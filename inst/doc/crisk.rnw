@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{03: Competing risks with Lexis, parametric rates and simulation based confidence intervals}
+%\VignetteIndexEntry{Competing risks with Lexis, parametric rates and simulation based confidence intervals}
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
 
@@ -7,8 +7,8 @@
 \newcommand{\Title}{Competing risks with\\ \texttt{Lexis}, parametric
   rates and\\ simulation based confidence intervals}
 \newcommand{\Tit}{CmpRskParSim}
-\newcommand{\Version}{Version 5}
-\newcommand{\Dates}{April 2024}
+\newcommand{\Version}{Version 6}
+\newcommand{\Dates}{November 2024}
 \newcommand{\Where}{SDCC}
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
@@ -30,11 +30,26 @@ options(width = 90,
             las = 1,
             bty = "n",
            lend = "butt")))
+library(Epi)
+library(popEpi)
+library(survival)
+clear()
+@ %
+<<echo = FALSE, results = hide>>=
+glmLexis <- glm.Lexis
+gamLexis <- gam.Lexis
+coxphLexis <- coxph.Lexis
+anfang <- Sys.time()
+cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
 <<echo = FALSE>>=
-anfang <- Sys.time()
+vers <-
+data.frame(R = substr(R.version.string, 11, 15),
+         Epi = as.character(packageVersion(   "Epi")),
+      popEpi = as.character(packageVersion("popEpi")))
+names(vers) <- paste(" ", names(vers))
+print(vers, row.names = FALSE)
 @ %
-
 \chapter{Competing risks}
 
 \section{Concepts}
@@ -233,14 +248,13 @@ As an illustrative data example we use the (fake) diabetes register
 data; we set up the Lexis object, an then cut the follow-up time at
 dates of OAD and Ins:
 <<>>=
-library(Epi)
 data(DMlate)
 Ldm <- Lexis(entry = list(per = dodm,
                           age = dodm-dobth,
                           tfd = 0),
               exit = list(per = dox),
        exit.status = factor(!is.na(dodth), labels = c("DM", "Dead")),
-              data = DMlate[sample(1:nrow(DMlate), 1000),])
+              data = DMlate)
 summary(Ldm, t = T)
 set.seed(1952)
 Mdm <- mcutLexis(Ldm,
@@ -944,12 +958,12 @@ randomly generated.
 Finally, we may want to see the \emph{difference} (or ratio) of
 survival probabilities between men and women, say. This can be derived
 from two bootstrap samples using different prediction frames (the
-argument \texttt{nd=} to ci.Crisk). But the two bootstrap samples must
-come from the \emph{same} stream of samples from the multivariate
-normal. This can be obtained by explicitly setting the seed for the
-random number generator to the same value before calling
-\texttt{ci.Crisk} with each of the two different prediction frames as
-\texttt{nd} argument:
+argument \texttt{nd=} to \texttt{ci.Crisk}). But the two bootstrap
+samples of parameters must be the same, i.e. come from the
+\emph{same} stream of samples from the multivariate normal. This can
+be obtained by explicitly setting the seed for the random number
+generator to the same value before calling \texttt{ci.Crisk} with each
+of the two different prediction frames as \texttt{nd} argument:
 <<>>=
 nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
 nw <- data.frame(tfD = seq(0, 15, 0.1), sex = "F")
@@ -999,7 +1013,7 @@ abline(h = 1)
   and women, derived from the same set of bootstrap samples from the
   parameter vector.}
 
-To illustrate the effect of \texttt{not} pairing the random samples we
+To illustrate the effect of \emph{not} pairing the random samples we
 can generate a fresh sample for women from a different stream and do
 the calculations to illustrate the excess we get from not aligning
 samples.

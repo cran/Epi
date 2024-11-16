@@ -229,7 +229,7 @@ function(entry, exit, duration, entry.status=0, exit.status=0, id, data,
     }
     lex <- cbind(lex, data)
   }
-  
+
   ## Drop rows with short or negative duration for consistency with splitLexis
   short.dur <- lex$lex.dur <= tol
   if ( any(short.dur) ) {
@@ -511,7 +511,7 @@ points.Lexis <- function(x, time.scale=options()[["Lexis.time.scale"]], ...)
 }
 
 print.Lexis <-
-function(x, ..., td = 2, nd = 3, rnam = FALSE, org = FALSE)
+function(x, ..., td = 2, nd = td, rnam = FALSE, org = FALSE)
     {
     # "intersect" is to allow subsets of variables to be printed
     # result is ordered as the first argument to intersect()
@@ -530,7 +530,7 @@ function(x, ..., td = 2, nd = 3, rnam = FALSE, org = FALSE)
     if (org) print.data.frame(x, row.names = rnam, ...)
         else print.data.frame(x[,c(whL, oth)],
                                  row.names = rnam, ...)
-    # return the printed ordering of variables 
+    # return the printed ordering of variables
     invisible(c(whL, oth))
     }
 
@@ -613,7 +613,7 @@ if( all(!is.lex) ) stop( "At least one argument nust be a Lexis object\n",
 if( sum(is.lex)>1 ) stop( "It is meaningless to 'cbind' several Lexis objects:",
                           " arguments ", paste( which(is.lex), collapse=","),
                           " are Lexis objects.\n" )
-is.lex <- which(is.lex) 
+is.lex <- which(is.lex)
 res <- do.call( base::cbind.data.frame, allargs )
 attr( res, "class"       ) <- attr( allargs[[is.lex]], "class"       )
 attr( res, "breaks"      ) <- attr( allargs[[is.lex]], "breaks"      )
@@ -625,7 +625,7 @@ res
 rbind.Lexis <-
 function( ... )
 {
-# A list of all Lexis objects    
+# A list of all Lexis objects
 allargs <- list( ... )
 # Check if they are all Lexis
 # (or possibly NULL - often rbind-ing with NULL is very useful)
@@ -643,32 +643,32 @@ tsin <- do.call( c, lapply( allargs, function(x) attr(x,"time.since" ) ) )
 # but only one copy of each
 scls <- match( unique(tscl), tscl )
 tscl <- tscl[scls]
-tsin <- tsin[scls]    
+tsin <- tsin[scls]
 # Fish out the breaks on timescale in turn from all input objects and
 # - if all the non-NULL are identical use this
 # - if not, set the corresponding break to NULL
 newbrks <- list()
-# all the breaks attributes in a list    
+# all the breaks attributes in a list
 brks <- lapply( allargs, function(x) attr(x,"breaks") )
-# run through the timescales found 
+# run through the timescales found
 for( scl in tscl )
    {
-   # breaks for this timescale in any of the objects   
+   # breaks for this timescale in any of the objects
    brk <- lapply( brks, function(x) x[[scl]] )
    # but only the non-null ones
    brk <- brk[!sapply( brk, is.null )]
    # if more than one occurrence, all non-NULL breaks should be identical
-   if( ( length(brk)>1 & 
+   if( ( length(brk)>1 &
          all( sapply( brk[-1], function(x) identical(brk[[1]],x) ) ) )
        | length(brk) == 1 ) newbrks[scl] <- brk[1]
-   else newbrks[scl] <- list(NULL)    
+   else newbrks[scl] <- list(NULL)
    }
 # define attributes of the reulting object:
 attr( res, "class"       ) <- c( "Lexis", "data.frame" )
 attr( res, "breaks"      ) <- newbrks
 attr( res, "time.scales" ) <- tscl
 attr( res, "time.since"  ) <- tsin
-res  
+res
 }
 
 ## Extractor functions
@@ -734,7 +734,7 @@ if( !is.Lexis(x) ) stop( "Not a Lexis object" )
 tc <- tapply( x$lex.dur, x$lex.Cst, sum )
 nt <- names( tc[tc>0] )
 nt[!is.na(nt)]
-}    
+}
 
 absorbing <-
 function( x )
@@ -742,7 +742,7 @@ function( x )
 if( !is.Lexis(x) ) stop( "Not a Lexis object" )
 tc <- table( x$lex.Xst )
 setdiff( names( tc[tc>0] ), transient(x) )
-}    
+}
 
 updn <-
 function(x, tt, states)
@@ -823,7 +823,7 @@ transform.Lexis <- function(`_data`, ... )
     y
 }
 
-# Two utility functions used to sort a Lexis object by (lex.id,time)    
+# Two utility functions used to sort a Lexis object by (lex.id,time)
 order.Lexis <-
  orderLexis <-
 function( x )
@@ -833,7 +833,7 @@ function( x )
    if (!inherits(x, "Lexis")) stop("Argument must be a Lexis object\n")
    # Fixing things if a data.table
    attr(x, "class") <- c("Lexis", "data.frame")
-   a.ts <- timeScales(x)[which(timeSince(x) != "X")[1]] 
+   a.ts <- timeScales(x)[which(timeSince(x) != "X")[1]]
    order(x$lex.id, x[,a.ts], na.last = FALSE)
    }
 

@@ -1,3 +1,10 @@
+Changes in 2.57
+
+o glmLexis, gamLexis and coxphLexis have been added, identical to the functions
+  glm.Lexis, gam.Lexis and coxph.Lexis. Not S3 methods so more logical names.
+
+o flup, the basic Lexis vignette, has been updated
+
 Changes in 2.56
 
 o ci.eta was broken, fix provided 

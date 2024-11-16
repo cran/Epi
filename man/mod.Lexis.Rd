@@ -1,4 +1,7 @@
 \name{mod.Lexis}
+\alias{glmLexis}
+\alias{gamLexis}
+\alias{coxphLexis}
 \alias{glm.Lexis}
 \alias{gam.Lexis}
 \alias{coxph.Lexis}
@@ -12,14 +15,23 @@ traditional explicit modeling using \code{\link{glm}}, \code{\link[mgcv]{gam}}
 and \code{\link[survival]{coxph}}. Requires that \code{lex.Cst} and \code{lex.Xst}
 are defined as factors.
 
-But it is just a set of wrappers fro
+But it is just a set of wrappers for
 \code{glm}, \code{gam} and \code{coxph}.
 }
 \usage{
+glmLexis(Lx, formula,
+         from = preceding(Lx, to), to = absorbing(Lx),
+         paired = FALSE, link = "log", scale = 1, verbose = TRUE, \dots )     
+gamLexis(Lx, formula,
+         from = preceding(Lx, to), to = absorbing(Lx),
+         paired = FALSE, link = "log", scale = 1, verbose = TRUE, \dots )     
+coxphLexis(Lx, formula,
+           from = preceding(Lx, to), to = absorbing(Lx),
+           paired = FALSE, verbose = TRUE, \dots )     
   glm.Lexis( Lx,         # Lexis object	
         formula,         # ~ model	
-           from = preceding(Lx,to), # 'from' states
-             to = absorbing(Lx)   , # 'to' states
+           from = preceding(Lx, to), # 'from' states
+             to = absorbing(Lx)    , # 'to' states
          paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
@@ -27,8 +39,8 @@ But it is just a set of wrappers fro
             \dots )        # further arguments to glm
   gam.Lexis( Lx,         # Lexis object	
         formula,         # ~ model	
-           from = preceding(Lx,to), # 'from' states
-             to = absorbing(Lx)   , # 'to' states	
+           from = preceding(Lx, to), # 'from' states
+             to = absorbing(Lx)    , # 'to' states	
          paired = FALSE, # only the pairwise
            link = "log", # link function
           scale = 1,     # scaling of PY
@@ -36,8 +48,8 @@ But it is just a set of wrappers fro
             \dots )        # further arguments to gam
 coxph.Lexis( Lx,         # Lexis object	
         formula,         # timescale ~ model	
-           from = preceding(Lx,to), # 'from' states
-             to = absorbing(Lx)   , # 'to' states	
+           from = preceding(Lx, to), # 'from' states
+             to = absorbing(Lx)    , # 'to' states	
          paired = FALSE, # only the pairwise
         verbose = TRUE,  # report what is done?
             \dots )        # further arguments to coxph
@@ -81,6 +93,8 @@ coxph.Lexis( Lx,         # Lexis object
 }
 
 \details{
+  The functions with and without dots in the name are identical
+  
   The \code{glm} and \code{gam} models are fitted using the family
   \code{\link{poisreg}} which is a bit faster than the traditional
   \code{poisson} family. The response variable for this family is a
@@ -118,11 +132,11 @@ coxph.Lexis( Lx,         # Lexis object
   inconsistency is merely carried over from \code{coxph}.
 }
 
-\value{\code{glm.Lexis} returns a \code{\link{glm}} object, which is
+\value{\code{glmLexis} returns a \code{\link{glm}} object, which is
   also of class \code{glm.lex},
-  \code{gam.Lexis} returns a \code{\link[mgcv]{gam}} object, which is
+  \code{gamLexis} returns a \code{\link[mgcv]{gam}} object, which is
   also of class \code{gam.lex}, and
-  \code{coxph.Lexis} returns a \code{\link[survival]{coxph}} object, which is
+  \code{coxphLexis} returns a \code{\link[survival]{coxph}} object, which is
   also of class \code{coxph.lex}. These extra class attributes are meant
   to facilitate the (still pending) implementation of an \code{update} function.
 
@@ -181,7 +195,7 @@ summary( sL )
 # Proportional hazards model with insulin as time-dependent variable
 # - uses the defaul of modeling all transitions from both transient
 # states ("Alive" and "Ins") to the absorbing state ("Dead"). 
-mt <- glm.Lexis( sL, ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
+mt <- glmLexis( sL, ~ sex + lex.Cst + Ns(age,knots=c(15,3:8*10)) )
 
 # prediction of mortality rates from "Alive" with and without PH assumption
 nA <- data.frame( age=40:70, sex="M", lex.Cst="Alive" )
@@ -193,13 +207,13 @@ matshade( nA$age, cbind( ci.pred(mt,nA),
  
 # gam models may take some time to run so we leave it out
 \dontrun{
-mt.gam <- gam.Lexis( sL, ~ sex + lex.Cst + s(age), to="Dead",
+mt.gam <- gamLexis( sL, ~ sex + lex.Cst + s(age), to="Dead",
                      scale=1000 )
         }
 
 # Fit a Cox model for mortality with age as baseline time scale and
 # insulin (lex.Cst) as time-dependent covariate 
-mt.cox <- coxph.Lexis( sL, age ~ sex + lex.Cst, c("Alive","Ins"), "Dead" )
+mt.cox <- coxphLexis( sL, age ~ sex + lex.Cst, c("Alive","Ins"), "Dead" )
 
 # Pretty much the same results for regression paramters as the glm:
   ci.exp( mt    , subset="ex" )
