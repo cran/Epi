@@ -4,7 +4,7 @@
 \newcommand{\Title}{\texttt{Lexis} functions in \texttt{Epi}\\
   for representation and analysis of\\ follow-up data}
 \newcommand{\Tit}{\texttt{Lexis} FU}
-\newcommand{\Version}{Version 10}
+\newcommand{\Version}{Version 11}
 \newcommand{\Dates}{November 2024}
 \newcommand{\Where}{SDCC}
 \newcommand{\Homepage}{\url{http://bendixcarstensen.com/} }
@@ -18,7 +18,7 @@ Bendix Carstensen
                       \end{tabular}}
 
 \input{topreport}
-\renewcommand{\rwpre}{./flup}
+\renewcommand{\rwpre}{./aaflup}
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
@@ -42,9 +42,6 @@ clear()
 @
 % must be after clear() because 'anfang' is used at the end
 <<echo = FALSE, results = hide>>=
-glmLexis <- glm.Lexis
-gamLexis <- gam.Lexis
-coxphLexis <- coxph.Lexis
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
@@ -65,11 +62,11 @@ manipulation of follow-up data (``event history data'') from studies
 where exact dates of events are known. It accommodates follow-up
 through multiple states and on multiple time scales.
 
-This vignette uses a data example from the \texttt{Epi} package to
-illustrate the set-up of a simple \texttt{Lexis} object (a data frame
-of follow-up intervals), as well as the subdivision of follow-up
-intervals needed for multistate representation and analysis of
-transition rates by flexible parametric functions.
+We use a data example from the \texttt{Epi} package to illustrate the
+set-up of a simple \texttt{Lexis} object (a data frame of follow-up
+intervals), as well as the subdivision of follow-up intervals needed
+for multistate representation and analysis of transition rates by
+flexible parametric functions.
 
 The first chapter is exclusively on manipulation of the follow-up
 representation, but it points to the subsequent chapter where analysis
@@ -98,21 +95,20 @@ last chapter of this note, \hyperlink{lexfun}{``\texttt{Lexis}
 
 \begin{minipage}[t]{0.6\linewidth}
   \raggedright
-The \code{Lexis} functions(s) are named after the German demographer
-and economist Wilhelm Lexis (full name Wilhelm Hector Richard Albrecht
-Lexis) (17 July 1837 -- 24 August 1914), who in his book ``Einleitung
-in die Theorie der Bev\"{o}lkerungsstatistik'' [Introduction to the
-theory of population statistics] (1875) devised a diagram showing
-follow-up of persons on multiple time scales, notably calendar time
-and age. The diagram that nowadays is called a Lexis diagram, is
-usually drawn in a slightly different manner than that Lexis used in
-his book.
+  The \code{Lexis} machinery is named after the German demographer
+  and economist Wilhelm Lexis (full name Wilhelm Hector Richard
+  Albrecht Lexis, 17 July 1837 -- 24 August 1914), who in his book
+  ``Einleitung in die Theorie der Bev\"{o}lkerungsstatistik''
+  (Introduction to the theory of population statistics), (Strassburg,
+  1875), devised a diagram showing follow-up of persons on two time
+  scales, notably calendar time and age. The diagram that nowadays is
+  called a Lexis diagram, is usually drawn in a slightly different
+  manner than that Lexis used in his book.
 
-The display of follow-up on two timescales naturally leads to
-representation on several time scales and statistical modeling of
-occurrence rates with two (or more) timescales as explanatory
-terms. Hence the naming of the machinery that represents follow-up on
-multiple time scales after Wilhelm Lexis.
+  \quad The display of follow-up on two timescales naturally leads to
+  representation on several time scales and statistical modeling of
+  occurrence rates with two (or more) timescales as explanatory
+  terms. Hence the naming of the machinery after Wilhelm Lexis.
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.35\linewidth}
@@ -123,14 +119,13 @@ multiple time scales after Wilhelm Lexis.
 \subsection{Modeling of rates}
 
 In 1980 John Whitehead published a paper: ``Fitting Cox's regression
-model to survival data using GLIM'', cite{Whitehead.1980} in which he
+model to survival data using GLIM'', \cite{Whitehead.1980} in which he
 devised the likelihood of a model for many small time bands with
 constant intensity in each, and demonstrated that Cox's partial
-likelihood could be approximated by a Poisson likelihood. This is
-basically what underlies the time-splitting and subsequent modeling of
-transition rates in this
-book.
-\noindent\\[2em]
+likelihood could be seen as a Poisson likelihood. This is what
+underlies the time-splitting and subsequent modeling of transition
+rates in this vignette.\\[2em]
+\noindent
 \ldots so there is very little (if anything) new in this note.
 
 \chapter{Representation of follow-up data in \texttt{Epi}}
@@ -213,7 +208,9 @@ some extra structure to represent the follow-up. For the
 with recorded date of birth, date of diabetes, date of first insulin use,
 date of first oral drug use, date of exit and date of death --- we can
 construct a \texttt{Lexis} object by first including follow-up from
-entry at date of diabetes (\texttt{dodm}) to exit (\texttt{dox}):
+entry at date of diabetes (\texttt{dodm}) to exit (\texttt{dox}).
+The dates should \emph{not} be in \texttt{Date} format; some data
+manipulations in \texttt{Lexis} will crash if they are.
 <<>>=
 data(DMlate)
 head(DMlate)
@@ -304,8 +301,8 @@ The results of these two plotting commands are in figure
 \ref{fig:Lexis-diagram}, p. \pageref{fig:Lexis-diagram}.
 \begin{figure}[tb]
 \centering
-\includegraphics[width = 0.35\textwidth]{flup-dmL1}
-\includegraphics[width = 0.63\textwidth]{flup-dmL2}
+\includegraphics[width = 0.35\textwidth]{aaflup-dmL1}
+\includegraphics[width = 0.63\textwidth]{aaflup-dmL2}
 \caption{\it Lexis diagram of the \textrm{\tt DMlate} dataset; left
   panel is the default version, right panel is with some bells and
   whistles. The red lines are for women, blue for men, crosses
@@ -1188,8 +1185,8 @@ abline(h = 1)
 @ %
 \begin{figure}[tb]
 \centering
-\includegraphics[width = 0.49\textwidth]{flup-sep-mort}
-\includegraphics[width = 0.49\textwidth]{flup-sep-HR}
+\includegraphics[width = 0.49\textwidth]{aaflup-sep-mort}
+\includegraphics[width = 0.49\textwidth]{aaflup-sep-HR}
 \caption{\it Left panel: Mortality rates from separate models for the
   two mortality transitions; the \textrm{\tt
     DM}$\rightarrow$\textrm{\tt Dead} transition modeled by age alone;
@@ -1461,8 +1458,8 @@ ci.exp(rateDth, subset = "lex")
 \item[\texttt{AaJ.Lexis}] compute the Aalen-Johansen estimator for a
   \texttt{Lexis} object --- wrapper for \texttt{survfit} from
   \texttt{survival}
-\item[\texttt{ci.Crisk}] compute cumulative risks from model objects
-  for rates
+\item[\texttt{ci.Crisk}] compute cumulative risks with CIs from model
+  objects for competing rates
 \item[\texttt{glmLexis}] fit a \texttt{glm} model using the
   \texttt{poisreg} family to (hopefully) time split data
 \item[\texttt{gamLexis}] fit a \texttt{gam} model (from the
@@ -1470,10 +1467,10 @@ ci.exp(rateDth, subset = "lex")
   (hopefully) time split data
 \item[\texttt{coxphLexis}] fit a Cox model to follow-up in a
   \texttt{Lexis} object
-\item In versions of Epi up to 2.56 these functions were called
+\item In versions of Epi up to 2.56 the three modeling functions were called
   \texttt{glm.Lexis},
   \texttt{gam.Lexis} and
-  \texttt{coxph.Lexis} --- but they are not S3 methods so naming was
+  \texttt{coxph.Lexis} --- but they are not S3 methods so the naming was
   illogical. The versions with the old names still exist in
   \texttt{Epi} for backward compatibility.
 \end{description}

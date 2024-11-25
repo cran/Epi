@@ -17,14 +17,13 @@ library(tidyr)
 
 
 ###################################################
-### code chunk number 2: addLexis.rnw:35-37
+### code chunk number 2: addLexis.rnw:35-36
 ###################################################
 anfang <- Sys.time()
-cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: addLexis.rnw:105-117
+### code chunk number 3: addLexis.rnw:104-116
 ###################################################
 xcoh <- structure(list(id = c("A", "B", "C"),
                     birth = c("1952-07-14", "1954-04-01", "1987-06-10"),
@@ -41,7 +40,7 @@ xcoh
 
 
 ###################################################
-### code chunk number 4: addLexis.rnw:124-132
+### code chunk number 4: addLexis.rnw:123-131
 ###################################################
 Lcoh <- Lexis(entry = list(per = doe),
                exit = list(per = dox,
@@ -54,7 +53,7 @@ str(Lcoh)
 
 
 ###################################################
-### code chunk number 5: addLexis.rnw:148-151
+### code chunk number 5: addLexis.rnw:147-150
 ###################################################
 Lx$lex.id <- as.character(Lx$lex.id)
 str(Lx)
@@ -62,7 +61,7 @@ Lx
 
 
 ###################################################
-### code chunk number 6: addLexis.rnw:159-171
+### code chunk number 6: addLexis.rnw:158-170
 ###################################################
 clin <- data.frame(lex.id = c("A", "A", "C", "B", "C"),
                       per = cal.yr(c("1977-3-17",
@@ -79,20 +78,20 @@ clin
 
 
 ###################################################
-### code chunk number 7: addLexis.rnw:185-186
+### code chunk number 7: addLexis.rnw:184-185
 ###################################################
 (Cx <- addCov.Lexis(Lx, clin))
 
 
 ###################################################
-### code chunk number 8: addLexis.rnw:200-202
+### code chunk number 8: addLexis.rnw:199-201
 ###################################################
 (Dx <- addCov.Lexis(Lx, clin, exnam = "xnam", tfc = "tfCl"))
 summary(Dx, t=T)
 
 
 ###################################################
-### code chunk number 9: addLexis.rnw:209-224
+### code chunk number 9: addLexis.rnw:208-223
 ###################################################
 # split BEFORE add
 Lb <- addCov.Lexis(splitLexis(Lx,
@@ -112,7 +111,7 @@ La
 
 
 ###################################################
-### code chunk number 10: addLexis.rnw:230-233
+### code chunk number 10: addLexis.rnw:229-232
 ###################################################
 La$tfc == Lb$tfc
 La$age == Lb$age
@@ -120,7 +119,7 @@ La$per == Lb$per
 
 
 ###################################################
-### code chunk number 11: addLexis.rnw:236-248
+### code chunk number 11: addLexis.rnw:235-247
 ###################################################
 ## split BEFORE add
 Mb <- addCov.Lexis(splitMulti(Lx, age = seq(0, 80, 5)),
@@ -137,7 +136,7 @@ Ma$tfc == Mb$tfc
 
 
 ###################################################
-### code chunk number 12: addLexis.rnw:263-269
+### code chunk number 12: addLexis.rnw:262-268
 ###################################################
 cov <- c("bp", "chol")
 Lx <- La
@@ -148,7 +147,7 @@ class(Lx)
 
 
 ###################################################
-### code chunk number 13: addLexis.rnw:274-280
+### code chunk number 13: addLexis.rnw:273-279
 ###################################################
 Lx <- La
 Lx[,cov] <- as.data.frame(group_by(Lx, lex.id)
@@ -159,7 +158,7 @@ Lx
 
 
 ###################################################
-### code chunk number 14: addLexis.rnw:348-361
+### code chunk number 14: addLexis.rnw:347-360
 ###################################################
 fu <- data.frame(doe = c(2006, 2008),
                  dox = c(2015, 2018),
@@ -177,7 +176,7 @@ str(Sx)
 
 
 ###################################################
-### code chunk number 15: addLexis.rnw:370-380
+### code chunk number 15: addLexis.rnw:369-379
 ###################################################
 set.seed(1952)
 rf <- data.frame(per = c(2005 + runif(12, 0, 10)),
@@ -192,7 +191,7 @@ rg <- data.frame(per = c(2009 + runif(10, 0, 10)),
 
 
 ###################################################
-### code chunk number 16: addLexis.rnw:392-395
+### code chunk number 16: addLexis.rnw:391-394
 ###################################################
 pdat <- list(F = rf, G = rg)
 pdat
@@ -200,7 +199,7 @@ Lx
 
 
 ###################################################
-### code chunk number 17: addLexis.rnw:404-417
+### code chunk number 17: addLexis.rnw:403-416
 ###################################################
 summary(Sx) ; names(Sx)
 ex1 <- addDrug.Lexis(Sx, pdat, method = "ext") # default
@@ -218,7 +217,7 @@ print(fix, nd = 2)
 
 
 ###################################################
-### code chunk number 18: addLexis.rnw:426-435
+### code chunk number 18: addLexis.rnw:425-434
 ###################################################
 data(DMlate) ; str(DMlate)
 Lx <- Lexis(entry = list(per = dodm,
@@ -232,7 +231,7 @@ summary(Lx)
 
 
 ###################################################
-### code chunk number 19: addLexis.rnw:439-442
+### code chunk number 19: addLexis.rnw:438-441
 ###################################################
 Sx <- splitLexis(Lx[,1:7], time.scale="age", breaks = 0:120)
 summary(Sx)
@@ -240,7 +239,7 @@ str(Sx)
 
 
 ###################################################
-### code chunk number 20: addLexis.rnw:450-491
+### code chunk number 20: addLexis.rnw:449-490
 ###################################################
 set.seed(1952)
 
@@ -286,7 +285,7 @@ head(purC)
 
 
 ###################################################
-### code chunk number 21: addLexis.rnw:506-513
+### code chunk number 21: addLexis.rnw:505-512
 ###################################################
 Sx1 <- subset(Sx, lex.id < 100)
 pur <- list(A = subset(purA, lex.id < 1000),
@@ -298,7 +297,7 @@ summary(ad1)
 
 
 ###################################################
-### code chunk number 22: addLexis.rnw:517-524
+### code chunk number 22: addLexis.rnw:516-523
 ###################################################
 Sx2 <- subset(Sx, lex.id < 500)
 pur <- list(A = subset(purA, lex.id < 500),
@@ -310,7 +309,7 @@ summary(ad2)
 
 
 ###################################################
-### code chunk number 23: addLexis.rnw:531-538
+### code chunk number 23: addLexis.rnw:530-537
 ###################################################
 pur <- list(A = subset(purA, lex.id < 100 & runif(nrow(purA)) < 0.5),
             B = subset(purB, lex.id < 100 & runif(nrow(purB)) < 0.5),
@@ -322,7 +321,7 @@ summary(ad3)
 
 
 ###################################################
-### code chunk number 24: addLexis.rnw:554-560
+### code chunk number 24: addLexis.rnw:553-559
 ###################################################
 pur <- list(B = subset(purB, lex.id < 100),
             C = subset(purC, lex.id < 100))
@@ -333,13 +332,13 @@ summary(ad4)
 
 
 ###################################################
-### code chunk number 25: addLexis.rnw:569-570
+### code chunk number 25: addLexis.rnw:568-569
 ###################################################
 summary(ad1$lex.dur)
 
 
 ###################################################
-### code chunk number 26: addLexis.rnw:587-590
+### code chunk number 26: addLexis.rnw:586-589
 ###################################################
 summary(ad1)
 summary(adc <- coarse.Lexis(ad1, lim = c(1/6,1/2)))
@@ -347,7 +346,7 @@ summary(adc$lex.dur)
 
 
 ###################################################
-### code chunk number 27: addLexis.rnw:603-613
+### code chunk number 27: addLexis.rnw:602-612
 ###################################################
 summary(Sx2)
 system.time(ad4 <- addDrug.Lexis(Sx2,
@@ -362,7 +361,7 @@ summary(ad5)
 
 
 ###################################################
-### code chunk number 28: addLexis.rnw:618-624
+### code chunk number 28: addLexis.rnw:617-623
 ###################################################
 ad4$keep <- with(ad4, (B.ex & B.ct == 0) |
                       (C.ex & C.ct == 0))
@@ -373,7 +372,7 @@ summary(ad6)
 
 
 ###################################################
-### code chunk number 29: addLexis.rnw:653-657
+### code chunk number 29: addLexis.rnw:652-656
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"), "\n")

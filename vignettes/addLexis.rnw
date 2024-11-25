@@ -34,7 +34,6 @@ library(tidyr)
 
 <<echo = FALSE>>=
 anfang <- Sys.time()
-cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
 
 \chapter{Overview and rationale}

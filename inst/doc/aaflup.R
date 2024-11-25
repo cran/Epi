@@ -1,7 +1,7 @@
-### R code from vignette source 'flup.rnw'
+### R code from vignette source 'aaflup.rnw'
 
 ###################################################
-### code chunk number 1: flup.rnw:29-41
+### code chunk number 1: aaflup.rnw:29-41
 ###################################################
 options(width = 90,
         show.signif.stars = FALSE,
@@ -18,17 +18,14 @@ clear()
 
 
 ###################################################
-### code chunk number 2: flup.rnw:44-49
+### code chunk number 2: aaflup.rnw:44-46
 ###################################################
-glmLexis <- glm.Lexis
-gamLexis <- gam.Lexis
-coxphLexis <- coxph.Lexis
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: flup.rnw:51-57
+### code chunk number 3: aaflup.rnw:48-54
 ###################################################
 vers <-
 data.frame(R = substr(R.version.string, 11, 15),
@@ -39,7 +36,7 @@ print(vers, row.names = FALSE)
 
 
 ###################################################
-### code chunk number 4: flup.rnw:217-227
+### code chunk number 4: aaflup.rnw:214-224
 ###################################################
 data(DMlate)
 head(DMlate)
@@ -54,14 +51,14 @@ timeScales(dmL)
 
 
 ###################################################
-### code chunk number 5: flup.rnw:250-252
+### code chunk number 5: aaflup.rnw:247-249
 ###################################################
 str(dmL)
 head(dmL)[, 1:11]
 
 
 ###################################################
-### code chunk number 6: flup.rnw:269-270
+### code chunk number 6: aaflup.rnw:266-267
 ###################################################
 summary(dmL, timeScales = TRUE)
 
@@ -90,7 +87,7 @@ box(bty = 'o')
 
 
 ###################################################
-### code chunk number 9: flup.rnw:328-331
+### code chunk number 9: aaflup.rnw:325-328
 ###################################################
 dmS1 <- splitLexis(dmL, "age", breaks = seq(0, 100, 5))
 summary(dmL)
@@ -98,7 +95,7 @@ summary(dmS1)
 
 
 ###################################################
-### code chunk number 10: flup.rnw:341-344
+### code chunk number 10: aaflup.rnw:338-341
 ###################################################
 wh.id <- c(9, 27, 52, 484)
 subset(dmL , lex.id %in% wh.id)[, 1:10]
@@ -106,14 +103,14 @@ subset(dmS1, lex.id %in% wh.id)[, 1:10]
 
 
 ###################################################
-### code chunk number 11: flup.rnw:352-354
+### code chunk number 11: aaflup.rnw:349-351
 ###################################################
 dmS2 <- splitLexis(dmS1, "tfD", breaks = c(0, 1, 2, 5, 10, 20, 30, 40))
 subset(dmS2, lex.id %in% wh.id)[, 1:10]
 
 
 ###################################################
-### code chunk number 12: flup.rnw:359-365
+### code chunk number 12: aaflup.rnw:356-362
 ###################################################
 dmM <- splitMulti(dmL,
                   age = seq(0, 100, 5),
@@ -124,7 +121,7 @@ summary(dmM)
 
 
 ###################################################
-### code chunk number 13: flup.rnw:397-404
+### code chunk number 13: aaflup.rnw:394-401
 ###################################################
 subset(dmL, lex.id %in% wh.id)[, 1:11]
 dmC <- cutLexis(data = dmL,
@@ -136,7 +133,7 @@ subset(dmC, lex.id %in% wh.id)[, 1:11]
 
 
 ###################################################
-### code chunk number 14: flup.rnw:419-425
+### code chunk number 14: aaflup.rnw:416-422
 ###################################################
 dmS2C <- cutLexis(data = dmS2,
                    cut = dmS2$doins,
@@ -147,7 +144,7 @@ subset(dmS2C, lex.id %in% wh.id)[, 1:11]
 
 
 ###################################################
-### code chunk number 15: flup.rnw:443-444
+### code chunk number 15: aaflup.rnw:440-441
 ###################################################
 summary(dmS2C, timeScales = TRUE)
 
@@ -161,7 +158,7 @@ legendbox(70, 95)
 
 
 ###################################################
-### code chunk number 17: flup.rnw:489-497
+### code chunk number 17: aaflup.rnw:486-494
 ###################################################
 timeBand(dmS2C, "age", "middle")[1:10]
 # For nice printing and column labelling we use the data.frame() function:
@@ -174,13 +171,13 @@ data.frame(dmS2C[, c("per", "age", "tfD", "lex.dur")],
 
 
 ###################################################
-### code chunk number 18: flup.rnw:528-529
+### code chunk number 18: aaflup.rnw:525-526
 ###################################################
 summary((dmS2$age - dmS2$tfD) - (dmS2$dodm - dmS2$dobth))
 
 
 ###################################################
-### code chunk number 19: flup.rnw:535-538
+### code chunk number 19: aaflup.rnw:532-535
 ###################################################
 summary(timeBand(dmS2, "age", "middle") -
         timeBand(dmS2, "tfD", "middle") -
@@ -188,14 +185,14 @@ summary(timeBand(dmS2, "age", "middle") -
 
 
 ###################################################
-### code chunk number 20: flup.rnw:647-649
+### code chunk number 20: aaflup.rnw:644-646
 ###################################################
 dmCs <- splitLexis(dmC, time.scale = "age", breaks = seq(0, 110, 1/4))
 summary(dmCs, t = T)
 
 
 ###################################################
-### code chunk number 21: flup.rnw:671-676
+### code chunk number 21: aaflup.rnw:668-673
 ###################################################
 (a.kn <- with(subset(dmCs, lex.Xst == "Dead"),
               quantile(age+lex.dur, seq(5, 95, , 5)  /100)))
@@ -205,7 +202,7 @@ summary(dmCs, t = T)
 
 
 ###################################################
-### code chunk number 22: flup.rnw:692-697
+### code chunk number 22: aaflup.rnw:689-694
 ###################################################
 ma <- glm((lex.Xst == "Dead") ~ Ns(age, knots = a.kn),
            family = poisson,
@@ -215,7 +212,7 @@ summary(ma)
 
 
 ###################################################
-### code chunk number 23: flup.rnw:716-720
+### code chunk number 23: aaflup.rnw:713-717
 ###################################################
 Ma <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn),
           family = poisreg,
@@ -224,20 +221,20 @@ summary(Ma)
 
 
 ###################################################
-### code chunk number 24: flup.rnw:726-728
+### code chunk number 24: aaflup.rnw:723-725
 ###################################################
 Xa <- glmLexis(dmCs, formula = ~ Ns(age, knots = a.kn),
                      from = "DM", to = "Dead",)
 
 
 ###################################################
-### code chunk number 25: flup.rnw:733-734
+### code chunk number 25: aaflup.rnw:730-731
 ###################################################
 attr(Xa, "Lexis")
 
 
 ###################################################
-### code chunk number 26: flup.rnw:745-748
+### code chunk number 26: aaflup.rnw:742-745
 ###################################################
 transient(dmCs)
 absorbing(dmCs)
@@ -245,13 +242,13 @@ preceding(dmCs, absorbing(dmCs))
 
 
 ###################################################
-### code chunk number 27: flup.rnw:752-753
+### code chunk number 27: aaflup.rnw:749-750
 ###################################################
 xa <- glmLexis(dmCs, formula = ~ Ns(age, knots = a.kn))
 
 
 ###################################################
-### code chunk number 28: flup.rnw:756-760
+### code chunk number 28: aaflup.rnw:753-757
 ###################################################
 c(ma = deviance(ma),
   Ma = deviance(Ma),
@@ -274,7 +271,7 @@ matshade(nd$age, pr.a, plot = TRUE,
 
 
 ###################################################
-### code chunk number 30: flup.rnw:807-812
+### code chunk number 30: aaflup.rnw:804-809
 ###################################################
 pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
                                               + lex.Cst + sex,
@@ -284,14 +281,14 @@ round(ci.exp(pm), 3)
 
 
 ###################################################
-### code chunk number 31: flup.rnw:815-817
+### code chunk number 31: aaflup.rnw:812-814
 ###################################################
 pm <- glmLexis(dmCs, ~ Ns(age, knots = a.kn) + lex.Cst + sex)
 round(ci.exp(pm), 3)
 
 
 ###################################################
-### code chunk number 32: flup.rnw:834-839
+### code chunk number 32: aaflup.rnw:831-836
 ###################################################
 pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
                                             + Ns(tfI, knots = i.kn)
@@ -301,7 +298,7 @@ pm <- glm(cbind(lex.Xst == "Dead", lex.dur) ~ Ns(age, knots = a.kn)
 
 
 ###################################################
-### code chunk number 33: flup.rnw:845-851
+### code chunk number 33: aaflup.rnw:842-848
 ###################################################
 Pm <- glmLexis(tsNA20(dmCs),
                form = ~ Ns(age, knots = a.kn)
@@ -312,7 +309,7 @@ identical(model.matrix(Pm), model.matrix(pm))
 
 
 ###################################################
-### code chunk number 34: flup.rnw:857-858
+### code chunk number 34: aaflup.rnw:854-855
 ###################################################
 round(ci.exp(Pm, subset = "ex"), 3)
 
@@ -340,7 +337,7 @@ matshade(ndA$age, pra)
 
 
 ###################################################
-### code chunk number 36: flup.rnw:927-930
+### code chunk number 36: aaflup.rnw:924-927
 ###################################################
 cm <- coxph(Surv(age, age + lex.dur, lex.Xst == "Dead") ~
             Ns(tfI, knots = i.kn) + lex.Cst + sex,
@@ -348,7 +345,7 @@ cm <- coxph(Surv(age, age + lex.dur, lex.Xst == "Dead") ~
 
 
 ###################################################
-### code chunk number 37: flup.rnw:934-937
+### code chunk number 37: aaflup.rnw:931-934
 ###################################################
 Cm <- coxphLexis(tsNA20(dmCs),
                   formula = age ~ Ns(tfI, knots = i.kn) + lex.Cst + sex)
@@ -356,7 +353,7 @@ round(cbind(ci.exp(cm), ci.exp(Cm)), 4)
 
 
 ###################################################
-### code chunk number 38: flup.rnw:954-957
+### code chunk number 38: aaflup.rnw:951-954
 ###################################################
 round(cbind(ci.exp(Pm),
        rbind(matrix(NA, 5, 3),
@@ -398,7 +395,7 @@ abline(h = 1, lty = 3)
 
 
 ###################################################
-### code chunk number 41: flup.rnw:1079-1084
+### code chunk number 41: aaflup.rnw:1076-1081
 ###################################################
 ii <- glmLexis(tsNA20(dmCs),
                 formula = ~ Ns(age      , knots = a.kn)
@@ -408,7 +405,7 @@ ii <- glmLexis(tsNA20(dmCs),
 
 
 ###################################################
-### code chunk number 42: flup.rnw:1093-1099
+### code chunk number 42: aaflup.rnw:1090-1096
 ###################################################
 im <- glmLexis(tsNA20(dmCs),
                 formula = ~ Ns(age      , knots = a.kn)
@@ -419,7 +416,7 @@ ci.exp(im)
 
 
 ###################################################
-### code chunk number 43: flup.rnw:1108-1109
+### code chunk number 43: aaflup.rnw:1105-1106
 ###################################################
 anova(ii, im, test = 'Chisq')
 
@@ -452,7 +449,7 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 46: flup.rnw:1154-1167
+### code chunk number 46: aaflup.rnw:1151-1164
 ###################################################
 dmd <- glmLexis(dmCs,
                  from = "DM", to = "Dead",
@@ -493,7 +490,7 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 49: flup.rnw:1216-1223
+### code chunk number 49: aaflup.rnw:1213-1220
 ###################################################
 dmCs <- cutLexis(data = dmS2,
                   cut = dmS2$doins,
@@ -515,7 +512,7 @@ legendbox(70, 50)
 
 
 ###################################################
-### code chunk number 51: flup.rnw:1255-1261
+### code chunk number 51: aaflup.rnw:1252-1258
 ###################################################
 dmM <- mcutLexis(dmL,
            timescale = "per",
@@ -526,7 +523,7 @@ dmM <- mcutLexis(dmL,
 
 
 ###################################################
-### code chunk number 52: flup.rnw:1265-1268
+### code chunk number 52: aaflup.rnw:1262-1265
 ###################################################
 levels(dmM)
 dmM <- Relevel(dmM,  c("DM", "OAD", "Ins", "OAD-Ins", "Ins-OAD", "Dead"))
@@ -534,7 +531,7 @@ summary(dmM, t = T)
 
 
 ###################################################
-### code chunk number 53: flup.rnw:1272-1275
+### code chunk number 53: aaflup.rnw:1269-1272
 ###################################################
 wh <- c(subset(dmM, lex.Cst == "Ins-OAD")$lex.id[1:2],
         subset(dmM, lex.Cst == "OAD-Ins")$lex.id[1:2])
@@ -562,7 +559,7 @@ boxes(dmMr, boxpos = list(x = c(15, 15, 85, 85, 50),
 
 
 ###################################################
-### code chunk number 56: flup.rnw:1327-1336
+### code chunk number 56: aaflup.rnw:1324-1333
 ###################################################
 dmMs <- splitMulti(dmMr, age = 0:100)
 summary(dmMs)
@@ -576,7 +573,7 @@ ci.exp(rateDth, subset = "lex")
 
 
 ###################################################
-### code chunk number 57: flup.rnw:1481-1485
+### code chunk number 57: aaflup.rnw:1478-1482
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),

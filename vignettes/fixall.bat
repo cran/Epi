@@ -1,20 +1,24 @@
-call rw flup
-call rt flup
-call bl flup
-move flup.R   ..\inst\doc\
-move flup.pdf ..\inst\doc\
+rem vignettes appear in alphabetical order of filename
+rem this script moves .R and .pdf file to inst.doc
+rem => no vignette links on CRAN pckage website 
 
-call rt crisk
-call rw crisk
-call bl crisk
-move crisk.R   ..\inst\doc\
-move crisk.pdf ..\inst\doc\
+call rw aaflup
+call rt aaflup
+call bl aaflup
+move aaflup.R   ..\inst\doc\
+move aaflup.pdf ..\inst\doc\
 
 call rt addLexis
 call rw addLexis
 call bl addLexis
 move addLexis.R   ..\inst\doc\
 move addLexis.pdf ..\inst\doc\
+
+call rt crisk
+call rw crisk
+call bl crisk
+move crisk.R   ..\inst\doc\
+move crisk.pdf ..\inst\doc\
 
 call rt simLexis
 call rw simLexis
@@ -29,4 +33,4 @@ move yll.R   ..\inst\doc\
 move yll.pdf ..\inst\doc\
 
 call klean
-del *.pdf
+rem del *.pdf

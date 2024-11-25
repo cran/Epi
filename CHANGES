@@ -1,5 +1,9 @@
 Changes in 2.57
 
+o Too many typos in vignettes...
+
+Changes in 2.57
+
 o glmLexis, gamLexis and coxphLexis have been added, identical to the functions
   glm.Lexis, gam.Lexis and coxph.Lexis. Not S3 methods so more logical names.
 

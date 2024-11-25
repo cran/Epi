@@ -30,7 +30,8 @@ ci.lin( obj,
 ci.exp( ..., Exp = TRUE, pval = FALSE )
 Wald( obj, H0=0, ... )
 ci.mat( alpha = 0.05, df = Inf )
-ci.pred( obj, newdata,
+ci.pred( obj,
+     newdata,
          Exp = NULL,
        alpha = 0.05 )
 ci.ratio( r1, r2,
@@ -125,7 +126,7 @@ ci.ratio( r1, r2,
   \item{r1,r2}{Estimates of rates in two independent groups, with
     confidence limits. Can be either 3-column matrices or data frames
     with estimates and confidence intervals or 2 two column structures
-    with confidence limits. Only the confidence limits}
+    with confidence limits only. Only the confidence limits are used.}
   \item{se1,se2}{Standard errors of log-rates in the two groups. If
     given, it is assumed that \code{r1} and \code{r2} represent
     log-rates.}
@@ -137,7 +138,7 @@ ci.ratio( r1, r2,
   \code{ci.lin} returns a matrix with number of rows and row names as
   \code{ctr.mat}. The columns are Estimate, Std.Err, z, P, 2.5\% and
   97.5\% (or according to the value of \code{alpha}).  If
-  \code{vcov=TRUE} a list of length 2 with components \code{coef} (a
+  \code{vcov=TRUE}, instead a list of length 2 with components \code{coef} (a
   vector), the desired functional of the parameters and \code{vcov} (a
   square matrix), the variance covariance matrix of this, is returned
   but not printed. If \code{Exp==TRUE} the confidence intervals for the
