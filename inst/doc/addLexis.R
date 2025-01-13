@@ -375,8 +375,8 @@ summary(ad6)
 ### code chunk number 29: addLexis.rnw:652-656
 ###################################################
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 
 

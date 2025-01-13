@@ -20,18 +20,39 @@ Bendix Carstensen
 
 \input{topreport}
 \renewcommand{\rwpre}{./simLexis}
-<<echo=FALSE>>=
-options( width=90,
-         SweaveHooks=list( fig=function()
-         par(mar=c(3,3,1,1),mgp=c(3,1,0)/1.6,las=1,bty="n") ) )
-@ %
 
-<<echo = FALSE>>=
+\chapter{Using \texttt{simLexis}}
+
+\section{Technicalities}
+First we set some graphics parameters for convenience and load the
+packages needed:
+<<>>=
+options(width = 90,
+        show.signif.stars = FALSE,
+        SweaveHooks=list(fig = function()
+                         par(mar = c(3, 3, 1, 1),
+                             mgp = c(3, 1, 0) / 1.6,
+                             las = 1,
+                            lend = "butt",
+                             bty = "n")))
+library(Epi)
+library(popEpi)
+library(survival)
+clear()
+@
+% must be after clear() because 'anfang' is used at the end
+<<echo = FALSE, results = hide>>=
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
-
-\chapter{Using \texttt{simLexis}}
+<<echo = FALSE>>=
+vers <-
+data.frame(R = substr(R.version.string, 11, 15),
+         Epi = as.character(packageVersion(   "Epi")),
+      popEpi = as.character(packageVersion("popEpi")))
+names(vers) <- paste(" ", names(vers))
+print(vers, row.names = FALSE)
+@ %
 
 \section{Introduction}
 
@@ -936,9 +957,9 @@ follows:
 
 <<echo = FALSE>>=
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 @ %
 
 \bibliographystyle{plain}

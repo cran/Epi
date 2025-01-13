@@ -1,15 +1,16 @@
 ### R code from vignette source 'crisk.rnw'
 
 ###################################################
-### code chunk number 1: crisk.rnw:25-36
+### code chunk number 1: crisk.rnw:28-40
 ###################################################
 options(width = 90,
-        SweaveHooks = list(fig = function()
-        par(mar = c(3,3,1,1),
-            mgp = c(3,1,0)/1.6,
-            las = 1,
-            bty = "n",
-           lend = "butt")))
+        show.signif.stars = FALSE,
+        SweaveHooks=list(fig = function()
+                         par(mar = c(3, 3, 1, 1),
+                             mgp = c(3, 1, 0) / 1.6,
+                             las = 1,
+                            lend = "butt",
+                             bty = "n")))
 library(Epi)
 library(popEpi)
 library(survival)
@@ -17,17 +18,14 @@ clear()
 
 
 ###################################################
-### code chunk number 2: crisk.rnw:38-43
+### code chunk number 2: crisk.rnw:43-45
 ###################################################
-glmLexis <- glm.Lexis
-gamLexis <- gam.Lexis
-coxphLexis <- coxph.Lexis
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: crisk.rnw:45-51
+### code chunk number 3: crisk.rnw:47-53
 ###################################################
 vers <-
 data.frame(R = substr(R.version.string, 11, 15),
@@ -38,7 +36,7 @@ print(vers, row.names = FALSE)
 
 
 ###################################################
-### code chunk number 4: crisk.rnw:250-265
+### code chunk number 4: crisk.rnw:251-266
 ###################################################
 data(DMlate)
 Ldm <- Lexis(entry = list(per = dodm,
@@ -58,7 +56,7 @@ summary(Mdm)
 
 
 ###################################################
-### code chunk number 5: crisk.rnw:270-275
+### code chunk number 5: crisk.rnw:271-276
 ###################################################
 Sdm <- splitLexis(factorize(subset(Mdm,
                                    lex.Cst == "DM")),
@@ -89,17 +87,17 @@ boxes(Relevel(Sdm, c(1, 4, 2, 3)),
 
 
 ###################################################
-### code chunk number 8: crisk.rnw:313-316
+### code chunk number 8: crisk.rnw:314-317
 ###################################################
-mD <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
-mO <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
-mI <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
+mD <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
+mO <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
+mI <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
 
 
 ###################################################
-### code chunk number 9: crisk.rnw:333-336
+### code chunk number 9: crisk.rnw:331-334
 ###################################################
-nd <- data.frame(tfd = seq(0, 10, 1/10))
+nd <- data.frame(tfd = seq(0, 10, 1/20))
 rownames(nd) <- nd$tfd
 str(nd)
 
@@ -113,14 +111,14 @@ matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mO, nd)) * 1000,
          col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE,
          xlab = "Time since DM diagnosis (years)",
-         ylab = "Rates per 1000 PY", ylim = c(0.05,500), yaxt = "n")
-axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-               labels = formatC(ll,digits = 4), las = 1)
-axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+         ylab = "Rates per 1000 PY", ylim = c(0.05, 500), yaxt = "n")
+axis(side = 2, at = ll <- outer(c(1,2,5), -2:3, function(x,y) x * 10^y),
+               labels = formatC(ll, digits = 4), las = 1)
+axis(side = 2, at = outer(c(1.5,2:9), -2:3, function(x,y) x * 10^y),
                labels = NA, tcl = -0.3)
 text(0, 0.5*0.6^c(1,2,0),
      c("Dead","Ins","OAD"),
-     col = c("black","red","blue"), adj = 0)
+     col = c("black","red","blue"), adj = 0, font = 2)
 
 
 ###################################################
@@ -129,27 +127,26 @@ text(0, 0.5*0.6^c(1,2,0),
 getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
-                       ci.pred(mO, nd))*1000,
+                       ci.pred(mO, nd)) * 1000,
          col = c("black", "red", "blue"), lwd = 3, plot = TRUE,
          xlab = "Time since DM diagnosis (years)",
-         ylab = "Rates per 1000 PY", ylim = c(0,500), yaxs = "i")
+         ylab = "Rates per 1000 PY", ylim = c(0, 500), yaxs = "i")
 text(8, 500 - c(2, 3, 1) * 20,
      c("Dead","Ins","OAD"),
-     col = c("black","red","blue"), adj = 0)
+     col = c("black","red","blue"), adj = 0, font = 2)
 
 
 ###################################################
-### code chunk number 12: crisk.rnw:395-419
+### code chunk number 12: crisk.rnw:394-417
 ###################################################
-# utility function that calculates the midpoints between sucessive
-# values in a vector
+# utility function to compute midpoints between sucessive values in a vector
 mp <- function(x) x[-1] - diff(x) / 2
 #
-int <- 1/10
+int <- 1 / 20
 # rates at midpoints of intervals
-lD <- mp(ci.pred(mD, nd)[,1])
-lI <- mp(ci.pred(mI, nd)[,1])
-lO <- mp(ci.pred(mO, nd)[,1])
+lD <- mp(ci.pred(mD, nd)[, 1])
+lI <- mp(ci.pred(mI, nd)[, 1])
+lO <- mp(ci.pred(mO, nd)[, 1])
 #
 # cumulative rates and survival function at right border of the intervals
 LD <- cumsum(lD) * int
@@ -168,7 +165,7 @@ rO <- c(0, cumsum(lO * mp(Sv)) * int)
 
 
 ###################################################
-### code chunk number 13: crisk.rnw:424-428
+### code chunk number 13: crisk.rnw:422-426
 ###################################################
 summary(rD + rI + rO + Sv)
 oo <- options(digits = 20)
@@ -180,7 +177,7 @@ options(oo)
 ### code chunk number 14: stack
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
-zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd,
+zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd, # $
               xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
               xlab = "Time since DM diagnosis (years)",
               ylab = "Probability",
@@ -190,7 +187,7 @@ box(col = "white", lwd = 3)
 
 
 ###################################################
-### code chunk number 15: crisk.rnw:462-467
+### code chunk number 15: crisk.rnw:460-465
 ###################################################
 Sj <- c(sjA = sum(Sv * int),
         sjD = sum(rD * int),
@@ -200,60 +197,57 @@ c(Sj, sum(Sj))
 
 
 ###################################################
-### code chunk number 16: crisk.rnw:517-519
+### code chunk number 16: crisk.rnw:515-517
 ###################################################
 head(cbind(ci.pred(mI, nd),
            ci.exp (mI, nd)))
 
 
 ###################################################
-### code chunk number 17: crisk.rnw:524-526
+### code chunk number 17: crisk.rnw:523-525
 ###################################################
 str(ci.lin(mI, nd, sample = 4))
-head(cbind(ci.pred(mI,nd), exp(ci.lin(mI, nd, sample = 4))))
+head(cbind(ci.pred(mI, nd), exp(ci.lin(mI, nd, sample = 4))))
 
 
 ###################################################
-### code chunk number 18: crisk.rnw:570-578
+### code chunk number 18: crisk.rnw:571-578
 ###################################################
-system.time(
 res <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                          perm = 4:1))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                          perm = 4:1)
 str(res)
 
 
 ###################################################
-### code chunk number 19: crisk.rnw:614-622
+### code chunk number 19: crisk.rnw:613-620
 ###################################################
-system.time(
 rsm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                       sim.res = 'rates'))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                       sim.res = 'rates')
 str(rsm)
 
 
 ###################################################
-### code chunk number 20: crisk.rnw:629-637
+### code chunk number 20: crisk.rnw:628-635
 ###################################################
-system.time(
 csm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                       sim.res = 'crisk'))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                       sim.res = 'crisk')
 str(csm)
 
 
 ###################################################
-### code chunk number 21: crisk.rnw:650-656
+### code chunk number 21: crisk.rnw:648-654
 ###################################################
 Brates <- aperm(apply(rsm,
                       1:2,
@@ -273,19 +267,19 @@ matshade(nd$tfd, cbind(ci.pred(mD, nd),
          ylim = c(0.1,500), yaxt = "n",
          ylab = "Rates per 1000 PY",
          xlab = "Time since DM diagnosis (years)",
-         col = c("black","red","blue"), log = "y", lwd = 3, plot = TRUE)
+         col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE)
 matlines(nd$tfd,
-         cbind(Brates[,"Dead",],
-               Brates[,"Ins" ,],
-               Brates[,"OAD" ,]) * 1000,
+         cbind(Brates[, "Dead", ],
+               Brates[, "Ins" , ],
+               Brates[, "OAD" , ]) * 1000,
          col = c("white", "black", "black"), lty = 3, lwd = c(3,1,1))
-axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-               labels = formatC(ll,digits = 4), las = 1)
-axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+axis(side = 2, at = ll <- outer(c(1,2,5), -2:3, function(x, y) x * 10^y),
+               labels = formatC(ll, digits = 4), las = 1)
+axis(side = 2, at = outer(c(1.5, 2:9), -2:3, function(x, y) x * 10^y),
                labels = NA, tcl = -0.3)
-text(0, 0.5*0.6^c(1,2,0),
+text(0, 0.5 * 0.6^c(1,2,0),
      c("Dead", "Ins", "OAD"),
-     col = c("black", "red", "blue"), adj = 0)
+     col = c("black", "red", "blue"), adj = 0, font = 2)
 
 
 ###################################################
@@ -306,7 +300,7 @@ text(8, 0.3 + c(1, 0, 2) / 25,
 
 
 ###################################################
-### code chunk number 24: crisk.rnw:719-721
+### code chunk number 24: crisk.rnw:717-719
 ###################################################
 str(res$Crisk)
 str(res$Srisk)
@@ -318,20 +312,20 @@ str(res$Srisk)
 getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
               x = res$time,
-           xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
+           xlim = c(0, 10), xaxs = "i", yaxs = "i", las = 1,
            xlab = "Time since DM diagnosis (years)",
            ylab = "Probability",
             col =  c("black","red","blue","forestgreen") )
 text(9, mp(zz["9",]), c("Dead", "Ins", "OAD", "DM"), col = "white" )
 matshade(res$time,
-         cbind(res$Srisk[,1,],
-               res$Srisk[,2,],
-               res$Srisk[,3,]),
+         cbind(res$Srisk[, 1, ],
+               res$Srisk[, 2, ],
+               res$Srisk[, 3, ]),
          col = 'transparent', col.shade = "white", alpha = 0.4)
 
 
 ###################################################
-### code chunk number 26: crisk.rnw:761-764
+### code chunk number 26: crisk.rnw:759-762
 ###################################################
 s510 <- res$Stime[c("5", "10"),,]
 dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
@@ -339,35 +333,35 @@ round(ftable(s510, row.vars=1:2), 2)
 
 
 ###################################################
-### code chunk number 27: crisk.rnw:780-783
+### code chunk number 27: crisk.rnw:778-781
 ###################################################
 data(DMlate)
 set.seed(7465)
-wh <- sample(1:3, nrow(DMlate), r=T, prob = c(4, 2, 6))
+wh <- sample(1:3, nrow(DMlate), replace = T, prob = c(4, 2, 6))
 
 
 ###################################################
-### code chunk number 28: crisk.rnw:786-787
+### code chunk number 28: crisk.rnw:784-785
 ###################################################
 wh[is.na(DMlate$dodth)] <- 0
 
 
 ###################################################
-### code chunk number 29: crisk.rnw:792-794
+### code chunk number 29: crisk.rnw:790-792
 ###################################################
 DMlate$codth <- factor(wh, labels = c("Alive", "CVD", "Can", "Oth"))
 with(DMlate, table(codth, isDead = !is.na(dodth)))
 
 
 ###################################################
-### code chunk number 30: crisk.rnw:799-801
+### code chunk number 30: crisk.rnw:801-803
 ###################################################
 str(DMlate)
 head(DMlate, 12)
 
 
 ###################################################
-### code chunk number 31: crisk.rnw:808-815
+### code chunk number 31: crisk.rnw:810-817
 ###################################################
 dmL <- Lexis(entry = list(per = dodm,
                           age = dodm - dobth,
@@ -386,41 +380,41 @@ boxes(dmL, boxpos = TRUE)
 
 
 ###################################################
-### code chunk number 33: crisk.rnw:830-832
+### code chunk number 33: crisk.rnw:832-834
 ###################################################
-sL <- splitLexis(dmL, time.scale="age", breaks = seq(0, 120, 1/2))
+sL <- splitLexis(dmL, time.scale = "age", breaks = seq(0, 120, 1/2))
 summary(sL)
 
 
 ###################################################
-### code chunk number 34: crisk.rnw:834-837
+### code chunk number 34: crisk.rnw:836-839
 ###################################################
-mCVD <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "CVD")
-mCan <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Can")
-mOth <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Oth")
+mCVD <- gamLexis(sL, ~ s(tfD, by=sex), to = "CVD")
+mCan <- gamLexis(sL, ~ s(tfD, by=sex), to = "Can")
+mOth <- gamLexis(sL, ~ s(tfD, by=sex), to = "Oth")
 
 
 ###################################################
-### code chunk number 35: crisk.rnw:839-842 (eval = FALSE)
+### code chunk number 35: crisk.rnw:841-844 (eval = FALSE)
 ###################################################
-## mCVD <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
-## mCa  <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
-## mOth <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
+## mCVD <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
+## mCa  <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
+## mOth <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
 
 
 ###################################################
-### code chunk number 36: crisk.rnw:851-852
+### code chunk number 36: crisk.rnw:853-854
 ###################################################
-nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
+nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
 
 
 ###################################################
-### code chunk number 37: crisk.rnw:856-862
+### code chunk number 37: crisk.rnw:858-864
 ###################################################
 cR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
-               nB = 100,
+               nB = 500,
                nd = nm)
 str(cR)
 
@@ -435,8 +429,8 @@ matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
                         cR$Crisk[, "Other", ]),
          col = clr, lty = 1, lwd = 2,
          plot = TRUE, ylim = c(0, 1/3), yaxs = "i")
-text(0, 1/3 - 1:3/30, c("CVD", "Can", "Oth"),
-     col = clr, adj = 0)
+text(0, 1/3 - c(2,3,1)/30, c("CVD", "Can", "Oth"),
+     col = clr, adj = 0, font = 2)
 
 
 ###################################################
@@ -472,35 +466,37 @@ text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
 
 
 ###################################################
-### code chunk number 41: crisk.rnw:943-944
+### code chunk number 41: crisk.rnw:949-950
 ###################################################
 ftable(round(cR$Stime[paste(1:5 * 3), , ], 1), row.vars = 1)
 
 
 ###################################################
-### code chunk number 42: crisk.rnw:967-984
+### code chunk number 42: crisk.rnw:973-992
 ###################################################
-nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
-nw <- data.frame(tfD = seq(0, 15, 0.1), sex = "F")
+nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
+nw <- data.frame(tfD = seq(0, 15, 1/20), sex = "F")
+# set the seed
 set.seed(1952)
 mR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nm,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
+# REset the seed
 set.seed(1952)
 wR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nw,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
 str(wR)
 
 
 ###################################################
-### code chunk number 43: crisk.rnw:989-994
+### code chunk number 43: crisk.rnw:997-1002
 ###################################################
 dS <- mR[,"Surv",] - wR[,"Surv",]
 dS <- apply(dS, 1, quantile, probs = c(.5, .025, .975)) * 100
@@ -527,13 +523,13 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 45: crisk.rnw:1020-1030
+### code chunk number 45: crisk.rnw:1028-1038
 ###################################################
 fR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nw,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
 dxS <- mR[,"Surv",] - fR[,"Surv",]
 dxS <- apply(dxS, 1, quantile, probs = c(.5, .025, .975)) * 100
@@ -562,11 +558,11 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 47: crisk.rnw:1053-1057
+### code chunk number 47: crisk.rnw:1061-1065
 ###################################################
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 
 

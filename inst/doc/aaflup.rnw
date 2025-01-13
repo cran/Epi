@@ -1391,6 +1391,7 @@ ci.exp(rateDth, subset = "lex")
 \begin{description}
 \item[\texttt{summary.Lexis}] overview of transitions, risk time etc.
 \item[\texttt{levels.Lexis}] what are the states in the \texttt{Lexis} object
+\item[\texttt{paths.Lexis}] what are the paths through states iin a \texttt{Lexis} object
 \item[\texttt{nid.Lexis}] number of persons in the \texttt{Lexis}
   object --- how many unique values of \texttt{lex.id} are present
 \item[\texttt{entry}] entry time

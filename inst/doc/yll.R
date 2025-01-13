@@ -1,25 +1,42 @@
 ### R code from vignette source 'yll.rnw'
 
 ###################################################
-### code chunk number 1: yll.rnw:21-27
+### code chunk number 1: yll.rnw:29-41
 ###################################################
-options(width=90,
-         SweaveHooks=list(fig=function()
-         par(mar = c(3, 3, 1, 1),
-             mgp = c(3, 1, 0) / 1.6,
-             las = 1,
-             bty = "n")))
+options(width = 90,
+        show.signif.stars = FALSE,
+        SweaveHooks=list(fig = function()
+                         par(mar = c(3, 3, 1, 1),
+                             mgp = c(3, 1, 0) / 1.6,
+                             las = 1,
+                            lend = "butt",
+                             bty = "n")))
+library(Epi)
+library(popEpi)
+library(survival)
+clear()
 
 
 ###################################################
-### code chunk number 2: yll.rnw:31-33
+### code chunk number 2: yll.rnw:44-46
 ###################################################
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: states
+### code chunk number 3: yll.rnw:48-54
+###################################################
+vers <-
+data.frame(R = substr(R.version.string, 11, 15),
+         Epi = as.character(packageVersion(   "Epi")),
+      popEpi = as.character(packageVersion("popEpi")))
+names(vers) <- paste(" ", names(vers))
+print(vers, row.names = FALSE)
+
+
+###################################################
+### code chunk number 4: states
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 library(Epi)
@@ -35,7 +52,7 @@ zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
 
 
 ###################################################
-### code chunk number 4: states
+### code chunk number 5: states
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c(expression(lambda(a)),
@@ -45,20 +62,20 @@ boxes.MS(zz)
 
 
 ###################################################
-### code chunk number 5: yll.rnw:280-281
+### code chunk number 6: yll.rnw:301-302
 ###################################################
 data(DMepi)
 
 
 ###################################################
-### code chunk number 6: yll.rnw:287-289
+### code chunk number 7: yll.rnw:308-310
 ###################################################
 str(DMepi)
 head(DMepi)
 
 
 ###################################################
-### code chunk number 7: yll.rnw:309-315
+### code chunk number 8: yll.rnw:330-336
 ###################################################
 DMepi <- transform(subset(DMepi, A > 30),
                    A = A + 0.5,
@@ -69,7 +86,7 @@ head(DMepi)
 
 
 ###################################################
-### code chunk number 8: yll.rnw:321-346
+### code chunk number 9: yll.rnw:342-367
 ###################################################
 # Knots used in all models
 (a.kn <- seq(40, 95, , 6))
@@ -99,7 +116,7 @@ lW.f <- update(lW.m, data = subset(DMepi, sex == "F"))
 
 
 ###################################################
-### code chunk number 9: yll.rnw:353-390
+### code chunk number 10: yll.rnw:374-411
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
@@ -141,7 +158,7 @@ round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 
 
 ###################################################
-### code chunk number 10: imm
+### code chunk number 11: imm
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh, xtxt){
@@ -174,25 +191,25 @@ plyll("Imm", " - immunity assumption")
 
 
 ###################################################
-### code chunk number 11: tot
+### code chunk number 12: tot
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plyll("Tot", " - total mortality refernce")
 
 
 ###################################################
-### code chunk number 12: sus
+### code chunk number 13: sus
 ###################################################
 getOption("SweaveHooks")[["fig"]]()
 plyll("Sus", " - susceptibility assumed")
 
 
 ###################################################
-### code chunk number 13: yll.rnw:473-477
+### code chunk number 14: yll.rnw:494-498
 ###################################################
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 
 

@@ -1,9 +1,6 @@
 %\VignetteIndexEntry{Competing risks with Lexis, parametric rates and simulation based confidence intervals}
 \SweaveOpts{results=verbatim,keep.source=TRUE,include=FALSE,eps=FALSE}
 \documentclass[a4paper,dvipsnames,twoside,12pt]{report}
-
-% ----------------------------------------------------------------------
-% General information for the title page and the page headings
 \newcommand{\Title}{Competing risks with\\ \texttt{Lexis}, parametric
   rates and\\ simulation based confidence intervals}
 \newcommand{\Tit}{CmpRskParSim}
@@ -22,23 +19,28 @@ Bendix Carstensen
 
 \input{topreport}
 \renewcommand{\rwpre}{./crisk}
-<<echo=FALSE>>=
+
+\chapter{Competing risks}
+
+\section{Technicalities}
+First we set some output and graphics parameters for convenience and
+load the packages needed:
+<<>>=
 options(width = 90,
-        SweaveHooks = list(fig = function()
-        par(mar = c(3,3,1,1),
-            mgp = c(3,1,0)/1.6,
-            las = 1,
-            bty = "n",
-           lend = "butt")))
+        show.signif.stars = FALSE,
+        SweaveHooks=list(fig = function()
+                         par(mar = c(3, 3, 1, 1),
+                             mgp = c(3, 1, 0) / 1.6,
+                             las = 1,
+                            lend = "butt",
+                             bty = "n")))
 library(Epi)
 library(popEpi)
 library(survival)
 clear()
-@ %
+@
+% must be after clear() because 'anfang' is used at the end
 <<echo = FALSE, results = hide>>=
-glmLexis <- glm.Lexis
-gamLexis <- gam.Lexis
-coxphLexis <- coxph.Lexis
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 @ %
@@ -50,7 +52,6 @@ data.frame(R = substr(R.version.string, 11, 15),
 names(vers) <- paste(" ", names(vers))
 print(vers, row.names = FALSE)
 @ %
-\chapter{Competing risks}
 
 \section{Concepts}
 
@@ -105,11 +106,11 @@ The \emph{sojourn time} for cause $c$ is the time spent in the ``cause
 $c$'' state before a given time, $t$, say. This is also called the
 expected lifetime lost to cause $c$, \emph{truncated} at the time
 $t$. For the state ``alive'' it will be the expected time lived before
-$t$.
+$t$. This is also called the restricted mean survival time, RMST.
 
 \subsection{The time scale}
 
-The cause specific rates will be functions of come covariates, notably
+The cause specific rates will be functions of covariates, notably
 a time scale, be that age or time since entry to the study or even
 calendar time. But the cumulative risks are probabilities that refer
 to time \emph{since} some origin. Thus cumulative risks (and survival)
@@ -144,8 +145,8 @@ kind.
 The cumulative \emph{risk}, the probability of dying from cause $k$,
 say, before time $t$, $R_k(t)$ is:
 \begin{equation}
-   R_k(t) = \int_0^t \!\! \lambda_k(u) S(u) \dif u
-           = \int_0^t \!\! \lambda_k(u) \exp\left(\!-\!
+   R_k(t) = \int_{u=0}^{u=t} \!\! \lambda_k(u) S(u) \dif u
+           = \int_{u=0}^{u=t} \!\! \lambda_k(u) \exp\left(\!-\!
             \sum_j \Lambda_j(u) \right) \! \dif u
           \label{eq:R}
 \end{equation}
@@ -154,7 +155,7 @@ death from cause $k$ in the small interval $(u, u + \dif u)$,
 \emph{conditional} on being alive at time $u$. If this is multiplied
 with the probability of being alive at $u$, $S(u)$, Bayes rule tells
 us that we get the \emph{marginal probability} of death from cause $k$
-in the small interval $(u, u + \dif u)$, This function of $u$ is the
+in the small interval $(u, u + \dif u)$. This function of $u$ is the
 argument in the integral; so integration from $u=0$ to $u=t$, will
 give the probability of death from cause $c$ anywhere in $(0,t)$---the
 cumulative risk of cause $k$ at $t$.
@@ -203,8 +204,8 @@ groups.
 A common concept seen in competing risks is the subdistribution
 hazard, and proportional hazards models for this (the Fine-Gray model).
 
-Suppose we only consider all-cause mortality, $\lambda(t)$. Then the
-cumulative risk of death is:
+Suppose for a moment we only consider all-cause mortality,
+$\lambda(t)$. Then the cumulative risk of death is:
 \[
     R(t) = 1 - S(t) = 1 - \exp\left( \!-\!\int_0^t \lambda(s) \dif s \right)
 \]
@@ -246,7 +247,7 @@ above. Therefore the subdistribution is not included in this vignette.
 
 As an illustrative data example we use the (fake) diabetes register
 data; we set up the Lexis object, an then cut the follow-up time at
-dates of OAD and Ins:
+dates of \texttt{OAD} and \texttt{Ins} using \texttt{mcutLexis}:
 <<>>=
 data(DMlate)
 Ldm <- Lexis(entry = list(per = dodm,
@@ -263,10 +264,10 @@ Mdm <- mcutLexis(Ldm,
           seq.states = FALSE,
                 ties = TRUE)
 summary(Mdm)
-@
-We initially split the FU before drug inception in intervals of
-1/12 year, creating a \texttt{Lexis} object for a competing risks
-situation with three possible event types:
+@ We initially split the follow-up in the state \texttt{DM} (that is
+before drug inception) in intervals of 1/12 year, creating a
+\texttt{Lexis} object for a competing risks situation with three
+possible event types:
 <<>>=
 Sdm <- splitLexis(factorize(subset(Mdm,
                                    lex.Cst == "DM")),
@@ -293,7 +294,7 @@ boxes(Relevel(Sdm, c(1, 4, 2, 3)),
       show.BE = TRUE )
 @ %
 \insfig{boxes4}{0.8}{The transitions in the competing risks model,
-  where follow-up is stopped at drug exposure. By that token only the
+  where follow-up is stopped at first drug exposure. By that token only the
   \texttt{DM} state has person-years; a characteristic of a competing risks
   situation.}
 
@@ -305,33 +306,30 @@ the only underlying time scale.
 
 This is done by Poisson-regression on the time-split data set; since
 the dataset is in \texttt{Lexis} format we can use the convenience
-wrapper \texttt{gam.Lexis} to model rates a smooth functions of time
+wrapper \texttt{gamLexis} to model rates as smooth functions of time
 (\texttt{tfd}).  Note that we only need to specify the \texttt{to=}
 argument because there is only one possible \texttt{from} for each
 \texttt{to} (incidentally the same for all \texttt{to} states, namely
 \texttt{DM}):
 <<>>=
-mD <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
-mO <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
-mI <- gam.Lexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
+mD <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
+mO <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
+mI <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
 @ %
-We see that \texttt{gam.Lexis} (just like \texttt{glm.Lexis} would)
-tells us what transitions are modeled.
+We see that \texttt{gamLexis} (just like \texttt{glmLexis} would)
+tells us what transition rates are modeled.
 
-With these models fitted we can compute the rates, cumulative rates
-and the cumulative risks and sojourn times in states using the usual
-formulae. First we compute the rates in intervals of length 1/100
-years. Note that these models only have time since diagnosis as
-covariates, so they are the counterpart of Nelson-Aalen estimates,
-albeit in a biologically more meaningful guise.
+With these models fitted we can compute the rates, and from these
+cumulative rates and the cumulative risks and sojourn times in states
+using the usual formulae.
 
-The points where we compute the predicted rates are midpoints of
-intervals of length 1/100 year. These points are unrelated to the
-follow-up intervals in which we split the data for analysis---they
-were 1 month intervals, here we use 1/10 year (about 1 month, in real
-life a smaller interval should be used, say 1/50 year):
+First we compute the rates in intervals of length 1/20 years. Note
+that these prediction points are unrelated to the follow-up intervals
+in which we split the observed data for analysis---they were 1 month
+intervals (1/12 year), here we use 1/20 year (in real
+life a smaller interval should be used, say 1/50 or 1/100 year):
 <<>>=
-nd <- data.frame(tfd = seq(0, 10, 1/10))
+nd <- data.frame(tfd = seq(0, 10, 1/20))
 rownames(nd) <- nd$tfd
 str(nd)
 @ %
@@ -343,14 +341,14 @@ matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mO, nd)) * 1000,
          col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE,
          xlab = "Time since DM diagnosis (years)",
-         ylab = "Rates per 1000 PY", ylim = c(0.05,500), yaxt = "n")
-axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-               labels = formatC(ll,digits = 4), las = 1)
-axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+         ylab = "Rates per 1000 PY", ylim = c(0.05, 500), yaxt = "n")
+axis(side = 2, at = ll <- outer(c(1,2,5), -2:3, function(x,y) x * 10^y),
+               labels = formatC(ll, digits = 4), las = 1)
+axis(side = 2, at = outer(c(1.5,2:9), -2:3, function(x,y) x * 10^y),
                labels = NA, tcl = -0.3)
 text(0, 0.5*0.6^c(1,2,0),
      c("Dead","Ins","OAD"),
-     col = c("black","red","blue"), adj = 0)
+     col = c("black","red","blue"), adj = 0, font = 2)
 @ %
 \insfig{rates}{0.8}{Estimated rates from the \textrm{\tt DM} state,
   estimates are from \textrm{\tt gam} models fitted to data split in 1
@@ -366,19 +364,20 @@ are hardly ever shown. I suspect that this is frequently because they
 are often modeled by a Cox model and so are buried in the model and
 hard to get at.
 
-Since we will be integrating the rates, it would be relevant to show
+Since we will be integrating the rates, it would also be relevant to show
 the rates on a linear scale instead, de-emphasizing the very small
-fluctuations of the \texttt{Ins} rates:
+fluctuations of the \texttt{Ins} rates that are over-emphasized when
+using a log-scale for the $y$-axis.
 <<rates-l, fig = TRUE, width = 8>>=
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
-                       ci.pred(mO, nd))*1000,
+                       ci.pred(mO, nd)) * 1000,
          col = c("black", "red", "blue"), lwd = 3, plot = TRUE,
          xlab = "Time since DM diagnosis (years)",
-         ylab = "Rates per 1000 PY", ylim = c(0,500), yaxs = "i")
+         ylab = "Rates per 1000 PY", ylim = c(0, 500), yaxs = "i")
 text(8, 500 - c(2, 3, 1) * 20,
      c("Dead","Ins","OAD"),
-     col = c("black","red","blue"), adj = 0)
+     col = c("black","red","blue"), adj = 0, font = 2)
 @ %
 \insfig{rates-l}{0.8}{Estimated rates from the \textrm{\tt DM} state,
   estimates are from \textrm{\tt gam} models fitted to data split in 1
@@ -393,15 +392,14 @@ we need just the estimated rates (without CIs). The formulae
 \R-code; starting with the rates, $\lambda_\text{D}$ as \texttt{lD}
 etc:
 <<>>=
-# utility function that calculates the midpoints between sucessive
-# values in a vector
+# utility function to compute midpoints between sucessive values in a vector
 mp <- function(x) x[-1] - diff(x) / 2
 #
-int <- 1/10
+int <- 1 / 20
 # rates at midpoints of intervals
-lD <- mp(ci.pred(mD, nd)[,1])
-lI <- mp(ci.pred(mI, nd)[,1])
-lO <- mp(ci.pred(mO, nd)[,1])
+lD <- mp(ci.pred(mD, nd)[, 1])
+lI <- mp(ci.pred(mI, nd)[, 1])
+lO <- mp(ci.pred(mO, nd)[, 1])
 #
 # cumulative rates and survival function at right border of the intervals
 LD <- cumsum(lD) * int
@@ -427,24 +425,24 @@ oo <- options(digits = 20)
 cbind(summary(Sv + rD + rI + rO))
 options(oo)
 @ %
-\ldots and bar a rounding error, they are.
+\ldots and bar a small rounding error, they are.
 
 We can then plot the 3 cumulative risk functions stacked together
 using \texttt{mat2pol} (\texttt{mat}rix to \texttt{pol}ygons):
 <<stack, fig = TRUE, width = 8>>=
-zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd,
+zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd, # $
               xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
               xlab = "Time since DM diagnosis (years)",
               ylab = "Probability",
                col =  c("black","red","blue","forestgreen"))
 text(9, mp(zz["9", ]), c("Dead", "Ins", "OAD"," DM"), col = "white")
 box(col = "white", lwd = 3)
-@ % $
+@ %
 \insfig{stack}{0.9}{Probabilities of being in the 4 different states
   as a function of time since diagnosis. Note that \textrm{\tt OAD} means
   that OAD was initiated first, and similarly for \textrm{\tt Ins}. We are
-  not concerned about what occur after these events.  \textrm{\tt Dead}
-  means dead without being on any drug.}
+  not concerned about what occurs after any these events.  \textrm{\tt Dead}
+  means dead without initiating any of the two drugs.}
 
 \section{Sojourn times}
 
@@ -472,7 +470,7 @@ sum should really be exactly 10.
 This was a demonstration on how to compute the rates, cumulative risks
 and sojourn times. But no confidence intervals.
 
-\chapter{Confidence intervals}
+\chapter{Confidence intervals for cumulative risks}
 
 Besides confidence intervals for each of the 4 cumulative risks,
 we will also be interested in confidence intervals for \emph{sums} of
@@ -499,7 +497,7 @@ models.
 
 Confidence intervals for sojourn times (i.e. time spent) in each state
 up to a given time, would come almost for free from the simulation
-approach.
+approach, by taking the relevant quantiles of the simulated quantities.
 
 This means that we must devise a method to make a prediction not from
 the estimated model, but where we instead of the model parameters use
@@ -518,12 +516,13 @@ predicted values of the cause-specific rates:
 head(cbind(ci.pred(mI, nd),
            ci.exp (mI, nd)))
 @ %
-And here is an illustration of the prediction with model based confidence
-intervals for the rates, alongside predictions based on samples from
-the posterior distribution of the parameters in the model:
+Here is an illustration of the prediction with model based confidence
+intervals for the rates of insulin start (model \texttt{mI}),
+alongside predictions based on samples from the posterior distribution
+of the parameters in the model:
 <<>>=
 str(ci.lin(mI, nd, sample = 4))
-head(cbind(ci.pred(mI,nd), exp(ci.lin(mI, nd, sample = 4))))
+head(cbind(ci.pred(mI, nd), exp(ci.lin(mI, nd, sample = 4))))
 @ %
 Note that we use \texttt{exp(ci.lin(...}---this is because the
 \texttt{sample=} argument does not work with \texttt{ci.exp}.
@@ -552,8 +551,10 @@ in this case.
 
 However, this is not a very urgent need, since the situation where you
 want common parameters for different rates out of a common state is
-quite rare. By that token the facility is not likely to be implemented
-anytime soon, if ever.
+quite rare. It would for example be quite odd to assume the the M/W
+rate ratio were the same across different cauese of death. By that
+token the facility is not likely to be implemented anytime soon, if
+ever.
 
 \section{Simulation based confidence intervals}
 
@@ -565,33 +566,31 @@ We can now run the function using the model objects for the three
 competing events, using a common prediction data frame, \texttt{nd}
 for the rates. The time points in the frame must be so closely spaced
 that it makes sense to assume the rates constant in each interval;
-here we use intervals of length 1/10 years, approximately 1
-month---too large for real applications:
+here we use intervals of length 1/20 years, in real applications we
+would use 1/50 (about 1 week) or less:
 <<>>=
-system.time(
 res <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                          perm = 4:1))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                          perm = 4:1)
 str(res)
 @ %
 As we see, the returned object (\texttt{res}) is a list of length 4,
 the first 3 components are 3-way arrays, and the last the vector of
 times of the first dimension of the arrays. The latter is mainly for
 convenience in further processing---it is easier to write
-\texttt{res\$ time} than
-\texttt{as.numeric(dimnames(res\$ Crisk)[[1]])}.
+\texttt{res\$time} than
+\texttt{as.numeric(dimnames(res\$Crisk)[[1]])}.
 
 The three first components of \texttt{res} represent:
 \begin{itemize}
-\item \texttt{Crisk} \texttt{C}umulative \texttt{risk}s for each state
-\item \texttt{Srisk} \texttt{S}tacked cumulative \texttt{risk}s
-  across states
-\item \texttt{Stime} \texttt{S}ojourn
-  \texttt{time}s in each state, truncated at each point of the time
-  dimension.
+\item \texttt{Crisk}: \texttt{C}umulative \texttt{risk}s for each state
+\item \texttt{Srisk}: \texttt{S}tacked cumulative \texttt{risk}s across
+  states
+\item \texttt{Stime}: \texttt{S}ojourn \texttt{time}s in each state,
+  truncated at each point of the time dimension.
 \end{itemize}
 
 The first dimension of each array is time corresponding to endpoints
@@ -612,39 +611,38 @@ If we want the bootstrap samples to make other calculations we can ask
 the function to return the bootstrap samples of the rates by using the
 argument \texttt{sim.res = 'rates'} (defaults to \texttt{'none'}):
 <<>>=
-system.time(
 rsm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                       sim.res = 'rates'))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                       sim.res = 'rates')
 str(rsm)
 @ %
-This is 100 bootstrap samples of the rates evaluated at the 501
-endpoints of the intervals.
+This is 500 bootstrap samples (defined by \texttt{nB=}) of the rates
+evaluated at the 201 endpoints of the intervals (defined in
+\texttt{nd}).
 
 Alternatively we can get the bootstrap samples of the cumulative risks
 by setting \texttt{sim.res = 'crisk'}:
 <<>>=
-system.time(
 csm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
                     Dead = mD),
-                            nd = data.frame(tfd = seq(0, 10, 1/10)),
-                            nB = 100,
-                       sim.res = 'crisk'))
+                            nd = data.frame(tfd = seq(0, 10, 1/20)),
+                            nB = 500,
+                       sim.res = 'crisk')
 str(csm)
 @ %
-These are 100 simulated samples of the cumulative risks evaluated at
-the 501 endpoints of the intervals, and also includes the survival
+These are 500 simulated samples of the cumulative risks evaluated at
+the 201 endpoints of the intervals, and also includes the survival
 probability in the first slot of the \nth{2} dimension of
 \texttt{csm}.
 
 \section{Simulated confidence intervals for rates}
 
 In figure \ref{fig:rates} we showed the rates with confidence
-intervals from the model. But in \texttt{rsm} we have 100
+intervals from the model. But in \texttt{rsm} we have 500
 parametric bootstrap samples of the occurrence rates, so we can
 derive the bootstrap medians and the bootstrap c.i.s:
 <<>>=
@@ -673,19 +671,19 @@ matshade(nd$tfd, cbind(ci.pred(mD, nd),
          ylim = c(0.1,500), yaxt = "n",
          ylab = "Rates per 1000 PY",
          xlab = "Time since DM diagnosis (years)",
-         col = c("black","red","blue"), log = "y", lwd = 3, plot = TRUE)
+         col = c("black", "red", "blue"), log = "y", lwd = 3, plot = TRUE)
 matlines(nd$tfd,
-         cbind(Brates[,"Dead",],
-               Brates[,"Ins" ,],
-               Brates[,"OAD" ,]) * 1000,
+         cbind(Brates[, "Dead", ],
+               Brates[, "Ins" , ],
+               Brates[, "OAD" , ]) * 1000,
          col = c("white", "black", "black"), lty = 3, lwd = c(3,1,1))
-axis(side = 2, at = ll<-outer(c(1,2,5),-2:3,function(x,y) x*10^y),
-               labels = formatC(ll,digits = 4), las = 1)
-axis(side = 2, at = ll<-outer(c(1.5,2:9),-2:3,function(x,y) x*10^y),
+axis(side = 2, at = ll <- outer(c(1,2,5), -2:3, function(x, y) x * 10^y),
+               labels = formatC(ll, digits = 4), las = 1)
+axis(side = 2, at = outer(c(1.5, 2:9), -2:3, function(x, y) x * 10^y),
                labels = NA, tcl = -0.3)
-text(0, 0.5*0.6^c(1,2,0),
+text(0, 0.5 * 0.6^c(1,2,0),
      c("Dead", "Ins", "OAD"),
-     col = c("black", "red", "blue"), adj = 0)
+     col = c("black", "red", "blue"), adj = 0, font = 2)
 @ %
 
 \section{Confidence intervals for cumulative risks}
@@ -738,17 +736,17 @@ component. Then we add the confidence intervals as white shades (using
 <<stack-ci, fig = TRUE, width = 8>>=
 zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
               x = res$time,
-           xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
+           xlim = c(0, 10), xaxs = "i", yaxs = "i", las = 1,
            xlab = "Time since DM diagnosis (years)",
            ylab = "Probability",
             col =  c("black","red","blue","forestgreen") )
 text(9, mp(zz["9",]), c("Dead", "Ins", "OAD", "DM"), col = "white" )
 matshade(res$time,
-         cbind(res$Srisk[,1,],
-               res$Srisk[,2,],
-               res$Srisk[,3,]),
+         cbind(res$Srisk[, 1, ],
+               res$Srisk[, 2, ],
+               res$Srisk[, 3, ]),
          col = 'transparent', col.shade = "white", alpha = 0.4)
-@ % $
+@ %
 
 \section{Sojourn times}
 
@@ -762,12 +760,12 @@ first dimension of the \texttt{Stime} array:
 s510 <- res$Stime[c("5", "10"),,]
 dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
 round(ftable(s510, row.vars=1:2), 2)
-@ % $
+@ % 
 So we see that the expected life lived without pharmaceutical treatment
 during the first 10 years after DM diagnosis is 4.31 years with a 95\%
-CI of (4.21;4.42), and during the first 5 years 2.77 (2.72;2.82).
+CI of (4.21; 4.41), and during the first 5 years 2.77 (2.72; 2.82).
 
-\chapter{A simple illustration}
+\chapter{A simple illustration of \texttt{ci.Crisk}}
 
 The following is a terse cook-book illustration of how to use the
 \texttt{ci.Crisk} function.
@@ -780,19 +778,23 @@ For illustration we simulate some causes of death in the
 <<>>=
 data(DMlate)
 set.seed(7465)
-wh <- sample(1:3, nrow(DMlate), r=T, prob = c(4, 2, 6))
+wh <- sample(1:3, nrow(DMlate), replace = T, prob = c(4, 2, 6))
 @ %
 Those not dead are changed to 0:
 <<>>=
 wh[is.na(DMlate$dodth)] <- 0
 @ %
-Define a factor in DMlate defining exit status as either alive or one
+Define a factor in \texttt{DMlate} defining exit status as either alive or one
 of the three causes of death, and check by a \texttt{table} that all
 dead have a cause:
 <<>>=
 DMlate$codth <- factor(wh, labels = c("Alive", "CVD", "Can", "Oth"))
 with(DMlate, table(codth, isDead = !is.na(dodth)))
 @ %
+It is important that the \texttt{"Alive"} state is the \texttt{first}
+level if the factor \texttt{codth}; the \texttt{Lexis} function will
+assign this the all persons at start of follow-up.
+
 \texttt{DMlate} now looks like a typical data set with cause of death
 in a separate variable; in this case we also added a state, \texttt{Alive},
 for those without a recorded death:
@@ -816,7 +818,7 @@ summary(dmL, t = T)
 @ %
 We can show the overall rates (the default \texttt{boxes} is
 \emph{very} primitive):
-<<boxes, fig = TRUE, height = 4>>=
+<<boxes, fig = TRUE, height = 6, widtjh = 8>>=
 boxes(dmL, boxpos = TRUE)
 @ %
 \insfig{boxes}{0.8}{Transitions from live to different causes of
@@ -828,18 +830,18 @@ boxes(dmL, boxpos = TRUE)
 In order to model the cause-specific mortality rates by sex and time from
 diagnosis (\texttt{tfD}), we first split the data in 6-month intervals
 <<>>=
-sL <- splitLexis(dmL, time.scale="age", breaks = seq(0, 120, 1/2))
+sL <- splitLexis(dmL, time.scale = "age", breaks = seq(0, 120, 1/2))
 summary(sL)
 @
 <<>>=
-mCVD <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "CVD")
-mCan <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Can")
-mOth <- gam.Lexis(sL, ~ s(tfD, by=sex), to = "Oth")
+mCVD <- gamLexis(sL, ~ s(tfD, by=sex), to = "CVD")
+mCan <- gamLexis(sL, ~ s(tfD, by=sex), to = "Can")
+mOth <- gamLexis(sL, ~ s(tfD, by=sex), to = "Oth")
 @ %
 <<eval=FALSE, echo=FALSE>>=
-mCVD <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
-mCa  <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
-mOth <- glm.Lexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
+mCVD <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
+mCa  <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
+mOth <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
 @ %
 
 \section{Derived measures}
@@ -849,7 +851,7 @@ cumulative risks of dying from each of the causes. We need a
 prediction data frame that gives the rates at closely spaced times, in
 this case for men. For women the code would be practically the same:
 <<>>=
-nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
+nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
 @ %
 Note that we can rename the states as we please by naming the entries
 in the list of models we supply to \texttt{ci.Crisk}:
@@ -857,10 +859,10 @@ in the list of models we supply to \texttt{ci.Crisk}:
 cR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
-               nB = 100,
+               nB = 500,
                nd = nm)
 str(cR)
-@ %$
+@ %
 Note that we get three arrays: \texttt{Crisk}, the cumulative risks;
 \texttt{Srisk}, the stacked risks and \texttt{Stime}, the sojourn
 times in each state. Finally, for convenience we also have the
@@ -881,8 +883,8 @@ matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
                         cR$Crisk[, "Other", ]),
          col = clr, lty = 1, lwd = 2,
          plot = TRUE, ylim = c(0, 1/3), yaxs = "i")
-text(0, 1/3 - 1:3/30, c("CVD", "Can", "Oth"),
-     col = clr, adj = 0)
+text(0, 1/3 - c(2,3,1)/30, c("CVD", "Can", "Oth"),
+     col = clr, adj = 0, font = 2)
 @ %
 \insfig{cR}{0.9}{Cumulative risks of each cause of death based on
 \textrm{\tt gam} models for the cause-specific rates.}
@@ -908,9 +910,13 @@ text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
 box(bty = "o")
 @ %
 \insfig{Sr1}{0.9}{Stacked cumulative risks.}
-It is not a good idea to color the curves, they do not refer to
-the causes of death, it is the areas \emph{between} the curves that
-refer to causes.
+
+It is not a good idea to color these curves, they do not refer to the
+causes of death, it is the areas \emph{between} the curves that refer
+to causes. By the same token, since the quantity of interest is the
+area between the curves and horizontal lines at 0 and 1, it is
+important that the horizontal axes are placed at precisely 0 and 1 on
+the vertical axis. This is what \texttt{yaxs = "i"} achieves.
 
 It would be more logical to color the areas \emph{between} the
 curves. which can be done by \texttt{mat2pol} (\texttt{mat}rix to
@@ -965,21 +971,23 @@ be obtained by explicitly setting the seed for the random number
 generator to the same value before calling \texttt{ci.Crisk} with each
 of the two different prediction frames as \texttt{nd} argument:
 <<>>=
-nm <- data.frame(tfD = seq(0, 15, 0.1), sex = "M")
-nw <- data.frame(tfD = seq(0, 15, 0.1), sex = "F")
+nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
+nw <- data.frame(tfD = seq(0, 15, 1/20), sex = "F")
+# set the seed
 set.seed(1952)
 mR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nm,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
+# REset the seed
 set.seed(1952)
 wR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nw,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
 str(wR)
 @ %$
@@ -1014,15 +1022,15 @@ abline(h = 1)
   parameter vector.}
 
 To illustrate the effect of \emph{not} pairing the random samples we
-can generate a fresh sample for women from a different stream and do
-the calculations to illustrate the excess we get from not aligning
-samples.
+can generate a fresh sample for women from a different stream (by
+\texttt{not} setting the seed) and do the calculations to illustrate
+the excess we get from not aligning samples.
 <<>>=
 fR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
                   Other = mOth),
                nd = nw,
-               nB = 100,
+               nB = 500,
           sim.res = "crisk" )
 dxS <- mR[,"Surv",] - fR[,"Surv",]
 dxS <- apply(dxS, 1, quantile, probs = c(.5, .025, .975)) * 100
@@ -1052,9 +1060,9 @@ abline(h = 1)
 
 <<echo = FALSE>>=
 ende <- Sys.time()
-cat("  Start time:", format(anfang, "%F, %T"), "\n")
-cat("    End time:", format(  ende, "%F, %T"), "\n")
-cat("Elapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
+cat("  Start time:", format(anfang, "%F, %T"),
+  "\n    End time:", format(  ende, "%F, %T"),
+  "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
 @ %
 
 \end{document}

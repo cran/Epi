@@ -6,7 +6,7 @@ mkcens.Lexis <-
 function(Lx, cens = "cens")
 {
 Rx <- Epi::sortLexis(Lx)
-last <- rev(!duplicated(rev(Rx$lex.id)))
+last <- !duplicated(Rx$lex.id, fromLast = TRUE)
 Rx$lex.Xst <- ifelse(last & Rx$lex.Cst == Rx$lex.Xst,
                      cens,
                      as.character(Rx$lex.Xst))

@@ -573,7 +573,7 @@ ci.exp(rateDth, subset = "lex")
 
 
 ###################################################
-### code chunk number 57: aaflup.rnw:1478-1482
+### code chunk number 57: aaflup.rnw:1479-1483
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),
