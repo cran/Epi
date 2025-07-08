@@ -1,26 +1,23 @@
-"float" <-
-function(object, factor, iter.max = 50)
+float.variance <- function(V, tol=1.0e-3, iter.max = 50)
 {
-  float.variance <- function(V, tol=1.0e-3, iter.max = 50)
-    {
-      ## Calculate floated variances for variance matrix V, which is
-      ## assumed to represent a set of treatment contrasts
+    ## Calculate floated variances for variance matrix V, which is
+    ## assumed to represent a set of treatment contrasts
     
-      m <- nrow(V)
-      if (!is.matrix(V) || ncol(V) != m || m == 1)
+    m <- nrow(V)
+    if (!is.matrix(V) || ncol(V) != m || m == 1)
         stop ("V must be a square matrix of size 2 x 2 or more")
 
-      evals <- eigen(V, only.values=TRUE)$values
-      if(any(evals < 0))
+    evals <- eigen(V, only.values=TRUE)$values
+    if(any(evals < 0))
         stop("V not positive definite")
     
-      ## Starting values from Easton et al (1991)
-      R <- V - diag(diag(V))
-      V00 <- sum(R)/(m * (m-1))
-      V10 <- apply(R, 1, sum)/(m-1)
-      fv <- c(V00, V00 - 2 * V10 + diag(V))
+    ## Starting values from Easton et al (1991)
+    R <- V - diag(diag(V))
+    V00 <- sum(R)/(m * (m-1))
+    V10 <- apply(R, 1, sum)/(m-1)
+    fv <- c(V00, V00 - 2 * V10 + diag(V))
     
-      for(iter in 1:iter.max) {
+    for(iter in 1:iter.max) {
         w <- 1/fv
         S <- sum(w)
         w1 <- w[-1]/S
@@ -32,18 +29,21 @@ function(object, factor, iter.max = 50)
         fv <- c(V00, V00 - 2 * V10 + diag(V))
         ## Check convergence
         if(max(abs(fv.old - fv)/fv) < tol)
-          break
-      }
-      if (iter == iter.max)
-        warning("Floated variance estimates did not converge")
-  
-      Vmodel.inv <- S * (diag(w1) - w1 %*% t(w1))
-      evals <- 1/(eigen(V %*% Vmodel.inv, only.values=TRUE)$values)
-      divergence <- sum(1/evals - 1 + log(evals))/2
-      return(list(variance=fv, error.limits=sqrt(range(evals)),
-                  divergence=divergence))
+            break
     }
+    if (iter == iter.max)
+        warning("Floated variance estimates did not converge")
+    
+    Vmodel.inv <- S * (diag(w1) - w1 %*% t(w1))
+    evals <- 1/(eigen(V %*% Vmodel.inv, only.values=TRUE)$values)
+    divergence <- sum(1/evals - 1 + log(evals))/2
+    return(list(variance=fv, error.limits=sqrt(range(evals)),
+                divergence=divergence))
+}
 
+"float" <-
+function(object, factor, iter.max = 50, ...)
+{
   if (is.null(object$xlevels)) {
     stop("No factors in model")
   }
@@ -87,7 +87,7 @@ function(object, factor, iter.max = 50)
     cnames <- 1:(nlevels-1)
   contr.names <- paste(xname, cnames, sep="")
   coef <- coef(object)[contr.names]
-  V <- vcov(object)[contr.names, contr.names]
+  V <- vcov(object, ...)[contr.names, contr.names]
         
   ## Convert to treatment contrast parameterization
   if (identical(xcontrasts, "contr.treatment")) {

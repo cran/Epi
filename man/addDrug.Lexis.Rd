@@ -1,4 +1,5 @@
-\name{addDrug.Lexis}
+\name{addDrug}
+\alias{addDrug}
 \alias{addDrug.Lexis}
 \alias{coarse.Lexis}
 \title{

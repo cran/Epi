@@ -136,6 +136,8 @@ lines.apc,
   before,
   succeeding,
   after,
+  addCov,
+  addDrug,
   tbox,
   dbox,
   fillarr,
@@ -148,6 +150,7 @@ lines.apc,
   tmat,
   nState,
   pState,
+  AaJ,
   msdata,
         mh,
   print.mh,
@@ -248,7 +251,9 @@ S3method(   Relevel, default)
 S3method( factorize, Lexis)
 S3method( factorize, default)
 S3method(    addCov, Lexis)
+S3method(    addCov, default)
 S3method(   addDrug, Lexis)
+S3method(   addDrug, default)
 S3method(     stack, Lexis)
 S3method(      tmat, Lexis)
 S3method(     boxes, Lexis)
@@ -257,6 +262,7 @@ S3method(     boxes, MS)
 S3method(    msdata, Lexis)
 S3method(       etm, Lexis)
 S3method(       AaJ, Lexis)
+S3method(       AaJ, default)
 S3method(     print, mh)
 S3method(     print, LCa)
 S3method(   summary, LCa)

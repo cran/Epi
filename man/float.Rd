@@ -7,13 +7,15 @@
   floating variances (a.k.a. quasi-variances) for a given factor in the model.
 }
 \usage{
-float(object, factor, iter.max=50)
+float(object, factor, iter.max=50, ...)
 }
 \arguments{
-  \item{object}{a fitted model object}
+  \item{object}{a fitted model object.}
   \item{factor}{character string giving the name of the factor of
     interest. If this is not given, the first factor in the model is used.}
-  \item{iter.max}{Maximum number of iterations for EM algorithm}
+  \item{iter.max}{Maximum number of iterations for EM algorithm.}
+  \item{...}{Optional arguments passed to the \code{vcov()} method for
+  the fitted model object.}
 }
 \details{
 

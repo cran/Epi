@@ -1,4 +1,5 @@
-\name{AaJ.Lexis}
+\name{AaJ}
+\alias{AaJ}
 \alias{AaJ.Lexis}
 \title{The Aalen-Johansen estimator of state probabilities from a
   multistate \code{Lexis} object.
@@ -6,7 +7,7 @@
 \description{
 The Aalen-Johansen estimator is computed on the basis of a
 \code{\link{Lexis}} multistate object along a given time scale. The
-function is merely a wrapper for the \code{\link[survival]{survfit}}.
+function is a wrapper for the \code{\link[survival]{survfit}}.
 }
 \usage{
 \method{AaJ}{Lexis}(Lx,
@@ -22,7 +23,7 @@ function is merely a wrapper for the \code{\link[survival]{survfit}}.
   \item{timeScale}{Character or integer, selecting one of the timescales
     of the \code{Lexis} object.
 }
-  \item{\dots}{Arguments passed on. Ignored
+  \item{\dots}{Arguments passed on. Ignored.
 }
 }
 \value{An object of class \code{survfitms} --- see

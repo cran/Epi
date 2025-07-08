@@ -1,4 +1,5 @@
-\name{addCov.Lexis}
+\name{addCov}
+\alias{addCov}
 \alias{addCov.Lexis}
 \title{
   Add covariates (typically clinical measurements) taken at known times
@@ -33,7 +34,7 @@
     The times must be unique within each person; if not records with
     duplicate times are discarded, and a warning issued. This is done
     using \code{duplicated}, so not very well-defined, it is advisable
-    that you do this by yourself.
+    that you do this yourself.
     }
   \item{timescale}{
     Numerical or character. Number or name of a timescale in
@@ -60,7 +61,7 @@
     If the argument is omitted a variable called \code{tfc} will be
     constructed. 
     }
-  \item{\dots}{Arguments passed on. Ignored
+  \item{\dots}{Arguments passed on. Ignored.
 }
 }
 \value{

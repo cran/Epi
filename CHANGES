@@ -1,3 +1,7 @@
+Changes in 2.60
+
+o The float() function now passes optional arguments to vcov().
+
 Changes in 2.59
 
 o S3 method paths.Lexis has been added

@@ -44,7 +44,7 @@ form <- Surv(Lx$zeit,
              Lx$lex.Xst) ~ 1
 form[3] <- formula[2]
 survfit(form,
-        id = lex.id,
-    istate = lex.Cst,
-      data = Lx)
+          id = lex.id,
+      istate = lex.Cst,
+        data = Lx)
 }

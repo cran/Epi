@@ -66,16 +66,16 @@ if (inherits(obj,"coxph")) MM <- model.matrix(         obj     ,    data=nd)
 if (inherits(obj,"gam"  )) MM <- model.matrix(         obj     , newdata=nd)
    else
 if (inherits(obj,"lm"   )) MM <- model.matrix( formula(obj)[-2],    data=nd)
-return( MM )
+return(MM)
     }
 
 ci.dfr <-
-function( obj, ndx, ndr,
-         xvars = NULL,
-          vcov = FALSE,
-         alpha = 0.05,
-           Exp = FALSE,
-        sample = FALSE )
+function(obj, ndx, ndr,
+       xvars = NULL,
+        vcov = FALSE,
+       alpha = 0.05,
+         Exp = FALSE,
+      sample = FALSE )
 {
 if( nrow(ndr)==1 ) ndr <- ndr[rep(1,nrow(ndx)),,drop=FALSE]
 if(         ( nrow(ndx)  !=       nrow(ndr)) |
@@ -101,19 +101,19 @@ ovars <- setdiff( xvars, facs )
 # Construct the extra columns with bogus data (their contribution will
 # be null)
 xcols <- ndx[,NULL]
-if( length(ofacs) > 0 ) for( fn in ofacs ) xcols[,fn] <- obj$xlevels[[fn]][1]
-if( length(ovars) > 0 ) for( vn in ovars ) xcols[,vn] <- 1
-if( dim(xcols)[2]>0 )
+if (length(ofacs) > 0 ) for (fn in ofacs) xcols[,fn] <- obj$xlevels[[fn]][1]
+if (length(ovars) > 0 ) for (vn in ovars) xcols[,vn] <- 1
+if (dim(xcols)[2] > 0)
   {
-  ndx <- cbind( ndx, xcols )
-  ndr <- cbind( ndr, xcols )
+  ndx <- cbind(ndx, xcols)
+  ndr <- cbind(ndr, xcols)
   }
-ci.lin( obj,
-    ctr.mat = df2ctr( obj, ndx ) - df2ctr( obj, ndr ),
-       vcov = vcov,
-      alpha = alpha,
-        Exp = Exp,
-     sample = sample )
+ci.lin(obj,
+   ctr.mat = df2ctr(obj, ndx) - df2ctr(obj, ndr),
+      vcov = vcov,
+     alpha = alpha,
+       Exp = Exp,
+    sample = sample)
 }
 
 ci.dfr2 <-
