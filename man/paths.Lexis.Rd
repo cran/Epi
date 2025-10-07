@@ -1,10 +1,12 @@
 \name{paths.Lexis}
+\alias{paths}
 \alias{paths.Lexis}
 \title{
-Generate paths travelled through a Lexis multistate model data frame. 
+Generate paths traveled through a Lexis multistate model data frame. 
 }
 \description{
-Paths visited in a \code{Lexis} multistate model.
+Paths that a person traveled through states in a \code{\link{Lexis}}
+multistate model. 
 }
 \usage{
 \method{paths}{Lexis}(Lx, dfr = FALSE, \dots)
@@ -31,9 +33,8 @@ Paths visited in a \code{Lexis} multistate model.
 \code{\link{Lexis}}
 }
 \examples{
-# a simple example
+# a simple example from the package
 example(DMlate)
-summary(dmi)
 str(paths.Lexis(dmi, dfr = TRUE))
 str(pathD <- paths.Lexis(dmi))
 cbind(addmargins(table(pathD)))

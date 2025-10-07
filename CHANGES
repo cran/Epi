@@ -1,6 +1,16 @@
+Changes in 2.61
+
+o xcutLexis for generating states as cross-classification of event ocurrences 
+
+o Ugly typos in vignettes istroduced in 2.60  (and not so ugly ones too) rectified.
+
+o Function paths now properly defined as S3 method for Lexis 
+
 Changes in 2.60
 
 o The float() function now passes optional arguments to vcov().
+
+o Vignettes lightly edited
 
 Changes in 2.59
 

@@ -161,19 +161,23 @@ cutLexis(yy,c(33,47,29,50),precursor=c("alpha","beta"),new.state="aleph")
 ## Using a dataframe as cut argument
 rl <- data.frame( lex.id=1:3, cut=c(19,53,26), timescale="age", new.state=3 )
 rl
-cutLexis( xx, rl )
-cutLexis( xx, rl, precursor=1 )
-cutLexis( xx, rl, precursor=0:2 )
+cutLexis(xx, rl )
+cutLexis(xx, rl, precursor = 1)
+cutLexis(xx, rl, precursor = 0:2)
 
 ## It is immaterial in what order splitting and cutting is done
-xs <- splitLexis( xx, breaks=seq(0,100,10), time.scale="age" )
+xs <- splitLexis( xx, breaks=seq(0,100,10), time.scale="age")
 xs
-xsC <- cutLexis(xs, rl, precursor=0 )
+xsC <- cutLexis(xs, rl, precursor = 0 )
 
-xC <- cutLexis( xx, rl, pre=0 )
+xC <- cutLexis(xx, rl, pre = 0)
 xC
-xCs <- splitLexis( xC, breaks=seq(0,100,10), time.scale="age" )
+xCs <- splitLexis(xC, breaks=seq(0, 100, 10), time.scale = "age")
 xCs
 str(xCs)
 }
 \keyword{survival}
+\concept{Lexis}
+\concept{multistate models}
+\concept{transition rates}
+\concept{state transition}

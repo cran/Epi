@@ -18,7 +18,7 @@ for (i in 2:3) base[,i] <- as.character(base[,i])
 # split by persons
 lbas <- split(base, base$lex.id)
 # construct character vector of visited states, weed out duplicates
-visits <- function(x)
+visits <- function(x) # visited states for one person
           {
           zz <- c(x$lex.Cst[1], x$lex.Xst)
           zz[c(TRUE, zz[-1] != zz[-length(zz)])]

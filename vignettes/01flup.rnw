@@ -101,7 +101,7 @@ last chapter of this note, \hyperlink{lexfun}{``\texttt{Lexis}
   and economist Wilhelm Lexis (full name Wilhelm Hector Richard
   Albrecht Lexis, 17 July 1837 -- 24 August 1914), who in his book
   ``Einleitung in die Theorie der Bev\"{o}lkerungsstatistik''
-  (Introduction to the theory of population statistics), (Strassburg,
+  (Introduction to the theory of population statistics, Strassburg,
   1875), devised a diagram showing follow-up of persons on two time
   scales, notably calendar time and age. The diagram that nowadays is
   called a Lexis diagram, is usually drawn in a slightly different
@@ -129,7 +129,7 @@ time-dependent variables.  In 1980 John Whitehead published a paper:
 \cite{Whitehead.1980} in which he devised the likelihood of a model
 for many small time bands with constant intensity in each, and
 demonstrated that Cox's partial likelihood could be seen as a Poisson
-likelihood. It is essentially these two papers that underlies the
+likelihood. It is essentially these two papers that underlie the
 time-splitting and subsequent modeling of transition
 rates in this vignette.\\[1em]
 \noindent
@@ -205,15 +205,17 @@ entry point on each of the time scales, for example:
 \begin{itemize}[noitemsep]
   \item Age at entry
   \item Date of entry
-  \item Time at treatment (\emph{at} treatment, time since treatment is 0)
-  \item Time at relapse (\emph{at} relapse, time since relapse is 0)
+  \item Time at treatment---\emph{at} treatment, time since treatment
+    is 0, but persons may enter before or after treatment beginnng.
+  \item Time at relapse---\emph{at} relapse, time since relapse
+    is 0, but persons may enter before or after relapse.
 \end{itemize}
 In the \texttt{Epi} package, follow-up in a cohort is represented in a
 \texttt{Lexis} object. A \texttt{Lexis} object is a data frame with
 some extra structure to represent the follow-up. For the
-\texttt{DMlate} dataset of follow-up of diabetes patients in Denmark
+\texttt{DMlate} dataset of follow-up of diabetes patients in Denmark---
 with recorded date of birth, date of diabetes, date of first insulin use,
-date of first oral drug use, date of exit and date of death --- we can
+date of first oral drug use, date of exit and date of death---we can
 construct a \texttt{Lexis} object by first including follow-up from
 entry at date of diabetes (\texttt{dodm}) to exit (\texttt{dox}).
 The dates should \emph{not} be in \texttt{Date} format; some data
@@ -478,11 +480,11 @@ covariates that can be used to describe mortality rates:
 There is only one time-dependent covariate, namely \texttt{lex.Cst},
 the current state of the person's follow up; it takes the values
 \texttt{DM} and \texttt{Ins} according to whether the person has ever
-purchased insulin at the beginning of a given follow-up interval.
+purchased insulin before the beginning of a given follow-up interval.
 
 The time-scales are obvious candidates for explanatory variables for
 the rates, notably age and time from diagnosis (duration of diabetes)
-and insulin.
+and time since start of insulin.
 
 \subsection{Time scales as covariates}
 
@@ -1170,8 +1172,8 @@ ini <- ci.pred(ind, ndI)
 dmi <- ci.pred(dmd, ndI)
 dma <- ci.pred(dmd, ndA)
 @ %
-The estimated mortality rates are shown in figure \ref{fig:sep-mort},
-p. \pageref{fig:sep-mort}, using:
+The estimated mortality rates are shown in figure \ref{fig:Ins-noIns},
+p. \pageref{fig:Ins-noIns}, using:
 <<sep-mort, fig = TRUE>>=
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
 matshade(ndI$age, ini * 100, plot = TRUE, log = "y",
@@ -1441,6 +1443,10 @@ ci.exp(rateDth, subset = "lex")
   \texttt{data.frame}
 \item[\texttt{cbind.Lexis}] bind a \texttt{data.frame} to a \texttt{Lexis} object
 \item[\texttt{rbind.Lexis}] put two \texttt{Lexis} objects head-to-foot
+\item[\texttt{order.Lexis}, \texttt{orderLexis}] ordering of records
+  in a \texttt{Lexis} object
+\item[\texttt{sortLexis}] sort records in a \texttt{Lexis} object by
+  (\texttt{lex.id}, \texttt{time}) 
 \item[\texttt{transform.Lexis}] transform and add variables
 \item[\texttt{tsNA20}] turn \texttt{NA}s to 0s for time scales
 \item[\texttt{factorize.Lexis}] turn \texttt{lex.Cst} and
@@ -1511,7 +1517,7 @@ cat("  Start time:", format(anfang, "%F, %T"),
 
 \renewcommand{\bibname}{References}
 
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}%{plain}
 \begin{thebibliography}{1}
 
 \bibitem{Holford.1976}
@@ -1524,11 +1530,6 @@ J~Whitehead.
 \newblock Fitting {C}ox's regression model to survival data using {GLIM}.
 \newblock {\em Applied Statistics}, 29(3):268--275, 1980.
 
-\bibitem{Carstensen.2007a}
-B~Carstensen.
-\newblock Age-{P}eriod-{C}ohort models for the {L}exis diagram.
-\newblock {\em Statistics in Medicine}, 26(15):3018--3045, July 2007.
-
 \bibitem{Plummer.2011}
 M~Plummer and B~Carstensen.
 \newblock Lexis: An {R} class for epidemiological studies with long-term
@@ -1539,6 +1540,11 @@ M~Plummer and B~Carstensen.
 B~Carstensen and M~Plummer.
 \newblock Using {L}exis objects for multi-state models in {R}.
 \newblock {\em Journal of Statistical Software}, 38(6):1--18, 1 2011.
+
+\bibitem{Carstensen.2007a}
+B~Carstensen.
+\newblock Age-{P}eriod-{C}ohort models for the {L}exis diagram.
+\newblock {\em Statistics in Medicine}, 26(15):3018--3045, July 2007.
 
 \bibitem{Iacobelli.2013}
 S~Iacobelli and B~Carstensen.

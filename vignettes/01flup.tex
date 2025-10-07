@@ -46,7 +46,7 @@ packages needed:
 \begin{Schunk}
 \begin{Soutput}
      R   Epi   popEpi
- 4.5.0  2.59   0.4.13
+ 4.5.0  2.60   0.4.13
 \end{Soutput}
 \end{Schunk}
 
@@ -97,7 +97,7 @@ last chapter of this note, \hyperlink{lexfun}{``\texttt{Lexis}
   and economist Wilhelm Lexis (full name Wilhelm Hector Richard
   Albrecht Lexis, 17 July 1837 -- 24 August 1914), who in his book
   ``Einleitung in die Theorie der Bev\"{o}lkerungsstatistik''
-  (Introduction to the theory of population statistics), (Strassburg,
+  (Introduction to the theory of population statistics, Strassburg,
   1875), devised a diagram showing follow-up of persons on two time
   scales, notably calendar time and age. The diagram that nowadays is
   called a Lexis diagram, is usually drawn in a slightly different
@@ -125,7 +125,7 @@ time-dependent variables.  In 1980 John Whitehead published a paper:
 \cite{Whitehead.1980} in which he devised the likelihood of a model
 for many small time bands with constant intensity in each, and
 demonstrated that Cox's partial likelihood could be seen as a Poisson
-likelihood. It is essentially these two papers that underlies the
+likelihood. It is essentially these two papers that underlie the
 time-splitting and subsequent modeling of transition
 rates in this vignette.\\[1em]
 \noindent
@@ -201,15 +201,17 @@ entry point on each of the time scales, for example:
 \begin{itemize}[noitemsep]
   \item Age at entry
   \item Date of entry
-  \item Time at treatment (\emph{at} treatment, time since treatment is 0)
-  \item Time at relapse (\emph{at} relapse, time since relapse is 0)
+  \item Time at treatment---\emph{at} treatment, time since treatment
+    is 0, but persons may enter before or after treatment beginnng.
+  \item Time at relapse---\emph{at} relapse, time since relapse
+    is 0, but persons may enter before or after relapse.
 \end{itemize}
 In the \texttt{Epi} package, follow-up in a cohort is represented in a
 \texttt{Lexis} object. A \texttt{Lexis} object is a data frame with
 some extra structure to represent the follow-up. For the
-\texttt{DMlate} dataset of follow-up of diabetes patients in Denmark
+\texttt{DMlate} dataset of follow-up of diabetes patients in Denmark---
 with recorded date of birth, date of diabetes, date of first insulin use,
-date of first oral drug use, date of exit and date of death --- we can
+date of first oral drug use, date of exit and date of death---we can
 construct a \texttt{Lexis} object by first including follow-up from
 entry at date of diabetes (\texttt{dodm}) to exit (\texttt{dox}).
 The dates should \emph{not} be in \texttt{Date} format; some data
@@ -706,11 +708,11 @@ covariates that can be used to describe mortality rates:
 There is only one time-dependent covariate, namely \texttt{lex.Cst},
 the current state of the person's follow up; it takes the values
 \texttt{DM} and \texttt{Ins} according to whether the person has ever
-purchased insulin at the beginning of a given follow-up interval.
+purchased insulin before the beginning of a given follow-up interval.
 
 The time-scales are obvious candidates for explanatory variables for
 the rates, notably age and time from diagnosis (duration of diabetes)
-and insulin.
+and time since start of insulin.
 
 \subsection{Time scales as covariates}
 
@@ -1091,7 +1093,7 @@ $trans
 
 $formula
 ~Ns(age, knots = a.kn)
-<environment: 0x000002899df74af8>
+<environment: 0x000001c029568b18>
 
 $scale
 [1] 1
@@ -1773,8 +1775,8 @@ Ins->Dead
 > dma <- ci.pred(dmd, ndA)
 \end{Sinput}
 \end{Schunk}
-The estimated mortality rates are shown in figure \ref{fig:sep-mort},
-p. \pageref{fig:sep-mort}, using:
+The estimated mortality rates are shown in figure \ref{fig:Ins-noIns},
+p. \pageref{fig:Ins-noIns}, using:
 \begin{Schunk}
 \begin{Sinput}
 > par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0)/1.6, las = 1, bty = "n")
@@ -1907,12 +1909,12 @@ states is, so that will have to be fixed by hand using \texttt{Relevel}:
 Transitions:
      To
 From        DM  OAD  Ins OAD-Ins Ins-OAD Dead  Records:  Events: Risk time:  Persons:
-  DM      2830 2957  689       0       0 1056      7532     4702   22920.15      7532
-  OAD        0 3327    0    1005       0  992      5324     1997   22965.32      5324
-  Ins        0    0  462       0     172  152       786      324    3883.15       786
-  OAD-Ins    0    0    0     739       0  266      1005      266    3770.55      1005
-  Ins-OAD    0    0    0       0     139   33       172       33     734.10       172
-  Sum     2830 6284 1151    1744     311 2499     14819     7322   54273.27      9996
+  DM      2830 2958  688       0       0 1056      7532     4702   22920.14      7532
+  OAD        0 3327    0    1006       0  992      5325     1998   22965.32      5325
+  Ins        0    0  462       0     171  152       785      323    3883.13       785
+  OAD-Ins    0    0    0     741       0  265      1006      265    3789.44      1006
+  Ins-OAD    0    0    0       0     137   34       171       34     715.23       171
+  Sum     2830 6285 1150    1747     308 2499     14819     7322   54273.27      9996
 
 Timescales:
   per   age   tfD   tfI   tfO 
@@ -1932,28 +1934,28 @@ into states.
      18 1996.75 61.72 0.00   NA   NA    1.17      DM     OAD   M 1935.02 1996.75    NA
      18 1997.92 62.89 1.17   NA 0.00    8.08     OAD OAD-Ins   M 1935.02 1996.75    NA
      18 2005.99 70.97 9.25 0.00 8.08    4.00 OAD-Ins OAD-Ins   M 1935.02 1996.75    NA
-     25 2003.69 60.34 0.00   NA   NA    1.88      DM     OAD   F 1943.35 2003.69    NA
-     25 2005.57 62.22 1.88   NA 0.00    3.07     OAD OAD-Ins   F 1943.35 2003.69    NA
-     25 2008.64 65.29 4.95 0.00 3.07    1.36 OAD-Ins OAD-Ins   F 1943.35 2003.69    NA
-     20 2009.25 53.22 0.00   NA   NA    0.03      DM     Ins   F 1956.03 2009.25    NA
-     20 2009.27 53.25 0.03 0.00   NA    0.01     Ins Ins-OAD   F 1956.03 2009.25    NA
-     20 2009.29 53.26 0.04 0.01 0.00    0.71 Ins-OAD Ins-OAD   F 1956.03 2009.25    NA
+     20 2009.25 53.22 0.00   NA   NA    0.03      DM     OAD   F 1956.03 2009.25    NA
+     20 2009.27 53.25 0.03   NA 0.00    0.01     OAD OAD-Ins   F 1956.03 2009.25    NA
+     20 2009.29 53.26 0.04 0.00 0.01    0.71 OAD-Ins OAD-Ins   F 1956.03 2009.25    NA
      38 2008.37 63.93 0.00   NA   NA    0.09      DM     Ins   M 1944.43 2008.37  2010
      38 2008.46 64.02 0.09 0.00   NA    0.21     Ins Ins-OAD   M 1944.43 2008.37  2010
      38 2008.67 64.24 0.31 0.21 0.00    1.33 Ins-OAD    Dead   M 1944.43 2008.37  2010
+     39 2005.96 55.53 0.00   NA   NA    0.06      DM     Ins   M 1950.44 2005.96    NA
+     39 2006.02 55.58 0.06 0.00   NA    0.03     Ins Ins-OAD   M 1950.44 2005.96    NA
+     39 2006.05 55.61 0.09 0.03 0.00    3.95 Ins-OAD Ins-OAD   M 1950.44 2005.96    NA
    dooad   doins  dox
  1997.92 2005.99 2010
  1997.92 2005.99 2010
  1997.92 2005.99 2010
- 2005.57 2008.64 2010
- 2005.57 2008.64 2010
- 2005.57 2008.64 2010
- 2009.29 2009.27 2010
- 2009.29 2009.27 2010
- 2009.29 2009.27 2010
+ 2009.27 2009.29 2010
+ 2009.27 2009.29 2010
+ 2009.27 2009.29 2010
  2008.67 2008.46 2010
  2008.67 2008.46 2010
  2008.67 2008.46 2010
+ 2006.05 2006.02 2010
+ 2006.05 2006.02 2010
+ 2006.05 2006.02 2010
 \end{Soutput}
 \end{Schunk}
 \begin{expl}
@@ -1989,11 +1991,11 @@ with both insulin and OAD to one, regardless of order (figure
 Transitions:
      To
 From        DM  OAD  Ins OAD+Ins Dead  Records:  Events: Risk time:  Persons:
-  DM      2830 2957  689       0 1056      7532     4702   22920.15      7532
-  OAD        0 3327    0    1005  992      5324     1997   22965.32      5324
-  Ins        0    0  462     172  152       786      324    3883.15       786
-  OAD+Ins    0    0    0     878  299      1177      299    4504.65      1177
-  Sum     2830 6284 1151    2055 2499     14819     7322   54273.27      9996
+  DM      2830 2958  688       0 1056      7532     4702   22920.14      7532
+  OAD        0 3327    0    1006  992      5325     1998   22965.32      5325
+  Ins        0    0  462     171  152       785      323    3883.13       785
+  OAD+Ins    0    0    0     878  299      1177      299    4504.67      1177
+  Sum     2830 6285 1150    2055 2499     14819     7322   54273.27      9996
 \end{Soutput}
 \begin{Sinput}
 > boxes(dmMr, boxpos = list(x = c(15, 15, 85, 85, 50),
@@ -2031,11 +2033,11 @@ Here is a brief sketch of models that might be considered:
 Transitions:
      To
 From         DM   OAD  Ins OAD+Ins Dead  Records:  Events: Risk time:  Persons:
-  DM      25682  2957  689       0 1055     30383     4701   22920.13      7532
-  OAD         0 26226    0    1005  990     28221     1995   22959.18      5323
-  Ins         0     0 4353     172  152      4677      324    3883.15       786
-  OAD+Ins     0     0    0    5357  298      5655      298    4503.68      1177
-  Sum     25682 29183 5042    6534 2495     68936     7318   54266.14      9995
+  DM      25682  2958  688       0 1055     30383     4701   22920.11      7532
+  OAD         0 26226    0    1006  990     28222     1996   22959.19      5324
+  Ins         0     0 4353     171  152      4676      323    3883.13       785
+  OAD+Ins     0     0    0    5357  298      5655      298    4503.70      1177
+  Sum     25682 29184 5041    6534 2495     68936     7318   54266.14      9995
 \end{Soutput}
 \begin{Sinput}
 > levels(dmMs)
@@ -2076,24 +2078,24 @@ OAD+Ins->Dead
 > ci.exp(rateIns, subset = "lex")
 \end{Sinput}
 \begin{Soutput}
-           exp(Est.)     2.5%   97.5%
-lex.CstOAD  1.863395 1.679253 2.06773
+           exp(Est.)     2.5%    97.5%
+lex.CstOAD  1.867473 1.682872 2.072322
 \end{Soutput}
 \begin{Sinput}
 > ci.exp(rateOAD, subset = "lex")
 \end{Sinput}
 \begin{Soutput}
            exp(Est.)      2.5%     97.5%
-lex.CstIns 0.4996943 0.4266305 0.5852707
+lex.CstIns 0.4964878 0.4237129 0.5817622
 \end{Soutput}
 \begin{Sinput}
 > ci.exp(rateDth, subset = "lex")
 \end{Sinput}
 \begin{Soutput}
                exp(Est.)      2.5%    97.5%
-lex.CstOAD     0.9461307 0.8675542 1.031824
-lex.CstIns     2.6394620 2.2220053 3.135348
-lex.CstOAD+Ins 1.6368559 1.4394596 1.861322
+lex.CstOAD     0.9461298 0.8675534 1.031823
+lex.CstIns     2.6395092 2.2220452 3.135404
+lex.CstOAD+Ins 1.6368495 1.4394540 1.861314
 \end{Soutput}
 \end{Schunk}
 
@@ -2198,6 +2200,10 @@ lex.CstOAD+Ins 1.6368559 1.4394596 1.861322
   \texttt{data.frame}
 \item[\texttt{cbind.Lexis}] bind a \texttt{data.frame} to a \texttt{Lexis} object
 \item[\texttt{rbind.Lexis}] put two \texttt{Lexis} objects head-to-foot
+\item[\texttt{order.Lexis}, \texttt{orderLexis}] ordering of records
+  in a \texttt{Lexis} object
+\item[\texttt{sortLexis}] sort records in a \texttt{Lexis} object by
+  (\texttt{lex.id}, \texttt{time}) 
 \item[\texttt{transform.Lexis}] transform and add variables
 \item[\texttt{tsNA20}] turn \texttt{NA}s to 0s for time scales
 \item[\texttt{factorize.Lexis}] turn \texttt{lex.Cst} and
@@ -2261,15 +2267,15 @@ lex.CstOAD+Ins 1.6368559 1.4394596 1.861322
 \end{description}
 \begin{Schunk}
 \begin{Soutput}
-  Start time: 2025-07-08, 12:25:23 
-    End time: 2025-07-08, 12:25:57 
-Elapsed time: 0.57 minutes
+  Start time: 2025-10-06, 16:32:43 
+    End time: 2025-10-06, 16:33:20 
+Elapsed time: 0.62 minutes
 \end{Soutput}
 \end{Schunk}
 
 \renewcommand{\bibname}{References}
 
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}%{plain}
 \begin{thebibliography}{1}
 
 \bibitem{Holford.1976}
@@ -2282,11 +2288,6 @@ J~Whitehead.
 \newblock Fitting {C}ox's regression model to survival data using {GLIM}.
 \newblock {\em Applied Statistics}, 29(3):268--275, 1980.
 
-\bibitem{Carstensen.2007a}
-B~Carstensen.
-\newblock Age-{P}eriod-{C}ohort models for the {L}exis diagram.
-\newblock {\em Statistics in Medicine}, 26(15):3018--3045, July 2007.
-
 \bibitem{Plummer.2011}
 M~Plummer and B~Carstensen.
 \newblock Lexis: An {R} class for epidemiological studies with long-term
@@ -2297,6 +2298,11 @@ M~Plummer and B~Carstensen.
 B~Carstensen and M~Plummer.
 \newblock Using {L}exis objects for multi-state models in {R}.
 \newblock {\em Journal of Statistical Software}, 38(6):1--18, 1 2011.
+
+\bibitem{Carstensen.2007a}
+B~Carstensen.
+\newblock Age-{P}eriod-{C}ohort models for the {L}exis diagram.
+\newblock {\em Statistics in Medicine}, 26(15):3018--3045, July 2007.
 
 \bibitem{Iacobelli.2013}
 S~Iacobelli and B~Carstensen.
