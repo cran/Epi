@@ -56,7 +56,9 @@ Bendix Carstensen, \url{http://bendixcarstensen.com}
 \seealso{
   \code{\link{cutLexis}},
   \code{\link{rcutLexis}},
+  \code{\link{xcutLexis}},
   \code{\link{addCov.Lexis}},
+  \code{\link{addDrug.Lexis}},
   \code{\link{Lexis}},
   \code{\link{splitLexis}}
 }

@@ -8,14 +8,14 @@
 \newcommand{\Version}{2}
 \newcommand{\Dates}{June 2024}
 \newcommand{\Where}{SDC}
-\newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
+\newcommand{\Homepage}{\url{https://bendixcarstensen.com/Epi/}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center Copenhagen, Herlev, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
-  & \url{http://BendixCarstensen.com} \\[1em]
+  & \url{https://BendixCarstensen.com/} \\[1em]
                       \end{tabular}}
 
 \input{topreport}

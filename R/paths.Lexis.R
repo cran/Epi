@@ -30,9 +30,9 @@ ff <- factor(sapply(paths, paste, collapse = "->"))
 
 # if required, render as data frame else just return factor ff
 if (!dfr) return(ff)
-else {
-     df <- data.frame(lex.id = names(ff), path = ff)
-     if (is.numeric(Lx$lex.id)) df$lex.id <- as.numeric(df$lex.id)
-     return(df)
-     }
+   else {
+        df <- data.frame(lex.id = names(ff), path = ff)
+        if (is.numeric(Lx$lex.id)) df$lex.id <- as.numeric(df$lex.id)
+        return(df)
+        }
 }

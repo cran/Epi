@@ -5,8 +5,8 @@
 Generate paths traveled through a Lexis multistate model data frame. 
 }
 \description{
-Paths that a person traveled through states in a \code{\link{Lexis}}
-multistate model. 
+For each person the path traveled through states in a \code{\link{Lexis}}
+multistate object is derived, 
 }
 \usage{
 \method{paths}{Lexis}(Lx, dfr = FALSE, \dots)
@@ -19,8 +19,10 @@ multistate model.
 }
 \value{A factor with levels describing each person's path through states. It is
   of length \code{length(\link{nid}(Lx))}, named by the (character)
-  values of \code{Lx$lex.id}. If \code{dfr} is \code{TRUE} a two-column
-  data frame is returned.
+  values of \code{Lx$lex.id}. It will usually be wise to use
+  \code{table} on the output.
+
+  If \code{dfr} is \code{TRUE} a two-column data frame is returned. 
 }
 \author{
   Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
@@ -47,4 +49,4 @@ cbind(addmargins(table(pathS)))
   }
 \concept{Lexis}
 \concept{Multistate model}
-\concept{Multistate path}
+\concept{Multistate paths}

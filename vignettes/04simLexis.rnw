@@ -4,18 +4,18 @@
 
 \newcommand{\Title}{Simulation of\\ multistate models with\\ multiple
   timescales:\\ \texttt{simLexis} in the \texttt{Epi} package}
-\newcommand{\Tit}{Multistate models with multiple timescales}
-\newcommand{\Version}{Version 2.6}
-\newcommand{\Dates}{\today}
+\newcommand{\Tit}{SimMult}
+\newcommand{\Version}{Version 2.7}
+\newcommand{\Dates}{February 2026}
 \newcommand{\Where}{SDCC}
-\newcommand{\Homepage}{\url{http://BendixCarstensen.com/Epi/simLexis.pdf}}
+\newcommand{\Homepage}{\url{https://BendixCarstensen.com/Epi/04simLexis.pdf}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center Copenhagen, Gentofte, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
-  & \url{http://BendixCarstensen.com} \\[1em]
+  & \url{https://BendixCarstensen.com/} \\[1em]
                       \end{tabular}}
 
 \input{topreport}

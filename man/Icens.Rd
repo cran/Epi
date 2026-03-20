@@ -24,14 +24,14 @@
     without event. Numerical vector.}
   \item{last.well}{Time last seen without event. Numerical vector.}
   \item{first.ill}{Time first seen with event. Numerical vector.}
-  \item{formula}{Model formula for the log relative risk.}
+  \item{formula}{Model formula for the log rate ratios / excess rates.}
   \item{model.type}{Which model should be fitted.}
   \item{breaks}{Breakpoints between intervals in which the underlying
-    timescale is assumed constant. Any observation outside the range of
+    timescale effect is assumed constant. Any observation outside the range of
     \code{breaks} is discarded.}
   \item{boot}{Should bootstrap be performed to produce confidence
     intervals for parameters. If a number is given this will be the
-    number of bootsrap samples. The default is 1000.}
+    number of bootstrap samples. The default is 1000.}
   \item{alpha}{1 minus the confidence level.}
   \item{keep.sample}{Should the bootstrap sample of the parameter values
     be returned?} 
@@ -48,17 +48,21 @@
   \code{\link{fit.add}}. 
   }
 \value{
-  An object of class \code{"Icens"}: a list with three components:
+  An object of class \code{"Icens"}: a list with two or three components:
   \item{rates}{A glm object from a binomial model with log-link,
-    estimating the baseline rates, and the excess risk if \code{"AER"}
-    is specfied.}
+    estimating the baseline rates, and the excess rates if \code{"AER"}
+    is specified. The parameters in the linear predictor are rates,
+    \emph{not} log-rates. They are in units corresponding to
+    (the inverse of) the units
+    in which the arguments \code{first.well},  \code{last.well},
+    \code{first.ill} and  \code{breaks} are given.}
   \item{cov}{A glm object from a binomial model with complementary
     log-log link, estimating the log-rate-ratios. Only if \code{"MRR"}
-    is specfied.}
-  \item{niter}{Nuber of iterations, a scalar}
+    is specified.}
+  \item{niter}{Number of iterations, a scalar}
   \item{boot.ci}{If \code{boot=TRUE}, a 3-column matrix with estimates
     and 1-\code{alpha} confidence intervals for the parameters in the model.}
-  \item{sample}{A matrix of the parameterestimates from the
+  \item{sample}{A matrix of the parameter estimates from the
     bootstrapping. Rows refer to parameters, columns to bootstrap samples.}
   }
 \references{
@@ -77,26 +81,36 @@
   \code{\link{fit.mult}}
   }
 \examples{
-data( hivDK )
+data(hivDK)
 # Convert the dates to fractional years so that rates are
-# expressed in cases per year
-for( i in 2:4 ) hivDK[,i] <- cal.yr( hivDK[,i] )
+# expressed in cases per year and not per day
+for(i in 2:4) hivDK[,i] <- cal.yr(hivDK[,i])
 
-m.RR <- Icens( entry, well, ill,
-               model="MRR", formula=~pyr+us, breaks=seq(1980,1990,5),
-               data=hivDK)
-# Currently the MRR model returns a list with 2 glm objects.
-round( ci.lin( m.RR$rates ), 4 )
-round( ci.lin( m.RR$cov, Exp=TRUE ), 4 )
-# There is actually a print method:
-print( m.RR )
+# multiplicative rate ratio model, baseline rates and RRs
+m.RR <- Icens(entry, well, ill,
+              model = "MRR",
+            formula = ~ pyr + us,
+             breaks = seq(1980, 1990, 5),
+               data = hivDK)
+# the MRR model returns a list with 2 glm objects.
+round(ci.lin(m.RR$rates), 4)         # rates per 1 year
+round(ci.lin(m.RR$cov, Exp=TRUE), 4) # RRs
+# There is a print method that does the job:
+print(m.RR)
+# and scales only the rate parameters, here per 10 years
+print(m.RR, scale = 10)
 
-m.ER <- Icens( entry, well, ill,
-               model="AER", formula=~pyr+us, breaks=seq(1980,1990,5),
-               data=hivDK)
-# There is actually a print method:
-print( m.ER )
+# additive excess rate model, baseline rates and excess rates
+m.ER <- Icens(entry, well, ill,
+              model = "AER",
+            formula = ~ pyr + us,
+             breaks = seq(1980, 1990, 5),
+               data = hivDK)
+# The print method returns rates per 1 year:
+print(m.ER)
+# or per 10 years:
+print(m.ER, scale = 10)
   }
-\keyword{ models }
-\keyword{ regression }
-\keyword{ survival }
+\keyword{models}
+\keyword{regression}
+\keyword{survival}

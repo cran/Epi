@@ -222,7 +222,7 @@ ci.ratio( r1, r2,
   common use for this is for multiplicative Poisson or binomial models
   with either log or logit link.
 
-  \code{ci.ratio} returns the rate-ratio of two independent set of
+  \code{ci.ratio} returns the rate-ratio of two independent sets of
   rates given with confidence intervals or s.e.s. If \code{se1} and
   \code{se2} are given and \code{log.tr=FALSE} it is assumed that
   \code{r1} and \code{r2} are rates and \code{se1} and \code{se2} are
@@ -247,25 +247,25 @@ ci.ratio( r1, r2,
 f <- factor( sample( letters[1:5], 200, replace=TRUE ) )
 g <- factor( sample( letters[1:3], 200, replace=TRUE ) )
 x <- rnorm( 200 )
-y <- 7 + as.integer( f ) * 3 + 2 * x + 1.7 * rnorm( 200 )
+y <- 7 + as.integer(f) * 3 + 2 * x + 1.7 * rnorm(200)
 
 # Fit a simple model:
-mm <- lm( y ~ x + f + g )
+mm <- lm(y ~ x + f + g)
 ci.lin( mm )
-ci.lin( mm, subset=3:6, diff=TRUE, fnam=FALSE )
-ci.lin( mm, subset=3:6, diff=TRUE, fnam=TRUE )
-ci.lin( mm, subset="f", diff=TRUE, fnam="f levels:" )
-print( ci.lin( mm, subset="g", diff=TRUE, fnam="gee!:", vcov=TRUE ) )
+ci.lin( mm, subset = 3:6, diff = TRUE, fnam = FALSE )
+ci.lin( mm, subset = 3:6, diff = TRUE, fnam = TRUE )
+ci.lin( mm, subset = "f", diff = TRUE, fnam = "f levels:" )
+print( ci.lin( mm, subset = "g", diff = TRUE, fnam = "gee!:", vcov = TRUE ) )
 
 # Use character defined subset to get ALL contrasts:
-ci.lin( mm, subset="f", diff=TRUE )
+ci.lin( mm, subset = "f", diff = TRUE )
 
 # Suppose the x-effect differs across levels of g:
 mi <- update( mm, . ~ . + g:x )
 ci.lin( mi )
 # RR a vs. b by x:
-nda <- data.frame( x=-3:3, g="a", f="b" )
-ndb <- data.frame( x=-3:3, g="b", f="b" )
+nda <- data.frame( x = -3:3, g = "a", f = "b" )
+ndb <- data.frame( x = -3:3, g = "b", f = "b" )
 # 
 ci.lin( mi, list(nda,ndb) )
 # Same result if f column is omitted because "f" columns are identical
@@ -323,24 +323,6 @@ try( ci.pred( a.form, nd ) )
 try( ci.exp ( a.arg , nd ) )
 try( ci.exp ( a.form, nd ) )
 }
-# The offset may be given as an argument (offset=log(risk))
-# or as a term (+offset(log)), and depending on whether we are using a
-# glm or a gam Poisson model and whether we use ci.pred or ci.exp to
-# predict rates the offset is either used or ignored and either
-# required or not; the state of affairs can be summarized as:
-#
-#                     offset
-#                     -------------------------------------
-#                     usage                 required?
-#                     ------------------    ---------------                      
-# function  model     argument   term       argument   term
-# ---------------------------------------------------------
-# ci.pred   glm       used       used       yes        yes
-#           gam       ignored    used       no         yes
-#  		      
-# ci.exp    glm       ignored    ignored    no         yes
-#           gam       ignored    ignored    no         yes
-# ---------------------------------------------------------
 }
 \keyword{models}
 \keyword{regression}

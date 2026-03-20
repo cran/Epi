@@ -1,10 +1,27 @@
+Changes in 2.63
+
+o LexisScarf() added, gives a knitting pattern for a scarf
+
+o overlap.Lexis added, checks if record represent overlapping time within
+  a person 
+
+Changes in 2.62
+
+o lexVars() function returns names of Lexis specific variables
+
+o xcutLexis documentation groomed
+
+o Icens documentation groomed and clarified
+
 Changes in 2.61
 
-o xcutLexis for generating states as cross-classification of event ocurrences 
+o xcutLexis for generating states as cross-classification of event
+  ocurrences 
 
-o Ugly typos in vignettes istroduced in 2.60  (and not so ugly ones too) rectified.
+o Ugly typos in vignettes introduced in 2.60 (and not so ugly ones too)
+  rectified.
 
-o Function paths now properly defined as S3 method for Lexis 
+o Function paths() now properly defined as S3 method for Lexis 
 
 Changes in 2.60
 

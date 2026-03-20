@@ -2,6 +2,7 @@
 \alias{timeScales}
 \alias{timeSince}
 \alias{tsNA20}
+\alias{lexVars}
 \title{The time scales of a Lexis object}
 \description{
   Functions to get the names and type of the time scales of a
@@ -10,7 +11,8 @@
 \usage{
 timeScales(x)
 timeSince(x)
-tsNA20( x, all.scales=FALSE )
+tsNA20(x, all.scales = FALSE)
+lexVars(x)
 }
 \arguments{
   \item{x}{an object of class \code{Lexis}.}
@@ -30,6 +32,10 @@ tsNA20( x, all.scales=FALSE )
   string is used. Hence, if none of the timescales are defined as time
   since entry to a state \code{timeSince} will return a vector of empty
   strings.
+
+  \code{lexVars} returns a character vector containing the names if the
+  \code{Lexsi}-specific variables of \code{x}; those starting with
+  \code{lex.} and the names of the timescales. 
 }
 \author{Martyn Plummer, Bendix Carstensen}
 \seealso{\code{\link{Lexis}}, \code{\link{splitLexis}}}

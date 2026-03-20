@@ -7,14 +7,14 @@
 \newcommand{\Version}{Version 6}
 \newcommand{\Dates}{March 2024}
 \newcommand{\Where}{SDCC}
-\newcommand{\Homepage}{\url{http://bendixcarstensen.com/Epi}}
+\newcommand{\Homepage}{\url{https://bendixcarstensen.com/Epi/}}
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center Copenhagen, Herlev, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk}\\
-  & \url{http://BendixCarstensen.com} \\[1em]
+  & \url{https://BendixCarstensen.com/} \\[1em]
                       \end{tabular}}
 \input{topreport}
 <<echo=FALSE>>=

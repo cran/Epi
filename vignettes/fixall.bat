@@ -32,5 +32,17 @@ call bl 05yll
 copy 05yll.R   ..\inst\doc\
 copy 05yll.pdf ..\inst\doc\
 
+rem move to website
+call 2gp 01flup.R   Epi
+call 2gp 01flup.pdf Epi
+call 2gp 02addLexis.R   Epi
+call 2gp 02addLexis.pdf Epi
+call 2gp 03crisk.R   Epi
+call 2gp 03crisk.pdf Epi
+call 2gp 04simLexis.R   Epi
+call 2gp 04simLexis.pdf Epi
+call 2gp 05yll.R   Epi
+call 2gp 05yll.pdf Epi
+
 call klean
 rem del *.pdf

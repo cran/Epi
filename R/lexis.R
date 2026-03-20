@@ -754,8 +754,14 @@ cc <- intersect(rownames(tt), colnames(tt))
 tt[cbind(cc,cc)] <- 0
 rownames(tt[apply(tt, 1, sum) > 0, , drop = FALSE])
 }
-before <- preceding <- function( x, states ) updn( x, table(x$lex.Cst, x$lex.Xst), states)
-after <- succeeding <- function( x, states ) updn( x, table(x$lex.Xst, x$lex.Cst), states)
+before <- preceding <- function(x, states) updn(x,
+                                                table(x$lex.Cst,
+                                                      x$lex.Xst),
+                                                states)
+after <- succeeding <- function(x, states) updn(x,
+                                                table(x$lex.Xst,
+                                                      x$lex.Cst),
+                                                states)
 
 timeScales <- function(x)
 {
@@ -767,6 +773,11 @@ timeSince <- function(x)
         tt  <- attr(x, "time.since")
   names(tt) <- attr(x, "time.scales")
   return( tt )
+}
+
+lexVars <- function(x)
+{
+  c("lex.id", Epi::timeScales(x), "lex.dur", "lex.Cst", "lex.Xst")
 }
 
 timeBand <- function(lex, time.scale, type="integer")

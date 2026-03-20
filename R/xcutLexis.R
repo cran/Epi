@@ -42,7 +42,7 @@ Lx <- mutate(Lx, lex.Cst = ifelse(old.Cst == new.Cst,
                                   new.Xst,
                                   paste0(old.Xst, sep, new.Xst)))
 #
-# claen up and beautify
+# clean up and beautify
 todrop <- match(c("old.Cst", "new.Cst",
                   "old.Xst", "new.Xst",
                   "old.trn", "old.chg"), names(Lx))

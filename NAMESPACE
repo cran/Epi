@@ -66,6 +66,7 @@ lines.apc,
   summary.LCa,
   predict.LCa,
      plot.LCa,
+   LexisScarf,
   Lexis.diagram,
   Lexis.lines,
    Life.lines,
@@ -85,6 +86,7 @@ lines.apc,
             sortLexis,
           print.Lexis,
           paths.Lexis,
+        overlap.Lexis,
         summary.Lexis,
   print.summary.Lexis,
            splitLexis,
@@ -241,6 +243,8 @@ S3method(     rbind, Lexis)
 S3method(     print, Lexis)
 S3method(     paths, Lexis)
 S3method(     paths, default)
+S3method(   overlap, Lexis)
+S3method(   overlap, default)
 S3method(   summary, Lexis)
 S3method(     print, summary.Lexis)
 S3method( transform, Lexis)

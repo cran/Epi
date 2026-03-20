@@ -4,17 +4,17 @@
 \newcommand{\Title}{\texttt{Lexis} functions in \texttt{Epi}\\
   for representation and analysis of\\ follow-up data}
 \newcommand{\Tit}{\texttt{Lexis} FU}
-\newcommand{\Version}{Version 11}
-\newcommand{\Dates}{November 2024}
+\newcommand{\Version}{Version 12}
+\newcommand{\Dates}{February 2025}
 \newcommand{\Where}{SDCC}
-\newcommand{\Homepage}{\url{http://bendixcarstensen.com/} }
+\newcommand{\Homepage}{\url{https://bendixcarstensen.com/Epi/} }
 \newcommand{\Faculty}{\begin{tabular}{rl}
 Bendix Carstensen
   & Steno Diabetes Center Copenhagen, Herlev, Denmark\\
   & {\small \& Department of Biostatistics,
                University of Copenhagen} \\
   & \texttt{b@bxc.dk} \quad \texttt{bcar0029@regionh.dk} \\
-  & \url{http://BendixCarstensen.com} \\[1em]
+  & \url{https://BendixCarstensen.com/} \\[1em]
                       \end{tabular}}
 
 \input{topreport}
@@ -55,13 +55,11 @@ print(vers, row.names = FALSE)
 @ %
 
 \section{About this vignette}
-
-This vignette is an introduction to (parts of) the \texttt{Lexis}
-machinery in the \texttt{Epi} package, intended for representation and
-manipulation of follow-up data (``event history data'') from studies
-where exact dates of events (state transitions) are known. It
-accommodates follow-up through multiple states and on multiple time
-scales.
+This vignette is an introduction to the \texttt{Lexis} machinery in
+the \texttt{Epi} package, intended for representation and manipulation
+of follow-up data (``event history data'') from studies where exact
+dates of events (state transitions) are known. It accommodates
+follow-up through multiple states and on multiple time scales.
 
 We use a data example from the \texttt{Epi} package to illustrate the
 set-up of a simple \texttt{Lexis} object (a data frame of follow-up
@@ -71,8 +69,8 @@ flexible parametric functions.
 
 The first chapter is exclusively on manipulation of the follow-up
 representation, but it points to the subsequent chapter where analysis
-is based on a \texttt{Lexis} representation with very small follow-up
-intervals.
+of transition rates is based on a \texttt{Lexis} representation with
+very small follow-up intervals.
 
 Chapter 2 uses analysis of mortality rates among Danish diabetes
 patients (available in the \texttt{Epi} package) currently on insulin
@@ -206,7 +204,7 @@ entry point on each of the time scales, for example:
   \item Age at entry
   \item Date of entry
   \item Time at treatment---\emph{at} treatment, time since treatment
-    is 0, but persons may enter before or after treatment beginnng.
+    is 0, but persons may enter before or after treatment beginning.
   \item Time at relapse---\emph{at} relapse, time since relapse
     is 0, but persons may enter before or after relapse.
 \end{itemize}
@@ -280,29 +278,36 @@ time scales chosen by using the \texttt{plot} method for \texttt{Lexis}
 objects. \texttt{dmL} is an object of \emph{class} \texttt{Lexis}, so
 using the function \texttt{plot()} on it means that \R\ will look for
 the function \texttt{plot.Lexis} and use this function.
+
+To limit the size of the graphs we only use a 5\% sample of the
+persons:
 <<dmL1, fig = TRUE>>=
-plot(dmL)
+set.seed(1952)
+dmS <- bootLexis(dmL, size = nid(dmL) / 20, replace = FALSE)
+summary(dmL)
+summary(dmS)
+plot(dmS)
 @ %
-The function allows quite a bit of control over the output, and a
-\texttt{points.Lexis} function allows plotting of the endpoints of
-follow-up:
+The function \texttt{plot.Lexis} allows quite a bit of control over
+the output, and a \texttt{points.Lexis} function allows plotting of
+the endpoints of follow-up:
 <<dmL2, fig = TRUE>>=
 par(mar = c(3, 3, 1, 1), mgp = c(3, 1, 0) / 1.6)
-plot(dmL, 1:2, lwd = 1, col = c("blue", "red")[dmL$sex],
+plot(dmS, 1:2, lwd = 1, col = c("blue", "red")[dmS$sex],
      grid = TRUE, lty.grid = 1, col.grid = gray(0.7),
      xlim = 1960 + c(0, 60), xaxs = "i",
      ylim =   40 + c(0, 60), yaxs = "i", las = 1)
-points(dmL, 1:2, pch = c(NA, 3)[dmL$lex.Xst],
+points(dmS, 1:2, pch = c(NA, 3)[dmS$lex.Xst],
        col = "lightgray", lwd = 3, cex = 0.3)
-points(dmL, 1:2, pch = c(NA, 3)[dmL$lex.Xst],
-       col = c("blue", "red")[dmL$sex], lwd = 1, cex = 0.3)
+points(dmS, 1:2, pch = c(NA, 3)[dmS$lex.Xst],
+       col = c("blue", "red")[dmS$sex], lwd = 1, cex = 0.3)
 box(bty = 'o')
 @ %
 In the above code you will note that the values of the arguments
 \texttt{col} and \texttt{pch} are indexed by factors, using the
 convention in \R\ that the index is taken as \emph{number of the
   level} of the supplied factor. Thus \texttt{c("blue",
-  "red")[dmL\$sex]} is \texttt{"blue"} when \texttt{sex} is \texttt{M}
+  "red")[dmS\$sex]} is \texttt{"blue"} when \texttt{sex} is \texttt{M}
 (the first level of \texttt{sex}) and.  \texttt{"red"} when
 \texttt{sex} is \texttt{F} (the second level of \texttt{sex}).
 
@@ -374,7 +379,7 @@ Note we used the argument \texttt{drop = FALSE} which will retain
 follow-up also outside the window defined by the range of the
 breaks. Otherwise, the default for \texttt{splitMulti} would be to drop
 follow-up outside \texttt{age} [0, 100] and \texttt{tfD} [0, 40]. This
-clipping behaviour is not available in \texttt{splitLexis},
+clipping behavior is not available in \texttt{splitLexis},
 nevertheless this may be exactly what we want in some situations.
 
 The recommended way of splitting follow-up time is by
@@ -451,7 +456,7 @@ summary(dmS2C, timeScales = TRUE)
 @ %
 Finally we can get a quick overview of the states and transitions by
 using \texttt{boxes} --- \texttt{scale.R} scales transition rates to
-rates per 1000 PY:
+rates per 1000 person-years:
 <<box1, fig = TRUE, height = 6, width = 8>>=
 boxes(dmC, boxpos = TRUE, scale.R = 1000, show.BE = TRUE)
 legendbox(70, 95)
@@ -1382,8 +1387,10 @@ ci.exp(rateDth, subset = "lex")
   events, keeping track of history
 \item[\texttt{rcutLexis}] cut follow-up at intermediate, possibly
   recurring, events, only recording the current state
-\item[\texttt{countLexis}] cut follow-up at intermediate event time and count
-  the no. events so far
+\item[\texttt{xcutLexis}] cut follow-up at another set of events,
+  keeping the orignal states (cross classification)
+\item[\texttt{countLexis}] cut follow-up at intermediate event time
+  and coun  the no. events so far
 \item[\texttt{splitLexis}] split follow up along a time scale
 \item[\texttt{splitMulti}] split follow up along several time scales --- from
   the \texttt{popEpi} package, faster and has simpler syntax than
@@ -1419,12 +1426,13 @@ ci.exp(rateDth, subset = "lex")
 \begin{description}
 \item[\texttt{summary.Lexis}] overview of transitions, risk time etc.
 \item[\texttt{levels.Lexis}] what are the states in the \texttt{Lexis} object
-\item[\texttt{paths.Lexis}] what are the paths through states in a \texttt{Lexis} object
+\item[\texttt{paths.Lexis}] what are the paths through states for persons in a \texttt{Lexis} object
 \item[\texttt{nid.Lexis}] number of persons in the \texttt{Lexis}
-  object --- how many unique values of \texttt{lex.id} are present
+  object---how many unique values of \texttt{lex.id} are present
 \item[\texttt{entry}] entry time
 \item[\texttt{exit}] exit time
 \item[\texttt{status}] status at entry or exit
+\item[\texttt{lexVars}] names of the \texttt{Lexis} specific variables
 \item[\texttt{timeBand}] factor of time bands
 \item[\texttt{timeScales}] what time scales are in the \texttt{Lexis} object
 \item[\texttt{timeSince}] what time scales are defined as time since a given state
@@ -1446,7 +1454,7 @@ ci.exp(rateDth, subset = "lex")
 \item[\texttt{order.Lexis}, \texttt{orderLexis}] ordering of records
   in a \texttt{Lexis} object
 \item[\texttt{sortLexis}] sort records in a \texttt{Lexis} object by
-  (\texttt{lex.id}, \texttt{time}) 
+  (\texttt{lex.id}, \texttt{time})
 \item[\texttt{transform.Lexis}] transform and add variables
 \item[\texttt{tsNA20}] turn \texttt{NA}s to 0s for time scales
 \item[\texttt{factorize.Lexis}] turn \texttt{lex.Cst} and
