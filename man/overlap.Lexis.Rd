@@ -32,12 +32,12 @@ overlap.Lexis(dmi)
 #
 # now find 4 persons with multiple records
 tt <- table(dmi$lex.id)
-has2 <- dmi$lex.id %in% names(tt[tt > 1])[1:4]
+has2 <- dmi$lex.id \%in\% names(tt[tt > 1])[1:4]
 table(has2)
 #
 # add time (0.3 y) to lex.dur for these persons to produce overlapping intervals
 dmi$lex.dur[has2] <- dmi$lex.dur[has2] + 0.3
-overlap.Lexis(dmi)
+(overlap.Lexis(dmi))
 }
 \keyword{manip}
 \concept{Lexis checks}
