@@ -28,5 +28,6 @@ if (any(olp))
 else
    {
    cat("No overlapping records within persons.\n")
+   return(NULL)
    }
 }

@@ -67,8 +67,8 @@ summary( dmi, timeScales=T )
 ###################################################
 ### code chunk number 7: boxes
 ###################################################
-boxes( dmi, boxpos = list(x=c(20,20,80,80),
-                        y=c(80,20,80,20)),
+boxes( dmi, boxpos = list(x = c(20, 20, 80, 80),
+                          y = c(80, 20, 80, 20)),
             scale.R = 1000, show.BE = TRUE )
 
 

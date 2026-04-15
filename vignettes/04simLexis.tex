@@ -46,7 +46,7 @@ packages needed:
 \begin{Schunk}
 \begin{Soutput}
      R   Epi   popEpi
- 4.5.2  2.61   0.4.13
+ 4.5.3  2.64   0.4.14
 \end{Soutput}
 \end{Schunk}
 
@@ -189,7 +189,7 @@ We start by loading the \texttt{Epi} package:
 > print( sessionInfo(), l=F )
 \end{Sinput}
 \begin{Soutput}
-R version 4.5.2 (2025-10-31 ucrt)
+R version 4.5.3 (2026-03-11 ucrt)
 Platform: x86_64-w64-mingw32/x64
 Running under: Windows 11 x64 (build 22631)
 
@@ -200,17 +200,17 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] survival_3.8-3 popEpi_0.4.13  Epi_2.61      
+[1] survival_3.8-6 popEpi_0.4.14  Epi_2.64      
 
 loaded via a namespace (and not attached):
- [1] etm_1.1.2           vctrs_0.6.5         nlme_3.1-168        cli_3.6.5          
- [5] rlang_1.1.6         cmprsk_2.2-12       generics_0.1.4      data.table_1.17.8  
- [9] zoo_1.8-14          glue_1.8.0          plyr_1.8.9          grid_4.5.2         
-[13] tibble_3.3.0        MASS_7.3-65         numDeriv_2016.8-1.1 lifecycle_1.0.4    
-[17] compiler_4.5.2      dplyr_1.1.4         Rcpp_1.1.0          pkgconfig_2.0.3    
-[21] mgcv_1.9-3          lattice_0.22-7      R6_2.6.1            tidyselect_1.2.1   
-[25] pillar_1.11.1       parallel_4.5.2      splines_4.5.2       magrittr_2.0.4     
-[29] Matrix_1.7-4       
+ [1] etm_1.1.2           vctrs_0.7.2         nlme_3.1-168        cli_3.6.5          
+ [5] rlang_1.1.7         cmprsk_2.2-12       generics_0.1.4      data.table_1.18.2.1
+ [9] zoo_1.8-15          glue_1.8.0          plyr_1.8.9          grid_4.5.3         
+[13] tibble_3.3.1        MASS_7.3-65         numDeriv_2016.8-1.1 lifecycle_1.0.5    
+[17] compiler_4.5.3      dplyr_1.2.0         Rcpp_1.1.1          pkgconfig_2.0.3    
+[21] mgcv_1.9-4          lattice_0.22-9      R6_2.6.1            tidyselect_1.2.1   
+[25] pillar_1.11.1       parallel_4.5.3      splines_4.5.3       magrittr_2.0.4     
+[29] Matrix_1.7-4        tools_4.5.3        
 \end{Soutput}
 \end{Schunk}
 First we load the diabetes data and set up a simple illness-death
@@ -266,8 +266,8 @@ transitions and transition rates (per 1000), using the
 transitions between them:
 \begin{Schunk}
 \begin{Sinput}
-> boxes( dmi, boxpos = list(x=c(20,20,80,80),
-+                         y=c(80,20,80,20)),
+> boxes( dmi, boxpos = list(x = c(20, 20, 80, 80),
++                           y = c(80, 20, 80, 20)),
 +             scale.R = 1000, show.BE = TRUE )
 \end{Sinput}
 \end{Schunk}
@@ -619,7 +619,7 @@ the \emph{residual} deviances.
 
 \subsection{How the mortality rates look}
 
-If we want to see how the mortality rates are modelled in
+If we want to see how the mortality rates are modeled in
 \texttt{DM.Dead} and \texttt{Ins.Dead} in relation to
 \texttt{All.Dead}, we make a prediction of rates for say men diagnosed
 in different ages and going on insulin at different times after
@@ -759,7 +759,7 @@ duration of insulin use.
 \section{Input to the \texttt{simLexis} function}
 
 We want to estimate the cumulative probability of being in each of the
-4 states, so that we can assess the fraction of diabetes pateints that
+4 states, so that we can assess the fraction of diabetes patients that
 go on insulin
 
 In order to simulate from the multistate model with the estimated
@@ -840,7 +840,7 @@ for one man and one woman:
 \end{Schunk}
 So the persons starts in age 60 in 1995 with 5 years of diabetes
 duration. Note that the \texttt{t.Ins} is \texttt{NA}, because this is
-a timescale that first comes alive if a transtion to \texttt{Ins} is
+a timescale that first comes alive if a transition to \texttt{Ins} is
 simulated.
 
 \section{Simulation of the follow-up}
@@ -865,7 +865,7 @@ the user.
 \end{Sinput}
 \begin{Soutput}
   bruger   system forløbet 
-    1.47     0.16     1.83 
+    1.33     0.19     1.57 
 \end{Soutput}
 \end{Schunk}
 The result is a \texttt{Lexis} object --- a data frame representing
@@ -922,7 +922,7 @@ transition object:
 \end{Sinput}
 \begin{Soutput}
   bruger   system forløbet 
-    1.40     0.14     1.73 
+    1.08     0.23     1.45 
 \end{Soutput}
 \begin{Sinput}
 > summary( simP, by="sex" )
@@ -1005,7 +1005,7 @@ for different transitions
 \end{Sinput}
 \begin{Soutput}
   bruger   system forløbet 
-    2.32     0.38     2.91 
+    2.22     0.53     2.91 
 \end{Soutput}
 \begin{Sinput}
 > summary( simC, by="sex" )
@@ -1045,7 +1045,7 @@ equal to the starting time for the simulated individuals.
 \end{Sinput}
 \begin{Soutput}
   bruger   system forløbet 
-    0.10     0.00     0.07 
+    0.06     0.00     0.06 
 \end{Soutput}
 \begin{Sinput}
 > nSt[1:10,]
@@ -1334,12 +1334,12 @@ follows:
     three simulated transition times was actually the $i$th, is as above.
 
     But conditional on \emph{survival} till $t$, the probabilities
-    that events of type $1,2,3$ takes place in the interval $(t,t+\dif
-    t)$ are $\lambda_1(t)\dif t$, $\lambda_2(t)\dif t$ and
-    $\lambda_1(t)\dif t$, respectively (assuming that the probability
+    that events of type $1,2,3$ takes place in the interval
+    $(t,t+\dif t)$ are $\lambda_1(t)\dif t$, $\lambda_2(t)\dif t$ and
+    $\lambda_3(t)\dif t$, respectively (assuming that the probability
     of more than one event in the interval of length $\dif t$ is
-    0). Hence the conditional probabilities \emph{given a transition
-      time} in $(t,t+\dif t)$ is:
+    0). Hence the conditional probability of transition of type $i$
+    \emph{given a transition time} in $(t,t+\dif t)$ is:
     \[
     \frac{\lambda_i(t)\dif t}{\lambda_1(t)\dif t+
                               \lambda_2(t)\dif t+
@@ -1352,9 +1352,9 @@ follows:
 
 \begin{Schunk}
 \begin{Soutput}
-  Start time: 2026-03-21, 11:24:21 
-    End time: 2026-03-21, 11:24:49 
-Elapsed time: 0.46 minutes
+  Start time: 2026-04-13, 14:02:13 
+    End time: 2026-04-13, 14:02:36 
+Elapsed time: 0.38 minutes
 \end{Soutput}
 \end{Schunk}
 

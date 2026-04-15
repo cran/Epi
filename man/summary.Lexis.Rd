@@ -9,8 +9,12 @@
   (\code{lex.Cst} and \code{lex.Xst}), as well the risk time in each state.
   }
 \usage{
-  \method{summary}{Lexis}(object, simplify = TRUE, scale = 1, by = NULL,
-                          Rates = FALSE, timeScales = FALSE, ...)
+  \method{summary}{Lexis}(object,
+                        simplify = TRUE,
+                           scale = 1,
+                              by = NULL,
+                           Rates = FALSE,
+                      timeScales = FALSE, ...)
   \method{print}{summary.Lexis}(x, ..., digits = 2)
   }
 \arguments{
@@ -20,19 +24,19 @@
     multiplied by this number.}
   \item{by}{Character vector of name(s) of variable(s) in
     \code{object}. Used to give a separate summaries for subsets of
-    \code{object}. If longer than than 1, the interaction between that
+    \code{object}. If longer than than 1, the interaction between the
     variables is used to stratify the summary. It is also possible to
-    supply a vector of length \code{nrow(object)}, and the distinct
+    supply a vector of length \code{nrow(object)}, in which case the distinct
     values of this will be used to stratify the summary.}
   \item{Rates}{Should a component with transition rates be returned (and
     printed) too?}
   \item{timeScales}{Should the names of the timescales and the indication
-    of since which entry also be given?}
+    of since which entry also be returned?}
   \item{x}{A \code{Lexis} or \code{summary.Lexis} object.}
   \item{digits}{Number of digits after the decimal separator used when
     printing the summary.}
   \item{...}{Ignored.}
-  }
+}
 \value{
   An object of class \code{summary.Lexis}, a list with two components,
   \code{Transitions} and \code{Rates}, each one a matrix with rows
@@ -43,8 +47,10 @@
   contributing attached.  The \code{Rates} contains the transitions
   rates.
 
-  If the argument \code{Rates} is FALSE (the default), then only the
+  If the argument \code{Rates} is \code{FALSE} (the default), then only the
   first component of the list is returned.
+
+  If \code{mat} is \code{FALSE} a list is returned, possibly of length 1.
 }
 \author{
    Bendix Carstensen, \url{http://bendixcarstensen.com}
@@ -52,15 +58,19 @@
 \examples{
 data( nickel )
 # Lung cancer deaths and other deaths are coded 1 and 2
-nic <- Lexis( data = nickel,
-             entry = list(age = agein),
-              exit = list(age = ageout,cal = ageout+dob,tfh = ageout-age1st),
-       exit.status = factor( (icd > 0) + (icd \%in\% c(162,163)),
-                           labels = c("Alive","Other","Lung") ) )
+nic <- Lexis(data = nickel,
+            entry = list(age = agein),
+             exit = list(age = ageout,
+                         cal = ageout + dob,
+                         tfh = ageout - age1st),
+       exit.status = factor((icd > 0) + (icd \%in\% c(162,163)),
+                            labels = c("Alive", "Other", "Lung") ) )
 str( nic )
 head( nic )
 summary( nic )
-# More detailed summary, by exposure level
-summary( nic, by = nic$exposure>5, Rates = TRUE, scale = 100 )
+# More detailed summary, by exposure level, and rates per 100 PY
+summary(nic, by = nic$exposure > 5,
+          Rates = TRUE,
+          scale = 100)
 }
 \keyword{survival}

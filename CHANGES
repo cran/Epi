@@ -1,32 +1,37 @@
+Changes in 2.65
+
+o new function, adtte2Lexis, that creates a Lexis Object from an ADAM
+  ADTTE Dataset, courtesy of Lars Diaz
+o summary.Lexis: Annoying leading blanks in the column names of the summary
+  have been removed 
+
+Changes in 2.64
+
+o Trivial typos fixed
+
 Changes in 2.63
 
 o LexisScarf() added, gives a knitting pattern for a scarf
-
 o overlap.Lexis added, checks if record represent overlapping time within
   a person 
 
 Changes in 2.62
 
 o lexVars() function returns names of Lexis specific variables
-
 o xcutLexis documentation groomed
-
 o Icens documentation groomed and clarified
 
 Changes in 2.61
 
 o xcutLexis for generating states as cross-classification of event
   ocurrences 
-
 o Ugly typos in vignettes introduced in 2.60 (and not so ugly ones too)
   rectified.
-
 o Function paths() now properly defined as S3 method for Lexis 
 
 Changes in 2.60
 
 o The float() function now passes optional arguments to vcov().
-
 o Vignettes lightly edited
 
 Changes in 2.59
@@ -41,7 +46,6 @@ Changes in 2.57
 
 o glmLexis, gamLexis and coxphLexis have been added, identical to the functions
   glm.Lexis, gam.Lexis and coxph.Lexis. Not S3 methods so more logical names.
-
 o flup, the basic Lexis vignette, has been updated
 
 Changes in 2.56
@@ -51,7 +55,6 @@ o ci.eta was broken, fix provided
 Changes in 2.55
 
 o changes in clogistic.c to comply with new requirements for c code
-
 o nice (defined in plotEst.R) no longer crashes for very large
   ranges of log-axes 
 
@@ -63,7 +66,6 @@ o ci.eta allows NAs in coefficients (singular model) and in rows
 Changes in 2.53
 
 o Bug in example of plotCIF corrected (Esa Laara)
-
 o name.check argument added to ci.eta, and function now exported(!)
 
 Changes up to 2.52
@@ -1307,7 +1309,6 @@ Changes 0.6.1 to 0.7.0
 
 o Function Icens() for estimation of rates from intervalcensored
   follow-up data by Martyn Plummer added.
-
 o Function epi.eff by Michael Hills is added. Estimates effects in
   various epidemiological study types.
 
@@ -1315,7 +1316,6 @@ Changes 0.6.0 to 0.6.1
 
 o Coding errors in thoro dataset corrected. Only concerning dates and
   status for livercancer diagnosis.
-
 o Lexis.lines now allows col.life, lwd.life, pch.fail, col.fail and
   cex.fail to have the same length as the data, i.e. to produce
   individualized lines and points. As Lexis.diagram calls Lexis.lines,
@@ -1326,29 +1326,21 @@ Changes from 0.4 to 0.6
 o ci.pd() amended to support the Agresti-Caffo method for confidence
   intervals for difference between proportions. Newcombes method 10
   is still used in twoby2.
-
 o apc.fit() added. Fits age-period-cohort models with a range of
   possibilities for parametrizations.
-
 o Functions for time-splitting at arbitrary times and at recurrent
   failures have been added: isec(), icut(), fcut1(), fcut() and
   ex1(). Eventually they will be superseded by new facilities in Lexis.
-
 o Function apc.plot() to make a plot of an apc fit is added. It is just
   a wrapper for apc.frame() and apc.lines(), with suitable computation of
   the paramters supplied to apc.frame.
-
 o Lexis.lines(): pch.fail and col.fail expandS to vectors of length two
   if only one value is given.
-
 o ci.cum() aimed at computing cumulative hazard functions from
   parametric functions for hazards.
-
 o Problem in print.floated() with printing of objects of class
   "floated" fixed.
-
 o Problem in ci.lin when subset did not match any factor names and
   diff=T was given the function crashed. Fixed, and documentation updated.
-
 o cal.yr produces objects of class c("cal.yr","numeric"). Functions
   as.Date.numeric and as.Date.cal.yr added.

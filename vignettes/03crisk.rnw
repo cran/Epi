@@ -140,7 +140,7 @@ The quantities $\Lambda_c(t) = \int_0^t \lambda_c(s) \dif s$ are
 called cumulative \emph{rates} (probabilists call them integrated
 intensities), although they are not rates. Cumulative rates are
 dimensionless, but they have no probability interpretation of any
-kind.
+kind, and they are not necessarily in $[0,1]$.
 
 The cumulative \emph{risk}, the probability of dying from cause $k$,
 say, before time $t$, $R_k(t)$ is:
@@ -247,9 +247,12 @@ above. Therefore the subdistribution is not included in this vignette.
 
 As an illustrative data example we use the (fake) diabetes register
 data; we set up the Lexis object, an then cut the follow-up time at
-dates of \texttt{OAD} and \texttt{Ins} using \texttt{mcutLexis}:
+dates of \texttt{OAD} and \texttt{Ins} using \texttt{mcutLexis}, for
+convenience we restrict to a 10\% sample of the dataset:
 <<>>=
 data(DMlate)
+set.seed(1952)
+DMlate <- DMlate[runif(nrow(DMlate)) < 0.1, ]
 Ldm <- Lexis(entry = list(per = dodm,
                           age = dodm-dobth,
                           tfd = 0),
@@ -760,7 +763,7 @@ first dimension of the \texttt{Stime} array:
 s510 <- res$Stime[c("5", "10"),,]
 dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
 round(ftable(s510, row.vars=1:2), 2)
-@ % 
+@ %
 So we see that the expected life lived without pharmaceutical treatment
 during the first 10 years after DM diagnosis is 4.31 years with a 95\%
 CI of (4.21; 4.41), and during the first 5 years 2.77 (2.72; 2.82).
@@ -833,14 +836,16 @@ diagnosis (\texttt{tfD}), we first split the data in 6-month intervals
 sL <- splitLexis(dmL, time.scale = "age", breaks = seq(0, 120, 1/2))
 summary(sL)
 @
-<<>>=
+The code to fit the \texttt{gam} modes is (not run):
+<<eval=FALSE, echo=FALSE>>=
 mCVD <- gamLexis(sL, ~ s(tfD, by=sex), to = "CVD")
 mCan <- gamLexis(sL, ~ s(tfD, by=sex), to = "Can")
 mOth <- gamLexis(sL, ~ s(tfD, by=sex), to = "Oth")
 @ %
-<<eval=FALSE, echo=FALSE>>=
+\ldots and the code to fit \texttt{glm}s with splines is:
+<<>>=
 mCVD <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
-mCa  <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Ca")
+mCan <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Can")
 mOth <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
 @ %
 

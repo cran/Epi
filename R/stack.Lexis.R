@@ -9,7 +9,7 @@ function(x, ...)
 ## Function to stack obervations for survival analysis
 ## Make sure that lex.Cst and lex.Xst are factors with identical levels
 x <- factorize(x)
-    
+
 ## Same covariates
 xx <- data.frame( cbind( x, lex.Tr="", lex.Fail=FALSE ) )[NULL,]
 tm <- tmat.Lexis( x )
@@ -56,15 +56,16 @@ transform.stacked.Lexis <- function(`_data`, ... )
 tmat <- function (x, ...) UseMethod("tmat")
 
 tmat.Lexis <-
-function( x, Y=FALSE, mode="numeric", ... )
+function( x, Y = FALSE, mode = "numeric", ... )
 {
-zz <- table(x$lex.Cst,x$lex.Xst)
+zz <- table(x$lex.Cst, x$lex.Xst)
 class(zz) <- "matrix"
 if( Y )
   {
-  diag(zz) <- summary( x, simplify=FALSE )[[1]][1:nrow(zz),"Risk time:"]
-  }
-else diag(zz) <- NA
+  diag(zz) <- summary(x, simplify=FALSE )[[1]][1:nrow(zz),"Risk time:"]
+  } else {
+         diag(zz) <- NA
+         }
 zz[zz==0] <- NA
 if( mode != "numeric" ) zz <- !is.na(zz)
 zz

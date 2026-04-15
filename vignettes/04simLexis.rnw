@@ -223,8 +223,8 @@ transitions and transition rates (per 1000), using the
 \texttt{boxes.Lexis} function to display the states and the number of
 transitions between them:
 <<boxes,fig=TRUE,height=5,width=7>>=
-boxes( dmi, boxpos = list(x=c(20,20,80,80),
-                        y=c(80,20,80,20)),
+boxes( dmi, boxpos = list(x = c(20, 20, 80, 80),
+                          y = c(80, 20, 80, 20)),
             scale.R = 1000, show.BE = TRUE )
 @ %
 \insfig{boxes}{0.8}{Data overview for the \textrm{\tt dmi}
@@ -404,7 +404,7 @@ the \emph{residual} deviances.
 
 \subsection{How the mortality rates look}
 
-If we want to see how the mortality rates are modelled in
+If we want to see how the mortality rates are modeled in
 \texttt{DM.Dead} and \texttt{Ins.Dead} in relation to
 \texttt{All.Dead}, we make a prediction of rates for say men diagnosed
 in different ages and going on insulin at different times after
@@ -527,7 +527,7 @@ duration of insulin use.
 \section{Input to the \texttt{simLexis} function}
 
 We want to estimate the cumulative probability of being in each of the
-4 states, so that we can assess the fraction of diabetes pateints that
+4 states, so that we can assess the fraction of diabetes patients that
 go on insulin
 
 In order to simulate from the multistate model with the estimated
@@ -578,7 +578,7 @@ ini
 @ %
 So the persons starts in age 60 in 1995 with 5 years of diabetes
 duration. Note that the \texttt{t.Ins} is \texttt{NA}, because this is
-a timescale that first comes alive if a transtion to \texttt{Ins} is
+a timescale that first comes alive if a transition to \texttt{Ins} is
 simulated.
 
 \section{Simulation of the follow-up}
@@ -939,12 +939,12 @@ follows:
     three simulated transition times was actually the $i$th, is as above.
 
     But conditional on \emph{survival} till $t$, the probabilities
-    that events of type $1,2,3$ takes place in the interval $(t,t+\dif
-    t)$ are $\lambda_1(t)\dif t$, $\lambda_2(t)\dif t$ and
-    $\lambda_1(t)\dif t$, respectively (assuming that the probability
+    that events of type $1,2,3$ takes place in the interval
+    $(t,t+\dif t)$ are $\lambda_1(t)\dif t$, $\lambda_2(t)\dif t$ and
+    $\lambda_3(t)\dif t$, respectively (assuming that the probability
     of more than one event in the interval of length $\dif t$ is
-    0). Hence the conditional probabilities \emph{given a transition
-      time} in $(t,t+\dif t)$ is:
+    0). Hence the conditional probability of transition of type $i$
+    \emph{given a transition time} in $(t,t+\dif t)$ is:
     \[
     \frac{\lambda_i(t)\dif t}{\lambda_1(t)\dif t+
                               \lambda_2(t)\dif t+
