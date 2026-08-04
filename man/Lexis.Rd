@@ -30,7 +30,7 @@ keep.dropped = FALSE)
     a numeric variable representing the entry time on the named time
     scale. The name of the elements of the list will appear as names of
     variables designated as timescales in the resulting object. All time
-    scales must have the same units (e.g. years). 
+    scales must have the same units (e.g. years).
     The names of the timescales must be different from any column name in
     \code{data}.}
   \item{exit}{a named list of exit times.}
@@ -79,7 +79,7 @@ keep.dropped = FALSE)
   Lexis (1837-1914), who is credited with the invention of the
   "Lexis diagram" for representing population dynamics simultaneously
   by several timescales in the book
-  "Einleitung in die Theorie der Bevolkerungsstatistik" from 1875. 
+  "Einleitung in die Theorie der Bevolkerungsstatistik" from 1875.
 
   The \code{Lexis} function can create a minimal \code{Lexis} object
   with only those variables required to define the follow-up history in
@@ -92,7 +92,7 @@ keep.dropped = FALSE)
   the Lexis-specific variables comes first. Returns (invisibly) a character
   vector with the (re)ordering of the columns in the object, even if
   \code{org = TRUE} is set.
-  
+
   There are also \code{merge}, \code{subset}, \code{transform} and many
   other methods for \code{Lexis} objects. They work as the corresponding
   methods for data-frames but ensures that the result is a \code{Lexis}
@@ -156,7 +156,7 @@ xcoh <- structure(list( id = c("A", "B", "C"),
                      entry = c("04/08/1965", "08/09/1972", "23/12/1991"),
                       exit = c("27/06/1997", "23/05/1995", "24/07/1998"),
                       fail = c(1, 0, 1) ),
-                    .Names = c("id", "birth", "entry", "exit", "fail"),
+                     names = c("id", "birth", "entry", "exit", "fail"),
                  row.names = c("1", "2", "3"),
                      class = "data.frame")
 

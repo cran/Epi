@@ -18,7 +18,7 @@ Bendix Carstensen
                       \end{tabular}}
 
 \input{topreport}
-\renewcommand{\rwpre}{./03crisk}
+\renewcommand{\rwpre}{./n03-crisk}
 
 \chapter{Competing risks}
 

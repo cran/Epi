@@ -2,19 +2,20 @@
 \alias{paths}
 \alias{paths.Lexis}
 \title{
-Generate paths traveled through a Lexis multistate model data frame. 
+Generate paths traveled through a Lexis multistate data frame.
 }
 \description{
 For each person the path traveled through states in a \code{\link{Lexis}}
-multistate object is derived, 
+object is derived.
 }
 \usage{
-\method{paths}{Lexis}(Lx, dfr = FALSE, \dots)
+\method{paths}{Lexis}(Lx, dfr = FALSE, coll = "->", \dots)
 }
 \arguments{
   \item{Lx}{A \code{\link{Lexis}} object}
   \item{dfr}{Logical. Should results be returned as a data frame with
     columns \code{lex.id} and \code{path}?}
+  \item{coll}{Character string used to separate state names in the paths}
   \item{\dots}{Arguments passed on. Ignored}
 }
 \value{A factor with levels describing each person's path through states. It is
@@ -22,7 +23,7 @@ multistate object is derived,
   values of \code{Lx$lex.id}. It will usually be wise to use
   \code{table} on the output.
 
-  If \code{dfr} is \code{TRUE} a two-column data frame is returned. 
+  If \code{dfr} is \code{TRUE} a two-column data frame is returned.
 }
 \author{
   Bendix Carstensen, \email{b@bxc.dk}, \url{http://bendixcarstensen.com}
@@ -31,6 +32,7 @@ multistate object is derived,
 \code{\link{cutLexis}},
 \code{\link{mcutLexis}},
 \code{\link{rcutLexis}},
+\code{\link{xcutLexis}},
 \code{\link{nid}},
 \code{\link{Lexis}}
 }

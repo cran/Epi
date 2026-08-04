@@ -1,7 +1,7 @@
-### R code from vignette source '05yll.rnw'
+### R code from vignette source 'n05-yll.rnw'
 
 ###################################################
-### code chunk number 1: 05yll.rnw:29-41
+### code chunk number 1: n05-yll.rnw:29-41
 ###################################################
 options(width = 90,
         show.signif.stars = FALSE,
@@ -18,14 +18,14 @@ clear()
 
 
 ###################################################
-### code chunk number 2: 05yll.rnw:44-46
+### code chunk number 2: n05-yll.rnw:44-46
 ###################################################
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: 05yll.rnw:48-54
+### code chunk number 3: n05-yll.rnw:48-54
 ###################################################
 vers <-
 data.frame(R = substr(R.version.string, 11, 15),
@@ -38,6 +38,7 @@ print(vers, row.names = FALSE)
 ###################################################
 ### code chunk number 4: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 library(Epi)
 TM <- matrix(NA, 4, 4)
 rownames(TM) <-
@@ -53,6 +54,7 @@ zz <- boxes(TM, boxpos = list(x = c(20, 80, 20, 80),
 ###################################################
 ### code chunk number 5: states
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz$Arrowtext <- c(expression(lambda(a)),
                   expression(mu[W](a)),
                   expression(mu[D][M](a,d)))
@@ -60,20 +62,20 @@ boxes.MS(zz)
 
 
 ###################################################
-### code chunk number 6: 05yll.rnw:301-302
+### code chunk number 6: n05-yll.rnw:301-302
 ###################################################
 data(DMepi)
 
 
 ###################################################
-### code chunk number 7: 05yll.rnw:308-310
+### code chunk number 7: n05-yll.rnw:308-310
 ###################################################
 str(DMepi)
 head(DMepi)
 
 
 ###################################################
-### code chunk number 8: 05yll.rnw:330-336
+### code chunk number 8: n05-yll.rnw:330-336
 ###################################################
 DMepi <- transform(subset(DMepi, A > 30),
                    A = A + 0.5,
@@ -84,7 +86,7 @@ head(DMepi)
 
 
 ###################################################
-### code chunk number 9: 05yll.rnw:342-367
+### code chunk number 9: n05-yll.rnw:342-367
 ###################################################
 # Knots used in all models
 (a.kn <- seq(40, 95, , 6))
@@ -114,7 +116,7 @@ lW.f <- update(lW.m, data = subset(DMepi, sex == "F"))
 
 
 ###################################################
-### code chunk number 10: 05yll.rnw:374-411
+### code chunk number 10: n05-yll.rnw:374-411
 ###################################################
 a.ref <- 30:90
 p.ref <- 1996:2016
@@ -158,6 +160,7 @@ round(ftable(aYLL[, , seq(1, 61, 10), ], col.vars=c(3, 2)), 1)
 ###################################################
 ### code chunk number 11: imm
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll <- function(wh, xtxt){
 par(mfrow = c(1, 2),
       mar = c(3, 3, 1, 1),
@@ -190,21 +193,21 @@ plyll("Imm", " - immunity assumption")
 ###################################################
 ### code chunk number 12: tot
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Tot", " - total mortality refernce")
 
 
 ###################################################
 ### code chunk number 13: sus
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 plyll("Sus", " - susceptibility assumed")
 
 
 ###################################################
-### code chunk number 14: 05yll.rnw:494-498
+### code chunk number 14: n05-yll.rnw:494-498
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),
   "\n    End time:", format(  ende, "%F, %T"),
   "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
-
-

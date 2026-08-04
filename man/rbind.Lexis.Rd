@@ -2,7 +2,7 @@
 \alias{cbind.Lexis}
 \alias{rbind.Lexis}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Combining a Lexis objects with data frames or other Lexis objects 
+\title{Combining a Lexis objects with data frames or other Lexis objects
 }
 \description{A Lexis object may be combined side-by-side with
   data frames. Or several Lexis objects may stacked, possibly increasing
@@ -51,7 +51,7 @@ xcoh <- structure( list( id = c("A", "B", "C"),
                       entry = c("04/08/1965", "08/09/1972", "23/12/1991"),
                        exit = c("27/06/1997", "23/05/1995", "24/07/1998"),
                        fail = c(1, 0, 1) ),
-                     .Names = c("id", "birth", "entry", "exit", "fail"),
+                      names = c("id", "birth", "entry", "exit", "fail"),
                   row.names = c("1", "2", "3"),
                       class = "data.frame" )
 

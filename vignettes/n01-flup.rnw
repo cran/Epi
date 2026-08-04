@@ -4,8 +4,8 @@
 \newcommand{\Title}{\texttt{Lexis} functions in \texttt{Epi}\\
   for representation and analysis of\\ follow-up data}
 \newcommand{\Tit}{\texttt{Lexis} FU}
-\newcommand{\Version}{Version 12}
-\newcommand{\Dates}{February 2025}
+\newcommand{\Version}{Version 13}
+\newcommand{\Dates}{February 2026}
 \newcommand{\Where}{SDCC}
 \newcommand{\Homepage}{\url{https://bendixcarstensen.com/Epi/} }
 \newcommand{\Faculty}{\begin{tabular}{rl}
@@ -18,7 +18,7 @@ Bendix Carstensen
                       \end{tabular}}
 
 \input{topreport}
-\renewcommand{\rwpre}{./01flup}
+\renewcommand{\rwpre}{./n01-flup}
 
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
@@ -93,7 +93,7 @@ last chapter of this note, \hyperlink{lexfun}{``\texttt{Lexis}
 
 \subsection{Wilhelm Lexis}
 
-\begin{minipage}[t]{0.6\linewidth}
+\begin{minipage}[t]{0.55\linewidth}
   \raggedright
   The \code{Lexis} machinery is named after the German demographer
   and economist Wilhelm Lexis (full name Wilhelm Hector Richard
@@ -111,7 +111,7 @@ last chapter of this note, \hyperlink{lexfun}{``\texttt{Lexis}
   terms. Hence the naming of the machinery after Wilhelm Lexis.
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.35\linewidth}
+\begin{minipage}[t]{0.40\linewidth}
   \ \\[-1em]
   \includegraphics[width=1.0\textwidth]{Wilhelm_Lexis}
 \end{minipage}
@@ -315,8 +315,8 @@ The results of these two plotting commands are in figure
 \ref{fig:Lexis-diagram}, p. \pageref{fig:Lexis-diagram}.
 \begin{figure}[tb]
 \centering
-\includegraphics[width = 0.35\textwidth]{01flup-dmL1}
-\includegraphics[width = 0.63\textwidth]{01flup-dmL2}
+\includegraphics[width = 0.35\textwidth]{n01-flup-dmL1}
+\includegraphics[width = 0.63\textwidth]{n01-flup-dmL2}
 \caption{\it Lexis diagram of the \textrm{\tt DMlate} dataset; left
   panel is the default version, right panel is with some bells and
   whistles. The red lines are for women, blue for men, crosses
@@ -1199,8 +1199,8 @@ abline(h = 1)
 @ %
 \begin{figure}[tb]
 \centering
-\includegraphics[width = 0.49\textwidth]{01flup-sep-mort}
-\includegraphics[width = 0.49\textwidth]{01flup-sep-HR}
+\includegraphics[width = 0.49\textwidth]{n01-flup-sep-mort}
+\includegraphics[width = 0.49\textwidth]{n01-flup-sep-HR}
 \caption{\it Left panel: Mortality rates from separate models for the
   two mortality transitions; the \textrm{\tt
     DM}$\rightarrow$\textrm{\tt Dead} transition modeled by age alone;
@@ -1446,6 +1446,7 @@ ci.exp(rateDth, subset = "lex")
 
 \item[Manipulate]\ \\
 \begin{description}
+\item[\texttt{overlap.Lexis}] check for overlapping records within persons
 \item[\texttt{subset.Lexis}, \texttt{[}] subset of a \texttt{Lexis} object
 \item[\texttt{merge.Lexis}] merges a \texttt{Lexis} objects with a
   \texttt{data.frame}

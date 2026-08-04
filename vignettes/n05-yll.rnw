@@ -19,7 +19,7 @@ Bendix Carstensen
                       \end{tabular}}
 
 \input{topreport}
-\renewcommand{\rwpre}{./05yll}
+\renewcommand{\rwpre}{./n05-yll}
 
 \chapter{Technicalities and theory}
 
@@ -450,7 +450,7 @@ plyll("Sus", " - susceptibility assumed")
 @ %
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{05yll-imm}
+  \includegraphics[width=\textwidth]{n05-yll-imm}
   \caption{Years of life lost to DM: the difference in expected
     residual life time at different ages between persons with and
     without diabetes, assuming the persons without diabetes at a given
@@ -463,7 +463,7 @@ plyll("Sus", " - susceptibility assumed")
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{05yll-sus}
+  \includegraphics[width=\textwidth]{n05-yll-sus}
   \caption{Years of life lost to DM: the difference in expected
     residual life time at different ages between persons with and
     without diabetes, allowing the persons without diabetes at a given
@@ -476,7 +476,7 @@ plyll("Sus", " - susceptibility assumed")
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{05yll-tot}
+  \includegraphics[width=\textwidth]{n05-yll-tot}
   \caption{Years of life lost to DM: the difference in expected
     residual life time at different ages between persons with and
     without diabetes. Allowance for susceptibility is approximated by

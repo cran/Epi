@@ -1,6 +1,6 @@
 rem vignette links on CRAN appear in alphabetical order of filename
-call rt 01flup.rnw
-call rt 02addLexis.rnw
-call rt 03crisk.rnw
-call rt 04simLexis.rnw
-call rt 05yll.rnw
+call rt n01-flup.rnw
+call rt n02-addLexis.rnw
+call rt n03-crisk.rnw
+call rt n04-simLexis.rnw
+call rt n05-yll.rnw

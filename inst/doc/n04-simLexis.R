@@ -1,7 +1,7 @@
-### R code from vignette source '04simLexis.rnw'
+### R code from vignette source 'n04-simLexis.rnw'
 
 ###################################################
-### code chunk number 1: 04simLexis.rnw:29-41
+### code chunk number 1: n04-simLexis.rnw:29-41
 ###################################################
 options(width = 90,
         show.signif.stars = FALSE,
@@ -18,14 +18,14 @@ clear()
 
 
 ###################################################
-### code chunk number 2: 04simLexis.rnw:44-46
+### code chunk number 2: n04-simLexis.rnw:44-46
 ###################################################
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: 04simLexis.rnw:48-54
+### code chunk number 3: n04-simLexis.rnw:48-54
 ###################################################
 vers <-
 data.frame(R = substr(R.version.string, 11, 15),
@@ -67,6 +67,7 @@ summary( dmi, timeScales=T )
 ###################################################
 ### code chunk number 7: boxes
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes( dmi, boxpos = list(x = c(20, 20, 80, 80),
                           y = c(80, 20, 80, 20)),
             scale.R = 1000, show.BE = TRUE )
@@ -110,7 +111,7 @@ class( DM.Ins )
 
 
 ###################################################
-### code chunk number 11: 04simLexis.rnw:308-314
+### code chunk number 11: n04-simLexis.rnw:308-314
 ###################################################
 DM.Ins <- glm.Lexis( Si, from = "DM", to = "Ins",
                       formula = ~ Ns( Age  , knots=ai.kn ) +
@@ -121,7 +122,7 @@ class( DM.Ins )
 
 
 ###################################################
-### code chunk number 12: 04simLexis.rnw:319-328
+### code chunk number 12: n04-simLexis.rnw:319-328
 ###################################################
 DM.Dead <- glm.Lexis( Si, from = "DM", to = "Dead",
                        formula = ~ Ns( Age  , knots=ad.kn ) +
@@ -199,6 +200,7 @@ pr.rates[,ia, ii ,"All"   ,] <- ci.pred( All.Dead, newdata = dnew )
 ###################################################
 ### code chunk number 18: mort-int
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mar=c(3,3,1,1), mgp=c(3,1,0)/1.6, las=1 )
 plot( NA, xlim=c(40,82), ylim=c(5,300), bty="n",
       log="y", xlab="Age", ylab="Mortality rate per 1000 PY" )
@@ -305,6 +307,7 @@ nSt[1:10,]
 ###################################################
 ### code chunk number 28: pstate0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 pM <- pState( nSt, perm=c(1,2,4,3) )
 head( pM )
 par( mfrow=c(1,2), mar=c(3,3,1,1), mgp=c(3,1,0)/1.6 )
@@ -320,6 +323,7 @@ box()
 ###################################################
 ### code chunk number 29: pstatex
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 clr <- c("limegreen","orange")
 # expand with a lighter version of the two chosen colors
 clx <- c( clr, rgb( t( col2rgb( clr[2:1] )*2 + rep(255,3) ) / 3, max=255 ) )
@@ -354,6 +358,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 30: pstatey
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par( mfrow=c(1,2), las=1, mar=c(3,3,4,2), mgp=c(3,1,0)/1.6 )
 # Men
 pM <- pState( nState( subset(simL,sex=="M"),
@@ -392,6 +397,7 @@ axis( side=4, at=1:99/100, labels=FALSE, tcl=-0.3 )
 ###################################################
 ### code chunk number 31: comp-0
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 PrM  <- pState( nState( subset(simP,sex=="M"),
                         at=seq(0,11,0.2),
                         from=60,
@@ -428,11 +434,9 @@ box( lwd=5, col="white" ) ; box( lwd=2, col="black" )
 
 
 ###################################################
-### code chunk number 32: 04simLexis.rnw:958-962
+### code chunk number 32: n04-simLexis.rnw:958-962
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),
   "\n    End time:", format(  ende, "%F, %T"),
   "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
-
-

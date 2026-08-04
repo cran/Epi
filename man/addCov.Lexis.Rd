@@ -3,7 +3,7 @@
 \alias{addCov.Lexis}
 \title{
   Add covariates (typically clinical measurements) taken at known times
-  to a Lexis object. 
+  to a Lexis object.
 }
 \description{
   When follow-up in a multistate model is represented in a
@@ -22,7 +22,7 @@
 }
 \arguments{
   \item{Lx}{
-    A Lexis object with follow-up of a cohort.  
+    A Lexis object with follow-up of a cohort.
     }
   \item{clin}{
     A data frame with covariates to add (typically clinical
@@ -46,26 +46,26 @@
     Character. Name of the variable in \code{clin} with the examination
     names (such as \code{wave1}, \code{wave2} etc.). Values may not be
     repeated within person and cannot be equal to any of
-    \code{levels(Lx)}. Will be carried over to the resulting 
+    \code{levels(Lx)}. Will be carried over to the resulting
     \code{Lexis} object. If there is no such variable in \code{clin} it
     will be constructed; if the argument is omitted, a variable called
     \code{exnam} with values \code{ex1}, \code{ex2} etc. will be
     constructed.
     }
-  \item{tfc}{      
+  \item{tfc}{
     Character (\code{t}ime \code{f}rom last \code{c}linical visit). Name
     of the variable in the result which will contain the time since the
     most recent covariate date. It will be included among the timescales
     of the resulting Lexis object.
 
     If the argument is omitted a variable called \code{tfc} will be
-    constructed. 
+    constructed.
     }
   \item{\dots}{Arguments passed on. Ignored.
 }
 }
 \value{
-    A \code{Lexis} object representing the same follow-up as \code{Lx}, 
+    A \code{Lexis} object representing the same follow-up as \code{Lx},
     with cuts added at the times of examination, and covariate
     measurements added for all records representing follow-up after the
     most recent time of measurement.
@@ -92,7 +92,7 @@ xcoh <- structure( list( id = c("A", "B", "C"),
                       entry = c("1965-08-04", "1972-09-08", "1991-12-23"),
                        exit = c("1997-06-27", "1995-05-23", "1998-07-24"),
                        fail = c(1, 0, 1) ),
-                     .Names = c("id", "birth", "entry", "exit", "fail"),
+                      names = c("id", "birth", "entry", "exit", "fail"),
                   row.names = c("1", "2", "3"),
                       class = "data.frame" )
 

@@ -19,7 +19,7 @@ Bendix Carstensen
                       \end{tabular}}
 
 \input{topreport}
-\renewcommand{\rwpre}{./04simLexis}
+\renewcommand{\rwpre}{./n04-simLexis}
 
 \chapter{Using \texttt{simLexis}}
 

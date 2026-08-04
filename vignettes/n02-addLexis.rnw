@@ -30,7 +30,7 @@ library(popEpi)
 library(dplyr)
 library(tidyr)
 @ %
-\renewcommand{\rwpre}{./02addLexis}
+\renewcommand{\rwpre}{./n02-addLexis}
 
 <<echo = FALSE>>=
 anfang <- Sys.time()
@@ -107,7 +107,7 @@ xcoh <- structure(list(id = c("A", "B", "C"),
                     entry = c("1965-08-04", "1972-09-08", "1991-12-23"),
                      exit = c("1997-06-27", "1995-05-23", "1998-07-24"),
                      fail = c(1, 0, 1) ),
-                   .Names = c("id", "birth", "entry", "exit", "fail"),
+                    names = c("id", "birth", "entry", "exit", "fail"),
                 row.names = c("1", "2", "3"),
                     class = "data.frame" )
 xcoh$dob <- cal.yr(xcoh$birth)

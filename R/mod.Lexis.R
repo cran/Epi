@@ -77,17 +77,19 @@ cat(deparse(substitute(model)),
     " Poisson analysis of Lexis object ", nameLx, " with ", link, " link",
     ":\nRates for", if( onetr) " the", " transition",
                     if(!onetr) "s", ":", paste0("\n", trnam), "\n",
-    if( scale!=1 ) paste(", lex.dur (person-time) scaled by", scale ), "\n", sep="" )
+    if( scale!=1 ) paste("lex.dur (person-time) scaled by", scale ), "\n", sep="" )
              }
 
 # Fit the model
 mod <- model( form, family = poisreg(link=link), data = Lx, ... )
 
 # Add an explanatory attribute
-attr( mod, "Lexis" ) <- list( data=nameLx,
-                             trans=trnam,
-                           formula=form[-2],
-                             scale=scale )
+attr( mod, "Lexis" ) <- list( data = nameLx,
+                             trans = trnam,
+                           # as.character to avoid including the
+                           # formula environment---the data
+                           formula = as.character(form[-2]),
+                             scale = scale )
 mod
 }
 
@@ -98,7 +100,7 @@ glmLexis <-
 glm.Lexis <-
 function( Lx,
      formula,
-        from = preceding(Lx,to),
+        from = preceding(Lx, to),
           to = absorbing(Lx),
       paired = FALSE,
         link = "log",
@@ -110,8 +112,8 @@ function( Lx,
 nameLx <- deparse(substitute(Lx))
 
 # sensible defaults if one of to and from is missing
-if(  missing(from) & !missing(to) ) from <- preceding (Lx,to  )
-if( !missing(from) &  missing(to) ) to   <- succeeding(Lx,from)
+if(  missing(from) & !missing(to) ) from <- preceding (Lx, to  )
+if( !missing(from) &  missing(to) ) to   <- succeeding(Lx, from)
 xx <- modLexis( Lx, nameLx,
                 formula, from, to,
                 paired = paired, link = link, scale = scale, verbose = verbose,
@@ -224,7 +226,7 @@ from <- levels( factor(Lx$lex.Cst) )
 # construct a Surv response object, and note that we want the possibility
 # of transitions to transient states, hence the lex.Xst != lex.Cst
 Sobj <- Surv(Lx[,ts],
-             Lx[,ts]+Lx$lex.dur,
+             Lx[,ts] + Lx$lex.dur,
              trt( Lx$lex.Cst, Lx$lex.Xst ) %in% trnam )
 
 # Tell what we intend to and then do it
@@ -243,9 +245,9 @@ mod <- coxph(as.formula(paste("Sobj",
              ...)
 
 # Add an explanatory attribute
-attr( mod, "Lexis" ) <- list( data=nameLx,
-                             trans=trnam,
-                           formula=formula )
+attr( mod, "Lexis" ) <- list( data = nameLx,
+                             trans = trnam,
+                           formula = as.character(formula) )
 class( mod ) <- c( "coxph.lex", class(mod) )
 mod
 }

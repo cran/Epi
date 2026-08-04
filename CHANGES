@@ -1,9 +1,20 @@
+Changes in 2.66
+
+o duplicate version of LexisScarf removed
+o glmLexis, gamLexis and coxphLexis rturned objects with an extra
+  slot, "Lexis", that contained the model formula, which unfortunately
+  comes with the formula environment as an attribute. This is now
+  changes to be only the character version of the fomula.
+o paths gains an argument, coll, defaulting to "->", the character string
+  separating path names in the resuting paths
+o help pages edited slightly for addDrug.Lexis, overlap.Lexis, cal.yr
+
 Changes in 2.65
 
 o new function, adtte2Lexis, that creates a Lexis Object from an ADAM
   ADTTE Dataset, courtesy of Lars Diaz
 o summary.Lexis: Annoying leading blanks in the column names of the summary
-  have been removed 
+  have been removed
 
 Changes in 2.64
 
@@ -13,7 +24,7 @@ Changes in 2.63
 
 o LexisScarf() added, gives a knitting pattern for a scarf
 o overlap.Lexis added, checks if record represent overlapping time within
-  a person 
+  a person
 
 Changes in 2.62
 
@@ -24,10 +35,10 @@ o Icens documentation groomed and clarified
 Changes in 2.61
 
 o xcutLexis for generating states as cross-classification of event
-  ocurrences 
+  ocurrences
 o Ugly typos in vignettes introduced in 2.60 (and not so ugly ones too)
   rectified.
-o Function paths() now properly defined as S3 method for Lexis 
+o Function paths() now properly defined as S3 method for Lexis
 
 Changes in 2.60
 
@@ -50,13 +61,13 @@ o flup, the basic Lexis vignette, has been updated
 
 Changes in 2.56
 
-o ci.eta was broken, fix provided 
+o ci.eta was broken, fix provided
 
 Changes in 2.55
 
 o changes in clogistic.c to comply with new requirements for c code
 o nice (defined in plotEst.R) no longer crashes for very large
-  ranges of log-axes 
+  ranges of log-axes
 
 Changes in 2.54
 
@@ -81,7 +92,7 @@ o bootLexis crashed if lex.id was non-numeric. Fixed now.
 
 o new functions: unLexis removes Lexis atttributes; legendbox explains
   the contents of the plot from boxes.Lexis
-  
+
 o vignettes groomed
 
 o cutLexis would give erroneous results if the Lexis object was not
@@ -90,15 +101,15 @@ o cutLexis would give erroneous results if the Lexis object was not
 Changes in 2.47
 
 o a function, Lexis2msm added, converts a Lexis object to a data frame
-  suitable input to msm::msm 
+  suitable input to msm::msm
 
 o in functions modLexis, and thus glm.Lexis and gam.Lexis the warning
-  about several transions out of the state is changed to a cat() 
+  about several transions out of the state is changed to a cat()
 
-o id = lex.id added as default in coxph.Lexis 
+o id = lex.id added as default in coxph.Lexis
 
 o glm. gam. and coxph.Lexis now print the list of transitions modeled
-  differently 
+  differently
 
 Changes in 2.45/2.46
 
@@ -122,7 +133,7 @@ o cal.yr returned an object of class c("cal.yr","numeric"), now changed
   designation when 'double' is meant.
 
 o COEF.polr was wrongly defined, caused a crash of ci.lin() on a polr
-  object. Fixed. 
+  object. Fixed.
 
 o Using a factor as response in a binomial glm/gam model caused df2ctr
   called from ci.lin to crash. Fixed.
@@ -177,7 +188,7 @@ o mcutLexis reported wrong number of ties resolved; fixed
 o Bug in mcutLexis accidentally omitting new states as precursor states
 
 o Bug in boxes.Lexis causing text in boxes always to be printed in
-  bold font is fixed. Default font is changed to 1 instead of 2 
+  bold font is fixed. Default font is changed to 1 instead of 2
 
 o factorize.Lexis now only turns lex.Cst and lex.Xst into factors with
   the same set of levels.
@@ -219,7 +230,7 @@ o the argument formula for glm.Lexis, gam.Lexis and coxph.Lexis is
   models for two-state (survival) models easier
 
 o addCov.Lexis was not exported as a proper method for Lexis, due to a
-  mis-named argument in the definition. 
+  mis-named argument in the definition.
 
 o addCov.Lexis produced erroneous results because of mistaken sorting
   order variables
@@ -264,7 +275,7 @@ Changes in 2.36
 o Lexis gains a 'notes' argument allowing to silence notes
 
 o Documentation of bootLexis upadated and groomed
- 
+
 o Description of units of measurement in diet dataset corrected
 
 o Problems with default reference period/cohort in apc.fit fixed
@@ -311,7 +322,7 @@ o apc.fit nomenclature for drift extraction has been changed from
 Changes in 2.33
 
 o Fixed bug in gen.exp causing a crash when purchase dates were
-  indestinguishable from FU-dates by match() but not by %in%.  
+  indestinguishable from FU-dates by match() but not by %in%.
 
 o Previously, apc.fit with dist="bin" returned odds in the Age
   component. Now returns probabilities.
@@ -357,7 +368,7 @@ o Bug in LCa.fit rectified, non-needed elements of npar can now be
   omitted, previously all 5 named items of the list were required.
 
 o matshade now allow NAs in x or y coordinates, causing separate
-  shaded areas to be drawn. 
+  shaded areas to be drawn.
 
 Changes in 2.30
 
@@ -371,7 +382,7 @@ o Small changes in pc.lines, and addition of pc.matshade to make
 Changes in 2.29
 
 o ci.lin with a list of two prediction frames as argument to ctr.mat
-  now also honors the vcov and sample arguments. 
+  now also honors the vcov and sample arguments.
   Also expanded to accept a single data frame to mimick ci.pred and
   extending this to honor arguments vcov and sample. This facility
   ignores the offset, though.
@@ -384,13 +395,13 @@ Changes in 2.28
 o Added function matshade() that plots shaded confidence bands.
 
 o Epi:::ci.dfr (called from ci.lin) redesigned so that it actually
-  works in most cases. 
+  works in most cases.
 
 Changes in 2.27
 
-o Documentation of LCa.fit improved - really disturbing typos rectified. 
+o Documentation of LCa.fit improved - really disturbing typos rectified.
 
-o Ns groomed to have knots= have precedence over df=, 
+o Ns groomed to have knots= have precedence over df=,
 
 o Code of ci.dfr groomed, gam objects are now also accommodated when
   using the list(dfrx,dfrr) version of the ctr.mat argument. Bug
@@ -403,18 +414,18 @@ o ci.lin did not honour a reference data frame of 1 row as promised. Fixed.
 Changes in 2.25
 
 o N2Y now also completes the Lexis triangles in the last age-category
-  by fitting the sum to the average of the two prevalent numbers. 
+  by fitting the sum to the average of the two prevalent numbers.
 
 o ci.lin(vcov=TRUE) now returns a list whose first element is named
   'coef' (previously 'est') and which is a vector (previously a 1-column
   matrix). Old performance was illogical.
- 
+
   ci.lin also now accepts a list of two prediction dataframes as the
   ctr.mat argument. On the basis of these it computes the row-wise
   difference (RR for ci.exp).
 
-o bootLexis for bootstrapping persons from a Lexis object added. 
-  nid.Lexis (and nid.default) counting the number of persons in a 
+o bootLexis for bootstrapping persons from a Lexis object added.
+  nid.Lexis (and nid.default) counting the number of persons in a
   Lexis object added as utility.
 
 o Dataset BrCa used for illustration of the Crowther and Lambert paper
@@ -475,18 +486,18 @@ Changes in 2.18
 
 o addCov.Lexis was fundamentally flawed, re-written, argument names and
   order changed too.
- 
+
 o Documentation links between addCov.Lexis and gen.exp are introduced.
 
 Changes in 2.16
- 
+
 o Function addCov.Lexis added. Allows addition of covariates (clinical
   mesurements) taken at a particular time to be added to a Lexis
-  object. 
+  object.
 
 Changes in 2.15
- 
-o typo in stackedCIF code corrected (caused a crash with ony one group) 
+
+o typo in stackedCIF code corrected (caused a crash with ony one group)
 
 Changes in 2.14
 
@@ -496,12 +507,12 @@ o plotCIF, stackedCIF plotting Nelson-Aalen-Johansen estimators of
 o Convenice wrappers for grep to select elements: fgrep, ngrep, lgrep1.
 
 o A bug in Ns has been fixed, thanks to Lars J Diaz (DK) and Stephen
-  Wade (AUS). 
+  Wade (AUS).
 
 o surv1, surv2, yll, erl: NAs in input rates are now changed to 0
   (with a warning) instead of crashing the function.
 
-o documentation of ci.cum groomed. 
+o documentation of ci.cum groomed.
 
 Changes in 2.12
 
@@ -527,11 +538,11 @@ o Grooming of code and documentation for mcutLexis.
 Changes in 2.8
 
 o A function, mcutLexis, to cut at several different event times,
-  preserving intermediat event histories has been added. 
+  preserving intermediat event histories has been added.
 
 o Errors in the erl.Rd corrected: Description of the argument "immune"
   was wrong, as were the description of the timepoints where rates
-  were supposed given.  
+  were supposed given.
 
 o Inaccuracies in the vignette for simLexis patched.
 
@@ -547,7 +558,7 @@ Changes in 2.6
 
 o Added function erl computing Expected Residual Lifetime in an
   illness-death model added, together with companions surv1, surv2,
-  erl1 and yll (Years of Life Lost). 
+  erl1 and yll (Years of Life Lost).
 
 Changes in 2.5
 
@@ -565,7 +576,7 @@ o LCa.fit rewritten and expanded to encompass both age-period and
 o APC.LCa added, fits all possible Lee-Carter type models and
   APC-models. boxes.APC.LCa plots the relationship between models
   including the residual deviances, and optionally places boxes to
-  provide overview of best fitting models.	   
+  provide overview of best fitting models.
 
 Changes in 2.4
 
@@ -589,13 +600,13 @@ Changes in 2.2
 
 o LCa.fit added: Fits Lee-Carter models with smooth age and time
   effects to rate-data. print, summary, plot and predict methods also
-  supplied. 
+  supplied.
 
 Changes in 2.1
 
 o The show.BE="nz" feature in boxes.Lexis is now documented
 
-o "[.Lexis" is now exported and works... 
+o "[.Lexis" is now exported and works...
 
 Changes in 2.0
 
@@ -618,7 +629,7 @@ o Bug in calling lme4::fixef from within ci.lin fixed
 o ci.lin with sample=TRUE now samples from the posterior of the
   parameter vector and then transforms this by the contrast matrix
   (earlier the sampling was from the posterior of the ctr.mat
-  transformed parameters). 
+  transformed parameters).
 
 Changes in 1.1.69
 
@@ -629,7 +640,7 @@ o ci.cum now has an argument ci.Exp (defaults to FALSE) that computes
 
 o ci.pred updated to automatically use the inverse link for
   transformation of results. Also now only accepts glm objects.
-  
+
 o Ns now have arguents ref= and detrend=. ref= allows a reference
   value to be specified (where the Ns is 0); this is independent of
   the supplied data. detrend= projects the columns of Ns() on the

@@ -2,47 +2,47 @@ rem vignettes appear in alphabetical order of filename
 rem this script moves .R and .pdf file to inst.doc
 rem => no vignette links on CRAN package website 
 
-call rw 01flup
-call rt 01flup
-call bl 01flup
-copy 01flup.R   ..\inst\doc\
-copy 01flup.pdf ..\inst\doc\
+call rw n01-flup
+call rt n01-flup
+call bl n01-flup
+rem copy n01-flup.R   ..\inst\doc\
+rem copy n01-flup.pdf ..\inst\doc\
 
-call rt 02addLexis
-call rw 02addLexis
-call bl 02addLexis
-copy 02addLexis.R   ..\inst\doc\
-copy 02addLexis.pdf ..\inst\doc\
+call rt n02-addLexis
+call rw n02-addLexis
+call bl n02-addLexis
+rem copy n02-addLexis.R   ..\inst\doc\
+rem copy n02-addLexis.pdf ..\inst\doc\
 
-call rt 03crisk
-call rw 03crisk
-call bl 03crisk
-copy 03crisk.R   ..\inst\doc\
-copy 03crisk.pdf ..\inst\doc\
+call rt n03-crisk
+call rw n03-crisk
+call bl n03-crisk
+rem copy n03-crisk.R   ..\inst\doc\
+rem copy n03-crisk.pdf ..\inst\doc\
 
-call rt 04simLexis
-call rw 04simLexis
-call bl 04simLexis
-copy 04simLexis.R   ..\inst\doc\
-copy 04simLexis.pdf ..\inst\doc\
+call rt n04-simLexis
+call rw n04-simLexis
+call bl n04-simLexis
+rem copy n04-simLexis.R   ..\inst\doc\
+rem copy n04-simLexis.pdf ..\inst\doc\
 
-call rt 05yll
-call rw 05yll
-call bl 05yll
-copy 05yll.R   ..\inst\doc\
-copy 05yll.pdf ..\inst\doc\
+call rt n05-yll
+call rw n05-yll
+call bl n05-yll
+rem copy n05-yll.R   ..\inst\doc\
+rem copy n05-yll.pdf ..\inst\doc\
 
 rem move to website
-call 2gp 01flup.R   Epi
-call 2gp 01flup.pdf Epi
-call 2gp 02addLexis.R   Epi
-call 2gp 02addLexis.pdf Epi
-call 2gp 03crisk.R   Epi
-call 2gp 03crisk.pdf Epi
-call 2gp 04simLexis.R   Epi
-call 2gp 04simLexis.pdf Epi
-call 2gp 05yll.R   Epi
-call 2gp 05yll.pdf Epi
+call 2gp n01-flup.R   Epi
+call 2gp n01-flup.pdf Epi
+call 2gp n02-addLexis.R   Epi
+call 2gp n02-addLexis.pdf Epi
+call 2gp n03-crisk.R   Epi
+call 2gp n03-crisk.pdf Epi
+call 2gp n04-simLexis.R   Epi
+call 2gp n04-simLexis.pdf Epi
+call 2gp n05-yll.R   Epi
+call 2gp n05-yll.pdf Epi
 
 call klean
 rem del *.pdf

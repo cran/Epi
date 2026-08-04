@@ -1,7 +1,7 @@
-### R code from vignette source '03crisk.rnw'
+### R code from vignette source 'n03-crisk.rnw'
 
 ###################################################
-### code chunk number 1: 03crisk.rnw:28-40
+### code chunk number 1: n03-crisk.rnw:28-40
 ###################################################
 options(width = 90,
         show.signif.stars = FALSE,
@@ -18,14 +18,14 @@ clear()
 
 
 ###################################################
-### code chunk number 2: 03crisk.rnw:43-45
+### code chunk number 2: n03-crisk.rnw:43-45
 ###################################################
 anfang <- Sys.time()
 cat("Start time:", format(anfang, "%F, %T"), "\n")
 
 
 ###################################################
-### code chunk number 3: 03crisk.rnw:47-53
+### code chunk number 3: n03-crisk.rnw:47-53
 ###################################################
 vers <-
 data.frame(R = substr(R.version.string, 11, 15),
@@ -36,7 +36,7 @@ print(vers, row.names = FALSE)
 
 
 ###################################################
-### code chunk number 4: 03crisk.rnw:252-269
+### code chunk number 4: n03-crisk.rnw:252-269
 ###################################################
 data(DMlate)
 set.seed(1952)
@@ -58,7 +58,7 @@ summary(Mdm)
 
 
 ###################################################
-### code chunk number 5: 03crisk.rnw:274-279
+### code chunk number 5: n03-crisk.rnw:274-279
 ###################################################
 Sdm <- splitLexis(factorize(subset(Mdm,
                                    lex.Cst == "DM")),
@@ -70,6 +70,7 @@ summary(Sdm)
 ###################################################
 ### code chunk number 6: boxes5
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
                          y = c(85, 50, 15, 85, 15)),
           scale.R = 100,
@@ -79,6 +80,7 @@ boxes(Mdm, boxpos = list(x = c(15, 50, 15, 85, 85),
 ###################################################
 ### code chunk number 7: boxes4
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(Relevel(Sdm, c(1, 4, 2, 3)),
       boxpos  = list(x = c(15, 85, 75, 15),
                      y = c(85, 85, 30, 15)),
@@ -87,7 +89,7 @@ boxes(Relevel(Sdm, c(1, 4, 2, 3)),
 
 
 ###################################################
-### code chunk number 8: 03crisk.rnw:317-320
+### code chunk number 8: n03-crisk.rnw:317-320
 ###################################################
 mD <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Dead')
 mO <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'OAD' )
@@ -95,7 +97,7 @@ mI <- gamLexis(Sdm, ~ s(tfd, k = 5), to = 'Ins' )
 
 
 ###################################################
-### code chunk number 9: 03crisk.rnw:334-337
+### code chunk number 9: n03-crisk.rnw:334-337
 ###################################################
 nd <- data.frame(tfd = seq(0, 10, 1/20))
 rownames(nd) <- nd$tfd
@@ -105,6 +107,7 @@ str(nd)
 ###################################################
 ### code chunk number 10: rates
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd)) * 1000,
@@ -123,6 +126,7 @@ text(0, 0.5*0.6^c(1,2,0),
 ###################################################
 ### code chunk number 11: rates-l
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd)) * 1000,
@@ -135,7 +139,7 @@ text(8, 500 - c(2, 3, 1) * 20,
 
 
 ###################################################
-### code chunk number 12: 03crisk.rnw:397-420
+### code chunk number 12: n03-crisk.rnw:397-420
 ###################################################
 # utility function to compute midpoints between sucessive values in a vector
 mp <- function(x) x[-1] - diff(x) / 2
@@ -163,7 +167,7 @@ rO <- c(0, cumsum(lO * mp(Sv)) * int)
 
 
 ###################################################
-### code chunk number 13: 03crisk.rnw:425-429
+### code chunk number 13: n03-crisk.rnw:425-429
 ###################################################
 summary(rD + rI + rO + Sv)
 oo <- options(digits = 20)
@@ -174,6 +178,7 @@ options(oo)
 ###################################################
 ### code chunk number 14: stack
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(cbind(rD, rI, rO, Sv), x = nd$tfd, # $
               xlim = c(0,10), xaxs = "i", yaxs = "i", las = 1,
               xlab = "Time since DM diagnosis (years)",
@@ -184,7 +189,7 @@ box(col = "white", lwd = 3)
 
 
 ###################################################
-### code chunk number 15: 03crisk.rnw:463-468
+### code chunk number 15: n03-crisk.rnw:463-468
 ###################################################
 Sj <- c(sjA = sum(Sv * int),
         sjD = sum(rD * int),
@@ -194,21 +199,21 @@ c(Sj, sum(Sj))
 
 
 ###################################################
-### code chunk number 16: 03crisk.rnw:518-520
+### code chunk number 16: n03-crisk.rnw:518-520
 ###################################################
 head(cbind(ci.pred(mI, nd),
            ci.exp (mI, nd)))
 
 
 ###################################################
-### code chunk number 17: 03crisk.rnw:526-528
+### code chunk number 17: n03-crisk.rnw:526-528
 ###################################################
 str(ci.lin(mI, nd, sample = 4))
 head(cbind(ci.pred(mI, nd), exp(ci.lin(mI, nd, sample = 4))))
 
 
 ###################################################
-### code chunk number 18: 03crisk.rnw:574-581
+### code chunk number 18: n03-crisk.rnw:574-581
 ###################################################
 res <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
@@ -220,7 +225,7 @@ str(res)
 
 
 ###################################################
-### code chunk number 19: 03crisk.rnw:616-623
+### code chunk number 19: n03-crisk.rnw:616-623
 ###################################################
 rsm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
@@ -232,7 +237,7 @@ str(rsm)
 
 
 ###################################################
-### code chunk number 20: 03crisk.rnw:631-638
+### code chunk number 20: n03-crisk.rnw:631-638
 ###################################################
 csm <- ci.Crisk(list(OAD = mO,
                      Ins = mI,
@@ -244,7 +249,7 @@ str(csm)
 
 
 ###################################################
-### code chunk number 21: 03crisk.rnw:651-657
+### code chunk number 21: n03-crisk.rnw:651-657
 ###################################################
 Brates <- aperm(apply(rsm,
                       1:2,
@@ -257,6 +262,7 @@ str(Brates)
 ###################################################
 ### code chunk number 22: rates-ci
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(nd$tfd, cbind(ci.pred(mD, nd),
                        ci.pred(mI, nd),
                        ci.pred(mO, nd)) * 1000,
@@ -281,6 +287,7 @@ text(0, 0.5 * 0.6^c(1,2,0),
 ###################################################
 ### code chunk number 23: crates
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(res$time,
          cbind(res$Crisk[,"Dead",],
                res$Crisk[,"Ins" ,],
@@ -295,7 +302,7 @@ text(8, 0.3 + c(1, 0, 2) / 25,
 
 
 ###################################################
-### code chunk number 24: 03crisk.rnw:720-722
+### code chunk number 24: n03-crisk.rnw:720-722
 ###################################################
 str(res$Crisk)
 str(res$Srisk)
@@ -304,6 +311,7 @@ str(res$Srisk)
 ###################################################
 ### code chunk number 25: stack-ci
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(res$Crisk[,c("Dead", "Ins", "OAD", "Surv"),1],
               x = res$time,
            xlim = c(0, 10), xaxs = "i", yaxs = "i", las = 1,
@@ -319,7 +327,7 @@ matshade(res$time,
 
 
 ###################################################
-### code chunk number 26: 03crisk.rnw:762-765
+### code chunk number 26: n03-crisk.rnw:762-765
 ###################################################
 s510 <- res$Stime[c("5", "10"),,]
 dimnames(s510)[[1]] <- c(" 5 yr","10 yr")
@@ -327,7 +335,7 @@ round(ftable(s510, row.vars=1:2), 2)
 
 
 ###################################################
-### code chunk number 27: 03crisk.rnw:781-784
+### code chunk number 27: n03-crisk.rnw:781-784
 ###################################################
 data(DMlate)
 set.seed(7465)
@@ -335,27 +343,27 @@ wh <- sample(1:3, nrow(DMlate), replace = T, prob = c(4, 2, 6))
 
 
 ###################################################
-### code chunk number 28: 03crisk.rnw:787-788
+### code chunk number 28: n03-crisk.rnw:787-788
 ###################################################
 wh[is.na(DMlate$dodth)] <- 0
 
 
 ###################################################
-### code chunk number 29: 03crisk.rnw:793-795
+### code chunk number 29: n03-crisk.rnw:793-795
 ###################################################
 DMlate$codth <- factor(wh, labels = c("Alive", "CVD", "Can", "Oth"))
 with(DMlate, table(codth, isDead = !is.na(dodth)))
 
 
 ###################################################
-### code chunk number 30: 03crisk.rnw:804-806
+### code chunk number 30: n03-crisk.rnw:804-806
 ###################################################
 str(DMlate)
 head(DMlate, 12)
 
 
 ###################################################
-### code chunk number 31: 03crisk.rnw:813-820
+### code chunk number 31: n03-crisk.rnw:813-820
 ###################################################
 dmL <- Lexis(entry = list(per = dodm,
                           age = dodm - dobth,
@@ -369,18 +377,19 @@ summary(dmL, t = T)
 ###################################################
 ### code chunk number 32: boxes
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 boxes(dmL, boxpos = TRUE)
 
 
 ###################################################
-### code chunk number 33: 03crisk.rnw:835-837
+### code chunk number 33: n03-crisk.rnw:835-837
 ###################################################
 sL <- splitLexis(dmL, time.scale = "age", breaks = seq(0, 120, 1/2))
 summary(sL)
 
 
 ###################################################
-### code chunk number 34: 03crisk.rnw:840-843 (eval = FALSE)
+### code chunk number 34: n03-crisk.rnw:840-843 (eval = FALSE)
 ###################################################
 ## mCVD <- gamLexis(sL, ~ s(tfD, by=sex), to = "CVD")
 ## mCan <- gamLexis(sL, ~ s(tfD, by=sex), to = "Can")
@@ -388,7 +397,7 @@ summary(sL)
 
 
 ###################################################
-### code chunk number 35: 03crisk.rnw:846-849
+### code chunk number 35: n03-crisk.rnw:846-849
 ###################################################
 mCVD <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "CVD")
 mCan <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Can")
@@ -396,13 +405,13 @@ mOth <- glmLexis(sL, ~ Ns(tfD, kn=1:6*2):sex, to = "Oth")
 
 
 ###################################################
-### code chunk number 36: 03crisk.rnw:858-859
+### code chunk number 36: n03-crisk.rnw:858-859
 ###################################################
 nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
 
 
 ###################################################
-### code chunk number 37: 03crisk.rnw:863-869
+### code chunk number 37: n03-crisk.rnw:863-869
 ###################################################
 cR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
@@ -415,6 +424,7 @@ str(cR)
 ###################################################
 ### code chunk number 38: cR
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 clr <- c("black", "orange", "limegreen")
 matshade(cR$time, cbind(cR$Crisk[, "CVD"  , ],
                         cR$Crisk[, "Can"  , ],
@@ -428,6 +438,7 @@ text(0, 1/3 - c(2,3,1)/30, c("CVD", "Can", "Oth"),
 ###################################################
 ### code chunk number 39: Sr1
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 matshade(cR$time, cbind(cR$Srisk[,1,],
                         cR$Srisk[,2,],
                         cR$Srisk[,3,]),
@@ -441,6 +452,7 @@ box(bty = "o")
 ###################################################
 ### code chunk number 40: Sr2
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 zz <- mat2pol(cR$Crisk[, c("Other", "Can", "CVD", "Surv"), "50%"],
               x = cR$time,
            xlim = c(0,15), xaxs = "i", yaxs = "i", las = 1,
@@ -456,13 +468,13 @@ text(14, mp(c(0, cR$Srisk["14", , 1], 1)),
 
 
 ###################################################
-### code chunk number 41: 03crisk.rnw:954-955
+### code chunk number 41: n03-crisk.rnw:954-955
 ###################################################
 ftable(round(cR$Stime[paste(1:5 * 3), , ], 1), row.vars = 1)
 
 
 ###################################################
-### code chunk number 42: 03crisk.rnw:978-997
+### code chunk number 42: n03-crisk.rnw:978-997
 ###################################################
 nm <- data.frame(tfD = seq(0, 15, 1/20), sex = "M")
 nw <- data.frame(tfD = seq(0, 15, 1/20), sex = "F")
@@ -486,7 +498,7 @@ str(wR)
 
 
 ###################################################
-### code chunk number 43: 03crisk.rnw:1002-1007
+### code chunk number 43: n03-crisk.rnw:1002-1007
 ###################################################
 dS <- mR[,"Surv",] - wR[,"Surv",]
 dS <- apply(dS, 1, quantile, probs = c(.5, .025, .975)) * 100
@@ -498,6 +510,7 @@ rS <- apply(rS, 1, quantile, probs = c(.5, .025, .975))
 ###################################################
 ### code chunk number 44: difrat
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par(mfrow = c(1,2))
 matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
          lwd = 3, ylim = c(-5, 5),
@@ -512,7 +525,7 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 45: 03crisk.rnw:1033-1043
+### code chunk number 45: n03-crisk.rnw:1033-1043
 ###################################################
 fR <- ci.Crisk(list(CVD = mCVD,
                     Can = mCan,
@@ -529,6 +542,7 @@ rxS <- apply(rxS, 1, quantile, probs = c(.5, .025, .975))
 ###################################################
 ### code chunk number 46: difratx
 ###################################################
+getOption("SweaveHooks")[["fig"]]()
 par(mfrow = c(1,2))
 matshade(as.numeric(colnames(dS)), t(dS), plot = TRUE,
          lwd = 3, ylim = c(-5, 5),
@@ -546,11 +560,9 @@ abline(h = 1)
 
 
 ###################################################
-### code chunk number 47: 03crisk.rnw:1066-1070
+### code chunk number 47: n03-crisk.rnw:1066-1070
 ###################################################
 ende <- Sys.time()
 cat("  Start time:", format(anfang, "%F, %T"),
   "\n    End time:", format(  ende, "%F, %T"),
   "\nElapsed time:", round(difftime(ende, anfang, units = "mins"), 2), "minutes\n")
-
-

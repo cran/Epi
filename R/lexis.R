@@ -777,6 +777,7 @@ timeSince <- function(x)
 
 lexVars <- function(x)
 {
+  if (!inherits(x, "Lexis")) stop("not a Lexis object\n")
   c("lex.id", Epi::timeScales(x), "lex.dur", "lex.Cst", "lex.Xst")
 }
 

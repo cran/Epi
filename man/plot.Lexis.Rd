@@ -37,7 +37,7 @@
     methods.
 
     Grids can be drawn (behind the life lines) using the following
-    parameters in \code{plot}: 
+    parameters in \code{plot}:
     \itemize{
       \item \code{grid} If logical, a background grid is set up
       using the axis ticks. If a list, the first component is used as
@@ -62,7 +62,7 @@
   If \code{lex} has been split along one of the time axes by a call to
   \code{splitLexis}, then vertical or horizontal grid lines are plotted
   (on top of the life lines) at the break points.
-  
+
   \code{PY.ann} writes the length of each (segment of) life line at the middle
   of the line. Not advisable to use with large cohorts. Another example is
   in the example file for \code{\link{occup}}.
@@ -75,7 +75,7 @@ xcoh <- structure( list( id = c("A", "B", "C"),
                       entry = c("04/08/1965", "08/09/1972", "23/12/1991"),
                        exit = c("27/06/1997", "23/05/1995", "24/07/1998"),
                        fail = c(1, 0, 1) ),
-                     .Names = c("id", "birth", "entry", "exit", "fail"),
+                      names = c("id", "birth", "entry", "exit", "fail"),
                   row.names = c("1", "2", "3"),
                       class = "data.frame" )
 

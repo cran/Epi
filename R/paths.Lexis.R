@@ -3,7 +3,7 @@ paths <- function (Lx, ...) UseMethod("paths")
 
 paths.default <-
 paths.Lexis <-
-function(Lx, dfr = FALSE, ...)
+function(Lx, dfr = FALSE, coll = "->", ...)
 {
 # sort the Lx object
 Lx <- sortLexis(Lx)
@@ -26,7 +26,7 @@ visits <- function(x) # visited states for one person
 # create list of character vectors
 paths <- lapply(lbas, visits)
 # paste them together
-ff <- factor(sapply(paths, paste, collapse = "->"))
+ff <- factor(sapply(paths, paste, collapse = coll))
 
 # if required, render as data frame else just return factor ff
 if (!dfr) return(ff)
